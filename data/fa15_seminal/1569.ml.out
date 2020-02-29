@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "1569.ml", line 7, characters 42-50:
+This expression has type 'a list but is here used with type int
+Relevant code: [n > 10]
+------------------------------------------------------------------
+File "1569.ml", line 7, characters 24-41:
+Try replacing
+    digitsOfIntHelper
+with
+    <
+of type
+    bool list -> bool list -> bool
+within context
+    let rec digitsOfInt n = (< [n > 10]) ;; 
+==============================
+File "1569.ml", line 7, characters 24-41:
+Try replacing
+    digitsOfIntHelper
+with
+    @
+of type
+    bool list -> bool list -> bool list
+within context
+    let rec digitsOfInt n = (@ [n > 10]) ;; 
+==============================
+File "1569.ml", line 7, characters 24-41:
+Try replacing
+    digitsOfIntHelper
+with
+    >
+of type
+    bool list -> bool list -> bool
+within context
+    let rec digitsOfInt n = (> [n > 10]) ;; 
+==============================

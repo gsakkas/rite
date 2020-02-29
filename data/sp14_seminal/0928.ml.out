@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0928.ml", line 16, characters 28-36:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: (l1, l2)
+------------------------------------------------------------------
+File "0928.ml", line 16, characters 15-27:
+Try replacing
+    List.combine
+with
+    List.combine; [[...]]
+of type
+    'd * 'e -> 'f
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | [] -> a
+                                  | h :: t ->
+                                    a) in let base = 0, [] in
+          let args = ((List.combine; [[...]]) (l1, l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

@@ -1,0 +1,66 @@
+------------------------------------------------------------------
+File "3090.ml", line 4, characters 28-68:
+This expression has type ('a -> ('a -> 'a) * bool) * 'b
+but is here used with type ('a -> 'a * bool) * 'a
+Relevant code: ((let f' x = (f, ((f x) = x)) in f'), b)
+------------------------------------------------------------------
+File "3090.ml", line 4, characters 47-48:
+Try replacing
+    (f x) = x
+with
+    (f (x = x))
+of type
+    (bool -> bool) * bool
+within context
+    (wwhile ((let f' x = f, (f (x = x)) in f'), b))
+==============================
+File "3090.ml", line 4, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('c -> ('c -> 'c) * bool) * 'd -> ('c -> ('c -> 'c) * bool) * 'd -> bool
+within context
+    let fixpoint (f, b) = (= ((let f' x = f, (f x) = x in f'), b)) ;; 
+==============================
+File "3090.ml", line 4, characters 42-43:
+Try replacing
+    f
+with
+    x
+of type
+    'e * bool
+within context
+    (wwhile ((let f' x = x, (f x) = x in f'), b))
+==============================
+File "3090.ml", line 4, characters 42-43:
+Try replacing
+    f
+with
+    =
+of type
+    ('f -> 'f -> bool) * bool
+within context
+    (wwhile ((let f' x = =, (f x) = x in f'), b))
+==============================
+File "3090.ml", line 4, characters 42-43:
+Try replacing
+    f
+with
+    b
+of type
+    'g * bool
+within context
+    (wwhile ((let f' x = b, (f x) = x in f'), b))
+==============================
+File "3090.ml", line 4, characters 42-43:
+Try replacing
+    f
+with
+    wwhile
+of type
+    (('h -> 'h * bool) * 'h -> 'h) * bool
+within context
+    (wwhile ((let f' x = wwhile, (f x) = x in f'), b))
+==============================

@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1427.ml", line 5, characters 2-65:
+This expression has type int list but is here used with type int
+Relevant code: if n <= 0 then [] else append (digitsOfInt (n / 10)) [n mod 10]
+------------------------------------------------------------------
+File "1427.ml", line 5, characters 32-65:
+Try replacing
+    (append (digitsOfInt (n / 10)) [(mod n 10)])
+with
+    (append [(mod n 10)] (digitsOfInt (n / 10)))
+of type
+    int list list
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [] else (append [(mod n 10)] (digitsOfInt (n / 10))))
+    ;; 
+==============================

@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "1090.ml", line 3, characters 62-66:
+This expression has type 'a -> 'a but is here used with type bool
+Relevant code: base
+------------------------------------------------------------------
+File "1090.ml", line 3, characters 14-17:
+Try replacing
+    a = (x a)
+with
+    ( = ) (a (x a))
+of type
+    'b -> bool
+within context
+    let pipe fs =
+    let f a x = ( = ) (a (x a)) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1090.ml", line 3, characters 45-59:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('c -> 'c) -> (('c -> 'c) -> 'c -> 'c) -> bool) ->
+    ('c -> 'c) -> (('c -> 'c) -> 'c -> 'c) -> bool
+within context
+    let pipe fs = let f a x = a = (x a) in let base x = x in (base f base  fs) ;; 
+==============================

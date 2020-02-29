@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1783.ml", line 10, characters 4-75:
+This expression has type int list list * int list list
+but is here used with type int list list
+Relevant code: if first > sec then (l1, ((clone 0 (first - sec)) :: l2)) else (l1, l2)
+------------------------------------------------------------------
+File "1783.ml", line 8, characters 7-36:
+Try replacing
+    (clone 0 (sec - first)) :: l1
+with
+    (clone 0 (sec - first)) :: l1; [[...]]
+of type
+    int list list * int list list
+within context
+    fun l1
+      l2 ->
+        (let first = (List.length l1) in
+            let sec = (List.length l2) in
+            (if first < sec then ((clone 0 (sec - first)) :: l1; [[...]]) else
+                (if first > sec then l1, (clone 0 (first - sec)) :: l2 else
+                  l1, l2)))
+==============================
+File "1783.ml", line 10, characters 4-75:
+Try replacing
+    (if first > sec then l1, (clone 0 (first - sec)) :: l2 else l1, l2)
+with
+    (if first > sec then l1, (clone 0 (first - sec)) :: l2 else l1, l2); [[...]]
+of type
+    int list list
+within context
+    fun l1
+      l2 ->
+        (let first = (List.length l1) in
+            let sec = (List.length l2) in
+            (if first < sec then (clone 0 (sec - first)) :: l1 else
+                ((if first > sec then l1, (clone 0 (first - sec)) :: l2 else
+                    l1, l2);
+                  [[...]])))
+==============================

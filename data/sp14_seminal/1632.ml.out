@@ -1,0 +1,60 @@
+------------------------------------------------------------------
+File "1632.ml", line 2, characters 49-50:
+This expression is not a function, it cannot be applied
+Relevant code: f
+------------------------------------------------------------------
+File "1632.ml", line 2, characters 51-52:
+Try replacing
+    (f b)
+with
+    f
+of type
+    'l * 'm
+within context
+    let rec wwhile (f, b) = (match f with 
+                             | (n, boo) -> f) ;; 
+==============================
+File "1632.ml", line 2, characters 38-45:
+Try replacing
+    n, boo
+with
+    _
+of type
+    ('n -> 'o) * 'n -> 'o
+within context
+    let rec wwhile (f, b) = (match f with 
+                             | _ -> (f b)) ;; 
+==============================
+File "1632.ml", line 2, characters 29-30:
+Try replacing
+    f
+with
+    b
+of type
+    't * 'u
+within context
+    let rec wwhile (f, b) = (match b with 
+                             | (n, boo) -> (f b)) ;; 
+==============================
+File "1632.ml", line 2, characters 49-50:
+Try replacing
+    f
+with
+    n
+of type
+    'h -> 'i
+within context
+    let rec wwhile (f, b) = (match f with 
+                             | (n, boo) -> (n b)) ;; 
+==============================
+File "1632.ml", line 2, characters 49-50:
+Try replacing
+    f
+with
+    boo
+of type
+    'j -> 'k
+within context
+    let rec wwhile (f, b) = (match f with 
+                             | (n, boo) -> (boo b)) ;; 
+==============================

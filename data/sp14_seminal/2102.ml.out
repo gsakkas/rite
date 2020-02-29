@@ -1,0 +1,101 @@
+------------------------------------------------------------------
+File "2102.ml", line 28, characters 9-18:
+This expression has type expr but is here used with type int
+Relevant code: buildX ()
+------------------------------------------------------------------
+File "2102.ml", line 27, characters 9-20:
+Try replacing
+    (rand (1, 7))
+with
+    (rand (1, 7)); [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) = (match (rand (1, 7)) with 
+                                   | _ -> ((rand (1, 7)); [[...]])
+                                   | 1 -> (buildX ())
+                                   | 2 -> (buildY ())
+                                   | 3 ->
+                                     (buildSine
+                                         (if depth = 0 then (buildX ()) else
+                                           (build (rand, depth - 1))))
+                                   | 4 ->
+                                     (buildCosine
+                                         (if depth = 0 then (buildY ()) else
+                                           (build (rand, depth - 1))))
+                                   | 5 ->
+                                     (buildAverage
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))
+                                   | 6 ->
+                                     (buildTimes
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))
+                                   | 7 ->
+                                     (buildThresh
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))) ;; 
+==============================
+File "2102.ml", line 26, characters 8-19:
+Try replacing
+    (rand (1, 7))
+with
+    (rand (1, 7)); [[...]]
+of type
+    int
+within context
+    let rec build (rand, depth) = (match ((rand (1, 7)); [[...]]) with 
+                                   | _ -> (rand (1, 7))
+                                   | 1 -> (buildX ())
+                                   | 2 -> (buildY ())
+                                   | 3 ->
+                                     (buildSine
+                                         (if depth = 0 then (buildX ()) else
+                                           (build (rand, depth - 1))))
+                                   | 4 ->
+                                     (buildCosine
+                                         (if depth = 0 then (buildY ()) else
+                                           (build (rand, depth - 1))))
+                                   | 5 ->
+                                     (buildAverage
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))
+                                   | 6 ->
+                                     (buildTimes
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))
+                                   | 7 ->
+                                     (buildThresh
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))) ;; 
+==============================

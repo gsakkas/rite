@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0671.ml", line 2, characters 30-31:
+This expression has type 'a -> 'b but is here used with type 'a
+Relevant code: x
+------------------------------------------------------------------
+File "0671.ml", line 2, characters 30-31:
+Try replacing
+    (x x)
+with
+    x
+of type
+    'c
+within context
+    fun fs -> (let f a x x = x in let base x = x in (List.fold_left f base  fs))
+==============================
+File "0671.ml", line 2, characters 28-29:
+Try replacing
+    x
+with
+    a
+of type
+    'd -> 'e
+within context
+    let f a x x = (a x) in let base x = x in (List.fold_left f base  fs)
+==============================

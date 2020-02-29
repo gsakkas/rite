@@ -1,0 +1,51 @@
+------------------------------------------------------------------
+File "0646.ml", line 30, characters 47-76:
+This expression has type int list -> int list but is here used with type
+  int list
+Relevant code: bigAdd ((mulByDigit (h a)) a)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0646.ml", line 30, characters 47-53:
+And modified the following location:
+File "0646.ml", line 30, characters 55-73:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit (h a))
+with
+    (mulByDigit (h a)); [[...]]
+The actual replacement has type
+    'a -> 'b
+within context
+    let f a x = (match x with 
+                 | [] -> a
+                 | h :: t ->
+                   ((bigAdd; [[...]])
+                       (((mulByDigit (h a)); [[...]])
+                         a))) in let base = l1, [] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "0646.ml", line 30, characters 47-53:
+And modified the following location:
+File "0646.ml", line 30, characters 74-75:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int list
+within context
+    let f a x = (match x with 
+                 | [] -> a
+                 | h :: t ->
+                   ((bigAdd; [[...]])
+                       ((mulByDigit (h a))
+                         (a;
+                           [[...]])))) in let base = l1, [] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

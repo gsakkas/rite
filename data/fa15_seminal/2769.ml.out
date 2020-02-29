@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "2769.ml", line 15, characters 70-75:
+This expression has type int but is here used with type int list
+Relevant code: i * h
+------------------------------------------------------------------
+File "2769.ml", line 15, characters 70-75:
+Try replacing
+    i * h
+with
+    i * h; [[...]]
+of type
+    int list
+within context
+    fun l -> (if i = 0 || i > 9 then [] else (match (List.rev l) with 
+                                              | [] -> []
+                                              | h :: t -> (match t with 
+                                                           | [] ->
+                                                             (if i * h > 10 then
+                                                                 [(carry i h)] @
+                                                                   [(remainder i h)]
+                                                                 else
+                                                                 (i * h; [[...]]))
+                                                           | h' :: t' ->
+                                                             (mulByDigit i t') @
+                                                                 ([
+                                                                         (remainder
+                                                                             h' i)
+                                                                           +
+                                                                           (carry
+                                                                             h i)
+                                                                         ]
+                                                                     @
+                                                                     [
+                                                                         (remainder
+                                                                           h i)
+                                                                         ]))))
+==============================

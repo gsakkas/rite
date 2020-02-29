@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "0455.ml", line 7, characters 70-77:
+This expression has type ((int -> int) -> (int -> int) * int) * int
+but is here used with type
+  ((int -> int) -> (int -> int) * bool) * (int -> int)
+Relevant code: (gs, b)
+------------------------------------------------------------------
+File "0455.ml", line 7, characters 63-69:
+Try replacing
+    wwhile
+with
+    <
+of type
+    ('a -> (int -> int) * int) * int -> ('a -> (int -> int) * int) * int -> bool
+within context
+    let fixpoint (f, b) =
+    let gs x = let isFPoint x = (f x) - x < 0 in f, (f b) in (< (gs, b))
+    ;; 
+==============================
+File "0455.ml", line 7, characters 63-69:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('b -> (int -> int) * int) * int -> ('b -> (int -> int) * int) * int -> bool
+within context
+    let fixpoint (f, b) =
+    let gs x = let isFPoint x = (f x) - x < 0 in f, (f b) in (= (gs, b))
+    ;; 
+==============================

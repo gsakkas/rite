@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2757.ml", line 10, characters 33-47:
+This expression has type 'a list but is here used with type int
+Relevant code: [(i * h) / 10]
+------------------------------------------------------------------
+File "2757.ml", line 10, characters 48-49:
+Try replacing
+    +
+with
+    @
+of type
+    int list -> int list -> int list
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t -> (match (List.length t) with 
+                           | 1 -> [i * h]
+                           | _ ->
+                             [(remainder h i)] @
+                                 ([(i * h) / 10] @ (mulByDigit i t))))
+==============================

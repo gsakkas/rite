@@ -1,0 +1,120 @@
+------------------------------------------------------------------
+File "0361.ml", line 23, characters 40-44:
+This expression has type 'a list -> ('b * 'a) list but is here used with type
+  (int * int) list
+Relevant code: args
+------------------------------------------------------------------
+Triaged the following locations:
+File "0361.ml", line 23, characters 4-51:
+And modified the following location:
+File "0361.ml", line 22, characters 32-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (l1 l2)
+with
+    l1
+The actual replacement has type
+    'c list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (y, z) -> (let sum = y + z in (match a with 
+                                                                     | h :: t ->
+                                                                       (sum + h)
+                                                                               / 10
+                                                                             ::
+                                                                             (mod
+                                                                               (sum
+                                                                                   +
+                                                                                   h) 10)
+                                                                             ::
+                                                                             t
+                                                                     | [] ->
+                                                                       [
+                                                                             sum
+                                                                               / 10
+                                                                             ;
+                                                                             (mod
+                                                                               sum 10)
+                                                                             ]))) in let
+        base
+        =
+        []
+        in
+        let args = (List.combine l1) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0361.ml", line 23, characters 4-51:
+And modified the following location:
+File "0361.ml", line 22, characters 29-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    'd -> 'e list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (y, z) -> (let sum = y + z in (match a with 
+                                                                     | h :: t ->
+                                                                       (sum + h)
+                                                                               / 10
+                                                                             ::
+                                                                             (mod
+                                                                               (sum
+                                                                                   +
+                                                                                   h) 10)
+                                                                             ::
+                                                                             t
+                                                                     | [] ->
+                                                                       [
+                                                                             sum
+                                                                               / 10
+                                                                             ;
+                                                                             (mod
+                                                                               sum 10)
+                                                                             ]))) in let
+        base
+        =
+        []
+        in
+        let args = (List.combine ((l1; [[...]]) l2)) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0361.ml", line 23, characters 4-51:
+And modified the following location:
+File "0361.ml", line 22, characters 4-90:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (List.combine (l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'f
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (y, z) -> (let sum = y + z in (match a with 
+                                                                     | h :: t ->
+                                                                       (sum + h)
+                                                                               / 10
+                                                                             ::
+                                                                             (mod
+                                                                               (sum
+                                                                                   +
+                                                                                   h) 10)
+                                                                             ::
+                                                                             t
+                                                                     | [] ->
+                                                                       [
+                                                                             sum
+                                                                               / 10
+                                                                             ;
+                                                                             (mod
+                                                                               sum 10)
+                                                                             ]))) in let
+        base
+        =
+        []
+        in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================

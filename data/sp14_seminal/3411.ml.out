@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "3411.ml", line 12, characters 5-6:
+This expression has type int but is here used with type bool
+Relevant code: x
+------------------------------------------------------------------
+File "3411.ml", line 12, characters 5-6:
+Try replacing
+    x
+with
+    x; [[...]]
+of type
+    bool
+within context
+    let padZero l1 l2 =
+    let x = (List.length l1) - (List.length l2) in
+      (if (x; [[...]]) then
+          (if x < 0 then (clone 0 (abs x)) @ l1, l2 else l1, (clone 0 (abs x)) @ l2)
+          else
+          l1, l2)
+    ;; 
+==============================
+File "3411.ml", line 11, characters 10-45:
+Try replacing
+    (List.length l1) - (List.length l2)
+with
+    (List.length l1) - (List.length l2); [[...]]
+of type
+    'a
+within context
+    let padZero l1 l2 =
+    let x = (List.length l1) - (List.length l2); [[...]] in
+      (if x then
+          (if x < 0 then (clone 0 (abs x)) @ l1, l2 else l1, (clone 0 (abs x)) @ l2)
+          else
+          l1, l2)
+    ;; 
+==============================

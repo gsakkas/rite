@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "1377.ml", line 21, characters 31-32:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: x
+------------------------------------------------------------------
+Triaged the following locations:
+File "1377.ml", line 23, characters 20-33:
+And modified the following location:
+File "1377.ml", line 21, characters 17-112:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    carry :: rest
+If you ignore other surrounding code, try replacing
+    (or ((List.length x) = (List.length l1)) ((List.length x) = (List.length l2)))
+with
+    [[...]]
+The actual replacement has type
+    bool
+within context
+    fun a x -> (match a with 
+                | (carry, rest) -> (match x with 
+                                    | (add1, add2) ->
+                                      (if [[...]] then (carry :: rest; [[...]]) else
+                                          ((add1 + add2) + carry) / 10,
+                                            (mod ((add1 + add2) + carry) 10) ::
+                                                rest)))
+==============================

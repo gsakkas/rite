@@ -1,0 +1,6 @@
+------------------------------------------------------------------
+File "2821.ml", line 6, characters 47-57:
+This expression has type 'a * 'a but is here used with type unit
+Relevant code: ((f b), b)
+------------------------------------------------------------------
+<pre>Couldn't find repairs.</pre>

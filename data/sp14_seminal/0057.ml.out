@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0057.ml", line 4, characters 36-40:
+This expression has type 'a list but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+File "0057.ml", line 4, characters 36-43:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left f fs  base)
+of type
+    int
+within context
+    let pipe fs = let f a x = (match x with 
+                               | [] -> 0
+                               | _ ->
+                                 1) in let base = [] in
+      (List.fold_left f fs  base) ;; 
+==============================

@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "0105.ml", line 4, characters 2-67:
+This expression has type 'a list but is here used with type int -> 'a
+Relevant code: if n < 0 then return else (digitsOfInt (-1) (n mod 10)) :: return
+------------------------------------------------------------------
+File "0105.ml", line 4, characters 29-40:
+Try replacing
+    digitsOfInt
+with
+    mod
+of type
+    int -> int -> int
+within context
+    fun n ->
+      (let return = [] in (if n < 0 then return else (mod -1 (mod n 10)) :: return))
+==============================
+File "0105.ml", line 4, characters 29-40:
+Try replacing
+    digitsOfInt
+with
+    <
+of type
+    int -> int -> bool
+within context
+    fun n ->
+      (let return = [] in (if n < 0 then return else (< -1 (mod n 10)) :: return))
+==============================

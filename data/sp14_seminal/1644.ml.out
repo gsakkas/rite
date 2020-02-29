@@ -1,0 +1,98 @@
+------------------------------------------------------------------
+File "1644.ml", line 30, characters 15-31:
+This expression has type float but is here used with type int
+Relevant code: (eval (u, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1644.ml", line 30, characters 9-59:
+And modified the following location:
+File "1644.ml", line 31, characters 12-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    abs
+with
+    abs; [[...]]
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine u -> (sin (pi *. (eval (u, x, y))))
+                              | Cosine u -> (cos (pi *. (eval (u, x, y))))
+                              | Average (u, v) ->
+                                (((eval (u, x, y)) +. (eval (v, x, y))) /. 2.0)
+                              | Times (u, v) ->
+                                ((eval (u, x, y)) *. (eval (v, x, y)))
+                              | Thresh (s, t, u, v) ->
+                                (if (eval (s, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (v, x, y)))
+                              | Halve u -> ((eval (u, x, y)) /. 2.0)
+                              | Wow (u, v, w) ->
+                                (sqrt
+                                    ([[...other program...]] *.
+                                        ((abs; [[...]]) (eval (w, x, y)))))) ;; 
+==============================
+Triaged the following locations:
+File "1644.ml", line 30, characters 9-59:
+And modified the following location:
+File "1644.ml", line 31, characters 12-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    abs
+with
+    cos
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine u -> (sin (pi *. (eval (u, x, y))))
+                              | Cosine u -> (cos (pi *. (eval (u, x, y))))
+                              | Average (u, v) ->
+                                (((eval (u, x, y)) +. (eval (v, x, y))) /. 2.0)
+                              | Times (u, v) ->
+                                ((eval (u, x, y)) *. (eval (v, x, y)))
+                              | Thresh (s, t, u, v) ->
+                                (if (eval (s, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (v, x, y)))
+                              | Halve u -> ((eval (u, x, y)) /. 2.0)
+                              | Wow (u, v, w) ->
+                                (sqrt
+                                    ([[...other program...]] *.
+                                        (cos (eval (w, x, y)))))) ;; 
+==============================
+Triaged the following locations:
+File "1644.ml", line 30, characters 9-59:
+And modified the following location:
+File "1644.ml", line 31, characters 12-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    abs
+with
+    sin
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine u -> (sin (pi *. (eval (u, x, y))))
+                              | Cosine u -> (cos (pi *. (eval (u, x, y))))
+                              | Average (u, v) ->
+                                (((eval (u, x, y)) +. (eval (v, x, y))) /. 2.0)
+                              | Times (u, v) ->
+                                ((eval (u, x, y)) *. (eval (v, x, y)))
+                              | Thresh (s, t, u, v) ->
+                                (if (eval (s, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (v, x, y)))
+                              | Halve u -> ((eval (u, x, y)) /. 2.0)
+                              | Wow (u, v, w) ->
+                                (sqrt
+                                    ([[...other program...]] *.
+                                        (sin (eval (w, x, y)))))) ;; 
+==============================

@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0467.ml", line 11, characters 43-68:
+This expression has type 'a * bool but is here used with type int
+Relevant code: ((iterate (x, r)), false)
+------------------------------------------------------------------
+File "0467.ml", line 11, characters 43-68:
+Try replacing
+    (iterate (x, r)), false
+with
+    [[...]]
+of type
+    int
+within context
+    let iterate (t, y) = (t y) in
+      let rec go r = (if (isFPoint r) then r, true else (go [[...]])) in (go x)
+==============================

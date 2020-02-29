@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0169.ml", line 6, characters 28-37:
+This expression has type int -> int list but is here used with type int
+Relevant code: (clone 0)
+------------------------------------------------------------------
+File "0169.ml", line 6, characters 2-52:
+Try replacing
+    (clone 0 diff) @ l1, (clone 0) - diff @ l2
+with
+    (clone 0 diff) @ l1
+of type
+    int list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l2) - (List.length l1) in (clone 0 diff) @ l1
+    ;; 
+==============================

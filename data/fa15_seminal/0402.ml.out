@@ -1,0 +1,46 @@
+------------------------------------------------------------------
+File "0402.ml", line 6, characters 42-49:
+This expression has type int * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: (fx, b)
+------------------------------------------------------------------
+File "0402.ml", line 6, characters 43-48:
+Try replacing
+    fx, b
+with
+    b, fx
+of type
+    (int -> int * bool) * int
+within context
+    let fixpoint (f, b) = let fx = 2 in (wwhile (b, fx)) ;; 
+==============================
+File "0402.ml", line 6, characters 35-41:
+Try replacing
+    wwhile
+with
+    =
+of type
+    int * 'c -> int * 'c -> bool
+within context
+    let fixpoint (f, b) = let fx = 2 in (= (fx, b)) ;; 
+==============================
+File "0402.ml", line 6, characters 35-41:
+Try replacing
+    wwhile
+with
+    f
+of type
+    int * 'd -> 'e
+within context
+    let fixpoint (f, b) = let fx = 2 in (f (fx, b)) ;; 
+==============================
+File "0402.ml", line 6, characters 43-45:
+Try replacing
+    fx
+with
+    f
+of type
+    ('f -> 'f * bool) * 'f
+within context
+    let fixpoint (f, b) = let fx = 2 in (wwhile (f, b)) ;; 
+==============================

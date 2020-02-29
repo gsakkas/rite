@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0255.ml", line 13, characters 37-44:
+This expression has type int list -> int but is here used with type int
+Relevant code: sumList
+------------------------------------------------------------------
+File "0255.ml", line 13, characters 17-44:
+Try replacing
+    (additivePersistence sumList (digitsOfInt n))
+with
+    (additivePersistence (sumList (digitsOfInt n)))
+of type
+    int
+within context
+    let rec additivePersistence n =
+    (if n > 9 then (additivePersistence (sumList (digitsOfInt n))) + 1 else 0)
+    ;; 
+==============================

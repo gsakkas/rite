@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "3455.ml", line 15, characters 5-17:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: print_string
+------------------------------------------------------------------
+File "3455.ml", line 15, characters 5-17:
+Try replacing
+    print_string
+with
+    print_string; [[...]]
+of type
+    string -> (unit -> unit) -> unit -> 'c
+within context
+    let rec additivePersistence n =
+    (if (sumList (digitsOfInt n)) > 9 then
+      (((print_string; [[...]]) "going into then" print_newline  ());
+        1 :: x; (additivePersistence (sumList (digitsOfInt n))))
+      else
+      (1 :: x; (sumList x)))
+    ;; 
+==============================

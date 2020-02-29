@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "2409.ml", line 37, characters 16-17:
+This expression has type int but is here used with type int list
+Relevant code: 0
+------------------------------------------------------------------
+File "2409.ml", line 37, characters 16-17:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    int list
+within context
+    fun l ->
+      (if i = 1 then l else
+        (if i = 0 then [] else
+          (if i < 0 then
+            (match (bigAdd (bigAdd l l) (mulByDigit (i * -1 - 2) l)) with 
+             | h :: t -> h * -1 :: t
+             | _ -> (0; [[...]]))
+            else
+            (bigAdd (bigAdd l l) (mulByDigit (i - 2) l)))))
+==============================

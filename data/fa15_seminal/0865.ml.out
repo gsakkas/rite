@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0865.ml", line 11, characters 20-44:
+This expression has type int list * int list but is here used with type
+  'a list
+Relevant code: (((clone 0 n) @ l2), l1)
+------------------------------------------------------------------
+File "0865.ml", line 11, characters 11-19:
+Try replacing
+    List.rev
+with
+    List.rev; [[...]]
+of type
+    int list * int list -> int list * int list
+within context
+    fun l1 l2 -> (match (List.length l1) - (List.length l2) with 
+                  | 0 -> (l1, l2)
+                  | n ->
+                    (if n < 0 then (clone 0 (n * -1)) @ l1, l2 else
+                        ((List.rev; [[...]]) ((clone 0 n) @ l2, l1))))
+==============================

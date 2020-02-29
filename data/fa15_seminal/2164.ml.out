@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2164.ml", line 7, characters 32-46:
+This expression has type bool but is here used with type 'a list
+Relevant code: (List.mem h t)
+------------------------------------------------------------------
+File "2164.ml", line 7, characters 23-31:
+Try replacing
+    List.rev
+with
+    h
+of type
+    bool -> bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (h (List.mem h t)) then seen else h :: seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================

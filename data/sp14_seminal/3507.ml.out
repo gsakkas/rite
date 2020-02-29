@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "3507.ml", line 6, characters 53-54:
+This expression is not a function, it cannot be applied
+Relevant code: f
+------------------------------------------------------------------
+File "3507.ml", line 6, characters 47-63:
+Try replacing
+    x, (f b) = b
+with
+    [[...]]
+of type
+    ('e -> 'e * bool) * 'e
+within context
+    let fixpoint (f, b) = (wwhile (let x = (not f) in [[...]], b)) ;; 
+==============================

@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "1844.ml", line 6, characters 41-69:
+This expression has type int list but is here used with type int
+Relevant code: (append [m / 10] [m mod 10])
+------------------------------------------------------------------
+File "1844.ml", line 4, characters 27-30:
+Try replacing
+    xs2
+with
+    n
+of type
+    int
+within context
+    fun n -> (let rec append xs1 xs2 = (match xs1 with 
+                                        | [] -> n
+                                        | hd :: tl ->
+                                          (append
+                                              tl
+                                              hd ::
+                                                  xs2)) in let rec helper x =
+          (match x with 
+           | 0 -> []
+           | m -> (helper (append [m / 10] [(mod m 10)])))
+          in
+          (helper n))
+==============================

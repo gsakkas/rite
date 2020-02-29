@@ -1,0 +1,108 @@
+------------------------------------------------------------------
+File "1088.ml", line 10, characters 22-48:
+This expression has type int list * 'a list but is here used with type
+  'b list
+Relevant code: ((clone 0 (abs diff)), l1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1088.ml", line 11, characters 7-65:
+And modified the following location:
+File "1088.ml", line 10, characters 22-48:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.combine ((clone 0 (abs diff)), l1))
+with
+    (List.combine (clone 0 (abs diff)) l1)
+The actual replacement has type
+    (int * 'c) list * 'd list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (List.combine (clone 0 (abs diff)) l1), l2 else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1088.ml", line 11, characters 7-65:
+And modified the following location:
+File "1088.ml", line 10, characters 9-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    >
+The actual replacement has type
+    int list * 'e list -> int list * 'e list -> bool
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (> ((clone 0 (abs diff)), l1)), l2 else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1088.ml", line 11, characters 7-65:
+And modified the following location:
+File "1088.ml", line 10, characters 9-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    clone
+The actual replacement has type
+    int list * 'f list -> int -> (int list * 'f list) list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (clone ((clone 0 (abs diff)), l1)), l2 else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1088.ml", line 11, characters 7-65:
+And modified the following location:
+File "1088.ml", line 10, characters 9-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    <
+The actual replacement has type
+    int list * 'g list -> int list * 'g list -> bool
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (< ((clone 0 (abs diff)), l1)), l2 else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1088.ml", line 11, characters 7-65:
+And modified the following location:
+File "1088.ml", line 10, characters 9-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    List.combine; [[...]]
+The actual replacement has type
+    int list * 'h list -> 'i
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then ((List.combine; [[...]]) ((clone 0 (abs diff)), l1)), l2
+          else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1088.ml", line 10, characters 7-54:
+And modified the following location:
+File "1088.ml", line 11, characters 24-65:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1, (List.combine ((clone 0 diff), l2))
+with
+    [[...]]
+The actual replacement has type
+    unit
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then [[...other program...]] else (if diff > 0 then [[...]]))
+    ;; 
+==============================

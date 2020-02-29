@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "3203.ml", line 37, characters 27-44:
+This expression is not a function, it cannot be applied
+Relevant code: (mulByDigit x l2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3203.ml", line 37, characters 19-25:
+And modified the following location:
+File "3203.ml", line 37, characters 27-44:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit x l2)
+with
+    (mulByDigit x l2); [[...]]
+The actual replacement has type
+    'i -> 'j
+within context
+    let f a x = 0, ((bigAdd; [[...]]) (((mulByDigit x l2); [[...]]) a)) in
+      let base = 0, [0] in
+      let args = l1 in let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "3203.ml", line 37, characters 19-25:
+And modified the following location:
+File "3203.ml", line 37, characters 45-46:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    ((mulByDigit x l2) a)
+with
+    (mulByDigit x l2)
+The actual replacement has type
+    int list
+within context
+    let f a x = 0, ((bigAdd; [[...]]) (mulByDigit x l2)) in
+      let base = 0, [0] in
+      let args = l1 in let (_, res) = (List.fold_left f base  args) in res
+==============================

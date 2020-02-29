@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "2761.ml", line 10, characters 11-26:
+This expression has type int but is here used with type 'a list
+Relevant code: (remainder i h)
+------------------------------------------------------------------
+File "2761.ml", line 10, characters 11-26:
+Try replacing
+    (remainder i h)
+with
+    (remainder i h); [[...]]
+of type
+    int list
+within context
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t ->
+                  (if (List.length t) = 0 then [h * i] @ (mulByDigit i t) else
+                      ((remainder i h); [[...]]) @ (mulByDigit i t)))
+==============================
+File "2761.ml", line 10, characters 27-28:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> int list -> int list
+within context
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t ->
+                  (if (List.length t) = 0 then [h * i] @ (mulByDigit i t) else
+                      ((remainder i h) @; [[...]] (mulByDigit i t))))
+==============================

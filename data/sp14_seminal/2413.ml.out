@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "2413.ml", line 3, characters 2-180:
+This expression has type int list but is here used with type int
+Relevant code: match List.rev l with
+  | [] -> []
+  | h::t ->
+      let prod = h * i in
+      if prod > 10
+      then (prod mod 10) :: ((prod / 10) + (mulByDigit i t)) :: t
+      else prod :: t
+------------------------------------------------------------------
+File "2413.ml", line 2, characters 19-205:
+Try replacing
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t ->
+                  (let prod = h * i in
+                        (if prod > 10 then
+                            (mod prod 10) :: prod / 10 + (mulByDigit i t) :: t
+                            else
+                            prod :: t)))
+with
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t ->
+                  (let prod = h * i in
+                        (if prod > 10 then
+                            (mod prod 10) :: prod / 10 + (mulByDigit i t) :: t
+                            else
+                            prod :: t))); [[...]]
+of type
+    int -> int list -> int
+==============================

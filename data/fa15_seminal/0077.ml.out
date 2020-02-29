@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0077.ml", line 32, characters 51-63:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+File "0077.ml", line 32, characters 67-72:
+Try replacing
+    (exprToString e3 "/4)")
+with
+    (exprToString e3)
+of type
+    string
+within context
+    "(" ^
+      ((exprToString e1) ^
+          ("/2*" ^ ((exprToString e2) ^ ("/3*" ^ (exprToString e3)))))
+==============================

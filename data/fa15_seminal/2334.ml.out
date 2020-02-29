@@ -1,0 +1,80 @@
+------------------------------------------------------------------
+File "2334.ml", line 8, characters 34-48:
+This expression has type
+  ('a -> 'a list -> bool) list * ('a -> 'a list -> bool) list list
+but is here used with type
+  ('a -> 'a list -> bool) list * ('a -> 'a list -> bool) list
+Relevant code: (seen', rest')
+------------------------------------------------------------------
+File "2334.ml", line 8, characters 42-47:
+Try replacing
+    rest'
+with
+    l
+of type
+    ('b -> 'b list -> bool) list * ('b -> 'b list -> bool) list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (not (List.mem = h)) then h :: seen else seen) in
+             let rest' = [t] in (helper (seen', l))))
+==============================
+File "2334.ml", line 8, characters 42-47:
+Try replacing
+    rest'
+with
+    rest
+of type
+    ('c -> 'c list -> bool) list * ('c -> 'c list -> bool) list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (not (List.mem = h)) then h :: seen else seen) in
+             let rest' = [t] in (helper (seen', rest))))
+==============================
+File "2334.ml", line 8, characters 42-47:
+Try replacing
+    rest'
+with
+    t
+of type
+    ('d -> 'd list -> bool) list * ('d -> 'd list -> bool) list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (not (List.mem = h)) then h :: seen else seen) in
+             let rest' = [t] in (helper (seen', t))))
+==============================
+File "2334.ml", line 8, characters 42-47:
+Try replacing
+    rest'
+with
+    seen'
+of type
+    ('e -> 'e list -> bool) list * ('e -> 'e list -> bool) list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (not (List.mem = h)) then h :: seen else seen) in
+             let rest' = [t] in (helper (seen', seen'))))
+==============================
+File "2334.ml", line 8, characters 21-22:
+Try replacing
+    t
+with
+    h
+of type
+    'f -> 'f list -> bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (not (List.mem = h)) then h :: seen else seen)
+                                 in
+                                 let rest' = [h] in (helper (seen', rest'))))
+==============================

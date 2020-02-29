@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "2204.ml", line 29, characters 17-57:
+This expression is not a function, it cannot be applied
+Relevant code: ((eval (e1, x, y)) +. (eval (e2, x, y)))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2204.ml", line 29, characters 6-15:
+And modified the following location:
+File "2204.ml", line 29, characters 17-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mod_float
+If you ignore other surrounding code, try replacing
+    ((eval (e1, x, y)) +. (eval (e2, x, y)))
+with
+    ((eval (e1, x, y)) +. (eval (e2, x, y))); [[...]]
+The actual replacement has type
+    (expr * float * float -> float) ->
+    expr * float * float -> 'c
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Mirana e -> (abs_float (eval (e, x, y)))
+                              | Darius (e1, e2, e3) ->
+                                ((mod_float; [[...]])
+                                    ((((eval (e1, x, y)) +. (eval (e2, x, y)));
+                                        [[...]])
+                                      eval (e3, x, y)))) ;; 
+==============================

@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1647.ml", line 25, characters 19-22:
+This expression is not a function, it cannot be applied
+Relevant code: "?"
+------------------------------------------------------------------
+File "1647.ml", line 25, characters 19-22:
+Try replacing
+    "?"
+with
+    "?"; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    (exprToString a) ^
+      ("<" ^
+          ((exprToString b) ^
+              ((exprToString "?"; [[...]] c) ^ (":" ^ (exprToString d)))))
+==============================

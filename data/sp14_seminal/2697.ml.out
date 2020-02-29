@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "2697.ml", line 30, characters 33-45:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+File "2697.ml", line 30, characters 48-54:
+Try replacing
+    (exprToString a (b, c))
+with
+    (exprToString a)
+of type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+                              | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+                              | Average (a, b) ->
+                                "((" ^
+                                    ((exprToString a) ^
+                                        ("+" ^ ((exprToString b) ^ ")/2)")))
+                              | Times (a, b) ->
+                                (exprToString a) ^ ("*" ^ (exprToString b))
+                              | Thresh (a, b, c, d) ->
+                                "(" ^
+                                    ((exprToString a) ^
+                                        ("<" ^
+                                            ((exprToString b) ^
+                                                ("?" ^
+                                                    ((exprToString c) ^
+                                                        (":" ^
+                                                            ((exprToString d)
+                                                                ^ ")")))))))
+                              | _ -> "_"
+                              | Tan a -> "tan(pi*" ^ ((exprToString a) ^ ")")
+                              | Arc (a, b, c) ->
+                                "sin(pi*" ^ ((exprToString a) ^ ")")) ;; 
+==============================

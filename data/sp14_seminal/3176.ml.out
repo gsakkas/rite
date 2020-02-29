@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "3176.ml", line 2, characters 67-71:
+This expression has type 'a -> 'a but is here used with type unit
+Relevant code: base
+------------------------------------------------------------------
+File "3176.ml", line 2, characters 22-28:
+Try replacing
+    fun x -> ()
+with
+    fun _ x -> ()
+of type
+    'b -> 'c -> unit
+within context
+    let pipe fs = let f a _ x = () in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "3176.ml", line 2, characters 22-28:
+Try replacing
+    fun x -> ()
+with
+    fun x _ -> ()
+of type
+    'd -> 'e -> unit
+within context
+    let pipe fs = let f a x _ = () in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "3176.ml", line 2, characters 50-64:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('f -> 'f) -> 'g -> unit) -> ('f -> 'f) -> 'g -> unit
+within context
+    let pipe fs = let f a x = () in let base x = x in (base f base  fs) ;; 
+==============================

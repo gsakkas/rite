@@ -1,0 +1,51 @@
+------------------------------------------------------------------
+File "1954.ml", line 43, characters 37-41:
+This expression has type int * 'a list but is here used with type int list
+Relevant code: base
+------------------------------------------------------------------
+File "1954.ml", line 43, characters 35-36:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> int -> int * 'b list
+within context
+    let f a x = (match x with 
+                 | [] -> []
+                 | h :: t ->
+                   (bigAdd
+                       (mulByDigit h l1)
+                       a)) in let base = 0, [] in
+      let args = (tenEx 0 l2) in
+      let (carry, res) = (List.fold_left (f; [[...]]) base  args) in [carry] @ res
+==============================
+File "1954.ml", line 43, characters 20-34:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int list -> int list) -> int * 'c list -> int list -> 'd * 'e
+within context
+    let f a x = (match x with 
+                 | [] -> []
+                 | h :: t ->
+                   (bigAdd
+                       (mulByDigit h l1)
+                       a)) in let base = 0, [] in
+      let args = (tenEx 0 l2) in
+      let (carry, res) = ((List.fold_left; [[...]]) f base  args) in [carry] @ res
+==============================
+File "1954.ml", line 40, characters 8-74:
+Try replacing
+    fun a x -> (match x with 
+                | [] -> []
+                | h :: t -> (bigAdd (mulByDigit h l1) a))
+with
+    fun a x -> (match x with 
+                | [] -> []
+                | h :: t -> (bigAdd (mulByDigit h l1) a)); [[...]]
+of type
+    'f
+==============================

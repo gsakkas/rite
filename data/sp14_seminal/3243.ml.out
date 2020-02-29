@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "3243.ml", line 39, characters 34-46:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+Triaged the following locations:
+File "3243.ml", line 40, characters 35-1719:
+And modified the following location:
+File "3243.ml", line 39, characters 51-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString ex2 "+")
+with
+    (exprToString ex2)
+The actual replacement has type
+    string
+within context
+    (exprToString ex2) ^
+      (")*(" ^
+          ((exprToString ex1) ^
+              ("+" ^ ((exprToString ex2) ^ [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "3243.ml", line 39, characters 33-55:
+And modified the following location:
+File "3243.ml", line 44, characters 47-1497:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString ex2 "+") ^
+      ((exprToString ex3 "+") ^
+          ((exprToString ex4) ^
+              (")*(" ^
+                  ((exprToString ex1) ^
+                      ("+" ^
+                          ((exprToString ex2 "+") ^
+                              ((exprToString ex3 "+") ^
+                                  ((exprToString ex4 "+") ^
+                                      ((exprToString ex5) ^ "))")))))))))
+with
+    [[...]]
+The actual replacement has type
+    string
+==============================
+Triaged the following locations:
+File "3243.ml", line 40, characters 35-1719:
+And modified the following location:
+File "3243.ml", line 39, characters 34-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString; [[...]]
+The actual replacement has type
+    expr -> string -> string
+within context
+    (exprToString ex2) ^
+      (")*(" ^
+          ((exprToString ex1) ^
+              ("+" ^
+                  (((exprToString; [[...]]) ex2 "+") ^ [[...other program...]]))))
+==============================

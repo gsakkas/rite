@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "0594.ml", line 18, characters 40-44:
+This expression has type 'a list list * 'b list list
+but is here used with type 'c list
+Relevant code: args
+------------------------------------------------------------------
+File "0594.ml", line 17, characters 15-65:
+Try replacing
+    [(List.rev (List.hd l1))], [(List.rev (List.hd l2))]
+with
+    [[...]]
+of type
+    'd
+within context
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = [0], [0] in
+        let args = [[...]] in let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

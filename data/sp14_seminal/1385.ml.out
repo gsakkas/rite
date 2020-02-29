@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1385.ml", line 3, characters 2-84:
+This expression has type 'a list but is here used with type 'a
+Relevant code: if n <= 0
+  then []
+  else (match x with | [] -> x | h::t -> [clone t (n - 1); h])
+------------------------------------------------------------------
+File "1385.ml", line 2, characters 16-104:
+Try replacing
+    fun n -> (if (n <= 0) then [] else (match x with 
+                                        | [] -> x
+                                        | h :: t -> [(clone t (n - 1)) ; h]))
+with
+    fun n -> (if (n <= 0) then [] else (match x with 
+                                        | [] -> x
+                                        | h :: t ->
+                                          [(clone t (n - 1)) ; h])); [[...]]
+of type
+    int -> 'b
+==============================

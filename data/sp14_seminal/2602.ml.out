@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "2602.ml", line 21, characters 39-63:
+This expression has type 'a list * 'b list but is here used with type
+  ('c * 'd) list
+Relevant code: ((x :: one), (y :: two))
+------------------------------------------------------------------
+File "2602.ml", line 21, characters 17-64:
+Try replacing
+    let (one, two) = a in x :: one, y :: two
+with
+    let (one, two) = a in x :: one, y :: two; [[...]]
+of type
+    ('e * 'f) list
+within context
+    let f a x =
+      let y = (List.hd l2) in
+        (List.split (let (one, two) = a in x :: one, y :: two; [[...]]))
+      in
+      let base = [], [] in
+      let args = l1 in let (bar, res) = (List.fold_left f base  args) in res
+==============================
+File "2602.ml", line 21, characters 6-16:
+Try replacing
+    List.split
+with
+    List.split; [[...]]
+of type
+    'g list * 'h list -> 'i
+within context
+    let f a x =
+      let y = (List.hd l2) in
+        ((List.split; [[...]]) (let (one, two) = a in x :: one, y :: two))
+      in
+      let base = [], [] in
+      let args = l1 in let (bar, res) = (List.fold_left f base  args) in res
+==============================

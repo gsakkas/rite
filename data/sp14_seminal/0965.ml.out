@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "0965.ml", line 25, characters 40-67:
+This expression has type int * int list but is here used with type 'a list
+Relevant code: (cout, (List.append [r] l))
+------------------------------------------------------------------
+File "0965.ml", line 25, characters 27-29:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int * int list
+within context
+    let (cin, l) = a in
+      let result = (n1 + n2) + cin in
+      let cout = result / 10 in let r = (mod result 10) in (match l with 
+                                                            | [] -> ([]; [[...]])
+                                                            | h :: t ->
+                                                              (cout,
+                                                                    (List.append
+                                                                      [r] l)))
+==============================

@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1498.ml", line 8, characters 34-70:
+This expression has type int but is here used with type int list
+Relevant code: (((hd * i) / 10) + (mBDhelper i tl))
+------------------------------------------------------------------
+File "1498.ml", line 8, characters 51-52:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int -> int list -> int list
+within context
+    fun x -> (match x with 
+              | [] -> []
+              | hd :: tl ->
+                (if (hd * i) / 10 != 0 then
+                    (mod (hd * i) 10) :: ((hd * i) / 10 +; [[...]] (mBDhelper i tl))
+                    else
+                    hd * i :: (mBDhelper i tl)))
+==============================

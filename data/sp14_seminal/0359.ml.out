@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "0359.ml", line 20, characters 33-45:
+This expression has type int but is here used with type int list
+Relevant code: (sum mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0359.ml", line 21, characters 4-120:
+And modified the following location:
+File "0359.ml", line 20, characters 33-45:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod sum 10)
+with
+    (mod sum 10); [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (y, z) ->
+                                                    (let sum = y + z in
+                                                          (match a with 
+                                                           | h :: t ->
+                                                             (sum + h) / 10 ::
+                                                                   (mod
+                                                                     (sum + h) 10)
+                                                                   ::
+                                                                   t
+                                                           | [] ->
+                                                             sum / 10 ::
+                                                                   (mod sum 10);
+                                                                   [[...]]))) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0359.ml", line 21, characters 4-120:
+And modified the following location:
+File "0359.ml", line 14, characters 4-340:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match x with 
+                 | (y, z) -> (let sum = y + z in (match a with 
+                                                  | h :: t ->
+                                                    (sum + h) / 10 ::
+                                                          (mod (sum + h) 10) :: t
+                                                  | [] ->
+                                                    sum / 10 ::
+                                                          (mod
+                                                            sum
+                                                            10)))) in let base = []
+      in
+      let args = (failwith List.combine (l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

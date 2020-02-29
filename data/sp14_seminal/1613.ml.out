@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "1613.ml", line 7, characters 54-64:
+This expression has type 'a list but is here used with type unit
+Relevant code: seen @ [h]
+------------------------------------------------------------------
+File "1613.ml", line 7, characters 20-64:
+Try replacing
+    (if (List.mem h seen) = false then seen @ [h])
+with
+    [[...]]
+of type
+    'b
+within context
+    fun l -> (let rec helper (seen, rest) = (match rest with 
+                                             | [] -> seen
+                                             | h :: t ->
+                                               (let seen' = [[...]] in
+                                                     let rest' = t in
+                                                     (helper
+                                                         (seen',
+                                                             rest')))) in (List.rev
+              (helper ([], l))))
+==============================

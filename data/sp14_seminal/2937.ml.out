@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2937.ml", line 20, characters 59-61:
+This pattern matches values of type 'a list
+but is here used to match values of type 'b * 'c
+Relevant code: []
+------------------------------------------------------------------
+File "2937.ml", line 20, characters 59-61:
+Try replacing
+    []
+with
+    _
+of type
+    int * int list
+within context
+    fun x -> (let carry = (match a with 
+                           | (f, g) -> f) in let newc = (match x with 
+                                                         | (f, g) ->
+                                                           (if (f + g) + carry > 9
+                                                               then
+                                                               1
+                                                               else
+                                                               0)) in let digit =
+          (match x with 
+           | (f, g) -> (mod ((f + g) + carry) 10)
+           | _ -> carry)
+          in
+          (match a with 
+           | (o, p) -> (newc, digit :: p)))
+==============================

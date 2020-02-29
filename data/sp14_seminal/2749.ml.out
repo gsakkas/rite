@@ -1,0 +1,122 @@
+------------------------------------------------------------------
+File "2749.ml", line 7, characters 60-61:
+This expression has type string but is here used with type string list
+Relevant code: l
+------------------------------------------------------------------
+File "2749.ml", line 6, characters 27-28:
+Try replacing
+    ^
+with
+    h
+of type
+    'a list -> 'a -> string
+within context
+    let f a x = a ^ (sep h x) in
+      let base = "" in let l = sep in (List.fold_left f base  l)
+==============================
+File "2749.ml", line 6, characters 23-26:
+Try replacing
+    sep
+with
+    a
+of type
+    string
+within context
+    let f a x = a ^ (a ^ x) in
+      let base = "" in let l = sep in (List.fold_left f base  l)
+==============================
+File "2749.ml", line 6, characters 23-26:
+Try replacing
+    sep
+with
+    h
+of type
+    string
+within context
+    let f a x = a ^ (h ^ x) in
+      let base = "" in let l = sep in (List.fold_left f base  l)
+==============================
+File "2749.ml", line 7, characters 31-34:
+Try replacing
+    sep
+with
+    h
+of type
+    string list
+within context
+    fun sl -> (match sl with 
+               | [] -> ""
+               | h :: t ->
+                 (let f a x = a ^ (sep ^ x) in
+                       let base = "" in let l = h in (List.fold_left f base  l)))
+==============================
+File "2749.ml", line 7, characters 31-34:
+Try replacing
+    sep
+with
+    sl
+of type
+    string list
+within context
+    fun sl -> (match sl with 
+               | [] -> ""
+               | h :: t ->
+                 (let f a x = a ^ (sep ^ x) in
+                       let base = "" in let l = sl in (List.fold_left f base  l)))
+==============================
+File "2749.ml", line 7, characters 31-34:
+Try replacing
+    sep
+with
+    t
+of type
+    string list
+within context
+    fun sl -> (match sl with 
+               | [] -> ""
+               | h :: t ->
+                 (let f a x = a ^ (sep ^ x) in
+                       let base = "" in let l = t in (List.fold_left f base  l)))
+==============================
+File "2749.ml", line 7, characters 60-61:
+Try replacing
+    l
+with
+    h
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sep ^ x) in
+             let base = "" in let l = sep in (List.fold_left f base  h)))
+==============================
+File "2749.ml", line 7, characters 60-61:
+Try replacing
+    l
+with
+    t
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sep ^ x) in
+             let base = "" in let l = sep in (List.fold_left f base  t)))
+==============================
+File "2749.ml", line 7, characters 60-61:
+Try replacing
+    l
+with
+    sl
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sep ^ x) in
+             let base = "" in let l = sep in (List.fold_left f base  sl)))
+==============================

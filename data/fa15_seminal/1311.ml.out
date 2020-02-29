@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1311.ml", line 5, characters 17-19:
+This expression has type 'a list but is here used with type int
+Relevant code: l1
+------------------------------------------------------------------
+File "1311.ml", line 5, characters 20-21:
+Try replacing
+    *
+with
+    *; [[...]]
+of type
+    'b list -> 'c list -> 'd
+within context
+    fun l2 ->
+      (let difference1 = (List.length l1) - (List.length l2) in
+          let difference2 = (List.length l2) - (List.length l1) in
+          let retTuple = (l1 *; [[...]] l2) in (if difference1 > 0 then retTuple))
+==============================

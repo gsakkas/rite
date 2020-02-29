@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3509.ml", line 6, characters 31-34:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: not
+------------------------------------------------------------------
+File "3509.ml", line 6, characters 31-34:
+Try replacing
+    not
+with
+    wwhile
+of type
+    (('k -> 'k -> 'k -> 'k * bool) -> ('k -> 'k -> 'k -> 'k * bool) * bool) *
+    ('k -> 'k -> 'k -> 'k * bool) -> 'k -> 'k -> 'k -> 'k * bool
+within context
+    fun (f, b) -> (wwhile (((wwhile f b) b), b))
+==============================

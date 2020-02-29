@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "1702.ml", line 21, characters 62-63:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+File "1702.ml", line 21, characters 62-63:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin ((eval (a, x, y)) *. pi))
+                              | Cosine a -> (cos ((eval (a, x, y)) *. pi))
+                              | Average (a, b) ->
+                                ((eval (a, x, y)) +.
+                                      ((eval (b, x, y)) /. 2; [[...]]))
+                              | Times (a, b) -> x
+                              | Thresh (a, b, c, d) -> x) ;; 
+==============================
+File "1702.ml", line 21, characters 59-61:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin ((eval (a, x, y)) *. pi))
+                              | Cosine a -> (cos ((eval (a, x, y)) *. pi))
+                              | Average (a, b) ->
+                                ((eval (a, x, y)) +.
+                                      ((eval (b, x, y)) /.; [[...]] 2))
+                              | Times (a, b) -> x
+                              | Thresh (a, b, c, d) -> x) ;; 
+==============================

@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "3383.ml", line 37, characters 6-70:
+This expression has type int list -> int list but is here used with type
+  'a list
+Relevant code: bigAdd (mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)))
+------------------------------------------------------------------
+File "3383.ml", line 37, characters 6-12:
+Try replacing
+    bigAdd
+with
+    i
+of type
+    'b list -> 'b list
+within context
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t ->
+                  (let rec helper acc v =
+                        (if v = 0 then acc else (helper (mod v 10) :: acc (v / 10)))
+                        in
+                        (i
+                            (mulByDigit
+                              i (List.rev (List.map (fun x -> x * 10) t))))))
+==============================

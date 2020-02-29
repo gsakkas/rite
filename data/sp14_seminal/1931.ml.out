@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "1931.ml", line 8, characters 54-55:
+This expression is not a function, it cannot be applied
+Relevant code: f
+------------------------------------------------------------------
+Triaged the following locations:
+File "1931.ml", line 8, characters 50-51:
+And modified the following location:
+File "1931.ml", line 8, characters 54-55:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    f
+If you ignore other surrounding code, try replacing
+    f
+with
+    f; [[...]]
+The actual replacement has type
+    'a -> 'a
+within context
+    fun (f, b) ->
+      (if b != (f b) then
+        (let f = f, true in (wwhile ((f; [[...]]), ((f; [[...]]) b))))
+        else
+        b)
+==============================
+File "1931.ml", line 8, characters 29-38:
+Try replacing
+    f, true
+with
+    f, true; [[...]]
+of type
+    'g
+within context
+    let fixpoint (f, b) =
+    (if b != (f b) then (let f = f, true; [[...]] in (wwhile (f, (f b)))) else b)
+    ;; 
+==============================

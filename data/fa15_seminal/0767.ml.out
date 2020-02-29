@@ -1,0 +1,71 @@
+------------------------------------------------------------------
+File "0767.ml", line 17, characters 44-73:
+This expression has type int * int list but is here used with type int
+Relevant code: (0, (((a1 + x1) + x2) :: a2))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0767.ml", line 18, characters 4-115:
+And modified the following location:
+File "0767.ml", line 17, characters 44-73:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0, (a1 + x1) + x2 :: a2
+with
+    0, (a1 + x1) + x2 :: a2; [[...]]
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (x1, x2) = x in
+                let (a1, a2) = a in
+                (if ((a1 + x1) + x2 >= 10) then 1 else
+                    (0, (a1 + x1) + x2 :: a2; [[...]]))
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0767.ml", line 18, characters 4-115:
+And modified the following location:
+File "0767.ml", line 17, characters 37-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    int * int list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (x1, x2) = x in
+                let (a1, a2) = a in
+                (if ((a1 + x1) + x2 >= 10) then (1; [[...]]) else
+                    0, (a1 + x1) + x2 :: a2)
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0767.ml", line 18, characters 4-115:
+And modified the following location:
+File "0767.ml", line 14, characters 4-258:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x =
+      let (x1, x2) = x in
+        let (a1, a2) = a in
+        (if ((a1 + x1) + x2 >= 10) then 1 else 0, (a1 + x1) + x2 :: a2)
+      in
+      let base = [0, 0] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

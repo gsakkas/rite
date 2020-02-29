@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1920.ml", line 18, characters 21-32:
+This expression has type 'a list but is here used with type 'a
+Relevant code: (endChar t)
+------------------------------------------------------------------
+File "1920.ml", line 18, characters 17-18:
+Try replacing
+    h
+with
+    t
+of type
+    'b list
+within context
+    let rec palin ls = (match ls with 
+                        | [] -> true
+                        | h :: [] -> true
+                        | h :: t ->
+                          (if t = (endChar t) then (palin (removeLast t)) else
+                              false)) in (palin (explode w))
+==============================

@@ -1,0 +1,305 @@
+------------------------------------------------------------------
+File "0782.ml", line 36, characters 19-127:
+This expression has type 'a * 'a * 'a but is here used with type
+  expr * expr * expr * 'b
+Relevant code: ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+                     (build (rand, (depth - 1))))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0782.ml", line 34, characters 14-178:
+And modified the following location:
+File "0782.ml", line 40, characters 17-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildOp2
+with
+    buildOp2; [[...]]
+The actual replacement has type
+    expr * expr * expr ->
+    expr
+within context
+    let randNum = (rand (1, 2)) in
+      let randNum2 = (rand (1, 2)) in
+      let randNum3 = (rand (1, 2)) in (match randNum, randNum2 with 
+                                       | (1, 1) -> (buildSine (buildX ()))
+                                       | (2, 2) -> (buildCosine (buildX ()))
+                                       | _ -> (match randNum3 with 
+                                               | 1 -> [[...other program...]]
+                                               | 2 ->
+                                                 (buildCosine
+                                                     ((buildOp2; [[...]])
+                                                       ((build (rand, depth - 1)),
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           (build
+                                                             (rand, depth - 1)))))))
+==============================
+Triaged the following locations:
+File "0782.ml", line 39, characters 14-180:
+And modified the following location:
+File "0782.ml", line 36, characters 19-127:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, depth - 1)), (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    [[...]],
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+The actual replacement has type
+    expr * expr * expr *
+    expr
+within context
+    let randNum = (rand (1, 2)) in
+      let randNum2 = (rand (1, 2)) in
+      let randNum3 = (rand (1, 2)) in (match randNum, randNum2 with 
+                                       | (1, 1) -> (buildSine (buildX ()))
+                                       | (2, 2) -> (buildCosine (buildX ()))
+                                       | _ -> (match randNum3 with 
+                                               | 1 ->
+                                                 (buildSine
+                                                     (buildOp2
+                                                       ([[...]],
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           (build
+                                                             (rand, depth - 1)))))
+                                               | 2 -> [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0782.ml", line 39, characters 14-180:
+And modified the following location:
+File "0782.ml", line 36, characters 19-127:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, depth - 1)), (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      [[...]], (build (rand, depth - 1)), (build (rand, depth - 1))
+The actual replacement has type
+    expr * expr * expr *
+    expr
+within context
+    let randNum = (rand (1, 2)) in
+      let randNum2 = (rand (1, 2)) in
+      let randNum3 = (rand (1, 2)) in (match randNum, randNum2 with 
+                                       | (1, 1) -> (buildSine (buildX ()))
+                                       | (2, 2) -> (buildCosine (buildX ()))
+                                       | _ -> (match randNum3 with 
+                                               | 1 ->
+                                                 (buildSine
+                                                     (buildOp2
+                                                       ((build (rand, depth - 1)),
+                                                           [[...]],
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           (build
+                                                             (rand, depth - 1)))))
+                                               | 2 -> [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0782.ml", line 39, characters 14-180:
+And modified the following location:
+File "0782.ml", line 36, characters 19-127:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, depth - 1)), (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)), [[...]], (build (rand, depth - 1))
+The actual replacement has type
+    expr * expr * expr *
+    expr
+within context
+    let randNum = (rand (1, 2)) in
+      let randNum2 = (rand (1, 2)) in
+      let randNum3 = (rand (1, 2)) in (match randNum, randNum2 with 
+                                       | (1, 1) -> (buildSine (buildX ()))
+                                       | (2, 2) -> (buildCosine (buildX ()))
+                                       | _ -> (match randNum3 with 
+                                               | 1 ->
+                                                 (buildSine
+                                                     (buildOp2
+                                                       ((build (rand, depth - 1)),
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           [[...]],
+                                                           (build
+                                                             (rand, depth - 1)))))
+                                               | 2 -> [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0782.ml", line 39, characters 14-180:
+And modified the following location:
+File "0782.ml", line 36, characters 19-127:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, depth - 1)), (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1)), [[...]]
+The actual replacement has type
+    expr * expr * expr * 'c
+within context
+    let randNum = (rand (1, 2)) in
+      let randNum2 = (rand (1, 2)) in
+      let randNum3 = (rand (1, 2)) in (match randNum, randNum2 with 
+                                       | (1, 1) -> (buildSine (buildX ()))
+                                       | (2, 2) -> (buildCosine (buildX ()))
+                                       | _ -> (match randNum3 with 
+                                               | 1 ->
+                                                 (buildSine
+                                                     (buildOp2
+                                                       ((build (rand, depth - 1)),
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           [[...]])))
+                                               | 2 -> [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0782.ml", line 39, characters 14-180:
+And modified the following location:
+File "0782.ml", line 35, characters 17-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildOp2
+with
+    buildOp2; [[...]]
+The actual replacement has type
+    expr * expr * expr ->
+    expr
+within context
+    let randNum = (rand (1, 2)) in
+      let randNum2 = (rand (1, 2)) in
+      let randNum3 = (rand (1, 2)) in (match randNum, randNum2 with 
+                                       | (1, 1) -> (buildSine (buildX ()))
+                                       | (2, 2) -> (buildCosine (buildX ()))
+                                       | _ -> (match randNum3 with 
+                                               | 1 ->
+                                                 (buildSine
+                                                     ((buildOp2; [[...]])
+                                                       ((build (rand, depth - 1)),
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           (build
+                                                             (rand, depth - 1)))))
+                                               | 2 -> [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0782.ml", line 34, characters 14-178:
+And modified the following location:
+File "0782.ml", line 41, characters 19-127:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, depth - 1)), (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    [[...]],
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+The actual replacement has type
+    expr * expr * expr *
+    expr
+within context
+    let randNum = (rand (1, 2)) in
+      let randNum2 = (rand (1, 2)) in
+      let randNum3 = (rand (1, 2)) in (match randNum, randNum2 with 
+                                       | (1, 1) -> (buildSine (buildX ()))
+                                       | (2, 2) -> (buildCosine (buildX ()))
+                                       | _ -> (match randNum3 with 
+                                               | 1 -> [[...other program...]]
+                                               | 2 ->
+                                                 (buildCosine
+                                                     (buildOp2
+                                                       ([[...]],
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           (build
+                                                             (rand, depth - 1)))))))
+==============================
+Triaged the following locations:
+File "0782.ml", line 34, characters 14-178:
+And modified the following location:
+File "0782.ml", line 41, characters 19-127:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, depth - 1)), (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      [[...]], (build (rand, depth - 1)), (build (rand, depth - 1))
+The actual replacement has type
+    expr * expr * expr *
+    expr
+within context
+    let randNum = (rand (1, 2)) in
+      let randNum2 = (rand (1, 2)) in
+      let randNum3 = (rand (1, 2)) in (match randNum, randNum2 with 
+                                       | (1, 1) -> (buildSine (buildX ()))
+                                       | (2, 2) -> (buildCosine (buildX ()))
+                                       | _ -> (match randNum3 with 
+                                               | 1 -> [[...other program...]]
+                                               | 2 ->
+                                                 (buildCosine
+                                                     (buildOp2
+                                                       ((build (rand, depth - 1)),
+                                                           [[...]],
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           (build
+                                                             (rand, depth - 1)))))))
+==============================
+Triaged the following locations:
+File "0782.ml", line 34, characters 14-178:
+And modified the following location:
+File "0782.ml", line 41, characters 19-127:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, depth - 1)), (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)), [[...]], (build (rand, depth - 1))
+The actual replacement has type
+    expr * expr * expr *
+    expr
+within context
+    let randNum = (rand (1, 2)) in
+      let randNum2 = (rand (1, 2)) in
+      let randNum3 = (rand (1, 2)) in (match randNum, randNum2 with 
+                                       | (1, 1) -> (buildSine (buildX ()))
+                                       | (2, 2) -> (buildCosine (buildX ()))
+                                       | _ -> (match randNum3 with 
+                                               | 1 -> [[...other program...]]
+                                               | 2 ->
+                                                 (buildCosine
+                                                     (buildOp2
+                                                       ((build (rand, depth - 1)),
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           [[...]],
+                                                           (build
+                                                             (rand, depth - 1)))))))
+==============================
+Triaged the following locations:
+File "0782.ml", line 34, characters 14-178:
+And modified the following location:
+File "0782.ml", line 41, characters 19-127:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, depth - 1)), (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1)), [[...]]
+The actual replacement has type
+    expr * expr * expr * 'd
+within context
+    let randNum = (rand (1, 2)) in
+      let randNum2 = (rand (1, 2)) in
+      let randNum3 = (rand (1, 2)) in (match randNum, randNum2 with 
+                                       | (1, 1) -> (buildSine (buildX ()))
+                                       | (2, 2) -> (buildCosine (buildX ()))
+                                       | _ -> (match randNum3 with 
+                                               | 1 -> [[...other program...]]
+                                               | 2 ->
+                                                 (buildCosine
+                                                     (buildOp2
+                                                       ((build (rand, depth - 1)),
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           (build (rand, depth - 1))
+                                                           ,
+                                                           [[...]])))))
+==============================

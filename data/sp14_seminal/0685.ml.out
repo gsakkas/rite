@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "0685.ml", line 3, characters 20-21:
+This expression has type 'a -> 'b but is here used with type 'a
+Relevant code: a
+------------------------------------------------------------------
+File "0685.ml", line 3, characters 18-19:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('c -> 'd -> 'c) -> 'c -> 'd list -> 'c
+within context
+    fun a x a a -> (List.fold_left a)
+==============================
+File "0685.ml", line 3, characters 18-19:
+Try replacing
+    a
+with
+    x
+of type
+    'e -> 'f
+within context
+    fun a x a a -> (x a)
+==============================
+File "0685.ml", line 3, characters 20-21:
+Try replacing
+    a
+with
+    fs
+of type
+    'g list
+within context
+    fun a x a a -> (a fs)
+==============================
+File "0685.ml", line 3, characters 20-21:
+Try replacing
+    a
+with
+    x
+of type
+    'h
+within context
+    fun a x a a -> (a x)
+==============================
+File "0685.ml", line 3, characters 20-21:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('i -> 'j -> 'i) -> 'i -> 'j list -> 'i
+within context
+    fun a x a a -> (a List.fold_left)
+==============================

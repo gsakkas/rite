@@ -1,0 +1,233 @@
+------------------------------------------------------------------
+File "2286.ml", line 50, characters 26-45:
+This expression has type (int * int -> int) * int but is here used with type
+  expr
+Relevant code: (rand, (depth - 1))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2286.ml", line 50, characters 12-45:
+And modified the following location:
+File "2286.ml", line 51, characters 12-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildVolume
+with
+    buildVolume; [[...]]
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then
+      (let random = (rand (0, 1)) in
+          (if random = 0 then (buildX ()) else (buildY ())))
+      else
+      (let random = (rand (0, 6)) in (match random with 
+                                      | 0 -> (buildSine (build (rand, depth - 1)))
+                                      | 1 -> (buildCosine (build (rand, depth - 1)))
+                                      | 2 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 3 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 4 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 5 -> [[...other program...]]
+                                      | 6 ->
+                                        ((buildVolume; [[...]])
+                                            (rand, depth - 1)))))
+    ;; 
+==============================
+Triaged the following locations:
+File "2286.ml", line 50, characters 12-45:
+And modified the following location:
+File "2286.ml", line 51, characters 12-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildVolume
+with
+    build
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then
+      (let random = (rand (0, 1)) in
+          (if random = 0 then (buildX ()) else (buildY ())))
+      else
+      (let random = (rand (0, 6)) in (match random with 
+                                      | 0 -> (buildSine (build (rand, depth - 1)))
+                                      | 1 -> (buildCosine (build (rand, depth - 1)))
+                                      | 2 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 3 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 4 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 5 -> [[...other program...]]
+                                      | 6 -> (build (rand, depth - 1)))))
+    ;; 
+==============================
+Triaged the following locations:
+File "2286.ml", line 51, characters 12-43:
+And modified the following location:
+File "2286.ml", line 50, characters 26-45:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand, depth - 1
+with
+    rand, depth - 1; [[...]]
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then
+      (let random = (rand (0, 1)) in
+          (if random = 0 then (buildX ()) else (buildY ())))
+      else
+      (let random = (rand (0, 6)) in (match random with 
+                                      | 0 -> (buildSine (build (rand, depth - 1)))
+                                      | 1 -> (buildCosine (build (rand, depth - 1)))
+                                      | 2 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 3 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 4 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 5 ->
+                                        (buildCotanget (rand, depth - 1; [[...]]))
+                                      | 6 -> [[...other program...]])))
+    ;; 
+==============================
+Triaged the following locations:
+File "2286.ml", line 51, characters 12-43:
+And modified the following location:
+File "2286.ml", line 50, characters 12-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildCotanget
+with
+    buildCotanget; [[...]]
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then
+      (let random = (rand (0, 1)) in
+          (if random = 0 then (buildX ()) else (buildY ())))
+      else
+      (let random = (rand (0, 6)) in (match random with 
+                                      | 0 -> (buildSine (build (rand, depth - 1)))
+                                      | 1 -> (buildCosine (build (rand, depth - 1)))
+                                      | 2 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 3 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 4 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 5 ->
+                                        ((buildCotanget; [[...]]) (rand, depth - 1))
+                                      | 6 -> [[...other program...]])))
+    ;; 
+==============================
+Triaged the following locations:
+File "2286.ml", line 51, characters 12-43:
+And modified the following location:
+File "2286.ml", line 50, characters 12-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildCotanget
+with
+    build
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then
+      (let random = (rand (0, 1)) in
+          (if random = 0 then (buildX ()) else (buildY ())))
+      else
+      (let random = (rand (0, 6)) in (match random with 
+                                      | 0 -> (buildSine (build (rand, depth - 1)))
+                                      | 1 -> (buildCosine (build (rand, depth - 1)))
+                                      | 2 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 3 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 4 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 5 -> (build (rand, depth - 1))
+                                      | 6 -> [[...other program...]])))
+    ;; 
+==============================
+Triaged the following locations:
+File "2286.ml", line 50, characters 12-45:
+And modified the following location:
+File "2286.ml", line 51, characters 24-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand, depth - 1
+with
+    rand, depth - 1; [[...]]
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then
+      (let random = (rand (0, 1)) in
+          (if random = 0 then (buildX ()) else (buildY ())))
+      else
+      (let random = (rand (0, 6)) in (match random with 
+                                      | 0 -> (buildSine (build (rand, depth - 1)))
+                                      | 1 -> (buildCosine (build (rand, depth - 1)))
+                                      | 2 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 3 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 4 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 5 -> [[...other program...]]
+                                      | 6 ->
+                                        (buildVolume (rand, depth - 1; [[...]])))))
+    ;; 
+==============================

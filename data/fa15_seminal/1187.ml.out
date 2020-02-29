@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1187.ml", line 2, characters 50-51:
+This expression has type 'a but is here used with type 'a * 'b
+Relevant code: f
+------------------------------------------------------------------
+File "1187.ml", line 2, characters 50-51:
+Try replacing
+    (wwhile f b)
+with
+    (wwhile (f, b))
+of type
+    'c
+within context
+    let rec wwhile (f, b) = (match b with 
+                             | b -> (wwhile (f, b))) ;; 
+==============================
+File "1187.ml", line 2, characters 15-20:
+Try replacing
+    fun (f, b) -> (match b with 
+                   | b -> (wwhile f b))
+with
+    fun f b -> (match b with 
+                | b -> (wwhile f b))
+of type
+    'd -> 'e -> 'f
+within context
+    let rec wwhile f b = (match b with 
+                          | b -> (wwhile f b)) ;; 
+==============================

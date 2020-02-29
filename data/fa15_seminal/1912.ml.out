@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1912.ml", line 7, characters 23-41:
+This expression has type ('a * 'b) list -> bool but is here used with type
+  bool
+Relevant code: List.mem (seen, h)
+------------------------------------------------------------------
+File "1912.ml", line 7, characters 41-41:
+Try replacing
+    (List.mem (seen, h))
+with
+    (List.mem (seen, h) [[...]])
+of type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if (List.mem (seen, h) [[...]]) then
+                                             seen
+                                             else
+                                             h :: seen)
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================

@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "0278.ml", line 7, characters 29-43:
+This expression has type int but is here used with type 'a list
+Relevant code: (cout (hd, i))
+------------------------------------------------------------------
+File "0278.ml", line 7, characters 29-43:
+Try replacing
+    (cout (hd, i))
+with
+    (cout (hd, i)); [[...]]
+of type
+    int list
+within context
+    fun a x -> (let c = (cout (i, x)) in (match a with 
+                                          | hd :: tl ->
+                                            ((cout (hd, i)); [[...]])
+                                                @ (mulByDigit i tl)))
+==============================
+File "0278.ml", line 7, characters 44-45:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> int list -> 'b
+within context
+    fun a x -> (let c = (cout (i, x)) in (match a with 
+                                          | hd :: tl ->
+                                            ((cout (hd, i))
+                                                  @; [[...]] (mulByDigit i tl))))
+==============================

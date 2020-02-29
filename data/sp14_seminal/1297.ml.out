@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1297.ml", line 39, characters 43-46:
+This expression has type string but is here used with type int
+Relevant code: "+"
+------------------------------------------------------------------
+File "1297.ml", line 39, characters 47-48:
+Try replacing
+    +
+with
+    ^
+of type
+    string -> string -> string
+within context
+    (exprToString a) ^
+      ("+" ^ ((exprToString b) ^ (("+" ^ (exprToString c)) ^ ")^0")))
+==============================

@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "1263.ml", line 9, characters 6-19:
+This expression has type string but is here used with type 'a list
+Relevant code: makeString l'
+------------------------------------------------------------------
+File "1263.ml", line 9, characters 6-16:
+Try replacing
+    makeString
+with
+    f
+of type
+    'b list list -> 'b list
+within context
+    fun l -> (let l' = (List.map f l) in (match l' with 
+                                          | [] -> []
+                                          | _ ->
+                                            (let rec makeString res =
+                                                  (match res with 
+                                                   | [] -> ""
+                                                   | h :: t -> h ^ (makeString t))
+                                                  in
+                                                  (f l'))))
+==============================

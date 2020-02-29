@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1495.ml", line 8, characters 19-26:
+This expression has type 'a list * 'b but is here used with type
+  bool * bool list list
+Relevant code: ([], l)
+------------------------------------------------------------------
+File "1495.ml", line 7, characters 64-69:
+Try replacing
+    seen'
+with
+    seen
+of type
+    'c * 'c list list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (List.mem seen h) in let rest' = t in (helper (seen, rest'))))
+==============================

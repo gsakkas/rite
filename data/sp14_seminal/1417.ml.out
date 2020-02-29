@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1417.ml", line 6, characters 41-76:
+This expression has type int list but is here used with type unit
+Relevant code: (digitsOfInt (n / 10)) @ [n mod 10]
+------------------------------------------------------------------
+File "1417.ml", line 6, characters 27-76:
+Try replacing
+    (if n > 0 then (digitsOfInt (n / 10)) @ [(mod n 10)])
+with
+    [[...]]
+of type
+    int list
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else (if n = 0 then [0] else [[...]]))
+    ;; 
+==============================

@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0257.ml", line 4, characters 59-60:
+This expression has type int but is here used with type int list
+Relevant code: n
+------------------------------------------------------------------
+File "0257.ml", line 4, characters 59-60:
+Try replacing
+    n
+with
+    n; [[...]]
+of type
+    int list
+within context
+    let rec digitalRoot n =
+    (if n > 9 then (digitalRoot (sumList (n; [[...]]))) else n)
+    ;; 
+==============================
+File "0257.ml", line 4, characters 51-58:
+Try replacing
+    sumList
+with
+    sumList; [[...]]
+of type
+    int -> int
+within context
+    let rec digitalRoot n =
+    (if n > 9 then (digitalRoot ((sumList; [[...]]) n)) else n)
+    ;; 
+==============================

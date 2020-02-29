@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "0242.ml", line 7, characters 52-53:
+This expression has type 'a list list but is here used with type 'a list
+Relevant code: t
+------------------------------------------------------------------
+File "0242.ml", line 7, characters 52-53:
+Try replacing
+    t
+with
+    h
+of type
+    'b list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' = (if (List.mem h t) then h else h @ h) in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "0242.ml", line 7, characters 52-53:
+Try replacing
+    t
+with
+    seen
+of type
+    'c list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' = (if (List.mem h t) then h else h @ seen) in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================

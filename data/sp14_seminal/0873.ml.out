@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0873.ml", line 25, characters 39-40:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "0873.ml", line 25, characters 30-38:
+Try replacing
+    List.rev
+with
+    List.rev; [[...]]
+of type
+    int -> int
+within context
+    let base = 0, [] in
+      let args = (List.combine ((List.rev; [[...]]) 0) :: l1 0 :: (List.rev l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

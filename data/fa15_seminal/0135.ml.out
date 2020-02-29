@@ -1,0 +1,404 @@
+------------------------------------------------------------------
+File "0135.ml", line 34, characters 20-22:
+This expression has type float but is here used with type int
+Relevant code: pi
+------------------------------------------------------------------
+Triaged the following locations:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 37, characters 6-71:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 34, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin (pi *; [[...]] (eval (e1, x, y))))
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 37, characters 6-71:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 35, characters 25-26:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    float -> string -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> (cos (pi *; [[...]] (exprToString e1)))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 15-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString e1)
+with
+    (exprToString (e1))
+The actual replacement has type
+    string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString (e1)) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 32-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ^
+with
+    ^
+The actual replacement has type
+    string -> string -> string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 15-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString
+The actual replacement has type
+    expr -> string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e1
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e2
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e2) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 56-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2
+with
+    e1
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e1) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 60-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ^
+with
+    ^
+The actual replacement has type
+    string -> string -> string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 43-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString e2)
+with
+    (exprToString (e2))
+The actual replacement has type
+    string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString (e2)) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 56-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2
+with
+    e2
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 56-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 43-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString
+The actual replacement has type
+    expr -> string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0135.ml", line 34, characters 15-43:
+File "0135.ml", line 35, characters 17-45:
+File "0135.ml", line 38, characters 21-66:
+File "0135.ml", line 40, characters 6-197:
+And modified the following location:
+File "0135.ml", line 37, characters 39-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ^
+with
+    ^
+The actual replacement has type
+    string -> string -> string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================

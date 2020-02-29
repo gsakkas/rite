@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "1878.ml", line 20, characters 9-52:
+This expression has type unit -> expr but is here used with type unit
+Relevant code: if (rand mod 2) = 0 then buildX else buildY
+------------------------------------------------------------------
+Triaged the following locations:
+File "1878.ml", line 20, characters 9-52:
+And modified the following location:
+File "1878.ml", line 21, characters 20-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (if (mod rand 2) = 0 then buildX else buildY)
+If you ignore other surrounding code, try replacing
+    buildSine
+with
+    buildSine; [[...]]
+The actual replacement has type
+    unit -> unit
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 -> ()
+                                   | 1 ->
+                                     ((if (mod rand 2) = 0 then buildX else buildY);
+                                         [[...]])
+                                   | n ->
+                                     when n > 1 ->
+                                         ((buildSine; [[...]])
+                                             (build (rand, depth - 1)))) ;; 
+==============================

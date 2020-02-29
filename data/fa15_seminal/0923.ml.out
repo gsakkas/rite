@@ -1,0 +1,51 @@
+------------------------------------------------------------------
+File "0923.ml", line 23, characters 32-35:
+This expression has type int but is here used with type 'a list
+Relevant code: num
+------------------------------------------------------------------
+File "0923.ml", line 23, characters 32-35:
+Try replacing
+    num
+with
+    num; [[...]]
+of type
+    int list
+within context
+    (match a with 
+     | (carry, list) ->
+       (let num = (l1e + l2e) + carry in
+             (if num < 10 then 0, list @ (num; [[...]]) else
+                 (if num = 10 then 1, [0] @ list else
+                   num / 10, [(mod num 10)] @ list))))
+==============================
+File "0923.ml", line 23, characters 30-31:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int list -> int -> int list
+within context
+    (match a with 
+     | (carry, list) ->
+       (let num = (l1e + l2e) + carry in
+             (if num < 10 then 0, (list @; [[...]] num) else
+                 (if num = 10 then 1, [0] @ list else
+                   num / 10, [(mod num 10)] @ list))))
+==============================
+File "0923.ml", line 21, characters 25-44:
+Try replacing
+    (l1e + l2e) + carry
+with
+    (l1e + l2e) + carry; [[...]]
+of type
+    'b
+within context
+    fun a x -> (match x with 
+                | (l1e, l2e) -> (match a with 
+                                 | (carry, list) ->
+                                   (let num = (l1e + l2e) + carry; [[...]] in
+                                         (if num < 10 then 0, list @ num else
+                                             (if num = 10 then 1, [0] @ list else
+                                               num / 10, [(mod num 10)] @ list)))))
+==============================

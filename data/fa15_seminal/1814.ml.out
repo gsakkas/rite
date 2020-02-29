@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "1814.ml", line 9, characters 8-110:
+This expression has type unit but is here used with type 'a list
+Relevant code: if (List.mem h r) = false
+        then let seen' = h :: seen in let rest' = t in helper (seen', rest')
+------------------------------------------------------------------
+File "1814.ml", line 9, characters 8-110:
+Try replacing
+    (if (List.mem h r) = false then
+      (let seen' = h :: seen in let rest' = t in (helper (seen', rest'))))
+with
+    [[...]]
+of type
+    'b list
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let r = (List.rev t) in
+                                           let seen' = h :: seen in
+                                           [[...]])) in (List.rev (helper ([], l)))
+==============================

@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+File "1873.ml", line 30, characters 50-52:
+This expression has type expr but is here used with type int
+Relevant code: e3
+------------------------------------------------------------------
+Triaged the following locations:
+File "1873.ml", line 30, characters 40-42:
+And modified the following location:
+File "1873.ml", line 30, characters 48-49:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    e3
+If you ignore other surrounding code, try replacing
+    ~-
+with
+    ~-; [[...]]
+The actual replacement has type
+    expr -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Acossin (e1, e2) ->
+                                ((((acos (eval (e1, x, y)))
+                                              *. (asin (eval (e2, x, y))))
+                                          *. 2.0)
+                                      /. (pi *. pi))
+                              | Crazy (e1, e2, e3) ->
+                                (if e1 > e2 then (e3; [[...]]) else
+                                    (( ~-; [[...]] ) e3))) ;; 
+==============================
+Triaged the following locations:
+File "1873.ml", line 19, characters 15-44:
+File "1873.ml", line 20, characters 17-46:
+File "1873.ml", line 21, characters 23-70:
+File "1873.ml", line 22, characters 21-59:
+File "1873.ml", line 24, characters 6-100:
+File "1873.ml", line 28, characters 6-91:
+And modified the following location:
+File "1873.ml", line 30, characters 48-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ~-
+with
+    ~-; [[...]]
+The actual replacement has type
+    expr -> expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> [[...other program...]]
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Acossin (e1, e2) -> [[...other program...]]
+                              | Crazy (e1, e2, e3) ->
+                                (if e1 > e2 then e3 else (( ~-; [[...]] ) e3))) ;; 
+==============================

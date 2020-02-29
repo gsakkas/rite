@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1395.ml", line 7, characters 5-22:
+This expression has type ('a * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((fin (f, b)), b)
+------------------------------------------------------------------
+File "1395.ml", line 6, characters 13-59:
+Try replacing
+    fun (f', b') -> (let nfb = (f' b') in nfb, nfb = b')
+with
+    fun (f', b') _ -> (let nfb = (f' b') in nfb, nfb = b')
+of type
+    ('c -> 'c) * 'c -> 'd -> 'c * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile
+      (let fin (f', b') _ = let nfb = (f' b') in nfb, nfb = b' in (fin (f, b)), b))
+    ;; 
+==============================
+File "1395.ml", line 5, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('e * bool) * 'e -> ('e * bool) * 'e -> bool
+within context
+    let fixpoint (f, b) =
+    (= (let fin (f', b') = let nfb = (f' b') in nfb, nfb = b' in (fin (f, b)), b))
+    ;; 
+==============================

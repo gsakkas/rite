@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "2102.ml", line 36, characters 44-50:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: bigAdd
+------------------------------------------------------------------
+Triaged the following locations:
+File "2102.ml", line 36, characters 44-50:
+And modified the following location:
+File "2102.ml", line 36, characters 65-72:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    i - 1
+with
+    i - 1; [[...]]
+The actual replacement has type
+    int -> 'c
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else
+            ((bigAdd; [[...]]) l mulByDigit  ((i - 1; [[...]]) l))))
+==============================
+Triaged the following locations:
+File "2102.ml", line 36, characters 44-50:
+And modified the following location:
+File "2102.ml", line 36, characters 73-74:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    ((i - 1) l)
+with
+    i - 1
+The actual replacement has type
+    int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else ((bigAdd; [[...]]) l mulByDigit  (i - 1))))
+==============================

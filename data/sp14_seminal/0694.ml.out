@@ -1,0 +1,6 @@
+------------------------------------------------------------------
+File "0694.ml", line 3, characters 15-16:
+This variable is bound several times in this matching
+Relevant code: x
+------------------------------------------------------------------
+<pre>Couldn't find repairs.</pre>

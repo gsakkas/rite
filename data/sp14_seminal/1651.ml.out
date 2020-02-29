@@ -1,0 +1,89 @@
+------------------------------------------------------------------
+File "1651.ml", line 19, characters 22-34:
+This expression has type expr -> string but is here used with type string
+Relevant code: exprToString
+------------------------------------------------------------------
+File "1651.ml", line 19, characters 22-34:
+Try replacing
+    exprToString
+with
+    exprToString; [[...]]
+of type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+                              | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+                              | Halve x -> "(" ^ ((exprToString; [[...]]) ^ ")/2")
+                              | Average (x, y) ->
+                                "((" ^
+                                    ((exprToString x) ^
+                                        ("*" ^ ((exprToString y) ^ ")/2)")))
+                              | Times (x, y) ->
+                                (exprToString x) ^ ("*" ^ (exprToString y))
+                              | Thresh (a, b, c, d) ->
+                                "(" ^
+                                    ((exprToString a) ^
+                                        ("<" ^
+                                            ((exprToString b) ^
+                                                ("?" ^
+                                                    ((exprToString c) ^
+                                                        (":" ^
+                                                            (exprToString d)))))))
+                              | Wow (x, y, z) ->
+                                "sqrt(" ^
+                                    ("abs(" ^
+                                        ((exprToString x) ^
+                                            (")*" ^
+                                                ("abs(" ^
+                                                    ((exprToString y) ^
+                                                        (")*" ^
+                                                            ("abs(" ^
+                                                                ((exprToString z)
+                                                                    ^
+                                                                    "))"))))))))) ;; 
+==============================
+File "1651.ml", line 19, characters 35-36:
+Try replacing
+    ^
+with
+    ^; [[...]]
+of type
+    (expr -> string) -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+                              | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+                              | Halve x -> "(" ^ (exprToString ^; [[...]] ")/2")
+                              | Average (x, y) ->
+                                "((" ^
+                                    ((exprToString x) ^
+                                        ("*" ^ ((exprToString y) ^ ")/2)")))
+                              | Times (x, y) ->
+                                (exprToString x) ^ ("*" ^ (exprToString y))
+                              | Thresh (a, b, c, d) ->
+                                "(" ^
+                                    ((exprToString a) ^
+                                        ("<" ^
+                                            ((exprToString b) ^
+                                                ("?" ^
+                                                    ((exprToString c) ^
+                                                        (":" ^
+                                                            (exprToString d)))))))
+                              | Wow (x, y, z) ->
+                                "sqrt(" ^
+                                    ("abs(" ^
+                                        ((exprToString x) ^
+                                            (")*" ^
+                                                ("abs(" ^
+                                                    ((exprToString y) ^
+                                                        (")*" ^
+                                                            ("abs(" ^
+                                                                ((exprToString z)
+                                                                    ^
+                                                                    "))"))))))))) ;; 
+==============================

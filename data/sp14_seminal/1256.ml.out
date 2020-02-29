@@ -1,0 +1,114 @@
+------------------------------------------------------------------
+File "1256.ml", line 28, characters 66-69:
+This expression has type int but is here used with type int list
+Relevant code: lis
+------------------------------------------------------------------
+Triaged the following locations:
+File "1256.ml", line 28, characters 24-33:
+And modified the following location:
+File "1256.ml", line 28, characters 41-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    helper
+with
+    helper; [[...]]
+The actual replacement has type
+    int -> int list -> 'a
+within context
+    let rec helper acc n lis = (match n with 
+                                | 1 -> [[...other program...]]
+                                | _ ->
+                                  ((helper; [[...]])
+                                      (n - 1) (bigAdd l lis))) in (helper [0] i  l)
+==============================
+Triaged the following locations:
+File "1256.ml", line 28, characters 24-33:
+And modified the following location:
+File "1256.ml", line 28, characters 55-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (helper (n - 1) (bigAdd l lis))
+with
+    (helper [[...]] (n - 1)  (bigAdd l lis))
+The actual replacement has type
+    'b
+within context
+    let rec helper acc n lis = (match n with 
+                                | 1 -> [[...other program...]]
+                                | _ ->
+                                  (helper
+                                      [[...]] (n - 1) (bigAdd l lis))) in (helper [0] i  l)
+==============================
+Triaged the following locations:
+File "1256.ml", line 28, characters 41-70:
+And modified the following location:
+File "1256.ml", line 28, characters 30-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    acc
+with
+    acc; [[...]]
+The actual replacement has type
+    int
+within context
+    let rec helper acc n lis = (match n with 
+                                | 1 -> lis + (acc; [[...]])
+                                | _ -> [[...other program...]]) in (helper [0] i  l)
+==============================
+Triaged the following locations:
+File "1256.ml", line 28, characters 41-70:
+And modified the following location:
+File "1256.ml", line 28, characters 28-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    'c -> 'd -> 'e
+within context
+    let rec helper acc n lis = (match n with 
+                                | 1 -> (lis +; [[...]] acc)
+                                | _ -> [[...other program...]]) in (helper [0] i  l)
+==============================
+Triaged the following locations:
+File "1256.ml", line 28, characters 41-70:
+And modified the following location:
+File "1256.ml", line 28, characters 28-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    >
+The actual replacement has type
+    'f -> 'f -> bool
+within context
+    let rec helper acc n lis = (match n with 
+                                | 1 -> lis > acc
+                                | _ -> [[...other program...]]) in (helper [0] i  l)
+==============================
+Triaged the following locations:
+File "1256.ml", line 28, characters 41-70:
+And modified the following location:
+File "1256.ml", line 28, characters 28-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    @
+The actual replacement has type
+    'g list -> 'g list -> 'g list
+within context
+    let rec helper acc n lis = (match n with 
+                                | 1 -> lis @ acc
+                                | _ -> [[...other program...]]) in (helper [0] i  l)
+==============================
+Triaged the following locations:
+File "1256.ml", line 28, characters 41-70:
+And modified the following location:
+File "1256.ml", line 28, characters 24-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    lis + acc
+with
+    ( + ) (lis acc)
+The actual replacement has type
+    int -> int
+within context
+    let rec helper acc n lis = (match n with 
+                                | 1 -> ( + ) (lis acc)
+                                | _ -> [[...other program...]]) in (helper [0] i  l)
+==============================

@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0221.ml", line 19, characters 21-22:
+This expression has type int but is here used with type unit
+Relevant code: y
+------------------------------------------------------------------
+File "0221.ml", line 19, characters 7-22:
+Try replacing
+    (if y = 2 then y)
+with
+    [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) =
+    let y = (rand (2, 6)) in
+      (if depth = 0 then (if (rand (0, 1)) = 0 then (buildX ()) else (buildY ()))
+          else
+          [[...]])
+    ;; 
+==============================

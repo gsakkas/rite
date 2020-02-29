@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "2476.ml", line 28, characters 24-50:
+This expression has type int but is here used with type int list
+Relevant code: (((carry + b) + c) mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2476.ml", line 30, characters 20-240:
+And modified the following location:
+File "2476.ml", line 28, characters 24-50:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod ((carry + b) + c) 10)
+with
+    (mod ((carry + b) + c) 10); [[...]]
+The actual replacement has type
+    int list
+within context
+    fun a x -> (match x with 
+                | (b, c) -> (match a with 
+                             | (carry, sum) -> (match sum with 
+                                                | [] ->
+                                                  (if (carry + b) + c < 10 then
+                                                      0, [carry ; (carry + b) + c]
+                                                      else
+                                                      carry + 1,
+                                                        carry + 1 ::
+                                                            (mod
+                                                              ((carry + b) + c) 10);
+                                                            [[...]])
+                                                | h :: t ->
+                                                  [[...other program...]])))
+==============================
+Triaged the following locations:
+File "2476.ml", line 24, characters 20-230:
+And modified the following location:
+File "2476.ml", line 34, characters 50-72:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod ((h + b) + c) 10)
+with
+    (mod ((h + b) + c) 10); [[...]]
+The actual replacement has type
+    int list
+within context
+    fun a x -> (match x with 
+                | (b, c) -> (match a with 
+                             | (carry, sum) -> (match sum with 
+                                                | [] -> [[...other program...]]
+                                                | h :: t ->
+                                                  (if (b + c) + h < 10 then
+                                                      0, [0] @ ([(b + c) + h] @ t)
+                                                      else
+                                                      carry + 1,
+                                                        ((h + b) + c) / 10 ::
+                                                              (mod
+                                                                ((h + b) + c) 10);
+                                                              [[...]]
+                                                          @ t))))
+==============================

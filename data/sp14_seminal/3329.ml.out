@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "3329.ml", line 12, characters 13-73:
+This expression has type int list but is here used with type int
+Relevant code: match lst with | [] -> [] | h1::t1 -> [helper t1; h1 mod 10]
+------------------------------------------------------------------
+File "3329.ml", line 12, characters 52-61:
+Try replacing
+    (helper t1)
+with
+    (helper t1); [[...]]
+of type
+    int
+within context
+    (match (mulByDigit i (List.rev (List.map (fun x -> x * 10) t))) @ [h * i] with 
+     | [] -> []
+     | h :: t -> (let rec helper lst = (match lst with 
+                                        | [] -> []
+                                        | h1 :: t1 ->
+                                          [(helper t1); [[...]] ; (mod h1 10)
+                                                ]) in (helper [h])))
+==============================

@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "2661.ml", line 27, characters 17-21:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: atan
+------------------------------------------------------------------
+File "2661.ml", line 27, characters 17-26:
+Try replacing
+    (atan eval (e1, x, y))
+with
+    (atan (eval (e1, x, y)))
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Arctan e1 -> (atan (eval (e1, x, y)))
+                              | Strange (e1, e2, e3) ->
+                                (((((eval (e1, x, y)) *. (eval (e1, x, y)))
+                                              +.
+                                              ((eval (e2, x, y))
+                                                  *. (eval (e2, x, y))))
+                                          +.
+                                          ((eval (e3, x, y)) *. (eval (e3, x, y))))
+                                      /. 3.)) ;; 
+==============================

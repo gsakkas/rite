@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "2540.ml", line 6, characters 46-47:
+This expression has type int but is here used with type 'a list
+Relevant code: y
+------------------------------------------------------------------
+File "2540.ml", line 6, characters 46-47:
+Try replacing
+    y
+with
+    y; [[...]]
+of type
+    'b list
+within context
+    let rec digitsOfInt n =
+    (if n < 0 then [] else (let x = n / 10 in (digitsOfInt x) @ (y; [[...]])))
+    ;; 
+==============================
+File "2540.ml", line 6, characters 44-45:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    'c list -> int -> 'c list
+within context
+    let rec digitsOfInt n =
+    (if n < 0 then [] else (let x = n / 10 in ((digitsOfInt x) @; [[...]] y)))
+    ;; 
+==============================
+File "2540.ml", line 6, characters 16-24:
+Try replacing
+    (mod n 10)
+with
+    (mod n 10); [[...]]
+of type
+    'd
+within context
+    let rec digitsOfInt n =
+    (if n < 0 then [] else (let x = n / 10 in (digitsOfInt x) @ y))
+    ;; 
+==============================

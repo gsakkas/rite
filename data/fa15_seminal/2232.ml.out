@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2232.ml", line 18, characters 31-42:
+This expression has type 'a list but is here used with type unit
+Relevant code: a :: (0, x)
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "2232.ml", line 18, characters 31-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a :: 0 :: x
+with
+    [[...]]
+The actual replacement has type
+    'b
+within context
+    fun (l1, l2) ->
+      (let f a x = (if x < 10 then [[...]] else [[...]]) in
+          let base = 0, [] in
+          let args =
+          let combine (a, b) = a + b in
+            (List.map combine (List.rev (List.combine l1 l2)))
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

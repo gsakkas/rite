@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "1176.ml", line 19, characters 62-63:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+File "1176.ml", line 19, characters 62-63:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine b -> (cos (pi *. (eval (b, x, y))))
+                              | Average (c, d) ->
+                                ((eval (c, x, y)) +.
+                                      ((eval (d, x, y)) /. 2; [[...]]))
+                              | Times (e, f) ->
+                                ((eval (e, x, y)) *. (eval (f, x, y)))
+                              | Thresh (g, h, i, j) ->
+                                (if (eval (g, x, y)) < (eval (h, x, y)) then
+                                    (eval (i, x, y))
+                                    else
+                                    (eval (j, x, y)))) ;; 
+==============================
+File "1176.ml", line 19, characters 59-61:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine b -> (cos (pi *. (eval (b, x, y))))
+                              | Average (c, d) ->
+                                ((eval (c, x, y)) +.
+                                      ((eval (d, x, y)) /.; [[...]] 2))
+                              | Times (e, f) ->
+                                ((eval (e, x, y)) *. (eval (f, x, y)))
+                              | Thresh (g, h, i, j) ->
+                                (if (eval (g, x, y)) < (eval (h, x, y)) then
+                                    (eval (i, x, y))
+                                    else
+                                    (eval (j, x, y)))) ;; 
+==============================

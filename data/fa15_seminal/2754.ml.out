@@ -1,0 +1,91 @@
+------------------------------------------------------------------
+File "2754.ml", line 10, characters 39-40:
+This expression has type int list but is here used with type int
+Relevant code: l
+------------------------------------------------------------------
+Triaged the following locations:
+File "2754.ml", line 10, characters 48-49:
+And modified the following location:
+File "2754.ml", line 10, characters 39-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    l
+with
+    h
+The actual replacement has type
+    int
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t -> (match (List.length t) with 
+                           | 1 -> [i * h]
+                           | _ ->
+                             [(remainder h i)] @
+                                 ((i * h) / 10 +; [[...]] (mulByDigit i t))))
+==============================
+Triaged the following locations:
+File "2754.ml", line 10, characters 48-49:
+And modified the following location:
+File "2754.ml", line 10, characters 39-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    l
+with
+    l; [[...]]
+The actual replacement has type
+    int
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t -> (match (List.length t) with 
+                           | 1 -> [i * h]
+                           | _ ->
+                             [(remainder h i)] @
+                                 ((i * (l; [[...]])) / 10
+                                     +; [[...]] (mulByDigit i t))))
+==============================
+Triaged the following locations:
+File "2754.ml", line 10, characters 48-49:
+And modified the following location:
+File "2754.ml", line 10, characters 39-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    l
+with
+    i
+The actual replacement has type
+    int
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t -> (match (List.length t) with 
+                           | 1 -> [i * h]
+                           | _ ->
+                             [(remainder h i)] @
+                                 ((i * i) / 10 +; [[...]] (mulByDigit i t))))
+==============================
+Triaged the following locations:
+File "2754.ml", line 10, characters 48-49:
+And modified the following location:
+File "2754.ml", line 10, characters 37-38:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    int -> int list -> int
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t -> (match (List.length t) with 
+                           | 1 -> [i * h]
+                           | _ ->
+                             [(remainder h i)] @
+                                 ((i *; [[...]] l) / 10
+                                     +; [[...]] (mulByDigit i t))))
+==============================

@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2310.ml", line 19, characters 47-48:
+This expression has type 'a list * 'b but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+File "2310.ml", line 19, characters 47-48:
+Try replacing
+    a
+with
+    a; [[...]]
+of type
+    int list
+within context
+    fun a x -> (let (h :: t, _) = a in [], 0 :: a; [[...]])
+==============================

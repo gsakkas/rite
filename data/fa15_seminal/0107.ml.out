@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0107.ml", line 4, characters 51-66:
+This expression has type 'a list but is here used with type 'a
+Relevant code: (digitsOfInt 0)
+------------------------------------------------------------------
+File "0107.ml", line 4, characters 52-63:
+Try replacing
+    digitsOfInt
+with
+    mod
+of type
+    int -> int -> int
+within context
+    fun n ->
+      (let return = [] in
+          (if n == 0 then return else (mod n 10) :: return); (mod 0) :: return)
+==============================
+File "0107.ml", line 4, characters 52-63:
+Try replacing
+    digitsOfInt
+with
+    ==
+of type
+    int -> int -> bool
+within context
+    fun n ->
+      (let return = [] in
+          (if n == 0 then return else (mod n 10) :: return); (== 0) :: return)
+==============================

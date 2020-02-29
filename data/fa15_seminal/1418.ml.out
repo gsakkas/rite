@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1418.ml", line 8, characters 62-63:
+This expression has type int list but is here used with type int
+Relevant code: t
+------------------------------------------------------------------
+File "1418.ml", line 8, characters 62-63:
+Try replacing
+    t
+with
+    n
+of type
+    int
+within context
+    let rec digitalRoot n = (match (digits n) with 
+                             | x :: [] -> x
+                             | h :: t -> h + (digitalRoot n)) ;; 
+==============================
+File "1418.ml", line 8, characters 62-63:
+Try replacing
+    t
+with
+    h
+of type
+    int
+within context
+    let rec digitalRoot n = (match (digits n) with 
+                             | x :: [] -> x
+                             | h :: t -> h + (digitalRoot h)) ;; 
+==============================

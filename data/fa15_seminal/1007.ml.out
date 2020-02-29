@@ -1,0 +1,156 @@
+------------------------------------------------------------------
+File "1007.ml", line 10, characters 60-74:
+This expression has type 'a list * 'a list list but is here used with type
+  'a list list * 'a list list
+Relevant code: (seen', rest')
+------------------------------------------------------------------
+File "1007.ml", line 10, characters 61-66:
+Try replacing
+    seen'
+with
+    t
+of type
+    'b list list * 'b list list
+within context
+    (if x then (helper (seen, t)) else
+      (let seen' = [] @ h in let rest' = t in (helper (t, rest'))))
+==============================
+File "1007.ml", line 10, characters 61-66:
+Try replacing
+    seen'
+with
+    l
+of type
+    'c list list * 'c list list
+within context
+    (if x then (helper (seen, t)) else
+      (let seen' = [] @ h in let rest' = t in (helper (l, rest'))))
+==============================
+File "1007.ml", line 10, characters 61-66:
+Try replacing
+    seen'
+with
+    seen
+of type
+    'd list list * 'd list list
+within context
+    (if x then (helper (seen, t)) else
+      (let seen' = [] @ h in let rest' = t in (helper (seen, rest'))))
+==============================
+File "1007.ml", line 10, characters 61-66:
+Try replacing
+    seen'
+with
+    rest'
+of type
+    'e list list * 'e list list
+within context
+    (if x then (helper (seen, t)) else
+      (let seen' = [] @ h in let rest' = t in (helper (rest', rest'))))
+==============================
+File "1007.ml", line 7, characters 27-31:
+Try replacing
+    seen
+with
+    l
+of type
+    'f list list
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let x = (List.mem h l) in
+                                           (if x then (helper (seen, t)) else
+                                               (let seen' = [] @ h in
+                                                   let rest' = t in
+                                                   (helper
+                                                       (seen',
+                                                           rest')))))) in (List.rev
+          (helper ([], l)))
+==============================
+File "1007.ml", line 7, characters 27-31:
+Try replacing
+    seen
+with
+    t
+of type
+    'g list list
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let x = (List.mem h t) in
+                                           (if x then (helper (seen, t)) else
+                                               (let seen' = [] @ h in
+                                                   let rest' = t in
+                                                   (helper
+                                                       (seen',
+                                                           rest')))))) in (List.rev
+          (helper ([], l)))
+==============================
+File "1007.ml", line 10, characters 31-32:
+Try replacing
+    h
+with
+    rest
+of type
+    'h list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let x = (List.mem h seen) in
+             (if x then (helper (seen, t)) else
+                 (let seen' = [] @ rest in
+                     let rest' = t in (helper (seen', rest'))))))
+==============================
+File "1007.ml", line 10, characters 31-32:
+Try replacing
+    h
+with
+    l
+of type
+    'i list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let x = (List.mem h seen) in
+             (if x then (helper (seen, t)) else
+                 (let seen' = [] @ l in let rest' = t in (helper (seen', rest'))))))
+==============================
+File "1007.ml", line 10, characters 31-32:
+Try replacing
+    h
+with
+    t
+of type
+    'j list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let x = (List.mem h seen) in
+             (if x then (helper (seen, t)) else
+                 (let seen' = [] @ t in let rest' = t in (helper (seen', rest'))))))
+==============================
+File "1007.ml", line 7, characters 25-26:
+Try replacing
+    h
+with
+    @
+of type
+    'k list -> 'k list -> 'k list
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let x = (List.mem @ seen) in
+                                           (if x then (helper (seen, t)) else
+                                               (let seen' = [] @ h in
+                                                   let rest' = t in
+                                                   (helper
+                                                       (seen',
+                                                           rest')))))) in (List.rev
+          (helper ([], l)))
+==============================

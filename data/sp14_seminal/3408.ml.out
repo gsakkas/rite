@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3408.ml", line 7, characters 38-65:
+This expression has type int but is here used with type 'a list
+Relevant code: (helper (f :: acc) f x) - 1
+------------------------------------------------------------------
+File "3408.ml", line 7, characters 62-63:
+Try replacing
+    -
+with
+    -; [[...]]
+of type
+    'b list -> int -> 'b list
+within context
+    fun acc f x -> (match x with 
+                    | 0 -> acc
+                    | _ -> ((helper f :: acc f  x) -; [[...]] 1))
+==============================

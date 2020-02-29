@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0892.ml", line 13, characters 9-18:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sepConcat
+------------------------------------------------------------------
+File "0892.ml", line 13, characters 23-31:
+Try replacing
+    (sepConcat ";" List.map  (f l))
+with
+    (sepConcat ";" (f l))
+of type
+    string
+within context
+    let stringOfList f l = (match l with 
+                            | [] -> "[]"
+                            | x :: [] -> "[" ^ (x ^ "]")
+                            | l -> (sepConcat ";" (f l))) ;; 
+==============================

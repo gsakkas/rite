@@ -1,0 +1,114 @@
+------------------------------------------------------------------
+File "2429.ml", line 19, characters 37-53:
+This expression has type int * int but is here used with type 'a list
+Relevant code: (0, (l1x + l2x))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2429.ml", line 20, characters 4-115:
+And modified the following location:
+File "2429.ml", line 19, characters 54-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int * int -> 'b -> 'c
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (l1x, l2x) = x in (0, l1x + l2x @; [[...]] a) in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2429.ml", line 20, characters 4-115:
+And modified the following location:
+File "2429.ml", line 19, characters 54-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    <
+The actual replacement has type
+    int * int -> int * int -> bool
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (l1x, l2x) = x in (0, l1x + l2x) < a in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2429.ml", line 20, characters 4-115:
+And modified the following location:
+File "2429.ml", line 19, characters 54-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    =
+The actual replacement has type
+    int * int -> int * int -> bool
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (l1x, l2x) = x in (0, l1x + l2x) = a in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2429.ml", line 20, characters 4-115:
+And modified the following location:
+File "2429.ml", line 19, characters 54-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    >
+The actual replacement has type
+    int * int -> int * int -> bool
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (l1x, l2x) = x in (0, l1x + l2x) > a in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2429.ml", line 20, characters 4-115:
+And modified the following location:
+File "2429.ml", line 19, characters 37-53:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0, l1x + l2x
+with
+    0, l1x + l2x; [[...]]
+The actual replacement has type
+    'd list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (l1x, l2x) = x in (0, l1x + l2x; [[...]]) @ a in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2429.ml", line 20, characters 4-115:
+And modified the following location:
+File "2429.ml", line 19, characters 4-176:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = let (l1x, l2x) = x in (0, l1x + l2x) @ a in
+      let base = [0, 0] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'e
+==============================

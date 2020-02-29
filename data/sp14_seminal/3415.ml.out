@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "3415.ml", line 2, characters 47-49:
+This expression has type 'a -> 'b but is here used with type 'a
+Relevant code: fs
+------------------------------------------------------------------
+File "3415.ml", line 2, characters 44-46:
+Try replacing
+    fs
+with
+    fs; [[...]]
+of type
+    ('c -> 'c) list -> 'd
+within context
+    let pipe fs =
+    let f a x = (x a) in
+      let base = ((fs; [[...]]) fs) in (List.fold_left f base  fs)
+    ;; 
+==============================

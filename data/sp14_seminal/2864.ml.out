@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2864.ml", line 3, characters 50-67:
+This expression has type int but is here used with type 'a list
+Relevant code: ((clone x n) - 1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2864.ml", line 3, characters 35-37:
+And modified the following location:
+File "2864.ml", line 3, characters 45-67:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    []
+If you ignore other surrounding code, try replacing
+    x :: (clone x n) - 1
+with
+    [[...]]
+The actual replacement has type
+    'b
+within context
+    let rec clone x n = let helper = (match n with 
+                                      | 0 -> ([]; [[...]])
+                                      | _ -> [[...]]) in (helper n) ;; 
+==============================

@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1837.ml", line 14, characters 51-58:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sumList
+------------------------------------------------------------------
+File "1837.ml", line 14, characters 51-65:
+Try replacing
+    (sumList digits x)
+with
+    (sumList (digits x))
+of type
+    int
+within context
+    fun n ->
+      (let rec helper x = (if x < 10 then x else (helper (sumList (digits x)))) in
+          (helper n))
+==============================

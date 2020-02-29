@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0886.ml", line 3, characters 61-62:
+This expression has type int -> int list -> int list
+but is here used with type int -> int list -> int
+Relevant code: f
+------------------------------------------------------------------
+File "0886.ml", line 3, characters 61-62:
+Try replacing
+    f
+with
+    *
+of type
+    int -> int -> int
+within context
+    let sqsum xs =
+    let f a x = a * a :: x in let base = 0 in (List.fold_left * base  xs)
+    ;; 
+==============================

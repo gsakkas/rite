@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0251.ml", line 23, characters 8-38:
+This expression has type int but is here used with type 'a list
+Relevant code: (((addition (m, n)) + y) / 10)
+------------------------------------------------------------------
+File "0251.ml", line 23, characters 39-40:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> int list -> 'b
+within context
+    fun x ->
+      (let (m, n) = x in
+          let (y, z) = a in
+          (((addition (m, n)) + y) / 10 @; [[...]] z),
+              [(mod ((addition (m, n)) + y) 10)] @ z)
+==============================

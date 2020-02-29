@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0591.ml", line 19, characters 18-33:
+This expression has type int list * int list but is here used with type
+  'a list list * 'b
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "0591.ml", line 17, characters 25-32:
+Try replacing
+    List.hd
+with
+    List.rev
+of type
+    'c list -> 'c list
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = [0], [0] in
+      let args = (List.rev (List.rev l1)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

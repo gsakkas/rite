@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2079.ml", line 21, characters 35-38:
+This expression is not a function, it cannot be applied
+Relevant code: "+"
+------------------------------------------------------------------
+File "2079.ml", line 21, characters 35-38:
+Try replacing
+    "+"
+with
+    "+"; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    (match e with 
+     | Thresh (a, b, c, d) ->
+       "(" ^
+           ((exprToString a) ^
+               ("<" ^
+                   ((exprToString b) ^
+                       ("?" ^
+                           ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+     | Times (a, b) -> (exprToString a) ^ ("*" ^ (exprToString b))
+     | Average (a, b) ->
+       "((" ^ ((exprToString a) ^ ((exprToString "+"; [[...]] b) ^ ")/20"))
+     | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+     | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+     | VarY -> "x"
+     | VarX -> "y")
+==============================

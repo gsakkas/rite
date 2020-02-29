@@ -1,0 +1,119 @@
+------------------------------------------------------------------
+File "2193.ml", line 30, characters 33-34:
+This expression has type 'a * int list -> int * int -> int list
+but is here used with type 'a * int list -> int * int -> 'a * int list
+Relevant code: f
+------------------------------------------------------------------
+File "2193.ml", line 30, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'b list * 'c list -> 'd * 'e -> 'b list * 'c list
+within context
+    let f a x = (match x with 
+                 | (op1, op2) ->
+                   (let res = op1 + op2 in let (p1, p2) = a in (match p2 with 
+                                                                | [] ->
+                                                                  [
+                                                                        res / 10 ;
+                                                                        (mod res 10)
+                                                                        ]
+                                                                | a :: b ->
+                                                                  (let re =
+                                                                        a +
+                                                                          (mod
+                                                                            res 10)
+                                                                        in
+                                                                        re / 10 ::
+                                                                              (mod
+                                                                                re 10)
+                                                                              ::
+                                                                              b)))) in let
+      base
+      =
+      [], []
+      in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2193.ml", line 30, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('f * int list -> int * int -> int list) ->
+    'g list * 'h list -> ('i * 'j) list -> 'k * 'l
+within context
+    let f a x = (match x with 
+                 | (op1, op2) ->
+                   (let res = op1 + op2 in let (p1, p2) = a in (match p2 with 
+                                                                | [] ->
+                                                                  [
+                                                                        res / 10 ;
+                                                                        (mod res 10)
+                                                                        ]
+                                                                | a :: b ->
+                                                                  (let re =
+                                                                        a +
+                                                                          (mod
+                                                                            res 10)
+                                                                        in
+                                                                        re / 10 ::
+                                                                              (mod
+                                                                                re 10)
+                                                                              ::
+                                                                              b)))) in let
+      base
+      =
+      [], []
+      in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2193.ml", line 19, characters 10-280:
+Try replacing
+    fun a x -> (match x with 
+                | (op1, op2) ->
+                  (let res = op1 + op2 in let (p1, p2) = a in (match p2 with 
+                                                               | [] ->
+                                                                 [
+                                                                       res / 10 ;
+                                                                       (mod res 10)
+                                                                       ]
+                                                               | a :: b ->
+                                                                 (let re =
+                                                                       a +
+                                                                         (mod
+                                                                           res 10)
+                                                                       in
+                                                                       re / 10 ::
+                                                                             (mod
+                                                                               re 10)
+                                                                             ::
+                                                                             b))))
+with
+    fun a x -> (match x with 
+                | (op1, op2) ->
+                  (let res = op1 + op2 in let (p1, p2) = a in (match p2 with 
+                                                               | [] ->
+                                                                 [
+                                                                       res / 10 ;
+                                                                       (mod res 10)
+                                                                       ]
+                                                               | a :: b ->
+                                                                 (let re =
+                                                                       a +
+                                                                         (mod
+                                                                           res 10)
+                                                                       in
+                                                                       re / 10 ::
+                                                                             (mod
+                                                                               re 10)
+                                                                             ::
+                                                                             b)))); [[...]]
+of type
+    'm
+==============================

@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "2254.ml", line 7, characters 4-84:
+This expression has type (('a -> 'b) * 'a -> 'b * bool) * 'c
+but is here used with type
+  (('a -> 'b) * 'a -> (('a -> 'b) * 'a) * bool) * (('a -> 'b) * 'a)
+Relevant code: ((fun (f,b)  -> match f b with | b -> (b, false) | _ -> ((f b), true)),
+      b)
+------------------------------------------------------------------
+File "2254.ml", line 7, characters 11-12:
+Try replacing
+    f, b
+with
+    b
+of type
+    'd
+within context
+    let fixpoint (f, b) = (wwhile ((fun (b) -> (match (f b) with 
+                                                | b -> (b, false)
+                                                | _ -> ((f b), true))), b)) ;; 
+==============================
+File "2254.ml", line 7, characters 5-83:
+Try replacing
+    (fun (f, b) -> (match (f b) with 
+                    | b -> (b, false)
+                    | _ -> ((f b), true))), b
+with
+    b, (fun (f, b) -> (match (f b) with 
+                       | b -> (b, false)
+                       | _ -> ((f b), true)))
+of type
+    ((('e -> 'f) * 'e -> 'f * bool) -> (('e -> 'f) * 'e -> 'f * bool) * bool) *
+    (('e -> 'f) * 'e -> 'f * bool)
+==============================
+File "2254.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    f
+of type
+    (('g -> 'h) * 'g -> 'h * bool) * 'i -> 'j
+within context
+    let fixpoint (f, b) = (f ((fun (f, b) -> (match (f b) with 
+                                              | b -> (b, false)
+                                              | _ -> ((f b), true))), b)) ;; 
+==============================

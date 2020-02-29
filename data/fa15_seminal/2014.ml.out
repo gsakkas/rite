@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2014.ml", line 40, characters 37-40:
+This expression is not a function, it cannot be applied
+Relevant code: "+"
+------------------------------------------------------------------
+File "2014.ml", line 40, characters 41-57:
+Try replacing
+    (( "+" ) (exprToString z))
+with
+    "+"
+of type
+    string
+within context
+    ")/(" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ("+" ^ ")"))))
+==============================

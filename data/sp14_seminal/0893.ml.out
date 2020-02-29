@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "0893.ml", line 16, characters 56-60:
+This expression has type int but is here used with type
+  ('a list * 'b list) list
+Relevant code: args
+------------------------------------------------------------------
+File "0893.ml", line 16, characters 15-16:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    'c
+within context
+    let add (l1, l2) =
+      let f a x = x in
+        let base = [], [] in
+        let args = 0; [[...]] in let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+File "0893.ml", line 16, characters 56-60:
+Try replacing
+    args
+with
+    args; [[...]]
+of type
+    ('d list * 'e list) list
+within context
+    let f a x = x in
+      let base = [], [] in
+      let args = 0 in let (_, res) = (List.fold_left f base  (args; [[...]])) in res
+==============================
+File "0893.ml", line 16, characters 34-48:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('f -> 'g -> 'g) -> 'h list * 'i list -> int -> 'j * 'k
+within context
+    let f a x = x in
+      let base = [], [] in
+      let args = 0 in let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "0263.ml", line 2, characters 43-59:
+This expression has type 'a -> 'b list -> 'a but is here used with type
+  'c list
+Relevant code: List.fold_left n
+------------------------------------------------------------------
+File "0263.ml", line 2, characters 35-37:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    'd -> 'e list -> 'd
+within context
+    let rec clone x n = (if (x <= 0) then ([]; [[...]]) else (List.fold_left n)) ;; 
+==============================
+File "0263.ml", line 2, characters 43-59:
+Try replacing
+    (List.fold_left n)
+with
+    (List.fold_left n); [[...]]
+of type
+    'f list
+within context
+    let rec clone x n = (if (x <= 0) then [] else ((List.fold_left n); [[...]])) ;; 
+==============================

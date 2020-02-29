@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0559.ml", line 20, characters 21-38:
+This expression has type float but is here used with type int
+Relevant code: (eval (e1, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0559.ml", line 20, characters 61-62:
+And modified the following location:
+File "0559.ml", line 20, characters 39-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /
+If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    float -> float -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (float_of_int x)
+                              | VarY -> (float_of_int y)
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                ((float_of_int
+                                        ((eval (e1, x, y))
+                                            +; [[...]] (eval (e2, x, y))))
+                                      /; [[...]] 2)) ;; 
+==============================

@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "1652.ml", line 20, characters 33-34:
+This expression has type int list -> int * int -> int * int list
+but is here used with type int list -> int * int -> int list
+Relevant code: f
+------------------------------------------------------------------
+File "1652.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int * int -> int * int list) ->
+    'a list -> ('b * 'c) list -> 'd * 'e
+within context
+    let f a x =
+      (if (let (y, z) = x in y + z > 9) then
+        1, (let (y, z) = x in [(y + z) / 10] @ a)
+        else
+        0, (let (y, z) = x in [y + z] @ a))
+      in
+      let base = [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

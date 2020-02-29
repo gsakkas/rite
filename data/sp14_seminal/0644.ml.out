@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "0644.ml", line 30, characters 55-71:
+This expression is not a function, it cannot be applied
+Relevant code: (mulByDigit h a)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0644.ml", line 30, characters 47-53:
+And modified the following location:
+File "0644.ml", line 30, characters 56-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    mulByDigit; [[...]]
+The actual replacement has type
+    'b -> 'c -> 'c -> 'd
+within context
+    let f a x = (match x with 
+                 | [] -> a
+                 | h :: t ->
+                   ((bigAdd; [[...]])
+                       (((mulByDigit; [[...]]) h a)
+                         a))) in let base = l1 in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

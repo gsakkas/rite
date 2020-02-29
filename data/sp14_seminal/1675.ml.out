@@ -1,0 +1,428 @@
+------------------------------------------------------------------
+File "1675.ml", line 19, characters 15-18:
+This expression has type float -> float but is here used with type int
+Relevant code: sin
+------------------------------------------------------------------
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 21, characters 23-70:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 24, characters 36-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2, x, y
+with
+    x, e2, y
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (x, e2, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 21, characters 23-70:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 22, characters 39-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    <
+The actual replacement has type
+    bool -> bool -> bool
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) ->
+                                (eval (e1, x, y)) < (eval (e2, x, y))
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 30-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e2
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e2, x, y)) +. ((eval (e2, x, y)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 52-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2
+with
+    e2
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 46-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (e2, x, y))
+with
+    (eval ((e2, x, y)))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval ((e2, x, y))) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 52-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2
+with
+    e1
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval (e1, x, y)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 52-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2
+with
+    e
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval (e, x, y)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 59-60:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 56-57:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 56-57:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval (e2, y, y)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 59-60:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval (e2, x, x)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 56-60:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2, x, y
+with
+    e2, y, x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval (e2, y, x)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 52-57:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2, x, y
+with
+    e2, x, y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 46-50:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1675.ml", line 19, characters 15-43:
+File "1675.ml", line 20, characters 17-45:
+File "1675.ml", line 22, characters 21-59:
+File "1675.ml", line 24, characters 6-100:
+File "1675.ml", line 27, characters 16-58:
+File "1675.ml", line 29, characters 6-100:
+And modified the following location:
+File "1675.ml", line 21, characters 24-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) +. ((eval (e2, x, y)) /. 2.0))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Magic e1 -> [[...other program...]]
+                              | Weird (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================

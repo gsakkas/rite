@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "0084.ml", line 18, characters 28-36:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: (l1, l2)
+------------------------------------------------------------------
+File "0084.ml", line 18, characters 28-36:
+Try replacing
+    (List.combine (l1, l2))
+with
+    (List.combine l1 l2)
+of type
+    ('d * 'e) list
+within context
+    let add (l1, l2) =
+      let f a x = (failwith "TBD") in
+        let base = [], [] in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

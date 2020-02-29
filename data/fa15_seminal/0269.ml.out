@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0269.ml", line 3, characters 2-66:
+This expression has type int list but is here used with type int
+Relevant code: match l with | [] -> [] | hd::tl -> [hd * i] @ [mulByDigit i tl]
+------------------------------------------------------------------
+File "0269.ml", line 2, characters 19-91:
+Try replacing
+    fun i l -> (match l with 
+                | [] -> []
+                | hd :: tl -> [hd * i] @ [(mulByDigit i tl)])
+with
+    fun i l -> (match l with 
+                | [] -> []
+                | hd :: tl -> [hd * i] @ [(mulByDigit i tl)]); [[...]]
+of type
+    int -> int list -> int
+==============================

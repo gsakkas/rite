@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "1278.ml", line 16, characters 28-39:
+This expression has type int -> int list but is here used with type 'a list
+Relevant code: digitsOfInt
+------------------------------------------------------------------
+File "1278.ml", line 16, characters 28-39:
+Try replacing
+    digitsOfInt
+with
+    digitsOfInt; [[...]]
+of type
+    'b list
+within context
+    (match n with 
+     | 0 -> 0
+     | _ ->
+       (if (not ((lengthOfList (digitsOfInt; [[...]]) n) = 1)) then
+           (additivePersistence (sumList (digitsOfInt n)))
+           else
+           4))
+==============================
+File "1278.ml", line 16, characters 15-27:
+Try replacing
+    lengthOfList
+with
+    lengthOfList; [[...]]
+of type
+    (int -> int list) -> int -> int
+within context
+    (match n with 
+     | 0 -> 0
+     | _ ->
+       (if (not (((lengthOfList; [[...]]) digitsOfInt n) = 1)) then
+           (additivePersistence (sumList (digitsOfInt n)))
+           else
+           4))
+==============================

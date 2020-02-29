@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2405.ml", line 29, characters 9-46:
+This expression has type expr but is here used with type unit -> expr
+Relevant code: buildSine (build (rand, (depth - 1)))
+------------------------------------------------------------------
+File "2405.ml", line 26, characters 2-486:
+Try replacing
+    (match (rand (1, 7)) with 
+     | 1 -> buildX
+     | 2 -> buildY
+     | 3 -> (buildSine (build (rand, depth - 1)))
+     | 4 -> (buildCosine (build (rand, depth - 1)))
+     | 5 -> (buildAverage ((build (rand, depth - 1)), (build (rand, depth - 1))))
+     | 6 -> (buildTimes ((build (rand, depth - 1)), (build (rand, depth - 1))))
+     | 7 ->
+       (buildThresh
+           ((build (rand, depth - 1)),
+               (build (rand, depth - 1)),
+               (build (rand, depth - 1)), (build (rand, depth - 1)))))
+with
+    [[...]]
+of type
+    'a
+==============================

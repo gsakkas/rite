@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "1030.ml", line 7, characters 54-58:
+This expression has type string but is here used with type 'a list
+Relevant code: base
+------------------------------------------------------------------
+File "1030.ml", line 7, characters 52-53:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    string -> 'b list -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (List.append (List.append a sep) h) in
+             let base = "" in let l = sl in (List.fold_left (f; [[...]]) base  l)))
+==============================
+File "1030.ml", line 7, characters 37-51:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('c list -> 'd -> 'c list) -> string -> 'c list list -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (List.append (List.append a sep) h) in
+             let base = "" in let l = sl in ((List.fold_left; [[...]]) f base  l)))
+==============================
+File "1030.ml", line 6, characters 12-51:
+Try replacing
+    fun a x -> (List.append (List.append a sep) h)
+with
+    fun a x -> (List.append (List.append a sep) h); [[...]]
+of type
+    'e
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f =
+                                        fun a
+                                          x -> (List.append (List.append a sep) h);
+                                        [[...]]
+                                        in
+                                        let base = "" in
+                                        let l = sl in
+                                        (List.fold_left f base  l))) ;; 
+==============================

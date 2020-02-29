@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0510.ml", line 2, characters 70-74:
+This expression has type 'a list but is here used with type int -> int
+Relevant code: base
+------------------------------------------------------------------
+File "0510.ml", line 2, characters 70-77:
+Try replacing
+    (List.fold_left f base  xs)
+with
+    (List.fold_left f xs  base)
+of type
+    int -> int
+within context
+    let sqsum xs =
+    let f a x = ( + ) x in let base = [] in (List.fold_left f xs  base)
+    ;; 
+==============================

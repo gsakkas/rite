@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "1135.ml", line 27, characters 27-28:
+This expression has type int but is here used with type float
+Relevant code: 1
+------------------------------------------------------------------
+File "1135.ml", line 27, characters 27-28:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | SquareRoot e' ->
+                                (sqrt (1; [[...]] /. (eval (e', x, y))))
+                              | DivideByOne (e1, e2, e3) ->
+                                (sin
+                                    (((1.0 /. (eval (e1, x, y)))
+                                            +. (1.0 /. (eval (e2, x, y))))
+                                        +. (1.0 /. (eval (e3, x, y)))))) ;; 
+==============================
+File "1135.ml", line 27, characters 29-31:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    int -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | SquareRoot e' ->
+                                (sqrt (1 /.; [[...]] (eval (e', x, y))))
+                              | DivideByOne (e1, e2, e3) ->
+                                (sin
+                                    (((1.0 /. (eval (e1, x, y)))
+                                            +. (1.0 /. (eval (e2, x, y))))
+                                        +. (1.0 /. (eval (e3, x, y)))))) ;; 
+==============================

@@ -1,0 +1,121 @@
+------------------------------------------------------------------
+File "1290.ml", line 21, characters 55-59:
+This expression has type 'a list but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+Triaged the following locations:
+File "1290.ml", line 21, characters 24-71:
+And modified the following location:
+File "1290.ml", line 21, characters 18-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (l1 l2)
+with
+    l1
+The actual replacement has type
+    'b
+within context
+    let add (l1, l2) =
+      let f a x = a + x in let base = [] in let args = l1 in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1290.ml", line 21, characters 24-71:
+And modified the following location:
+File "1290.ml", line 21, characters 15-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    'c -> 'd
+within context
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = [] in let args = ((l1; [[...]]) l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1290.ml", line 21, characters 24-71:
+And modified the following location:
+File "1290.ml", line 21, characters 15-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    <
+The actual replacement has type
+    'e -> 'e -> bool
+within context
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = [] in let args = (< l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1290.ml", line 21, characters 24-71:
+And modified the following location:
+File "1290.ml", line 21, characters 15-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    =
+The actual replacement has type
+    'f -> 'f -> bool
+within context
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = [] in let args = (= l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1290.ml", line 21, characters 24-71:
+And modified the following location:
+File "1290.ml", line 21, characters 15-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    >
+The actual replacement has type
+    'g -> 'g -> bool
+within context
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = [] in let args = (> l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1290.ml", line 21, characters 24-71:
+And modified the following location:
+File "1290.ml", line 21, characters 15-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    @
+The actual replacement has type
+    'h list -> 'h list -> 'h list
+within context
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = [] in let args = (@ l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1290.ml", line 21, characters 24-71:
+And modified the following location:
+File "1290.ml", line 21, characters 4-71:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (l1 l2) in let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'i
+within context
+    let add (l1, l2) = let f a x = a + x in let base = [] in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

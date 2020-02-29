@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0424.ml", line 7, characters 39-48:
+This expression has type bool * int but is here used with type int * int
+Relevant code: (true, 1)
+------------------------------------------------------------------
+File "0424.ml", line 7, characters 15-48:
+Try replacing
+    (if (f b) then 1, 1 else true, 1)
+with
+    [[...]]
+of type
+    'a
+within context
+    let fixpoint (f, b) = let funt b = [[...]] in (wwhile (funt, b)) ;; 
+==============================

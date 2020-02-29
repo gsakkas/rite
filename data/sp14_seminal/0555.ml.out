@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "0555.ml", line 17, characters 19-21:
+This expression has type float but is here used with type int
+Relevant code: pi
+------------------------------------------------------------------
+Triaged the following locations:
+File "0555.ml", line 17, characters 14-41:
+And modified the following location:
+File "0555.ml", line 18, characters 24-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> [[...other program...]]
+                              | Cosine e ->
+                                (cos (pi *; [[...]] (eval (e, x, y))))) ;; 
+==============================
+Triaged the following locations:
+File "0555.ml", line 18, characters 16-43:
+And modified the following location:
+File "0555.ml", line 17, characters 22-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *; [[...]] (eval (e, x, y))))
+                              | Cosine e -> [[...other program...]]) ;; 
+==============================

@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "1298.ml", line 6, characters 46-47:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: g
+------------------------------------------------------------------
+File "1298.ml", line 6, characters 55-61:
+Try replacing
+    (g wwhile (g, b))
+with
+    (g wwhile)
+of type
+    (('l -> 'l * bool) * 'l -> 'l) * bool
+within context
+    let fixpoint (f, b) = let g x = let xx = (f x) in xx, xx = x in (g wwhile) ;; 
+==============================
+File "1298.ml", line 6, characters 46-54:
+Try replacing
+    (g wwhile (g, b))
+with
+    (g (wwhile (g, b)))
+of type
+    'm * bool
+within context
+    let fixpoint (f, b) =
+    let g x = let xx = (f x) in xx, xx = x in (g (wwhile (g, b)))
+    ;; 
+==============================
+File "1298.ml", line 6, characters 8-42:
+Try replacing
+    fun x -> (let xx = (f x) in xx, xx = x)
+with
+    fun x _ -> (let xx = (f x) in xx, xx = x)
+of type
+    (('u -> 'u * bool) * 'u -> 'u) -> 'v -> (('u -> 'u * bool) * 'u -> 'u) * bool
+within context
+    let fixpoint (f, b) =
+    let g x _ = let xx = (f x) in xx, xx = x in (g wwhile (g, b))
+    ;; 
+==============================

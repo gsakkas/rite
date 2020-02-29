@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "0817.ml", line 15, characters 32-40:
+This expression has type int -> 'a but is here used with type int
+Relevant code: (itt x')
+------------------------------------------------------------------
+File "0817.ml", line 10, characters 14-145:
+Try replacing
+    fun x
+      i ->
+        (if x < 10 then i else
+          (let x' = (sumList (digitsOfInt x)) in
+              (if x' > 9 then (i + 1) + (itt x') else 1)))
+with
+    fun x
+      i ->
+        (if x < 10 then i else
+          (let x' = (sumList (digitsOfInt x)) in
+              (if x' > 9 then (i + 1) + (itt x') else 1)));
+    [[...]]
+of type
+    int -> int
+==============================

@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "0237.ml", line 35, characters 13-16:
+This expression is not a function, it cannot be applied
+Relevant code: ","
+------------------------------------------------------------------
+File "0237.ml", line 35, characters 13-16:
+Try replacing
+    ","
+with
+    ","; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+     | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+     | Average (a, b) ->
+       "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+     | Times (a, b) -> (exprToString a) ^ ("*" ^ (exprToString b))
+     | Thresh (a, b, c, d) ->
+       "(" ^
+           ((exprToString a) ^
+               ("<" ^
+                   ((exprToString b) ^
+                       ("?" ^
+                           ((exprToString c) ^ (":" ^ ((exprToString d) ^ ")")))))))
+     | Inverse a -> "1/" ^ (exprToString a)
+     | Max (a, b) -> "max(" ^ ((exprToString a) ^ ("," ^ ((exprToString b) ^ ")")))
+     | Range (a, b, c) ->
+       "range(" ^
+           ((exprToString a) ^
+               ((exprToString ","; [[...]] b) ^ ("," ^ ((exprToString c) ^ ")")))))
+==============================

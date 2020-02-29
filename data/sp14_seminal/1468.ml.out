@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1468.ml", line 25, characters 62-66:
+This expression has type 'a list * 'b list but is here used with type 'c list
+Relevant code: args
+------------------------------------------------------------------
+File "1468.ml", line 25, characters 15-16:
+Try replacing
+    f
+with
+    @
+of type
+    'd list -> 'd list -> 'd list
+within context
+    fun (l1, l2) ->
+      (let f a x = [], [] in
+          let base = [], [] in
+          let args = (@ l1 l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

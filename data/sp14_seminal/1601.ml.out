@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "1601.ml", line 5, characters 28-72:
+This expression has type bool * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((let (x,y) = f b in (x > b) or (x < b)), b)
+------------------------------------------------------------------
+File "1601.ml", line 5, characters 29-71:
+Try replacing
+    (let (x, y) = (f b) in (or (x > b) (x < b))), b
+with
+    b, (let (x, y) = (f b) in (or (x > b) (x < b)))
+of type
+    (bool -> bool * bool) * bool
+within context
+    let fixpoint (f, b) = (wwhile (b, (let (x, y) = (f b) in (or (x > b) (x < b)))))
+    ;; 
+==============================
+File "1601.ml", line 5, characters 21-27:
+Try replacing
+    wwhile
+with
+    >
+of type
+    bool * 'c -> bool * 'c -> bool
+within context
+    let fixpoint (f, b) = (> ((let (x, y) = (f b) in (or (x > b) (x < b))), b)) ;; 
+==============================
+File "1601.ml", line 5, characters 21-27:
+Try replacing
+    wwhile
+with
+    <
+of type
+    bool * 'd -> bool * 'd -> bool
+within context
+    let fixpoint (f, b) = (< ((let (x, y) = (f b) in (or (x > b) (x < b))), b)) ;; 
+==============================
+File "1601.ml", line 5, characters 57-59:
+Try replacing
+    or
+with
+    y
+of type
+    bool -> bool -> 'e -> 'e * bool
+within context
+    fun (f, b) -> (wwhile ((let (x, y) = (f b) in (y (x > b) (x < b))), b))
+==============================

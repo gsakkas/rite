@@ -1,0 +1,49 @@
+------------------------------------------------------------------
+File "2307.ml", line 18, characters 42-54:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+Triaged the following locations:
+File "2307.ml", line 19, characters 19-52:
+And modified the following location:
+File "2307.ml", line 18, characters 40-72:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString e ")") / (2 ")")
+with
+    [[...]]
+The actual replacement has type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+                              | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+                              | Average (x, y) ->
+                                "((" ^ ((exprToString e) ^ ("+" ^ [[...]]))
+                              | Times (x, y) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2307.ml", line 18, characters 6-74:
+And modified the following location:
+File "2307.ml", line 19, characters 19-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString; [[...]]
+The actual replacement has type
+    expr ->
+    string ->
+    (expr -> string) -> expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+                              | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+                              | Average (x, y) -> [[...other program...]]
+                              | Times (x, y) ->
+                                ((exprToString; [[...]])
+                                    e "*"  exprToString  e)) ;; 
+==============================

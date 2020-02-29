@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1188.ml", line 3, characters 33-46:
+This expression has type 'a * bool but is here used with type 'a
+Relevant code: ((f b), true)
+------------------------------------------------------------------
+File "1188.ml", line 3, characters 33-46:
+Try replacing
+    (f b), true
+with
+    true
+of type
+    bool
+within context
+    let rec wwhile (f, b) = (match b with 
+                             | b -> (if (f b) = (true) then (wwhile (f, b)))) ;; 
+==============================
+File "1188.ml", line 3, characters 31-32:
+Try replacing
+    =
+with
+    b
+of type
+    'b -> 'b * bool -> bool
+within context
+    let rec wwhile (f, b) = (match b with 
+                             | b ->
+                               (if ((f b) b (f b), true) then (wwhile (f, b)))) ;; 
+==============================
+File "1188.ml", line 3, characters 35-36:
+Try replacing
+    f
+with
+    =
+of type
+    'c -> 'c -> bool
+within context
+    (match b with 
+     | b -> (if (f b) = ((= b), true) then (wwhile (f, b))))
+==============================

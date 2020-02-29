@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0354.ml", line 4, characters 47-51:
+This expression has type 'a * bool but is here used with type
+  ('b -> 'a * bool) * 'b
+Relevant code: func
+------------------------------------------------------------------
+File "0354.ml", line 4, characters 40-46:
+Try replacing
+    wwhile
+with
+    b
+of type
+    'c * bool -> 'c
+within context
+    fun (f, b) ->
+      (let func = (f b) in
+          let (value, boo) = func in (if boo then (b func) else value))
+==============================

@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0876.ml", line 10, characters 50-54:
+This expression has type int but is here used with type int list
+Relevant code: len2
+------------------------------------------------------------------
+File "0876.ml", line 10, characters 22-62:
+Try replacing
+    (clone 0 (len1 - len2)) @ len2, len1
+with
+    [[...]]
+of type
+    unit
+within context
+    fun l1
+      l2 ->
+        (let len1 = (List.length l1) in
+            let len2 = (List.length l2) in (if len1 > len2 then [[...]]))
+==============================

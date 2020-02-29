@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "0859.ml", line 8, characters 24-29:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: clone
+------------------------------------------------------------------
+Triaged the following locations:
+File "0859.ml", line 8, characters 23-43:
+And modified the following location:
+File "0859.ml", line 8, characters 49-69:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 abs  n) @ l2
+with
+    [[...]]
+The actual replacement has type
+    'a list * 'b list
+within context
+    let padZero l1 l2 = (match (List.length l1) - (List.length l2) with 
+                         | 0 -> (l1, l2)
+                         | n ->
+                           (if n < 0 then [[...other program...]] else [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "0859.ml", line 8, characters 49-69:
+And modified the following location:
+File "0859.ml", line 8, characters 23-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 abs  n) @ l1
+with
+    [[...]]
+The actual replacement has type
+    'c list * 'd list
+within context
+    let padZero l1 l2 = (match (List.length l1) - (List.length l2) with 
+                         | 0 -> (l1, l2)
+                         | n ->
+                           (if n < 0 then [[...]] else [[...other program...]])) ;; 
+==============================

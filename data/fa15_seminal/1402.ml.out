@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "1402.ml", line 7, characters 23-40:
+This expression has type 'a list -> bool but is here used with type bool
+Relevant code: List.mem (h seen)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1402.ml", line 7, characters 23-31:
+And modified the following location:
+File "1402.ml", line 7, characters 33-34:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.mem
+If you ignore other surrounding code, try replacing
+    h
+with
+    h; [[...]]
+The actual replacement has type
+    'b list -> 'c
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if ((List.mem; [[...]]) ((h; [[...]]) seen)) then
+                                   []
+                                   else
+                                   h :: seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+Triaged the following locations:
+File "1402.ml", line 7, characters 23-31:
+And modified the following location:
+File "1402.ml", line 7, characters 35-39:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.mem
+If you ignore other surrounding code, try replacing
+    seen
+with
+    seen; [[...]]
+The actual replacement has type
+    'd
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if ((List.mem; [[...]]) (h (seen; [[...]]))) then
+                                   []
+                                   else
+                                   h :: seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================

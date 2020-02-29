@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "0916.ml", line 18, characters 22-50:
+This expression has type 'a -> 'b but is here used with type 'a
+Relevant code: (if l1 > l2 then l1 else l2)
+------------------------------------------------------------------
+File "0916.ml", line 18, characters 22-50:
+Try replacing
+    (if l1 > l2 then l1 else l2)
+with
+    (if l1 > l2 then l1 else l2); [[...]]
+of type
+    'c
+within context
+    fun l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                               | (l1e, l2e) -> (match a with 
+                                                                | (carry, list) ->
+                                                                  (let num =
+                                                                        (l1e + l2e)
+                                                                          + carry
+                                                                        in
+                                                                        (mod num 9),
+                                                                            [7]
+                                                                              @
+                                                                              list))) in let
+            base
+            =
+            0, []
+            in
+            let args = (List.combine l1 l2) in
+            let (_, res) = (List.fold_left f base  args) in
+            res in (removeZero (add (l1 ((if l1 > l2 then l1 else l2); [[...]])))))
+==============================
+File "0916.ml", line 18, characters 19-21:
+Try replacing
+    l1
+with
+    l1; [[...]]
+of type
+    'd -> int list * int list
+within context
+    fun l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                               | (l1e, l2e) -> (match a with 
+                                                                | (carry, list) ->
+                                                                  (let num =
+                                                                        (l1e + l2e)
+                                                                          + carry
+                                                                        in
+                                                                        (mod num 9),
+                                                                            [7]
+                                                                              @
+                                                                              list))) in let
+            base
+            =
+            0, []
+            in
+            let args = (List.combine l1 l2) in
+            let (_, res) = (List.fold_left f base  args) in
+            res in (removeZero (add ((l1; [[...]]) (if l1 > l2 then l1 else l2)))))
+==============================

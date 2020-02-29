@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "0393.ml", line 31, characters 6-63:
+This expression has type int but is here used with type float
+Relevant code: if (eval (e1, x, y)) < (eval (e2, x, y)) then (-1) else 1
+------------------------------------------------------------------
+File "0393.ml", line 31, characters 6-63:
+Try replacing
+    (if (eval (e1, x, y)) < (eval (e2, x, y)) then -1 else 1)
+with
+    (if (eval (e1, x, y)) < (eval (e2, x, y)) then -1 else 1); [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) /. 2.0)
+                                      +. ((eval (e2, x, y)) /. 2.0))
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Chunky (e1, e2, e3) ->
+                                ((eval (e1, x, y)) ** (eval (e2, x, y)))
+                                    ** (eval (e3, x, y))
+                              | Monkey (e1, e2) ->
+                                ((if (eval (e1, x, y)) < (eval (e2, x, y)) then -1
+                                      else
+                                      1);
+                                    [[...]])) ;; 
+==============================

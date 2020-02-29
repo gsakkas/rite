@@ -1,0 +1,180 @@
+------------------------------------------------------------------
+File "1109.ml", line 25, characters 58-59:
+This expression has type (int * 'a) list but is here used with type int list
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "1109.ml", line 26, characters 4-120:
+And modified the following location:
+File "1109.ml", line 25, characters 58-59:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    t
+with
+    t; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | h :: t -> (match h with 
+                                                               | (b, c) ->
+                                                                 (match x with 
+                                                                  | (first, second)
+                                                                    ->
+                                                                    (((first +
+                                                                                    second)
+                                                                                + b)
+                                                                            / 10
+                                                                          ,
+                                                                          (mod
+                                                                                ((first
+                                                                                        +
+                                                                                        second)
+                                                                                    +
+                                                                                    b) 10)
+                                                                              ::
+                                                                              t;
+                                                                              [[...]])))) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1109.ml", line 26, characters 4-120:
+And modified the following location:
+File "1109.ml", line 25, characters 23-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod ((first + second) + b) 10)
+with
+    (mod ((first + second) + b) 10); [[...]]
+The actual replacement has type
+    int * 'b
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | h :: t -> (match h with 
+                                                               | (b, c) ->
+                                                                 (match x with 
+                                                                  | (first, second)
+                                                                    ->
+                                                                    (((first +
+                                                                                    second)
+                                                                                + b)
+                                                                            / 10
+                                                                          ,
+                                                                          (mod
+                                                                                ((first
+                                                                                        +
+                                                                                        second)
+                                                                                    +
+                                                                                    b)
+                                                                                10);
+                                                                              [[...]]
+                                                                              ::
+                                                                              t)))) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1109.ml", line 26, characters 4-120:
+And modified the following location:
+File "1109.ml", line 25, characters 22-60:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod ((first + second) + b) 10) :: t
+with
+    (mod ((first + second) + b) 10), t
+The actual replacement has type
+    int * (int * 'c) list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | h :: t -> (match h with 
+                                                               | (b, c) ->
+                                                                 (match x with 
+                                                                  | (first, second)
+                                                                    ->
+                                                                    (((first +
+                                                                                    second)
+                                                                                + b)
+                                                                            / 10
+                                                                          ,
+                                                                          ((mod
+                                                                                ((first
+                                                                                        +
+                                                                                        second)
+                                                                                    +
+                                                                                    b) 10)
+                                                                              ,
+                                                                              t))))) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1109.ml", line 26, characters 4-120:
+And modified the following location:
+File "1109.ml", line 24, characters 20-113:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ((first + second) + b) / 10, (mod ((first + second) + b) 10) :: t
+with
+    ((first + second) + b) / 10
+The actual replacement has type
+    int
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | h :: t -> (match h with 
+                                                               | (b, c) ->
+                                                                 (match x with 
+                                                                  | (first, second)
+                                                                    ->
+                                                                    (((first +
+                                                                                    second)
+                                                                                + b)
+                                                                            /
+                                                                            10)))) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1109.ml", line 26, characters 4-120:
+And modified the following location:
+File "1109.ml", line 20, characters 17-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    h; [[...]]
+The actual replacement has type
+    int * 'd
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | h :: t ->
+                                                    (match (h; [[...]]) with 
+                                                     | (b, c) -> (match x with 
+                                                                  | (first, second)
+                                                                    ->
+                                                                    (((first +
+                                                                                    second)
+                                                                                + b)
+                                                                            / 10
+                                                                          ,
+                                                                          (mod
+                                                                                ((first
+                                                                                        +
+                                                                                        second)
+                                                                                    +
+                                                                                    b) 10)
+                                                                              ::
+                                                                              t)))) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1109.ml", line 26, characters 4-120:
+And modified the following location:
+File "1109.ml", line 17, characters 4-401:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match a with 
+                 | h :: t -> (match h with 
+                              | (b, c) -> (match x with 
+                                           | (first, second) ->
+                                             (((first + second) + b) / 10,
+                                                   (mod ((first + second) + b) 10)
+                                                       ::
+                                                       t)))) in let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'e
+==============================

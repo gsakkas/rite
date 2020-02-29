@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0279.ml", line 6, characters 40-51:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: listReverse
+------------------------------------------------------------------
+File "0279.ml", line 6, characters 40-63:
+Try replacing
+    (listReverse digitsOfInt (n / 10))
+with
+    (listReverse (digitsOfInt (n / 10)))
+of type
+    int list
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [] else (mod n 10) :: (listReverse (digitsOfInt (n / 10))))
+    ;; 
+==============================

@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1344.ml", line 17, characters 63-67:
+This expression has type 'a * 'b but is here used with type int list
+Relevant code: args
+------------------------------------------------------------------
+File "1344.ml", line 17, characters 41-55:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int -> int -> int) -> int -> 'c * 'd -> 'e * 'f
+within context
+    let f a x = a + x in
+      let base = 0 in
+      let args = l1, l2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

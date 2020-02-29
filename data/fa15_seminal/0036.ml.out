@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0036.ml", line 7, characters 37-59:
+This expression has type int but is here used with type 'a list
+Relevant code: ((digitsOfInt n) / 10)
+------------------------------------------------------------------
+File "0036.ml", line 7, characters 39-50:
+Try replacing
+    (digitsOfInt n) / 10
+with
+    (digitsOfInt (n / 10))
+of type
+    int list
+within context
+    fun n -> (match n < 0 with 
+              | true -> []
+              | false ->
+                (let remainder = (mod n 10) in
+                      (if n = 0 then [remainder] else
+                          (digitsOfInt (n / 10)) @ [remainder])))
+==============================

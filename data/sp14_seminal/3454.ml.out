@@ -1,0 +1,61 @@
+------------------------------------------------------------------
+File "3454.ml", line 15, characters 25-26:
+This expression has type int list but is here used with type int
+Relevant code: x
+------------------------------------------------------------------
+File "3454.ml", line 15, characters 7-28:
+Try replacing
+    (if (sumList (digitsOfInt n)) < 9 then
+      (1 :: x; (additivePersistence (sumList (digitsOfInt n))))
+      else
+      (1 :: x; (sumList [x])))
+with
+    (if (sumList (digitsOfInt n)) < 9 then
+      (1 :: x; (additivePersistence (sumList (digitsOfInt n)))))
+of type
+    unit
+==============================
+File "3454.ml", line 15, characters 16-23:
+Try replacing
+    sumList
+with
+    List.rev
+of type
+    int list list -> int list list
+within context
+    let rec additivePersistence n =
+    (if (sumList (digitsOfInt n)) < 9 then
+      (1 :: x; (additivePersistence (sumList (digitsOfInt n))))
+      else
+      (1 :: x; (List.rev [x])))
+    ;; 
+==============================
+File "3454.ml", line 15, characters 16-23:
+Try replacing
+    sumList
+with
+    <
+of type
+    int list list -> int list list -> bool
+within context
+    let rec additivePersistence n =
+    (if (sumList (digitsOfInt n)) < 9 then
+      (1 :: x; (additivePersistence (sumList (digitsOfInt n))))
+      else
+      (1 :: x; (< [x])))
+    ;; 
+==============================
+File "3454.ml", line 15, characters 25-26:
+Try replacing
+    x
+with
+    n
+of type
+    int
+within context
+    fun n ->
+      (if (sumList (digitsOfInt n)) < 9 then
+        (1 :: x; (additivePersistence (sumList (digitsOfInt n))))
+        else
+        (1 :: x; (sumList [n])))
+==============================

@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "1536.ml", line 6, characters 9-63:
+This expression has type ('a -> 'a * bool) * ('a -> 'a * bool)
+but is here used with type ('a -> 'a * bool) * 'a
+Relevant code: ((let f' b = if (f b) = b then b else f b in f' b), b)
+------------------------------------------------------------------
+File "1536.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    'b * 'b -> 'b * 'b -> bool
+within context
+    let fixpoint (f, b) =
+    (= ((let f' b = (if (f b) = b then b else (f b)) in (f' b)), b))
+    ;; 
+==============================
+File "1536.ml", line 6, characters 61-62:
+Try replacing
+    b
+with
+    =
+of type
+    (('c -> 'c -> bool) -> ('c -> 'c -> bool) * bool) * ('c -> 'c -> bool)
+within context
+    let fixpoint (f, b) =
+    (wwhile ((let f' b = (if (f b) = b then b else (f b)) in (f' b)), =))
+    ;; 
+==============================
+File "1536.ml", line 6, characters 61-62:
+Try replacing
+    b
+with
+    wwhile
+of type
+    ((('d -> 'd * bool) * 'd -> 'd) -> (('d -> 'd * bool) * 'd -> 'd) * bool) *
+    (('d -> 'd * bool) * 'd -> 'd)
+within context
+    let fixpoint (f, b) =
+    (wwhile ((let f' b = (if (f b) = b then b else (f b)) in (f' b)), wwhile))
+    ;; 
+==============================

@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "1508.ml", line 11, characters 13-67:
+This expression has type int list but is here used with type 'a list list
+Relevant code: ((clone 0 ((List.length l1) - (List.length l2))) @ l2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1508.ml", line 13, characters 4-112:
+And modified the following location:
+File "1508.ml", line 11, characters 13-67:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 ((List.length l1) - (List.length l2))) @ l2
+with
+    (clone 0 ((List.length l1) - (List.length l2))) @ l2; [[...]]
+The actual replacement has type
+    'b list list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      l1 :: (clone 0 ((List.length l1) - (List.length l2))) @ l2; [[...]]
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1508.ml", line 13, characters 4-112:
+And modified the following location:
+File "1508.ml", line 11, characters 7-9:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    int
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      l1; [[...]] :: (clone 0 ((List.length l1) - (List.length l2))) @ l2
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1508.ml", line 11, characters 7-67:
+And modified the following location:
+File "1508.ml", line 14, characters 9-69:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l2 :: (clone 0 ((List.length l2) - (List.length l1))) @ l1
+with
+    [[...]]
+The actual replacement has type
+    unit
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then [[...other program...]] else
+      (if (List.length l1) < (List.length l2) then [[...]]))
+    ;; 
+==============================

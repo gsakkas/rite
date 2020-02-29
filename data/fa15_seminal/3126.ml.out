@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "3126.ml", line 6, characters 9-67:
+This expression has type bool * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((match b with | b' -> if b = b' then false else true), b)
+------------------------------------------------------------------
+File "3126.ml", line 6, characters 10-66:
+Try replacing
+    (match b with 
+     | b' -> (if b = b' then false else true)), b
+with
+    b, (match b with 
+        | b' -> (if b = b' then false else true))
+of type
+    (bool -> bool * bool) * bool
+within context
+    let fixpoint (f, b) = (wwhile (b, (match b with 
+                                       | b' ->
+                                         (if b = b' then false else true)))) ;; 
+==============================
+File "3126.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    f
+of type
+    bool * 'c -> 'd
+within context
+    let fixpoint (f, b) = (f ((match b with 
+                               | b' -> (if b = b' then false else true)), b)) ;; 
+==============================
+File "3126.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    bool * 'e -> bool * 'e -> bool
+within context
+    let fixpoint (f, b) = (= ((match b with 
+                               | b' -> (if b = b' then false else true)), b)) ;; 
+==============================

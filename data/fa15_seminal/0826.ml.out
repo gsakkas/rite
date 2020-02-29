@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0826.ml", line 11, characters 54-75:
+This expression has type 'a list but is here used with type int
+Relevant code: 55 :: (digitsOfInt n)
+------------------------------------------------------------------
+File "0826.ml", line 11, characters 47-48:
+Try replacing
+    n
+with
+    n; [[...]]
+of type
+    int list
+within context
+    let rec additivePersistence n =
+    (if (lt10 n) then (n; [[...]]) else 55 :: (digitsOfInt n))
+    ;; 
+==============================
+File "0826.ml", line 11, characters 54-75:
+Try replacing
+    55 :: (digitsOfInt n)
+with
+    55 :: (digitsOfInt n); [[...]]
+of type
+    int
+within context
+    let rec additivePersistence n =
+    (if (lt10 n) then n else (55 :: (digitsOfInt n); [[...]]))
+    ;; 
+==============================

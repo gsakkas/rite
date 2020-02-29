@@ -1,0 +1,61 @@
+------------------------------------------------------------------
+File "2572.ml", line 8, characters 34-40:
+This expression has type 'a list but is here used with type 'a
+Relevant code: fourth
+------------------------------------------------------------------
+File "2572.ml", line 8, characters 34-40:
+Try replacing
+    fourth
+with
+    x
+of type
+    int list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | x :: [] -> [x]
+                             | head :: tail :: third :: fourth ->
+                               [x ; third ; tail ; head]) ;; 
+==============================
+File "2572.ml", line 8, characters 34-40:
+Try replacing
+    fourth
+with
+    third
+of type
+    'b
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | x :: [] -> [x]
+                             | head :: tail :: third :: fourth ->
+                               [third ; third ; tail ; head]) ;; 
+==============================
+File "2572.ml", line 8, characters 34-40:
+Try replacing
+    fourth
+with
+    tail
+of type
+    'c
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | x :: [] -> [x]
+                             | head :: tail :: third :: fourth ->
+                               [tail ; third ; tail ; head]) ;; 
+==============================
+File "2572.ml", line 8, characters 34-40:
+Try replacing
+    fourth
+with
+    head
+of type
+    'd
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | x :: [] -> [x]
+                             | head :: tail :: third :: fourth ->
+                               [head ; third ; tail ; head]) ;; 
+==============================

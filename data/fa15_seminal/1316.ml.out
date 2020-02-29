@@ -1,0 +1,64 @@
+------------------------------------------------------------------
+File "1316.ml", line 3, characters 60-64:
+This expression has type ('a -> 'b) -> int but is here used with type
+  ('a -> 'b) -> 'a -> 'b
+Relevant code: base
+------------------------------------------------------------------
+File "1316.ml", line 3, characters 12-15:
+Try replacing
+    fun x a -> (x a)
+with
+    fun (x, a) -> (x a)
+of type
+    ('c -> 'd) * 'c -> 'd
+within context
+    let pipe fs =
+    let f a x (x, a) = (x a) in let base f = 0 in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1316.ml", line 3, characters 34-39:
+Try replacing
+    fun f -> 0
+with
+    fun f _ -> 0
+of type
+    'e -> 'f -> int
+within context
+    let pipe fs =
+    let f a x x a = (x a) in let base f _ = 0 in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1316.ml", line 3, characters 34-39:
+Try replacing
+    fun f -> 0
+with
+    fun _ f -> 0
+of type
+    'g -> 'h -> int
+within context
+    let pipe fs =
+    let f a x x a = (x a) in let base _ f = 0 in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1316.ml", line 3, characters 43-57:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('i -> 'j -> ('k -> 'l) -> 'k -> 'l) -> ('m -> int) -> ('n -> 'o) -> 'n -> 'o
+within context
+    let pipe fs = let f a x x a = (x a) in let base f = 0 in (f f base  fs) ;; 
+==============================
+File "1316.ml", line 3, characters 60-64:
+Try replacing
+    base
+with
+    f
+of type
+    ('p -> ('q -> 'r) -> 'q -> 'r) -> 'p -> ('q -> 'r) -> 'q -> 'r
+within context
+    let pipe fs =
+    let f a x x a = (x a) in let base f = 0 in (List.fold_left f f  fs)
+    ;; 
+==============================

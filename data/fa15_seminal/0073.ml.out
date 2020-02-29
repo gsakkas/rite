@@ -1,0 +1,395 @@
+------------------------------------------------------------------
+File "0073.ml", line 28, characters 31-32:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 31-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e1
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 25-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (e1, x, y))
+with
+    (eval ((e1, x, y)))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval ((e1, x, y))) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 31-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e2
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e2, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 31-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, y, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, x)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 35-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1, x, y
+with
+    e1, y, x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, y, x)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 31-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1, x, y
+with
+    e1, x, y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 25-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 52-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2
+with
+    e1
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e1, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 46-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (e2, x, y))
+with
+    (eval ((e2, x, y)))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval ((e2, x, y)))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 52-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2
+with
+    e2
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0073.ml", line 22, characters 21-59:
+File "0073.ml", line 24, characters 6-100:
+File "0073.ml", line 28, characters 6-105:
+File "0073.ml", line 31, characters 19-36:
+And modified the following location:
+File "0073.ml", line 21, characters 52-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2
+with
+    e
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e, x, y))) /. 2.0)
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Uncreative (e1, e2, e3) -> [[...other program...]]
+                              | Creative e1 -> [[...other program...]]) ;; 
+==============================

@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1663.ml", line 20, characters 74-75:
+This expression has type int * int list but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+File "1663.ml", line 20, characters 74-75:
+Try replacing
+    a
+with
+    ans
+of type
+    int list
+within context
+    (if (let (carry, ans) = a in let (y, z) = x in (y + z) + carry > 9) then
+      (let (carry, ans) = a in
+          1, (let (y, z) = x in [(mod ((y + z) + carry) 10)] @ ans))
+      else
+      (let (carry, ans) = a in 0, (let (y, z) = x in [(y + z) + carry] @ ans)))
+==============================

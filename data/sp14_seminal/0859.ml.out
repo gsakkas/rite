@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "0859.ml", line 8, characters 4-5:
+This pattern matches values of type int
+but is here used to match values of type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "0859.ml", line 6, characters 13-24:
+Try replacing
+    listReverse
+with
+    <
+of type
+    int -> int -> bool
+within context
+    let rec digitsOfInt n = let this = (< n) in (match n with 
+                                                 | 0 -> []
+                                                 | n ->
+                                                   (if n < 0 then [] else
+                                                       (mod n 10) ::
+                                                           (digitsOfInt
+                                                             (n / 10)))) ;; 
+==============================
+File "0859.ml", line 6, characters 13-24:
+Try replacing
+    listReverse
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n = let this = (/ n) in (match n with 
+                                                 | 0 -> []
+                                                 | n ->
+                                                   (if n < 0 then [] else
+                                                       (mod n 10) ::
+                                                           (digitsOfInt
+                                                             (n / 10)))) ;; 
+==============================

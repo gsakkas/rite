@@ -1,0 +1,244 @@
+------------------------------------------------------------------
+File "1318.ml", line 28, characters 25-31:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: bigAdd
+------------------------------------------------------------------
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 40-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    /
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (/ l)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 40-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    >
+The actual replacement has type
+    'f -> 'f -> bool
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (> l)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 40-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    =
+The actual replacement has type
+    'g -> 'g -> bool
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (= l)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 40-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (+ l)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 40-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    -
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (- l)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 40-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    l; [[...]]
+The actual replacement has type
+    'h -> 'i
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd ((l; [[...]]) l)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 40-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    *
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (* l)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 42-43:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    =
+The actual replacement has type
+    'd -> 'd -> bool
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (l =)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 42-43:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    *
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (l *)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 42-43:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    l; [[...]]
+The actual replacement has type
+    'c
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (l (l; [[...]]))  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 42-43:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    -
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (l -)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 42-43:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (l +)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 42-43:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    /
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (l /)  (mulByDigit (i - 1) l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1318.ml", line 28, characters 25-31:
+And modified the following location:
+File "1318.ml", line 28, characters 42-43:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    >
+The actual replacement has type
+    'e -> 'e -> bool
+within context
+    let rec mulByDigit i l =
+    ((bigAdd; [[...]]) bigAdd (l >)  (mulByDigit (i - 1) l))
+    ;; 
+==============================

@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "1942.ml", line 14, characters 67-73:
+This expression has type bool * bool but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: (y, b)
+------------------------------------------------------------------
+File "1942.ml", line 14, characters 60-66:
+Try replacing
+    wwhile
+with
+    =
+of type
+    bool * bool -> bool * bool -> bool
+within context
+    let fixpoint (f, b) = let y x = (f b) in y, b = (f b) in (= (y, b));; 
+==============================
+File "1942.ml", line 14, characters 60-66:
+Try replacing
+    wwhile
+with
+    <
+of type
+    bool * bool -> bool * bool -> bool
+within context
+    let fixpoint (f, b) = let y x = (f b) in y, b = (f b) in (< (y, b));; 
+==============================

@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1309.ml", line 5, characters 26-34:
+This expression has type 'a list * 'b list but is here used with type unit
+Relevant code: (l1, l2)
+------------------------------------------------------------------
+File "1309.ml", line 5, characters 26-34:
+Try replacing
+    l1, l2
+with
+    l1, l2; [[...]]
+of type
+    unit
+within context
+    fun l1
+      l2 ->
+        (let difference1 = (List.length l1) - (List.length l2) in
+            let difference2 = (List.length l2) - (List.length l1) in
+            (if difference1 > 0 then (l1, l2; [[...]])))
+==============================

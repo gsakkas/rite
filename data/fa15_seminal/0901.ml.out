@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "0901.ml", line 2, characters 36-38:
+This pattern matches values of type 'a list
+but is here used to match values of type int
+Relevant code: []
+------------------------------------------------------------------
+File "0901.ml", line 2, characters 27-28:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    int list
+within context
+    let rec sumList xs = (match (1; [[...]]) with 
+                          | [] -> 0
+                          | x :: xs' -> x + (sumList xs')) ;; 
+==============================
+Triaged the following locations:
+File "0901.ml", line 2, characters 42-43:
+File "0901.ml", line 2, characters 46-52:
+File "0901.ml", line 2, characters 56-73:
+And modified the following location:
+File "0901.ml", line 2, characters 36-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    int
+within context
+    let rec sumList xs = (match 1 with 
+                          | _ -> [[...other program...]]
+                          |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0901.ml", line 2, characters 36-38:
+File "0901.ml", line 2, characters 42-43:
+File "0901.ml", line 2, characters 56-73:
+And modified the following location:
+File "0901.ml", line 2, characters 46-52:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x :: xs'
+with
+    _
+The actual replacement has type
+    int
+within context
+    let rec sumList xs = (match 1 with 
+                          |[[...other pattern...]]->[[...other program...]]
+                          | _ -> [[...other program...]]) ;; 
+==============================

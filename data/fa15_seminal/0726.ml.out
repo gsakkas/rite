@@ -1,0 +1,257 @@
+------------------------------------------------------------------
+File "0726.ml", line 30, characters 6-7:
+This pattern matches values of type int
+but is here used to match values of type int * int -> 'a
+Relevant code: 1
+------------------------------------------------------------------
+Triaged the following locations:
+File "0726.ml", line 30, characters 6-7:
+File "0726.ml", line 30, characters 11-47:
+File "0726.ml", line 31, characters 6-7:
+File "0726.ml", line 31, characters 11-49:
+File "0726.ml", line 32, characters 6-7:
+File "0726.ml", line 32, characters 11-60:
+File "0726.ml", line 33, characters 11-62:
+File "0726.ml", line 34, characters 6-7:
+File "0726.ml", line 35, characters 8-118:
+And modified the following location:
+File "0726.ml", line 33, characters 6-7:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    4
+with
+    _
+The actual replacement has type
+    int * int -> 'b
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let rand' = (rand (1, 5)) in (match rand with 
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      | _ -> [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]])) else buildX)
+    ;; 
+==============================
+Triaged the following locations:
+File "0726.ml", line 30, characters 11-47:
+File "0726.ml", line 31, characters 6-7:
+File "0726.ml", line 31, characters 11-49:
+File "0726.ml", line 32, characters 6-7:
+File "0726.ml", line 32, characters 11-60:
+File "0726.ml", line 33, characters 6-7:
+File "0726.ml", line 33, characters 11-62:
+File "0726.ml", line 34, characters 6-7:
+File "0726.ml", line 35, characters 8-118:
+And modified the following location:
+File "0726.ml", line 30, characters 6-7:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    1
+with
+    _
+The actual replacement has type
+    int * int -> 'c
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let rand' = (rand (1, 5)) in (match rand with 
+                                                      | _ -> [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]])) else buildX)
+    ;; 
+==============================
+Triaged the following locations:
+File "0726.ml", line 30, characters 6-7:
+File "0726.ml", line 30, characters 11-47:
+File "0726.ml", line 31, characters 11-49:
+File "0726.ml", line 32, characters 6-7:
+File "0726.ml", line 32, characters 11-60:
+File "0726.ml", line 33, characters 6-7:
+File "0726.ml", line 33, characters 11-62:
+File "0726.ml", line 34, characters 6-7:
+File "0726.ml", line 35, characters 8-118:
+And modified the following location:
+File "0726.ml", line 31, characters 6-7:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    2
+with
+    _
+The actual replacement has type
+    int * int -> 'd
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let rand' = (rand (1, 5)) in (match rand with 
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      | _ -> [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]])) else buildX)
+    ;; 
+==============================
+Triaged the following locations:
+File "0726.ml", line 30, characters 6-7:
+File "0726.ml", line 30, characters 11-47:
+File "0726.ml", line 31, characters 6-7:
+File "0726.ml", line 31, characters 11-49:
+File "0726.ml", line 32, characters 11-60:
+File "0726.ml", line 33, characters 6-7:
+File "0726.ml", line 33, characters 11-62:
+File "0726.ml", line 34, characters 6-7:
+File "0726.ml", line 35, characters 8-118:
+And modified the following location:
+File "0726.ml", line 32, characters 6-7:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    3
+with
+    _
+The actual replacement has type
+    int * int -> 'e
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let rand' = (rand (1, 5)) in (match rand with 
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      | _ -> [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]])) else buildX)
+    ;; 
+==============================
+Triaged the following locations:
+File "0726.ml", line 30, characters 6-7:
+File "0726.ml", line 30, characters 11-47:
+File "0726.ml", line 31, characters 6-7:
+File "0726.ml", line 31, characters 11-49:
+File "0726.ml", line 32, characters 6-7:
+File "0726.ml", line 32, characters 11-60:
+File "0726.ml", line 33, characters 6-7:
+File "0726.ml", line 33, characters 11-62:
+File "0726.ml", line 35, characters 8-118:
+And modified the following location:
+File "0726.ml", line 34, characters 6-7:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    5
+with
+    _
+The actual replacement has type
+    int * int -> 'f
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let rand' = (rand (1, 5)) in (match rand with 
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      |
+                                                        [[...other pattern...]]
+                                                        ->
+                                                        [[...other program...]]
+                                                      | _ ->
+                                                        [[...other program...]])) else buildX)
+    ;; 
+==============================
+Triaged the following locations:
+File "0726.ml", line 30, characters 11-47:
+File "0726.ml", line 31, characters 11-49:
+File "0726.ml", line 32, characters 11-60:
+File "0726.ml", line 33, characters 11-62:
+File "0726.ml", line 35, characters 8-118:
+And modified the following location:
+File "0726.ml", line 29, characters 10-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand
+with
+    rand; [[...]]
+The actual replacement has type
+    int
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let rand' = (rand (1, 5)) in (match (rand; [[...]]) with 
+                                                      | 1 -> [[...other program...]]
+                                                      | 2 -> [[...other program...]]
+                                                      | 3 -> [[...other program...]]
+                                                      | 4 -> [[...other program...]]
+                                                      | 5 ->
+                                                        [[...other program...]])) else buildX)
+    ;; 
+==============================
+Triaged the following locations:
+File "0726.ml", line 30, characters 11-47:
+File "0726.ml", line 31, characters 11-49:
+File "0726.ml", line 32, characters 11-60:
+File "0726.ml", line 33, characters 11-62:
+File "0726.ml", line 35, characters 8-118:
+And modified the following location:
+File "0726.ml", line 29, characters 10-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand
+with
+    rand'
+The actual replacement has type
+    int
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let rand' = (rand (1, 5)) in (match rand' with 
+                                                      | 1 -> [[...other program...]]
+                                                      | 2 -> [[...other program...]]
+                                                      | 3 -> [[...other program...]]
+                                                      | 4 -> [[...other program...]]
+                                                      | 5 ->
+                                                        [[...other program...]])) else buildX)
+    ;; 
+==============================

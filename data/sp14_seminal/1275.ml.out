@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "1275.ml", line 12, characters 30-55:
+This expression is not a function, it cannot be applied
+Relevant code: (sumList (digitsOfInt n))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1275.ml", line 12, characters 9-28:
+And modified the following location:
+File "1275.ml", line 12, characters 30-55:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    additivePersistence
+If you ignore other surrounding code, try replacing
+    (sumList (digitsOfInt n))
+with
+    (sumList (digitsOfInt n)); [[...]]
+The actual replacement has type
+    int -> 'c
+within context
+    let rec additivePersistence n count = (match n with 
+                                           | 0 -> count
+                                           | _ ->
+                                             ((additivePersistence; [[...]])
+                                                 (((sumList (digitsOfInt n));
+                                                     [[...]])
+                                                   (count + 1)))) ;; 
+==============================
+Triaged the following locations:
+File "1275.ml", line 12, characters 9-28:
+And modified the following location:
+File "1275.ml", line 12, characters 56-67:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    additivePersistence
+If you ignore other surrounding code, try replacing
+    ((sumList (digitsOfInt n)) (count + 1))
+with
+    (sumList (digitsOfInt n))
+The actual replacement has type
+    int
+within context
+    let rec additivePersistence n count = (match n with 
+                                           | 0 -> count
+                                           | _ ->
+                                             ((additivePersistence; [[...]])
+                                                 (sumList (digitsOfInt n)))) ;; 
+==============================

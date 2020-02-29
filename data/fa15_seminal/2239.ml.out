@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2239.ml", line 22, characters 65-66:
+This expression has type int but is here used with type int list
+Relevant code: 1
+------------------------------------------------------------------
+File "2239.ml", line 22, characters 65-66:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    int list
+within context
+    (match a with 
+     | (o, l) ->
+       (let sum = o + x in
+             (if sum < 10 then 0, x :: l else 1, (mod x 10) :: 1; [[...]])))
+==============================

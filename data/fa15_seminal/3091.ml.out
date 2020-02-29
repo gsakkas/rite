@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "3091.ml", line 4, characters 28-76:
+This expression has type ('a -> ((bool -> bool) -> 'a) * bool) * 'b
+but is here used with type ('a -> 'a * bool) * 'a
+Relevant code: ((let f' x = ((f x), ((f x not) = x)) in f'), b)
+------------------------------------------------------------------
+File "3091.ml", line 4, characters 29-75:
+Try replacing
+    (let f' x = (f x), (f x not) = x in f'), b
+with
+    b, (let f' x = (f x), (f x not) = x in f')
+of type
+    (('c -> ((bool -> bool) -> 'c) * bool) ->
+     ('c -> ((bool -> bool) -> 'c) * bool) * bool) *
+    ('c -> ((bool -> bool) -> 'c) * bool)
+within context
+    let fixpoint (f, b) = (wwhile (b, (let f' x = (f x), (f x not) = x in f'))) ;; 
+==============================
+File "3091.ml", line 4, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('d -> ((bool -> bool) -> 'd) * bool) * 'e ->
+    ('d -> ((bool -> bool) -> 'd) * bool) * 'e -> bool
+within context
+    let fixpoint (f, b) = (= ((let f' x = (f x), (f x not) = x in f'), b)) ;; 
+==============================
+File "3091.ml", line 4, characters 43-44:
+Try replacing
+    f
+with
+    not
+of type
+    bool -> bool
+within context
+    (let f' x = (not x), (f x not) = x in f'), b
+==============================
+File "3091.ml", line 4, characters 62-63:
+Try replacing
+    x
+with
+    =
+of type
+    'f -> 'f -> bool
+within context
+    (let f' x = (f x), (f x not) = = in f'), b
+==============================
+File "3091.ml", line 4, characters 62-63:
+Try replacing
+    x
+with
+    not
+of type
+    bool -> bool
+within context
+    (let f' x = (f x), (f x not) = not in f'), b
+==============================

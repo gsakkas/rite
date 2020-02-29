@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1560.ml", line 3, characters 46-53:
+This expression has type 'a * 'b but is here used with type 'a * ('b * bool)
+Relevant code: (f, h1)
+------------------------------------------------------------------
+File "1560.ml", line 3, characters 50-52:
+Try replacing
+    h1
+with
+    f
+of type
+    ('c * bool) * ('c * bool)
+within context
+    fun (f, b) -> (match b with 
+                   | (h1, h2) -> (if h2 then (wwhile (f, f)) else h1))
+==============================
+File "1560.ml", line 3, characters 50-52:
+Try replacing
+    h1
+with
+    b
+of type
+    'd * ('e * bool)
+within context
+    fun (f, b) -> (match b with 
+                   | (h1, h2) -> (if h2 then (wwhile (f, b)) else h1))
+==============================
+File "1560.ml", line 3, characters 8-9:
+Try replacing
+    b
+with
+    f
+of type
+    'f * bool
+within context
+    let rec wwhile (f, b) = (match f with 
+                             | (h1, h2) ->
+                               (if h2 then (wwhile (f, h1)) else h1)) ;; 
+==============================

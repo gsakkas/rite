@@ -1,0 +1,425 @@
+------------------------------------------------------------------
+File "2492.ml", line 29, characters 8-66:
+This expression has type int but is here used with type float
+Relevant code: if (evalhelper p1 x y) < (evalhelper p2 x y) then 1 else 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 22-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    pi
+with
+    pi
+The actual replacement has type
+    float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 40-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (evalhelper p1 x  y)
+with
+    (evalhelper p1 x  y)
+The actual replacement has type
+    float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 43-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (evalhelper p1 x  y)
+with
+    (evalhelper p1 y  x)
+The actual replacement has type
+    float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper p1 y  x)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper p1 x  x)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 43-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper p1 y  y)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 43-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 40-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    p1
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper e x  y)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 40-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    p1
+with
+    p1
+The actual replacement has type
+    expr
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 29-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    evalhelper
+with
+    evalhelper
+The actual replacement has type
+    expr -> float -> float -> float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 17-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sin
+with
+    cos
+The actual replacement has type
+    float -> float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (cos (pi *. (evalhelper p1 x  y)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 21, characters 19-50:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 20, characters 17-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sin
+with
+    sin
+The actual replacement has type
+    float -> float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 20, characters 17-48:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 21, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> (cos (pi *. (evalhelper p1 y  y)))
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 20, characters 17-48:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 21, characters 42-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (evalhelper p1 x  y)
+with
+    (evalhelper p1 x  y)
+The actual replacement has type
+    float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> (cos (pi *. (evalhelper p1 x  y)))
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2492.ml", line 20, characters 17-48:
+File "2492.ml", line 22, characters 25-76:
+File "2492.ml", line 23, characters 23-65:
+File "2492.ml", line 25, characters 8-114:
+File "2492.ml", line 29, characters 8-66:
+File "2492.ml", line 31, characters 8-69:
+And modified the following location:
+File "2492.ml", line 21, characters 24-26:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    pi
+with
+    pi
+The actual replacement has type
+    float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> (cos (pi *. (evalhelper p1 x  y)))
+                                | Average (p1, p2) -> [[...other program...]]
+                                | Times (p1, p2) -> [[...other program...]]
+                                | Thresh (p1, p2, p3, p4) -> [[...other program...]]
+                                | Thresh2 (p1, p2) -> [[...other program...]]
+                                | Thresh3 (p1, p2) ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================

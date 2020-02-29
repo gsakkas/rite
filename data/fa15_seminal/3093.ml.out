@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "3093.ml", line 17, characters 30-70:
+This expression has type expr but is here used with type unit
+Relevant code: (if x = 1 then buildX () else buildY ())
+------------------------------------------------------------------
+File "3093.ml", line 17, characters 7-70:
+Try replacing
+    let x = (rand (1, 2)) in (if x = 1 then (buildX ()) else (buildY ()))
+with
+    let x = (rand (1, 2)) in (if x = 1 then (buildX ()) else (buildY ())); [[...]]
+of type
+    unit
+within context
+    let rec build (rand, depth) =
+    (if (depth <= 0) then
+      (let x = (rand (1, 2)) in (if x = 1 then (buildX ()) else (buildY ()));
+        [[...]]))
+    ;; 
+==============================

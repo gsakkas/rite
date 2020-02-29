@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0090.ml", line 12, characters 67-73:
+This expression has type int list but is here used with type int -> 'a
+Relevant code: digits
+------------------------------------------------------------------
+File "0090.ml", line 12, characters 50-61:
+Try replacing
+    digitalRoot
+with
+    digits
+of type
+    int list
+within context
+    let rec digitalRoot n =
+    let digits = (digitsOfInt n) in
+      let s = (sumList digits) in (if (n / 10 <> 0) then digits else digits)
+    ;; 
+==============================

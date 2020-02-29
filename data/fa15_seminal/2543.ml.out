@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "2543.ml", line 30, characters 63-65:
+This expression has type int but is here used with type int list
+Relevant code: 10
+------------------------------------------------------------------
+Triaged the following locations:
+File "2543.ml", line 30, characters 33-39:
+And modified the following location:
+File "2543.ml", line 30, characters 43-73:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit (x l1) 10) ** a1
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    let f a x = let (a1, a2) = a in ((bigAdd; [[...]]) a2 [[...]]) in
+      let base = 0, [] in
+      let args = (List.rev l1) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

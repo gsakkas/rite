@@ -1,0 +1,83 @@
+------------------------------------------------------------------
+File "0925.ml", line 17, characters 40-44:
+This expression has type (('a list -> ('b * 'a) list) * 'c) list
+but is here used with type 'd list list
+Relevant code: args
+------------------------------------------------------------------
+File "0925.ml", line 17, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'e list -> ('f list -> ('g * 'f) list) * 'h -> int * 'e list
+within context
+    let f a x = (match x with 
+                 | [] ->
+                   a) in let base = 0, [] in
+      let args = [(List.combine l1), l2] in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0925.ml", line 17, characters 40-44:
+Try replacing
+    args
+with
+    args; [[...]]
+of type
+    'i list list
+within context
+    let f a x = (match x with 
+                 | [] ->
+                   a) in let base = 0, [] in
+      let args = [(List.combine l1), l2] in
+      let (_, res) = (List.fold_left f base  (args; [[...]])) in res
+==============================
+File "0925.ml", line 17, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('j -> 'k list -> 'j) ->
+    int * 'l list -> (('m list -> ('n * 'm) list) * 'o) list -> 'p * 'q
+within context
+    let f a x = (match x with 
+                 | [] ->
+                   a) in let base = 0, [] in
+      let args = [(List.combine l1), l2] in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0925.ml", line 16, characters 15-40:
+Try replacing
+    [(List.combine l1), l2]
+with
+    [(List.combine l1), l2]; [[...]]
+of type
+    'r
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | [] ->
+                                      a) in let base = 0, [] in
+        let args = [(List.combine l1), l2]; [[...]] in
+        let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add (padZero l1 l2)))
+==============================
+File "0925.ml", line 14, characters 10-38:
+Try replacing
+    fun a x -> (match x with 
+                | [] -> a)
+with
+    fun a x -> (match x with 
+                | [] -> a); [[...]]
+of type
+    's
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f = fun a x -> (match x with 
+                                                         | [] ->
+                                                           a); [[...]] in let base =
+              0, []
+              in
+              let args = [(List.combine l1), l2] in
+              let (_, res) = (List.fold_left f base  args) in
+              res in (removeZero (add (padZero l1 l2))))
+==============================

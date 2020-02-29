@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "2916.ml", line 15, characters 63-64:
+This expression has type int but is here used with type unit
+Relevant code: 8
+------------------------------------------------------------------
+Triaged the following locations:
+File "2916.ml", line 16, characters 4-89:
+And modified the following location:
+File "2916.ml", line 15, characters 49-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if h > 9 then 8)
+with
+    [[...]]
+The actual replacement has type
+    int
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | [] -> 0
+                                                  | h :: t ->
+                                                    [[...]]) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2916.ml", line 16, characters 4-89:
+And modified the following location:
+File "2916.ml", line 15, characters 4-157:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match x with 
+                 | [] -> 0
+                 | h :: t ->
+                   (if h > 9 then
+                       8)) in let base = [] in
+      let args = l1 in let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "1953.ml", line 7, characters 11-14:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: not
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "1953.ml", line 7, characters 11-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    not
+with
+    not; [[...]]
+The actual replacement has type
+    ('b -> 'b list -> bool) -> 'c list -> 'c -> bool
+within context
+    fun l -> (let rec helper (seen, rest) = (match rest with 
+                                             | [] -> seen
+                                             | h :: t ->
+                                               (if ((not; [[...]]) List.mem seen  h)
+                                                   then
+                                                   (let seen' = h :: seen in
+                                                       let rest' = t in
+                                                       (helper (seen', rest')))
+                                                   else
+                                                   [[...]])) in (List.rev
+              (helper ([], l))))
+==============================

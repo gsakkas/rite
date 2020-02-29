@@ -1,0 +1,87 @@
+------------------------------------------------------------------
+File "2638.ml", line 22, characters 35-36:
+This expression is not a function, it cannot be applied
+Relevant code: b
+------------------------------------------------------------------
+Triaged the following locations:
+File "2638.ml", line 23, characters 11-28:
+File "2638.ml", line 24, characters 11-28:
+And modified the following location:
+File "2638.ml", line 22, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    b
+with
+    b; [[...]]
+The actual replacement has type
+    float -> float -> expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, a_less, b_less) ->
+                                (if (eval (a, x, y)) < (eval ((b; [[...]]) x y))
+                                    then
+                                    [[...other program...]]
+                                    else
+                                    [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2638.ml", line 22, characters 9-42:
+File "2638.ml", line 23, characters 11-28:
+And modified the following location:
+File "2638.ml", line 24, characters 17-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    b_less
+with
+    b_less; [[...]]
+The actual replacement has type
+    float -> float -> expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, a_less, b_less) ->
+                                (if [[...other program...]] then
+                                    [[...other program...]]
+                                    else
+                                    (eval ((b_less; [[...]]) x y)))) ;; 
+==============================
+Triaged the following locations:
+File "2638.ml", line 22, characters 9-42:
+File "2638.ml", line 24, characters 11-28:
+And modified the following location:
+File "2638.ml", line 23, characters 17-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a_less
+with
+    a_less; [[...]]
+The actual replacement has type
+    float -> float -> expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, a_less, b_less) ->
+                                (if [[...other program...]] then
+                                    (eval ((a_less; [[...]]) x y))
+                                    else
+                                    [[...other program...]])) ;; 
+==============================

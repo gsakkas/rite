@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "0563.ml", line 12, characters 64-65:
+This expression has type expr but is here used with type expr * 'a * 'a
+Relevant code: e
+------------------------------------------------------------------
+File "0563.ml", line 12, characters 64-67:
+Try replacing
+    (eval e x  y)
+with
+    (eval (e, x, y))
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin (eval (e, x, y)))) ;; 
+==============================
+File "0563.ml", line 11, characters 13-20:
+Try replacing
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine e1 -> (sin (eval e x  y)))
+with
+    fun e x y -> (match e with 
+                  | VarX -> x
+                  | VarY -> y
+                  | Sine e1 -> (sin (eval e x  y)))
+of type
+    expr -> float -> float -> float
+==============================

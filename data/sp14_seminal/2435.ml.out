@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2435.ml", line 5, characters 51-77:
+This expression has type int list * 'a list but is here used with type unit
+Relevant code: ((List.append [0] l1), l2)
+------------------------------------------------------------------
+File "2435.ml", line 5, characters 7-77:
+Try replacing
+    (if (List.length l1) < (List.length l2) then (List.append [0] l1), l2)
+with
+    [[...]]
+of type
+    'b list * 'c list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) = (List.length l2) then l1, l2 else [[...]])
+    ;; 
+==============================

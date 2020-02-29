@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "3440.ml", line 8, characters 51-52:
+This expression has type int list but is here used with type int
+Relevant code: t
+------------------------------------------------------------------
+File "3440.ml", line 8, characters 51-52:
+Try replacing
+    t
+with
+    n
+of type
+    int
+within context
+    let rec additivePersistence n = (match (digitsOfInt n) with 
+                                     | [] -> 0
+                                     | h :: t -> h + n) ;; 
+==============================
+File "3440.ml", line 8, characters 51-52:
+Try replacing
+    t
+with
+    h
+of type
+    int
+within context
+    let rec additivePersistence n = (match (digitsOfInt n) with 
+                                     | [] -> 0
+                                     | h :: t -> h + h) ;; 
+==============================

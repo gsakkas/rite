@@ -1,0 +1,92 @@
+------------------------------------------------------------------
+File "0912.ml", line 21, characters 63-64:
+This expression has type int but is here used with type 'a list
+Relevant code: 7
+------------------------------------------------------------------
+Triaged the following locations:
+File "0912.ml", line 25, characters 2-65:
+And modified the following location:
+File "0912.ml", line 21, characters 65-66:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int -> 'b -> 'c
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match x with 
+                                                       | (l1e, l2e) ->
+                                                         (match a with 
+                                                          | (carry, list) ->
+                                                            (let num =
+                                                                  (l1e + l2e)
+                                                                    + carry
+                                                                  in
+                                                                  (mod num 9),
+                                                                      (7 @; [[...]]
+                                                                          list)))) in let
+        base
+        =
+        0, []
+        in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in
+        res in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "0912.ml", line 25, characters 2-65:
+And modified the following location:
+File "0912.ml", line 21, characters 63-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    7
+with
+    7; [[...]]
+The actual replacement has type
+    'd list
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match x with 
+                                                       | (l1e, l2e) ->
+                                                         (match a with 
+                                                          | (carry, list) ->
+                                                            (let num =
+                                                                  (l1e + l2e)
+                                                                    + carry
+                                                                  in
+                                                                  (mod num 9),
+                                                                      (7; [[...]])
+                                                                        @
+                                                                        list))) in let
+        base
+        =
+        0, []
+        in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in
+        res in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "0912.ml", line 25, characters 2-65:
+And modified the following location:
+File "0912.ml", line 15, characters 2-390:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (l1e, l2e) -> (match a with 
+                                                     | (carry, list) ->
+                                                       (let num =
+                                                             (l1e + l2e) + carry
+                                                             in
+                                                             (mod num 9),
+                                                                 7 @
+                                                                   list))) in let
+        base
+        =
+        0, []
+        in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add ((padZero l1 l2) (if l1 > l2 then l1 else l2))))
+with
+    [[...other program...]]
+The actual replacement has type
+    'e
+==============================

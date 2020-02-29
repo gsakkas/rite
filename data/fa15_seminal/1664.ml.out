@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "1664.ml", line 18, characters 16-72:
+This expression has type int * int list but is here used with type int
+Relevant code: (1, (let (y,z) = x in [((y + z) + carry) mod 10] @ ans))
+------------------------------------------------------------------
+File "1664.ml", line 18, characters 8-13:
+Try replacing
+    clone
+with
+    clone; [[...]]
+of type
+    int -> int * int list -> int * int list
+within context
+    fun a
+      x ->
+        (if (let (carry, ans) = a in let (y, z) = x in (y + z) + carry > 9) then
+          (let (carry, ans) = a in
+              ((clone; [[...]])
+                  1 (1, (let (y, z) = x in [(mod ((y + z) + carry) 10)] @ ans))))
+          else
+          (let (carry, ans) = a in 0, (let (y, z) = x in [(y + z) + carry] @ ans)))
+==============================

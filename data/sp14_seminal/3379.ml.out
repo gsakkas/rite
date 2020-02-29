@@ -1,0 +1,100 @@
+
+------------------------------------------------------------------
+File "3379.ml", line 9, characters 39-49:
+This expression has type int but is here used with type 'a list
+Relevant code: (v mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3379.ml", line 9, characters 31-68:
+And modified the following location:
+File "3379.ml", line 9, characters 15-16:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    'b
+within context
+    let base = 0 in
+      let rec helper acc v =
+      (if v = (0; [[...]]) then acc else [[...other program...]])
+      in
+      (helper
+          []
+          [
+              (List.fold_left
+                f base
+                ((mulByDigit i (List.rev (List.map (fun x -> x * 10) t)))
+                    @ [h * i]))
+              ])
+==============================
+Triaged the following locations:
+File "3379.ml", line 9, characters 31-68:
+And modified the following location:
+File "3379.ml", line 9, characters 13-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    =
+with
+    =; [[...]]
+The actual replacement has type
+    'c -> int -> bool
+within context
+    let base = 0 in
+      let rec helper acc v =
+      (if (v =; [[...]] 0) then acc else [[...other program...]])
+      in
+      (helper
+          []
+          [
+              (List.fold_left
+                f base
+                ((mulByDigit i (List.rev (List.map (fun x -> x * 10) t)))
+                    @ [h * i]))
+              ])
+==============================
+Triaged the following locations:
+File "3379.ml", line 9, characters 31-68:
+And modified the following location:
+File "3379.ml", line 9, characters 11-12:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    v
+with
+    v; [[...]]
+The actual replacement has type
+    int
+within context
+    let base = 0 in
+      let rec helper acc v =
+      (if (v; [[...]]) = 0 then acc else [[...other program...]])
+      in
+      (helper
+          []
+          [
+              (List.fold_left
+                f base
+                ((mulByDigit i (List.rev (List.map (fun x -> x * 10) t)))
+                    @ [h * i]))
+              ])
+==============================
+Triaged the following locations:
+File "3379.ml", line 9, characters 31-68:
+And modified the following location:
+File "3379.ml", line 9, characters 11-12:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    v
+with
+    h
+The actual replacement has type
+    int
+within context
+    let base = 0 in
+      let rec helper acc v = (if h = 0 then acc else [[...other program...]]) in
+      (helper
+          []
+          [
+              (List.fold_left
+                f base
+                ((mulByDigit i (List.rev (List.map (fun x -> x * 10) t)))
+                    @ [h * i]))
+              ])
+==============================

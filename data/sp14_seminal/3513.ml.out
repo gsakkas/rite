@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "3513.ml", line 6, characters 28-72:
+This expression should not be a function, the expected type is
+('a -> 'a * bool) * 'a
+Relevant code: (fun f  -> fun b  -> ((f, ((f b) <> b)), b))
+------------------------------------------------------------------
+File "3513.ml", line 6, characters 21-27:
+Try replacing
+    wwhile
+with
+    b
+of type
+    (('b -> 'b) -> 'b -> (('b -> 'b) * bool) * 'b) -> 'c
+within context
+    let fixpoint (f, b) = (b (fun f b -> ((f, ((f b) <> b)), b))) ;; 
+==============================
+File "3513.ml", line 6, characters 21-27:
+Try replacing
+    wwhile
+with
+    <>
+of type
+    (('d -> 'd) -> 'd -> (('d -> 'd) * bool) * 'd) ->
+    (('d -> 'd) -> 'd -> (('d -> 'd) * bool) * 'd) -> bool
+within context
+    let fixpoint (f, b) = (<> (fun f b -> ((f, ((f b) <> b)), b))) ;; 
+==============================
+File "3513.ml", line 6, characters 21-27:
+Try replacing
+    wwhile
+with
+    f
+of type
+    (('e -> 'e) -> 'e -> (('e -> 'e) * bool) * 'e) -> 'f
+within context
+    let fixpoint (f, b) = (f (fun f b -> ((f, ((f b) <> b)), b))) ;; 
+==============================

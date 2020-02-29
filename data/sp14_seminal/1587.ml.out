@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "1587.ml", line 19, characters 25-27:
+This expression has type expr but is here used with type int
+Relevant code: e1
+------------------------------------------------------------------
+Triaged the following locations:
+File "1587.ml", line 19, characters 24-35:
+And modified the following location:
+File "1587.ml", line 19, characters 43-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    expr -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (pi *. x)
+                              | Cosine e -> (pi *. y)
+                              | Average (e1, e2) ->
+                                (([[...other program...]] +. (e2 *; [[...]] 1.00))
+                                      /. 2.0)) ;; 
+==============================
+Triaged the following locations:
+File "1587.ml", line 19, characters 39-50:
+And modified the following location:
+File "1587.ml", line 19, characters 28-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    expr -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (pi *. x)
+                              | Cosine e -> (pi *. y)
+                              | Average (e1, e2) ->
+                                (((e1 *; [[...]] 1.00) +. [[...other program...]])
+                                      /. 2.0)) ;; 
+==============================

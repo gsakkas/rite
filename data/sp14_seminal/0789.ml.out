@@ -1,0 +1,126 @@
+------------------------------------------------------------------
+File "0789.ml", line 30, characters 4-21:
+The constructor Op2 expects 3 argument(s),
+but is here applied to 4 argument(s)
+Relevant code: Op2 (e1,e2,e3,e4)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0789.ml", line 17, characters 13-14:
+File "0789.ml", line 18, characters 13-14:
+File "0789.ml", line 19, characters 14-42:
+File "0789.ml", line 20, characters 16-44:
+File "0789.ml", line 21, characters 23-70:
+File "0789.ml", line 22, characters 21-59:
+File "0789.ml", line 24, characters 6-100:
+File "0789.ml", line 28, characters 6-86:
+File "0789.ml", line 31, characters 6-100:
+And modified the following location:
+File "0789.ml", line 30, characters 9-11:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1, e2, e3, e4
+with
+    e2, e3, e4
+The actual replacement has type
+    expr * 'l * 'm -> 'n
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine e -> [[...other program...]]
+                              | Cosine e -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Op1 e -> [[...other program...]]
+                              | Op2 (e2, e3, e4) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0789.ml", line 17, characters 13-14:
+File "0789.ml", line 18, characters 13-14:
+File "0789.ml", line 19, characters 14-42:
+File "0789.ml", line 20, characters 16-44:
+File "0789.ml", line 21, characters 23-70:
+File "0789.ml", line 22, characters 21-59:
+File "0789.ml", line 24, characters 6-100:
+File "0789.ml", line 28, characters 6-86:
+File "0789.ml", line 31, characters 6-100:
+And modified the following location:
+File "0789.ml", line 30, characters 12-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1, e2, e3, e4
+with
+    e1, e3, e4
+The actual replacement has type
+    expr * 'i * 'j -> 'k
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine e -> [[...other program...]]
+                              | Cosine e -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Op1 e -> [[...other program...]]
+                              | Op2 (e1, e3, e4) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0789.ml", line 17, characters 13-14:
+File "0789.ml", line 18, characters 13-14:
+File "0789.ml", line 19, characters 14-42:
+File "0789.ml", line 20, characters 16-44:
+File "0789.ml", line 21, characters 23-70:
+File "0789.ml", line 22, characters 21-59:
+File "0789.ml", line 24, characters 6-100:
+File "0789.ml", line 28, characters 6-86:
+File "0789.ml", line 31, characters 6-100:
+And modified the following location:
+File "0789.ml", line 30, characters 15-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1, e2, e3, e4
+with
+    e1, e2, e4
+The actual replacement has type
+    expr * 'f * 'g -> 'h
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine e -> [[...other program...]]
+                              | Cosine e -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Op1 e -> [[...other program...]]
+                              | Op2 (e1, e2, e4) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0789.ml", line 17, characters 13-14:
+File "0789.ml", line 18, characters 13-14:
+File "0789.ml", line 19, characters 14-42:
+File "0789.ml", line 20, characters 16-44:
+File "0789.ml", line 21, characters 23-70:
+File "0789.ml", line 22, characters 21-59:
+File "0789.ml", line 24, characters 6-100:
+File "0789.ml", line 28, characters 6-86:
+File "0789.ml", line 31, characters 6-100:
+And modified the following location:
+File "0789.ml", line 30, characters 18-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1, e2, e3, e4
+with
+    e1, e2, e3
+The actual replacement has type
+    expr * 'c * 'd -> 'e
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine e -> [[...other program...]]
+                              | Cosine e -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Op1 e -> [[...other program...]]
+                              | Op2 (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================

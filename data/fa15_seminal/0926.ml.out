@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+File "0926.ml", line 29, characters 38-50:
+This expression has type int list -> int list but is here used with type
+  'a list
+Relevant code: (padZero l1)
+------------------------------------------------------------------
+File "0926.ml", line 29, characters 50-50:
+Try replacing
+    (padZero l1)
+with
+    (padZero l1 [[...]])
+of type
+    int list
+within context
+    let f a x = (match x with 
+                 | (l1e, l2e) -> (match a with 
+                                  | (carry, list) ->
+                                    (let num = (l1e + l2e) + carry in
+                                          (if num < 10 then 0, [num] @ list else
+                                              (if num = 10 then 1, [0] @ list else
+                                                num / 10,
+                                                  [(mod num 10)]
+                                                    @
+                                                    list))))) in let base = 0, [] in
+      let args = (List.combine (List.rev (padZero l1 [[...]])) (List.rev l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "0926.ml", line 29, characters 49-49:
+Try replacing
+    (padZero l1)
+with
+    (padZero [[...]] l1)
+of type
+    int list
+within context
+    let f a x = (match x with 
+                 | (l1e, l2e) -> (match a with 
+                                  | (carry, list) ->
+                                    (let num = (l1e + l2e) + carry in
+                                          (if num < 10 then 0, [num] @ list else
+                                              (if num = 10 then 1, [0] @ list else
+                                                num / 10,
+                                                  [(mod num 10)]
+                                                    @
+                                                    list))))) in let base = 0, [] in
+      let args = (List.combine (List.rev (padZero [[...]] l1)) (List.rev l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "0926.ml", line 29, characters 29-37:
+Try replacing
+    List.rev
+with
+    List.rev; [[...]]
+of type
+    (int list -> int list) -> 'b list
+within context
+    let f a x = (match x with 
+                 | (l1e, l2e) -> (match a with 
+                                  | (carry, list) ->
+                                    (let num = (l1e + l2e) + carry in
+                                          (if num < 10 then 0, [num] @ list else
+                                              (if num = 10 then 1, [0] @ list else
+                                                num / 10,
+                                                  [(mod num 10)]
+                                                    @
+                                                    list))))) in let base = 0, [] in
+      let args = (List.combine ((List.rev; [[...]]) (padZero l1)) (List.rev l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

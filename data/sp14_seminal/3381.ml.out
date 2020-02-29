@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "3381.ml", line 8, characters 6-14:
+This expression has type int -> int list but is here used with type 'a list
+Relevant code: helper h
+------------------------------------------------------------------
+File "3381.ml", line 8, characters 6-12:
+Try replacing
+    helper
+with
+    i
+of type
+    'b -> 'c list
+within context
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t ->
+                  (let rec helper acc v =
+                        (if v = 0 then acc else (helper (mod v 10) :: acc (v / 10)))
+                        in
+                        (i h)))
+==============================

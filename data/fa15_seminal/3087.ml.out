@@ -1,0 +1,453 @@
+------------------------------------------------------------------
+File "3087.ml", line 29, characters 30-31:
+This expression has type int but is here used with type float
+Relevant code: 0
+------------------------------------------------------------------
+File "3087.ml", line 29, characters 30-31:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> (sin (pi *. (eval (x1, x, y))))
+                              | Cosine x2 -> (cos (pi *. (eval (x2, x, y))))
+                              | Root x3 -> (sqrt (eval (x3, x, y)))
+                              | Average (x4, x5) ->
+                                (((eval (x4, x, y)) +. (eval (x5, x, y))) /. 2.)
+                              | Times (x6, x7) ->
+                                ((eval (x6, x, y)) *. (eval (x7, x, y)))
+                              | Thresh (x8, x9, x10, x11) ->
+                                (if (eval (x8, x, y)) < (eval (x9, x, y)) then
+                                    (eval (x10, x, y))
+                                    else
+                                    (eval (x11, x, y)))
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x12, x, y)) < (0; [[...]]) then
+                                    (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+File "3087.ml", line 29, characters 9-27:
+Try replacing
+    (eval (x12, x, y))
+with
+    (eval (x12, x, y)); [[...]]
+of type
+    int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> (sin (pi *. (eval (x1, x, y))))
+                              | Cosine x2 -> (cos (pi *. (eval (x2, x, y))))
+                              | Root x3 -> (sqrt (eval (x3, x, y)))
+                              | Average (x4, x5) ->
+                                (((eval (x4, x, y)) +. (eval (x5, x, y))) /. 2.)
+                              | Times (x6, x7) ->
+                                ((eval (x6, x, y)) *. (eval (x7, x, y)))
+                              | Thresh (x8, x9, x10, x11) ->
+                                (if (eval (x8, x, y)) < (eval (x9, x, y)) then
+                                    (eval (x10, x, y))
+                                    else
+                                    (eval (x11, x, y)))
+                              | Pivot (x12, x13, x14) ->
+                                (if ((eval (x12, x, y)); [[...]]) < 0 then
+                                    (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+File "3087.ml", line 29, characters 28-29:
+Try replacing
+    <
+with
+    <; [[...]]
+of type
+    float -> int -> bool
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> (sin (pi *. (eval (x1, x, y))))
+                              | Cosine x2 -> (cos (pi *. (eval (x2, x, y))))
+                              | Root x3 -> (sqrt (eval (x3, x, y)))
+                              | Average (x4, x5) ->
+                                (((eval (x4, x, y)) +. (eval (x5, x, y))) /. 2.)
+                              | Times (x6, x7) ->
+                                ((eval (x6, x, y)) *. (eval (x7, x, y)))
+                              | Thresh (x8, x9, x10, x11) ->
+                                (if (eval (x8, x, y)) < (eval (x9, x, y)) then
+                                    (eval (x10, x, y))
+                                    else
+                                    (eval (x11, x, y)))
+                              | Pivot (x12, x13, x14) ->
+                                (if ((eval (x12, x, y)) <; [[...]] 0) then
+                                    (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 16-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x12
+with
+    x14
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x14, x, y)) < 0 then (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 16-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x12
+with
+    x12
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x12, x, y)) < 0 then (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 16-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x12
+with
+    x13
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x13, x, y)) < 0 then (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 16-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x12, x, y
+with
+    x12, x, y
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x12, x, y)) < 0 then (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 21-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x12, x, y)) < 0 then (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 24-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x12, x, x)) < 0 then (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 24-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x12, x, y)) < 0 then (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 21-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x12, x, y
+with
+    x12, y, x
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x12, y, x)) < 0 then (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 27-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (x12, x, y))
+with
+    (eval (x12, x, y) [[...]])
+The actual replacement has type
+    int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x12, x, y) [[...]]) < 0 then
+                                    (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 37-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * int * int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x12, x, y)) < 0 then (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 43-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x13
+with
+    x14
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x12, x, y)) < 0 then (eval (x14, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3087.ml", line 19, characters 15-44:
+File "3087.ml", line 20, characters 17-46:
+File "3087.ml", line 21, characters 15-37:
+File "3087.ml", line 22, characters 23-69:
+File "3087.ml", line 23, characters 21-59:
+File "3087.ml", line 25, characters 6-102:
+And modified the following location:
+File "3087.ml", line 29, characters 43-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x13
+with
+    x13
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x1 -> [[...other program...]]
+                              | Cosine x2 -> [[...other program...]]
+                              | Root x3 -> [[...other program...]]
+                              | Average (x4, x5) -> [[...other program...]]
+                              | Times (x6, x7) -> [[...other program...]]
+                              | Thresh (x8, x9, x10, x11) -> [[...other program...]]
+                              | Pivot (x12, x13, x14) ->
+                                (if (eval (x12, x, y)) < 0 then (eval (x13, x, y))
+                                    else
+                                    (eval (x14, x, y)))) ;; 
+==============================

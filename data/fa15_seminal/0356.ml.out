@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0356.ml", line 2, characters 53-54:
+This expression has type 'a but is here used with type 'a * 'b * 'c list
+Relevant code: d
+------------------------------------------------------------------
+File "0356.ml", line 2, characters 53-56:
+Try replacing
+    (assoc d k  t)
+with
+    (assoc (d, k, t))
+of type
+    'd
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | h :: t -> (assoc (d, k, t))) ;; 
+==============================
+File "0356.ml", line 2, characters 14-21:
+Try replacing
+    fun (d, k, l) -> (match l with 
+                      | h :: t -> (assoc d k  t))
+with
+    fun d k l -> (match l with 
+                  | h :: t -> (assoc d k  t))
+of type
+    'e -> 'f -> 'g list -> 'h
+within context
+    let rec assoc d k l = (match l with 
+                           | h :: t -> (assoc d k  t)) ;; 
+==============================

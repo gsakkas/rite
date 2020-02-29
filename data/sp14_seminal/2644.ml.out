@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "2644.ml", line 30, characters 20-29:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: factorial
+------------------------------------------------------------------
+File "2644.ml", line 30, characters 20-29:
+Try replacing
+    factorial
+with
+    factorial; [[...]]
+of type
+    (expr * float * float -> float) ->
+    expr * float * float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, a_less, b_less) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (a_less, x, y))
+                                    else
+                                    (eval (b_less, x, y)))
+                              | Factorial e' ->
+                                ((factorial; [[...]]) eval (e', x, y)  1)
+                              | Sum3 (e1, e2, e3) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y)))
+                                      +. (eval (e3, x, y)))) ;; 
+==============================

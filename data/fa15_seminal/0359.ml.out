@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "0359.ml", line 25, characters 11-20:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: buildSine
+------------------------------------------------------------------
+Triaged the following locations:
+File "0359.ml", line 25, characters 11-39:
+And modified the following location:
+File "0359.ml", line 26, characters 11-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildCosine
+with
+    buildCosine; [[...]]
+The actual replacement has type
+    ((float -> int) * int -> unit -> expr) ->
+    int * int -> unit -> expr
+within context
+    let rec build (rand, depth) = let r = (rand 0.4) in (match depth with 
+                                                         | 0 ->
+                                                           (if (mod r 2) = 0 then
+                                                               buildX
+                                                               else
+                                                               buildY)
+                                                         | d ->
+                                                           (if r = 0 then
+                                                               [[...other program...]]
+                                                               else
+                                                               ((buildCosine;
+                                                                   [[...]])
+                                                                 build (r, d - 1)))) ;; 
+==============================
+Triaged the following locations:
+File "0359.ml", line 26, characters 11-41:
+And modified the following location:
+File "0359.ml", line 25, characters 11-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildSine
+with
+    buildSine; [[...]]
+The actual replacement has type
+    ((float -> int) * int -> unit -> expr) ->
+    int * int -> unit -> expr
+within context
+    let rec build (rand, depth) = let r = (rand 0.4) in (match depth with 
+                                                         | 0 ->
+                                                           (if (mod r 2) = 0 then
+                                                               buildX
+                                                               else
+                                                               buildY)
+                                                         | d ->
+                                                           (if r = 0 then
+                                                               ((buildSine; [[...]])
+                                                                 build (r, d - 1))
+                                                               else
+                                                               [[...other program...]])) ;; 
+==============================

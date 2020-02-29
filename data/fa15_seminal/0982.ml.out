@@ -1,0 +1,295 @@
+------------------------------------------------------------------
+File "0982.ml", line 18, characters 9-13:
+This expression has type string but is here used with type int
+Relevant code: "(("
+------------------------------------------------------------------
+Triaged the following locations:
+File "0982.ml", line 16, characters 16-65:
+File "0982.ml", line 18, characters 6-68:
+File "0982.ml", line 19, characters 19-62:
+File "0982.ml", line 21, characters 6-161:
+File "0982.ml", line 26, characters 9-10:
+And modified the following location:
+File "0982.ml", line 15, characters 56-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    0
+If you ignore other surrounding code, try replacing
+    s
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine s ->
+                                (String.concat
+                                    "" ["sin(pi*" ; (exprToString e) ; ")"])
+                              | Cosine s -> [[...other program...]]
+                              | Average (s, p) -> [[...other program...]]
+                              | Times (s, p) -> [[...other program...]]
+                              | Thresh (s, p, r, d) -> [[...other program...]]
+                              | _ -> (0; [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "0982.ml", line 16, characters 16-65:
+File "0982.ml", line 18, characters 6-68:
+File "0982.ml", line 19, characters 19-62:
+File "0982.ml", line 21, characters 6-161:
+File "0982.ml", line 26, characters 9-10:
+And modified the following location:
+File "0982.ml", line 15, characters 43-55:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    0
+If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString
+The actual replacement has type
+    expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine s ->
+                                (String.concat
+                                    "" ["sin(pi*" ; (exprToString s) ; ")"])
+                              | Cosine s -> [[...other program...]]
+                              | Average (s, p) -> [[...other program...]]
+                              | Times (s, p) -> [[...other program...]]
+                              | Thresh (s, p, r, d) -> [[...other program...]]
+                              | _ -> (0; [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "0982.ml", line 16, characters 16-65:
+File "0982.ml", line 18, characters 6-68:
+File "0982.ml", line 19, characters 19-62:
+File "0982.ml", line 21, characters 6-161:
+File "0982.ml", line 26, characters 9-10:
+And modified the following location:
+File "0982.ml", line 15, characters 56-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    0
+If you ignore other surrounding code, try replacing
+    s
+with
+    s
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine s ->
+                                (String.concat
+                                    "" ["sin(pi*" ; (exprToString s) ; ")"])
+                              | Cosine s -> [[...other program...]]
+                              | Average (s, p) -> [[...other program...]]
+                              | Times (s, p) -> [[...other program...]]
+                              | Thresh (s, p, r, d) -> [[...other program...]]
+                              | _ -> (0; [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "0982.ml", line 16, characters 16-65:
+File "0982.ml", line 18, characters 6-68:
+File "0982.ml", line 19, characters 19-62:
+File "0982.ml", line 21, characters 6-161:
+File "0982.ml", line 26, characters 9-10:
+And modified the following location:
+File "0982.ml", line 15, characters 43-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    0
+If you ignore other surrounding code, try replacing
+    (exprToString s)
+with
+    (exprToString (s))
+The actual replacement has type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine s ->
+                                (String.concat
+                                    "" ["sin(pi*" ; (exprToString (s)) ; ")"])
+                              | Cosine s -> [[...other program...]]
+                              | Average (s, p) -> [[...other program...]]
+                              | Times (s, p) -> [[...other program...]]
+                              | Thresh (s, p, r, d) -> [[...other program...]]
+                              | _ -> (0; [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "0982.ml", line 16, characters 16-65:
+File "0982.ml", line 18, characters 6-68:
+File "0982.ml", line 19, characters 19-62:
+File "0982.ml", line 21, characters 6-161:
+File "0982.ml", line 26, characters 9-10:
+And modified the following location:
+File "0982.ml", line 15, characters 14-27:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    0
+If you ignore other surrounding code, try replacing
+    String.concat
+with
+    String.concat
+The actual replacement has type
+    string -> string list -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine s ->
+                                (String.concat
+                                    "" ["sin(pi*" ; (exprToString s) ; ")"])
+                              | Cosine s -> [[...other program...]]
+                              | Average (s, p) -> [[...other program...]]
+                              | Times (s, p) -> [[...other program...]]
+                              | Thresh (s, p, r, d) -> [[...other program...]]
+                              | _ -> (0; [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "0982.ml", line 15, characters 14-63:
+File "0982.ml", line 18, characters 6-68:
+File "0982.ml", line 19, characters 19-62:
+File "0982.ml", line 21, characters 6-161:
+File "0982.ml", line 26, characters 9-10:
+And modified the following location:
+File "0982.ml", line 16, characters 58-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    0
+If you ignore other surrounding code, try replacing
+    s
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine s -> [[...other program...]]
+                              | Cosine s ->
+                                (String.concat
+                                    "" ["cos(pi*" ; (exprToString e) ; ")"])
+                              | Average (s, p) -> [[...other program...]]
+                              | Times (s, p) -> [[...other program...]]
+                              | Thresh (s, p, r, d) -> [[...other program...]]
+                              | _ -> (0; [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "0982.ml", line 15, characters 14-63:
+File "0982.ml", line 18, characters 6-68:
+File "0982.ml", line 19, characters 19-62:
+File "0982.ml", line 21, characters 6-161:
+File "0982.ml", line 26, characters 9-10:
+And modified the following location:
+File "0982.ml", line 16, characters 45-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    0
+If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString
+The actual replacement has type
+    expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine s -> [[...other program...]]
+                              | Cosine s ->
+                                (String.concat
+                                    "" ["cos(pi*" ; (exprToString s) ; ")"])
+                              | Average (s, p) -> [[...other program...]]
+                              | Times (s, p) -> [[...other program...]]
+                              | Thresh (s, p, r, d) -> [[...other program...]]
+                              | _ -> (0; [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "0982.ml", line 15, characters 14-63:
+File "0982.ml", line 18, characters 6-68:
+File "0982.ml", line 19, characters 19-62:
+File "0982.ml", line 21, characters 6-161:
+File "0982.ml", line 26, characters 9-10:
+And modified the following location:
+File "0982.ml", line 16, characters 58-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    0
+If you ignore other surrounding code, try replacing
+    s
+with
+    s
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine s -> [[...other program...]]
+                              | Cosine s ->
+                                (String.concat
+                                    "" ["cos(pi*" ; (exprToString s) ; ")"])
+                              | Average (s, p) -> [[...other program...]]
+                              | Times (s, p) -> [[...other program...]]
+                              | Thresh (s, p, r, d) -> [[...other program...]]
+                              | _ -> (0; [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "0982.ml", line 15, characters 14-63:
+File "0982.ml", line 18, characters 6-68:
+File "0982.ml", line 19, characters 19-62:
+File "0982.ml", line 21, characters 6-161:
+File "0982.ml", line 26, characters 9-10:
+And modified the following location:
+File "0982.ml", line 16, characters 45-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    0
+If you ignore other surrounding code, try replacing
+    (exprToString s)
+with
+    (exprToString (s))
+The actual replacement has type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine s -> [[...other program...]]
+                              | Cosine s ->
+                                (String.concat
+                                    "" ["cos(pi*" ; (exprToString (s)) ; ")"])
+                              | Average (s, p) -> [[...other program...]]
+                              | Times (s, p) -> [[...other program...]]
+                              | Thresh (s, p, r, d) -> [[...other program...]]
+                              | _ -> (0; [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "0982.ml", line 15, characters 14-63:
+File "0982.ml", line 18, characters 6-68:
+File "0982.ml", line 19, characters 19-62:
+File "0982.ml", line 21, characters 6-161:
+File "0982.ml", line 26, characters 9-10:
+And modified the following location:
+File "0982.ml", line 16, characters 16-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    0
+If you ignore other surrounding code, try replacing
+    String.concat
+with
+    String.concat
+The actual replacement has type
+    string -> string list -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine s -> [[...other program...]]
+                              | Cosine s ->
+                                (String.concat
+                                    "" ["cos(pi*" ; (exprToString s) ; ")"])
+                              | Average (s, p) -> [[...other program...]]
+                              | Times (s, p) -> [[...other program...]]
+                              | Thresh (s, p, r, d) -> [[...other program...]]
+                              | _ -> (0; [[...]])) ;; 
+==============================

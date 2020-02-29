@@ -1,0 +1,164 @@
+------------------------------------------------------------------
+File "2231.ml", line 24, characters 13-34:
+This expression has type int but is here used with type int list
+Relevant code: (add (padZero l1 l2))
+------------------------------------------------------------------
+File "2231.ml", line 23, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('a -> 'b -> 'c) -> int * int -> int list -> 'd * 'e
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = 1, 0 in
+      let args =
+      let combine (a, b) = a + b in
+        (List.map combine (List.rev (List.combine l1 l2)))
+      in
+      let (_, res) = (f f base  args) in res
+==============================
+File "2231.ml", line 24, characters 2-12:
+Try replacing
+    removeZero
+with
+    +
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 1, 0 in
+        let args =
+        let combine (a, b) = a + b in
+          (List.map combine (List.rev (List.combine l1 l2)))
+        in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (+ (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2231.ml", line 24, characters 2-12:
+Try replacing
+    removeZero
+with
+    *
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 1, 0 in
+        let args =
+        let combine (a, b) = a + b in
+          (List.map combine (List.rev (List.combine l1 l2)))
+        in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (* (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2231.ml", line 24, characters 2-12:
+Try replacing
+    removeZero
+with
+    <
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 1, 0 in
+        let args =
+        let combine (a, b) = a + b in
+          (List.map combine (List.rev (List.combine l1 l2)))
+        in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (< (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2231.ml", line 24, characters 2-12:
+Try replacing
+    removeZero
+with
+    >
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 1, 0 in
+        let args =
+        let combine (a, b) = a + b in
+          (List.map combine (List.rev (List.combine l1 l2)))
+        in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (> (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2231.ml", line 24, characters 2-12:
+Try replacing
+    removeZero
+with
+    =
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 1, 0 in
+        let args =
+        let combine (a, b) = a + b in
+          (List.map combine (List.rev (List.combine l1 l2)))
+        in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (= (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2231.ml", line 24, characters 2-12:
+Try replacing
+    removeZero
+with
+    -
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 1, 0 in
+        let args =
+        let combine (a, b) = a + b in
+          (List.map combine (List.rev (List.combine l1 l2)))
+        in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (- (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2231.ml", line 23, characters 48-51:
+Try replacing
+    res
+with
+    args
+of type
+    int list
+within context
+    fun (l1, l2) ->
+      (let f a x = (failwith "to be implemented") in
+          let base = 1, 0 in
+          let args =
+          let combine (a, b) = a + b in
+            (List.map combine (List.rev (List.combine l1 l2)))
+          in
+          let (_, res) = (List.fold_left f base  args) in args)
+==============================

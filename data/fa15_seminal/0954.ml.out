@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0954.ml", line 10, characters 61-64:
+This expression has type string but is here used with type string list
+Relevant code: "]"
+------------------------------------------------------------------
+File "0954.ml", line 10, characters 61-64:
+Try replacing
+    "]"
+with
+    "]"; [[...]]
+of type
+    string list
+within context
+    (List.map f (List.map (fun f -> "[" :: f :: "]"; [[...]]) l))
+==============================

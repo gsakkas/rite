@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "2024.ml", line 40, characters 11-17:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: bigAdd
+------------------------------------------------------------------
+File "2024.ml", line 40, characters 18-26:
+Try replacing
+    (bigAdd List.rev 0 :: (List.rev a)  (mulByDigit x l2))
+with
+    (bigAdd 0 :: (List.rev a) (mulByDigit x l2))
+of type
+    int list
+within context
+    fun l2 -> (let f a x = (match a with 
+                            | [] -> (mulByDigit x l2)
+                            | _ ->
+                              (bigAdd
+                                  0 :: (List.rev a)
+                                  (mulByDigit
+                                    x
+                                    l2))) in let base = [] in
+          let args = (List.rev l1) in
+          let res = (List.fold_left f base  args) in res)
+==============================

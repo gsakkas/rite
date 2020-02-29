@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1989.ml", line 20, characters 31-42:
+This expression has type char list but is here used with type 'a list list
+Relevant code: (explode w)
+------------------------------------------------------------------
+File "1989.ml", line 20, characters 19-30:
+Try replacing
+    listCompare
+with
+    listCompare; [[...]]
+of type
+    char list -> char list -> 'b
+within context
+    let palindrome w =
+    ((listCompare; [[...]]) (explode w) (listReverse (explode w)))
+    ;; 
+==============================

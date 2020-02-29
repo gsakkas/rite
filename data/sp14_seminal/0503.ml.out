@@ -1,0 +1,89 @@
+------------------------------------------------------------------
+File "0503.ml", line 24, characters 32-37:
+This expression has type 'a list but is here used with type int
+Relevant code: carry
+------------------------------------------------------------------
+File "0503.ml", line 21, characters 24-25:
+Try replacing
+    a
+with
+    a; [[...]]
+of type
+    'b * 'c
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (carry, res) = a; [[...]] in
+        (if (carry <> []) then
+            (let tens = ((x1 + x2) + carry) / 10 in
+                let ones = (mod ((x1 + x2) + carry) 10) in
+                [tens], tens :: ones :: res)
+            else
+            (let tens = (x1 + x2) / 10 in
+                let ones = (mod (x1 + x2) 10) in [tens], tens :: ones :: res))
+      in
+      let base = [], [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "0503.ml", line 25, characters 8-88:
+And modified the following location:
+File "0503.ml", line 24, characters 32-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    carry
+with
+    carry; [[...]]
+The actual replacement has type
+    int
+within context
+    fun x ->
+      (let (x1, x2) = x in
+          let (carry, res) = a in
+          (if (carry <> []) then
+              (let tens = ((x1 + x2) + (carry; [[...]])) / 10 in
+                  [[...other program...]])
+              else
+              (let tens = (x1 + x2) / 10 in
+                  let ones = (mod (x1 + x2) 10) in [tens], tens :: ones :: res)))
+==============================
+Triaged the following locations:
+File "0503.ml", line 25, characters 8-88:
+And modified the following location:
+File "0503.ml", line 24, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    int -> 'd list -> int
+within context
+    fun x ->
+      (let (x1, x2) = x in
+          let (carry, res) = a in
+          (if (carry <> []) then
+              (let tens = (x1 + x2 +; [[...]] carry) / 10 in
+                  [[...other program...]])
+              else
+              (let tens = (x1 + x2) / 10 in
+                  let ones = (mod (x1 + x2) 10) in [tens], tens :: ones :: res)))
+==============================
+Triaged the following locations:
+File "0503.ml", line 25, characters 8-88:
+And modified the following location:
+File "0503.ml", line 24, characters 8-135:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let tens = ((x1 + x2) + carry) / 10 in
+      let ones = (mod ((x1 + x2) + carry) 10) in [tens], tens :: ones :: res
+with
+    [[...other program...]]
+The actual replacement has type
+    int list * int list
+within context
+    fun x ->
+      (let (x1, x2) = x in
+          let (carry, res) = a in
+          (if (carry <> []) then [[...other program...]] else
+              (let tens = (x1 + x2) / 10 in
+                  let ones = (mod (x1 + x2) 10) in [tens], tens :: ones :: res)))
+==============================

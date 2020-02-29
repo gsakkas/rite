@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "2281.ml", line 38, characters 30-36:
+This expression is not a function, it cannot be applied
+Relevant code: "cos("
+------------------------------------------------------------------
+File "2281.ml", line 38, characters 30-36:
+Try replacing
+    "cos("
+with
+    "cos("; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    "(cos^2(pi*" ^
+      ((exprToString e2) ^ (")*" ^ ((exprToString "cos("; [[...]] e3) ^ "))")))
+==============================

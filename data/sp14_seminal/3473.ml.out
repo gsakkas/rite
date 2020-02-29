@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "3473.ml", line 3, characters 49-50:
+This expression has type 'a but is here used with type 'a list
+Relevant code: h
+------------------------------------------------------------------
+File "3473.ml", line 3, characters 49-50:
+Try replacing
+    h
+with
+    t
+of type
+    'b list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h1 -> [h1]
+                             | h :: t -> t :: (listReverse t)) ;; 
+==============================
+File "3473.ml", line 3, characters 49-50:
+Try replacing
+    h
+with
+    l
+of type
+    'c list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h1 -> [h1]
+                             | h :: t -> l :: (listReverse t)) ;; 
+==============================

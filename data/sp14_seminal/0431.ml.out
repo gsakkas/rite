@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0431.ml", line 19, characters 9-13:
+This expression has type int * int -> 'a but is here used with type int
+Relevant code: rand
+------------------------------------------------------------------
+File "0431.ml", line 19, characters 9-13:
+Try replacing
+    rand
+with
+    num
+of type
+    int
+within context
+    (if depth = 0 then
+      (let num = (rand (1, 10)) in
+          (if (mod num 2) = 0 then (buildX ()) else (buildY ())))
+      else
+      (let num = (rand (1, 10)) in (match num with 
+                                    | _ -> (build (rand, depth - 1)))))
+==============================

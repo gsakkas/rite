@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "1760.ml", line 23, characters 32-44:
+This expression has type int * int but is here used with type unit
+Relevant code: (0, (i + j))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1760.ml", line 22, characters 11-30:
+And modified the following location:
+File "1760.ml", line 23, characters 11-44:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    1, (i + j) - 10
+If you ignore other surrounding code, try replacing
+    (if (i + j <= 9) then 0, i + j)
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    let f a x =
+      let (i, j) = x in (if i + j > 9 then (1, (i + j) - 10; [[...]]) else [[...]])
+      in
+      let base = 0, [] in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

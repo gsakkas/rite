@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2738.ml", line 28, characters 66-70:
+This expression has type 'a * 'b but is here used with type int list list
+Relevant code: args
+------------------------------------------------------------------
+File "2738.ml", line 28, characters 66-70:
+Try replacing
+    args
+with
+    base
+of type
+    int list list
+within context
+    fun (l1, l2) ->
+      (let f a x = (addHelper (a, x)) in
+          let base = [] in let args = l1, l2 in (List.fold_left f base  base))
+==============================

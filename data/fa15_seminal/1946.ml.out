@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "1946.ml", line 23, characters 58-63:
+This expression has type int but is here used with type int list
+Relevant code: carry
+------------------------------------------------------------------
+File "1946.ml", line 23, characters 53-56:
+Try replacing
+    res
+with
+    res; [[...]]
+of type
+    int
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (carry, res) = a in
+        ((x1 + x2) + carry) / 10, (mod ((x1 + x2) + carry) 10) :: res
+      in
+      let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (carry, res) = (List.fold_left f base  args) in [res; [[...]] ; carry]
+==============================
+File "1946.ml", line 23, characters 22-48:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f base  args); [[...]]
+of type
+    'a * 'b
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (x1, x2) = x in
+            let (carry, res) = a in
+            ((x1 + x2) + carry) / 10, (mod ((x1 + x2) + carry) 10) :: res
+          in
+          let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (carry, res) = (List.fold_left f base  args); [[...]] in
+          [res ; carry])
+==============================

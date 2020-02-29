@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1756.ml", line 5, characters 40-50:
+This expression has type int but is here used with type 'a list
+Relevant code: (n mod 10)
+------------------------------------------------------------------
+File "1756.ml", line 5, characters 14-50:
+Try replacing
+    (digitsOfInt (n / 10)) :: (mod n 10)
+with
+    [[...]]
+of type
+    'b list
+within context
+    let rec digitsOfInt n = (match (n <= 0) with 
+                             | true -> []
+                             | false -> [[...]]) ;; 
+==============================

@@ -1,0 +1,77 @@
+------------------------------------------------------------------
+File "0637.ml", line 18, characters 22-23:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: x
+------------------------------------------------------------------
+Triaged the following locations:
+File "0637.ml", line 18, characters 27-42:
+And modified the following location:
+File "0637.ml", line 18, characters 22-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    'd list
+within context
+    fun x ->
+      (let (x', x'') = x in
+          let (c, s) = a in
+          (if (List.length (x; [[...]])) = [[...other program...]] then c, c :: s
+              else
+              ((c + x') + x'') / 10, (mod ((c + x') + x'') 10) :: s))
+==============================
+Triaged the following locations:
+File "0637.ml", line 18, characters 9-24:
+And modified the following location:
+File "0637.ml", line 18, characters 28-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.length
+with
+    List.length; [[...]]
+The actual replacement has type
+    int * int -> 'e
+within context
+    fun x ->
+      (let (x', x'') = x in
+          let (c, s) = a in
+          (if [[...other program...]] = ((List.length; [[...]]) x) then c, c :: s
+              else
+              ((c + x') + x'') / 10, (mod ((c + x') + x'') 10) :: s))
+==============================
+Triaged the following locations:
+File "0637.ml", line 18, characters 9-24:
+And modified the following location:
+File "0637.ml", line 18, characters 40-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    'f list
+within context
+    fun x ->
+      (let (x', x'') = x in
+          let (c, s) = a in
+          (if [[...other program...]] = (List.length (x; [[...]])) then c, c :: s
+              else
+              ((c + x') + x'') / 10, (mod ((c + x') + x'') 10) :: s))
+==============================
+Triaged the following locations:
+File "0637.ml", line 18, characters 27-42:
+And modified the following location:
+File "0637.ml", line 18, characters 10-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.length
+with
+    List.length; [[...]]
+The actual replacement has type
+    int * int -> 'g
+within context
+    fun x ->
+      (let (x', x'') = x in
+          let (c, s) = a in
+          (if ((List.length; [[...]]) x) = [[...other program...]] then c, c :: s
+              else
+              ((c + x') + x'') / 10, (mod ((c + x') + x'') 10) :: s))
+==============================

@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "0022.ml", line 27, characters 63-67:
+This expression has type 'a * 'b but is here used with type
+  ('c list * 'd list) list
+Relevant code: args
+------------------------------------------------------------------
+File "0022.ml", line 27, characters 63-67:
+Try replacing
+    args
+with
+    args; [[...]]
+of type
+    ('e list * 'f list) list
+within context
+    let f a x = (match a with 
+                 | (carry, result) -> (match x with 
+                                       | (h1 :: t1, h2 :: t2) ->
+                                         (0,
+                                               []))) in let base = 0, [] in
+      let args = l1, l2 in
+      let (_, res) = (List.fold_left f base  (args; [[...]])) in res
+==============================
+File "0022.ml", line 27, characters 15-23:
+Try replacing
+    l1, l2
+with
+    l1, l2; [[...]]
+of type
+    'g
+within context
+    let add (l1, l2) = let f a x = (match a with 
+                                    | (carry, result) -> (match x with 
+                                                          | (h1 :: t1, h2 :: t2) ->
+                                                            (0,
+                                                                  []))) in let base
+        =
+        0, []
+        in
+        let args = l1, l2; [[...]] in
+        let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add (padZero l1 l2)))
+==============================
+File "0022.ml", line 27, characters 41-55:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('h * 'i -> 'j list * 'k list -> int * 'l list) ->
+    int * 'm list -> 'n * 'o -> 'p * 'q
+within context
+    let f a x = (match a with 
+                 | (carry, result) -> (match x with 
+                                       | (h1 :: t1, h2 :: t2) ->
+                                         (0,
+                                               []))) in let base = 0, [] in
+      let args = l1, l2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

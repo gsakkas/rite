@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1262.ml", line 20, characters 17-18:
+This expression has type 'a * 'b but is here used with type int
+Relevant code: x
+------------------------------------------------------------------
+File "1262.ml", line 20, characters 19-20:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    'c * 'd -> 'c * 'd -> int
+within context
+    let (carry, result) = a in
+      let (b, c) = x in
+      let res = (x +; [[...]] x) + carry in
+      let newCarry = res / 10 in (match result with 
+                                  | [] -> (newCarry, [newCarry ; (mod res 10)])
+                                  | h :: t ->
+                                    (newCarry, newCarry :: (mod res 10) :: t))
+==============================

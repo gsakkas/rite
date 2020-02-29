@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1152.ml", line 59, characters 56-63:
+This expression is not a function, it cannot be applied
+Relevant code: (x / 1)
+------------------------------------------------------------------
+File "1152.ml", line 59, characters 64-65:
+Try replacing
+    ((x / 1) x)
+with
+    x / 1
+of type
+    int
+within context
+    [(mod (x / 1000) 10)] @
+      ([(mod (x / 100) 10)] @ ([(mod (x / 10) 10)] @ [(mod (x / 1) 10)]))
+==============================

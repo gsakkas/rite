@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "0638.ml", line 18, characters 40-41:
+This expression has type 'a * 'b list but is here used with type 'c list
+Relevant code: a
+------------------------------------------------------------------
+File "0638.ml", line 18, characters 40-41:
+Try replacing
+    a
+with
+    a; [[...]]
+of type
+    'd list
+within context
+    let (x', x'') = x in
+      let (c, s) = a in
+      (if (List.length s) = (List.length (a; [[...]])) then c, c :: s else
+          ((c + x') + x'') / 10, (mod ((c + x') + x'') 10) :: s)
+==============================
+File "0638.ml", line 18, characters 28-39:
+Try replacing
+    List.length
+with
+    List.length; [[...]]
+of type
+    int * int list -> int
+within context
+    let (x', x'') = x in
+      let (c, s) = a in
+      (if (List.length s) = ((List.length; [[...]]) a) then c, c :: s else
+          ((c + x') + x'') / 10, (mod ((c + x') + x'') 10) :: s)
+==============================

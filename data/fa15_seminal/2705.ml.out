@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2705.ml", line 5, characters 56-57:
+This expression has type ('a * 'b) list but is here used with type
+  'c * 'a * ('a * 'b) list
+Relevant code: t
+------------------------------------------------------------------
+File "2705.ml", line 5, characters 50-57:
+Try replacing
+    (if a = k then b else (assoc t))
+with
+    (if a = k then b)
+of type
+    unit
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: t ->
+                                 (let (a, b) = h in (if a = k then b))) ;; 
+==============================

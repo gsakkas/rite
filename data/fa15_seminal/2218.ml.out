@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "2218.ml", line 5, characters 28-46:
+This expression should not be a function, the expected type is
+('a -> 'a * bool) * 'a
+Relevant code: (fun x  -> (f, b))
+------------------------------------------------------------------
+File "2218.ml", line 5, characters 46-46:
+Try replacing
+    (wwhile (fun x -> (f, b)))
+with
+    (wwhile [[...]] (fun x -> (f, b)))
+of type
+    'b
+within context
+    let fixpoint (f, b) = (wwhile [[...]] (fun x -> (f, b))) ;; 
+==============================
+File "2218.ml", line 5, characters 21-27:
+Try replacing
+    wwhile
+with
+    wwhile; [[...]]
+of type
+    ('c -> 'd * 'e) -> 'f
+within context
+    let fixpoint (f, b) = ((wwhile; [[...]]) (fun x -> (f, b))) ;; 
+==============================

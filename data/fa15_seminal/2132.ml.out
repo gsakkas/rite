@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "2132.ml", line 9, characters 31-40:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sepConcat
+------------------------------------------------------------------
+File "2132.ml", line 9, characters 31-40:
+Try replacing
+    sepConcat
+with
+    sepConcat; [[...]]
+of type
+    string -> (('h -> 'i) -> 'h list -> 'i list) -> 'j -> 'k -> string
+within context
+    fun f l -> "[" ^ (((sepConcat; [[...]]) "; " List.map  f  l) ^ "]")
+==============================

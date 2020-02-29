@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "2851.ml", line 37, characters 13-100:
+This expression has type expr * expr but is here used with type
+  expr * expr * expr * expr
+Relevant code: ((build (rand, (depth - 1))),
+               (buildCosine (build (rand, (depth - 1)))))
+------------------------------------------------------------------
+File "2851.ml", line 36, characters 11-22:
+Try replacing
+    buildThresh
+with
+    buildAverage
+of type
+    expr * expr -> expr
+within context
+    (match depth with 
+     | 0 -> (if (rand (0, 1)) = 1 then (buildX ()) else (buildY ()))
+     | _ -> (let r = (rand (3, 100)) in (match r with 
+                                         | _ ->
+                                           when r < 20 ->
+                                               (buildAverage
+                                                   ((buildCosine
+                                                         (build (rand, depth - 1)))
+                                                       ,
+                                                       (buildSine
+                                                         (build
+                                                           (rand, depth - 1)))))
+                                         | _ ->
+                                           when r < 30 && r > 20 ->
+                                               (buildAverage
+                                                   ((build (rand, depth - 1)),
+                                                       (buildCosine
+                                                         (build
+                                                           (rand, depth - 1)))))
+                                         | _ ->
+                                           (buildCosine
+                                               (build (rand, depth - 1))))))
+==============================

@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "3191.ml", line 6, characters 69-73:
+This expression has type 'a list but is here used with type 'a
+Relevant code: base
+------------------------------------------------------------------
+File "3191.ml", line 6, characters 52-66:
+Try replacing
+    List.fold_left
+with
+    sep
+of type
+    ('b -> 'c -> 'd) -> 'd list -> 'd list -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t -> (let f a x = h in let base = t in let l = t in (sep f base  l)))
+==============================
+File "3191.ml", line 6, characters 69-73:
+Try replacing
+    base
+with
+    h
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h in let base = t in let l = t in (List.fold_left f h  l)))
+==============================
+File "3191.ml", line 6, characters 69-73:
+Try replacing
+    base
+with
+    sep
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h in let base = t in let l = t in (List.fold_left f sep  l)))
+==============================
+File "3191.ml", line 6, characters 34-35:
+Try replacing
+    t
+with
+    h
+of type
+    string
+within context
+    fun sep sl -> (match sl with 
+                   | [] -> ""
+                   | h :: t ->
+                     (let f a x = h in
+                           let base = h in let l = t in (List.fold_left f base  l)))
+==============================

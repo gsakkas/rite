@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0104.ml", line 3, characters 47-58:
+This expression has type int -> 'a but is here used with type int
+Relevant code: digitsOfInt
+------------------------------------------------------------------
+File "0104.ml", line 3, characters 59-60:
+Try replacing
+    -
+with
+    -; [[...]]
+of type
+    (int -> 'b list) -> int -> 'b list
+within context
+    let rec digitsOfInt n =
+    let return = [] in (if n < 0 then return else (digitsOfInt -; [[...]] 1))
+    ;; 
+==============================

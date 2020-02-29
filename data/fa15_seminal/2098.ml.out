@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2098.ml", line 36, characters 44-50:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: bigAdd
+------------------------------------------------------------------
+File "2098.ml", line 36, characters 44-50:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    int -> (int -> int -> int) -> int * int -> int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else ((bigAdd; [[...]]) l mulByDigit  (i - 1, l))))
+==============================

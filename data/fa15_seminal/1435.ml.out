@@ -1,0 +1,68 @@
+------------------------------------------------------------------
+File "1435.ml", line 21, characters 7-9:
+This expression has type unit but is here used with type expr
+Relevant code: ()
+------------------------------------------------------------------
+File "1435.ml", line 21, characters 7-9:
+Try replacing
+    ()
+with
+    (); [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) = (if depth > 0 then (match rand with 
+                                                      | (6, 10) ->
+                                                        (buildSine
+                                                            (build
+                                                              (rand, depth - 1)))
+                                                      | (11, 18) ->
+                                                        (buildCosine
+                                                            (build
+                                                              (rand,
+                                                                  depth
+                                                                    -
+                                                                    1)))) else (();
+        [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1435.ml", line 19, characters 16-53:
+And modified the following location:
+File "1435.ml", line 20, characters 17-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildCosine
+with
+    buildCosine; [[...]]
+The actual replacement has type
+    unit -> unit
+within context
+    let rec build (rand, depth) = (if depth > 0 then (match rand with 
+                                                      | (6, 10) ->
+                                                        [[...other program...]]
+                                                      | (11, 18) ->
+                                                        ((buildCosine; [[...]])
+                                                            (build
+                                                              (rand,
+                                                                  depth
+                                                                    -
+                                                                    1)))) else ()) ;; 
+==============================
+Triaged the following locations:
+File "1435.ml", line 20, characters 17-56:
+And modified the following location:
+File "1435.ml", line 19, characters 16-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildSine
+with
+    buildSine; [[...]]
+The actual replacement has type
+    unit -> unit
+within context
+    let rec build (rand, depth) = (if depth > 0 then (match rand with 
+                                                      | (6, 10) ->
+                                                        ((buildSine; [[...]])
+                                                            (build
+                                                              (rand, depth - 1)))
+                                                      | (11, 18) ->
+                                                        [[...other program...]]) else ()) ;; 
+==============================

@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "1665.ml", line 21, characters 9-56:
+This expression has type int * int list but is here used with type
+  (int * int list) list
+Relevant code: (0, (let (y,z) = x in [(y + z) + carry] @ ans))
+------------------------------------------------------------------
+File "1665.ml", line 17, characters 8-103:
+Try replacing
+    let (carry, ans) = a in
+      (clone (1, (let (y, z) = x in [(mod ((y + z) + carry) 10)] @ ans)) 2)
+with
+    let (carry, ans) = a in
+      (clone (1, (let (y, z) = x in [(mod ((y + z) + carry) 10)] @ ans)) 2);
+    [[...]]
+of type
+    int * int list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          (if (let (carry, ans) = a in let (y, z) = x in (y + z) + carry > 9) then
+            (let (carry, ans) = a in
+                (clone
+                    (1, (let (y, z) = x in [(mod ((y + z) + carry) 10)] @ ans)) 2);
+              [[...]])
+            else
+            (let (carry, ans) = a in
+                0, (let (y, z) = x in [(y + z) + carry] @ ans)))
+          in
+          let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

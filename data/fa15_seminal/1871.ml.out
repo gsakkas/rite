@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1871.ml", line 3, characters 2-56:
+This expression has type 'a list but is here used with type 'a
+Relevant code: match l with | [] -> [] | x::y -> (listReverse y) :: x
+------------------------------------------------------------------
+File "1871.ml", line 3, characters 2-56:
+Try replacing
+    (match l with 
+     | [] -> []
+     | x :: y -> (listReverse y) :: x)
+with
+    (match l with 
+     | [] -> []
+     | x :: y -> (listReverse y) :: x); [[...]]
+of type
+    'b
+==============================

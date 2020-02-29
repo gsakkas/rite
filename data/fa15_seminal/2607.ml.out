@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "2607.ml", line 22, characters 20-161:
+This expression has type int * int list but is here used with type 'a list
+Relevant code: if ((i + j) + m) >= 10
+                    then (1, (1 :: (((i + j) + m) - 10) :: t))
+                    else (0, (0 :: ((i + j) + m) :: t))
+------------------------------------------------------------------
+File "2607.ml", line 20, characters 24-26:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int * int list
+within context
+    fun a x -> (match x with 
+                | (i, j) -> (match a with 
+                             | (m, n) -> (match n with 
+                                          | [] -> ([]; [[...]])
+                                          | h :: t ->
+                                            (if ((i + j) + m >= 10) then
+                                                1, 1 :: ((i + j) + m) - 10 :: t
+                                                else
+                                                0, 0 :: (i + j) + m :: t))))
+==============================

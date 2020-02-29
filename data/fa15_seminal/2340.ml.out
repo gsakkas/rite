@@ -1,0 +1,6 @@
+------------------------------------------------------------------
+File "2340.ml", line 17, characters 20-22:
+This expression has type float but is here used with type int
+Relevant code: pi
+------------------------------------------------------------------
+<pre>Couldn't find repairs.</pre>

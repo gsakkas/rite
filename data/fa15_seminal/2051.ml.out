@@ -1,0 +1,106 @@
+------------------------------------------------------------------
+File "2051.ml", line 7, characters 58-59:
+This expression has type 'a list but is here used with type 'a list list
+Relevant code: l
+------------------------------------------------------------------
+Triaged the following locations:
+File "2051.ml", line 7, characters 6-59:
+And modified the following location:
+File "2051.ml", line 6, characters 36-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    string -> 'b -> 'c
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = ((sepConcat sep a) @; [[...]] x) in
+                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2051.ml", line 7, characters 6-59:
+And modified the following location:
+File "2051.ml", line 6, characters 36-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    h
+The actual replacement has type
+    string -> 'd -> 'e
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = ((sepConcat sep a) h x) in
+                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2051.ml", line 7, characters 6-59:
+And modified the following location:
+File "2051.ml", line 6, characters 19-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sepConcat
+with
+    @
+The actual replacement has type
+    'f list -> 'f list -> 'f list
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = (@ sep a) @ x in
+                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2051.ml", line 7, characters 6-59:
+And modified the following location:
+File "2051.ml", line 6, characters 19-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sepConcat
+with
+    h
+The actual replacement has type
+    'g -> 'h -> 'i list
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = (h sep a) @ x in
+                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2051.ml", line 7, characters 6-59:
+And modified the following location:
+File "2051.ml", line 6, characters 18-35:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (sepConcat sep a)
+with
+    (sepConcat sep a); [[...]]
+The actual replacement has type
+    'j list
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = ((sepConcat sep a); [[...]]) @ x in
+                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2051.ml", line 7, characters 6-59:
+And modified the following location:
+File "2051.ml", line 6, characters 6-102:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (sepConcat sep a) @ x in
+      let base = [] in let l = t in (List.fold_left f base  l)
+with
+    [[...other program...]]
+The actual replacement has type
+    string
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t -> [[...other program...]]) ;; 
+==============================

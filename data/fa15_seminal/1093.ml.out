@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1093.ml", line 2, characters 69-73:
+This expression has type int -> 'a -> int but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+File "1093.ml", line 2, characters 29-30:
+Try replacing
+    *
+with
+    x
+of type
+    'b -> 'b -> 'c
+within context
+    fun xs -> (let f a x = (a x a) in let base = f in (List.fold_left f base  xs))
+==============================

@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "1043.ml", line 35, characters 39-52:
+This expression has type int * int list list but is here used with type
+  int list
+Relevant code: (h, (t :: c))
+------------------------------------------------------------------
+File "1043.ml", line 35, characters 25-28:
+Try replacing
+    [0]
+with
+    0, []
+of type
+    int * int list list
+within context
+    fun x ->
+      (let (b, c) = a in
+          let (o, p) = x in
+          let r = (bigAdd (mulByDigit o (List.rev l2)) [b]) in (match r with 
+                                                                | [] -> (0, [])
+                                                                | h :: t ->
+                                                                  (h, t :: c)))
+==============================

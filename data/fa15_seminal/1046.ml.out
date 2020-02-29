@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1046.ml", line 2, characters 20-70:
+This expression has type int list but is here used with type int
+Relevant code: match n with | 0 -> [] | _ -> [(clone x n) - 1; x]
+------------------------------------------------------------------
+File "1046.ml", line 2, characters 52-57:
+Try replacing
+    clone
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun n -> (match n with 
+              | 0 -> []
+              | _ -> [(- x n) - 1 ; x])
+==============================

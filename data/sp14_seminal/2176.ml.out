@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "2176.ml", line 5, characters 4-11:
+This pattern matches values of type 'a * 'b * 'c
+but is here used to match values of type 'd list
+Relevant code: (d,k,l)
+------------------------------------------------------------------
+File "2176.ml", line 4, characters 4-6:
+Try replacing
+    []
+with
+    _
+of type
+    int * 'e * ('e * int) list -> int
+within context
+    let rec assoc (d, k, l) = (match d, k, l with 
+                               | _ -> 0
+                               | (d, k, l) -> (if l = [] then d else (match l with 
+                                                                      | h :: t ->
+                                                                        (match h
+                                                                         with
+                                                                         
+                                                                         | (a, b) ->
+                                                                           (if a = k
+                                                                               then
+                                                                               b
+                                                                               else
+                                                                               (assoc
+                                                                                 (d,
+                                                                                     k
+                                                                                     ,
+                                                                                     t))))))) ;; 
+==============================

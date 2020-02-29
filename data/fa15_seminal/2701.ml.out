@@ -1,0 +1,78 @@
+------------------------------------------------------------------
+File "2701.ml", line 7, characters 62-63:
+This expression has type 'a list list but is here used with type 'a
+Relevant code: h
+------------------------------------------------------------------
+File "2701.ml", line 7, characters 33-39:
+Try replacing
+    (List.mem seen h)
+with
+    (List.mem h seen)
+of type
+    bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem h seen) = false then seen @ [h] else
+                                   seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "2701.ml", line 7, characters 33-37:
+Try replacing
+    seen
+with
+    @
+of type
+    'b list -> 'b list -> 'b list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem @ h) = false then seen @ [h] else seen) in
+             let rest' = t in (helper (seen', rest'))))
+==============================
+File "2701.ml", line 7, characters 33-37:
+Try replacing
+    seen
+with
+    =
+of type
+    'c -> 'c -> bool
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem = h) = false then seen @ [h] else seen) in
+             let rest' = t in (helper (seen', rest'))))
+==============================
+File "2701.ml", line 7, characters 62-63:
+Try replacing
+    h
+with
+    @
+of type
+    'd list -> 'd list -> 'd list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem seen h) = false then seen @ [@] else seen) in
+             let rest' = t in (helper (seen', rest'))))
+==============================
+File "2701.ml", line 7, characters 62-63:
+Try replacing
+    h
+with
+    =
+of type
+    'e -> 'e -> bool
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem seen h) = false then seen @ [=] else seen) in
+             let rest' = t in (helper (seen', rest'))))
+==============================

@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2750.ml", line 2, characters 20-58:
+This expression has type 'a list but is here used with type 'a
+Relevant code: if n = 0 then x else [clone x (n - 1)]
+------------------------------------------------------------------
+File "2750.ml", line 2, characters 41-58:
+Try replacing
+    (if n = 0 then x else [(clone x (n - 1))])
+with
+    (if n = 0 then x)
+of type
+    unit
+within context
+    let rec clone x n = (if n = 0 then x) ;; 
+==============================

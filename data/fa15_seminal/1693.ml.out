@@ -1,0 +1,220 @@
+------------------------------------------------------------------
+File "1693.ml", line 5, characters 32-34:
+This expression has type 'a but is here used with type ('b * 'a) list
+Relevant code: h2
+------------------------------------------------------------------
+File "1693.ml", line 5, characters 20-21:
+Try replacing
+    h
+with
+    h; [[...]]
+of type
+    'c * 'd
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | h :: t ->
+                                 (let (h1, h2) = h; [[...]] in
+                                       (if k = h2 then h1 else
+                                           h1, h2 :: (assoc (d, k, t))))
+                               | _ -> d) ;; 
+==============================
+Triaged the following locations:
+File "1693.ml", line 5, characters 40-42:
+And modified the following location:
+File "1693.ml", line 5, characters 32-34:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    h1
+If you ignore other surrounding code, try replacing
+    h2
+with
+    k
+The actual replacement has type
+    ('e * 'f) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | h :: t ->
+                                 (let (h1, h2) = h in
+                                       (if k = k then (h1; [[...]]) else
+                                           h1, h2 :: (assoc (d, k, t))))
+                               | _ -> d) ;; 
+==============================
+Triaged the following locations:
+File "1693.ml", line 5, characters 40-42:
+And modified the following location:
+File "1693.ml", line 5, characters 32-34:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    h1
+If you ignore other surrounding code, try replacing
+    h2
+with
+    t
+The actual replacement has type
+    ('g * 'h) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | h :: t ->
+                                 (let (h1, h2) = h in
+                                       (if k = t then (h1; [[...]]) else
+                                           h1, h2 :: (assoc (d, k, t))))
+                               | _ -> d) ;; 
+==============================
+Triaged the following locations:
+File "1693.ml", line 5, characters 40-42:
+And modified the following location:
+File "1693.ml", line 5, characters 32-34:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    h1
+If you ignore other surrounding code, try replacing
+    h2
+with
+    l
+The actual replacement has type
+    ('i * 'j) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | h :: t ->
+                                 (let (h1, h2) = h in
+                                       (if k = l then (h1; [[...]]) else
+                                           h1, h2 :: (assoc (d, k, t))))
+                               | _ -> d) ;; 
+==============================
+Triaged the following locations:
+File "1693.ml", line 5, characters 40-42:
+And modified the following location:
+File "1693.ml", line 5, characters 32-34:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    h1
+If you ignore other surrounding code, try replacing
+    h2
+with
+    d
+The actual replacement has type
+    ('k * 'l) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | h :: t ->
+                                 (let (h1, h2) = h in
+                                       (if k = d then (h1; [[...]]) else
+                                           h1, h2 :: (assoc (d, k, t))))
+                               | _ -> d) ;; 
+==============================
+Triaged the following locations:
+File "1693.ml", line 5, characters 40-42:
+And modified the following location:
+File "1693.ml", line 5, characters 32-34:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    h1
+If you ignore other surrounding code, try replacing
+    h2
+with
+    h2; [[...]]
+The actual replacement has type
+    ('m * 'n) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | h :: t ->
+                                 (let (h1, h2) = h in
+                                       (if k = (h2; [[...]]) then (h1; [[...]]) else
+                                           h1, h2 :: (assoc (d, k, t))))
+                               | _ -> d) ;; 
+==============================
+Triaged the following locations:
+File "1693.ml", line 5, characters 40-42:
+And modified the following location:
+File "1693.ml", line 5, characters 30-31:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    h1
+If you ignore other surrounding code, try replacing
+    =
+with
+    =; [[...]]
+The actual replacement has type
+    ('o * 'p) list -> 'p -> bool
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | h :: t ->
+                                 (let (h1, h2) = h in
+                                       (if (k =; [[...]] h2) then (h1; [[...]]) else
+                                           h1, h2 :: (assoc (d, k, t))))
+                               | _ -> d) ;; 
+==============================
+Triaged the following locations:
+File "1693.ml", line 5, characters 40-42:
+And modified the following location:
+File "1693.ml", line 5, characters 28-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    h1
+If you ignore other surrounding code, try replacing
+    k
+with
+    k; [[...]]
+The actual replacement has type
+    'q
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | h :: t ->
+                                 (let (h1, h2) = h in
+                                       (if (k; [[...]]) = h2 then (h1; [[...]]) else
+                                           h1, h2 :: (assoc (d, k, t))))
+                               | _ -> d) ;; 
+==============================
+Triaged the following locations:
+File "1693.ml", line 5, characters 40-42:
+And modified the following location:
+File "1693.ml", line 5, characters 28-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    h1
+If you ignore other surrounding code, try replacing
+    k
+with
+    h1
+The actual replacement has type
+    'r
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | h :: t ->
+                                 (let (h1, h2) = h in
+                                       (if h1 = h2 then (h1; [[...]]) else
+                                           h1, h2 :: (assoc (d, k, t))))
+                               | _ -> d) ;; 
+==============================
+Triaged the following locations:
+File "1693.ml", line 5, characters 40-42:
+And modified the following location:
+File "1693.ml", line 5, characters 28-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    h1
+If you ignore other surrounding code, try replacing
+    k
+with
+    h2
+The actual replacement has type
+    's
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | h :: t ->
+                                 (let (h1, h2) = h in
+                                       (if h2 = h2 then (h1; [[...]]) else
+                                           h1, h2 :: (assoc (d, k, t))))
+                               | _ -> d) ;; 
+==============================
+Triaged the following locations:
+File "1693.ml", line 5, characters 40-42:
+And modified the following location:
+File "1693.ml", line 5, characters 28-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    h1
+If you ignore other surrounding code, try replacing
+    k
+with
+    =
+The actual replacement has type
+    't -> 't -> bool
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | h :: t ->
+                                 (let (h1, h2) = h in
+                                       (if = = h2 then (h1; [[...]]) else
+                                           h1, h2 :: (assoc (d, k, t))))
+                               | _ -> d) ;; 
+==============================

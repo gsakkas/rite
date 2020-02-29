@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0653.ml", line 32, characters 51-71:
+This expression has type int list -> int list but is here used with type
+  int list
+Relevant code: (mulByDigit (h l1'))
+------------------------------------------------------------------
+File "0653.ml", line 32, characters 44-50:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    (int list -> int list) -> 'a -> 'b * 'a
+within context
+    fun a x -> (let (l1', a') = a in (match x with 
+                                      | [] -> (l1, a')
+                                      | h :: t ->
+                                        ((bigAdd; [[...]])
+                                            (mulByDigit (h l1')) a')))
+==============================

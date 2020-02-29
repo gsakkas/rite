@@ -1,0 +1,48 @@
+------------------------------------------------------------------
+File "0276.ml", line 7, characters 19-21:
+This pattern matches values of type 'a list
+but is here used to match values of type int
+Relevant code: []
+------------------------------------------------------------------
+File "0276.ml", line 6, characters 21-22:
+Try replacing
+    x
+with
+    i
+of type
+    int * int
+within context
+    fun a x -> (let c = (cout (i, i)) in (match x with 
+                                          | [] -> []
+                                          | h :: t -> (mod (h * i + c) 10) :: t))
+==============================
+File "0276.ml", line 7, characters 10-11:
+Try replacing
+    x
+with
+    l
+of type
+    int list
+within context
+    let f a x = let c = (cout (i, x)) in (match l with 
+                                          | [] -> []
+                                          | h :: t ->
+                                            (mod (h * i + c) 10) ::
+                                                  t) in let base = [] in
+      let args = (List.rev l) in let res = (List.fold_left f base  args) in res
+==============================
+File "0276.ml", line 7, characters 10-11:
+Try replacing
+    x
+with
+    a
+of type
+    int list
+within context
+    let f a x = let c = (cout (i, x)) in (match a with 
+                                          | [] -> []
+                                          | h :: t ->
+                                            (mod (h * i + c) 10) ::
+                                                  t) in let base = [] in
+      let args = (List.rev l) in let res = (List.fold_left f base  args) in res
+==============================

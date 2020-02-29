@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "2040.ml", line 27, characters 31-32:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+File "2040.ml", line 27, characters 31-32:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine m -> (sin (pi *. (eval (m, x, y))))
+                              | Cosine m -> (cos (pi *. (eval (m, x, y))))
+                              | Square m -> (eval (m, x, y)) ** 2.0
+                              | Average (m, n) ->
+                                (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.)
+                              | Times (m, n) ->
+                                ((eval (m, x, y)) *. (eval (n, x, y)))
+                              | MyExpr (m, n, o) ->
+                                (if (eval (m, x, y)) < (eval (n, x, y)) then
+                                    (sqrt (abs_float (eval (o, x, y))))
+                                    else
+                                    ((eval (o, x, y)) /. 2; [[...]]))
+                              | Thresh (m, n, o, p) ->
+                                (if (eval (m, x, y)) < (eval (n, x, y)) then
+                                    (eval (o, x, y))
+                                    else
+                                    (eval (p, x, y)))) ;; 
+==============================
+File "2040.ml", line 27, characters 28-30:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine m -> (sin (pi *. (eval (m, x, y))))
+                              | Cosine m -> (cos (pi *. (eval (m, x, y))))
+                              | Square m -> (eval (m, x, y)) ** 2.0
+                              | Average (m, n) ->
+                                (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.)
+                              | Times (m, n) ->
+                                ((eval (m, x, y)) *. (eval (n, x, y)))
+                              | MyExpr (m, n, o) ->
+                                (if (eval (m, x, y)) < (eval (n, x, y)) then
+                                    (sqrt (abs_float (eval (o, x, y))))
+                                    else
+                                    ((eval (o, x, y)) /.; [[...]] 2))
+                              | Thresh (m, n, o, p) ->
+                                (if (eval (m, x, y)) < (eval (n, x, y)) then
+                                    (eval (o, x, y))
+                                    else
+                                    (eval (p, x, y)))) ;; 
+==============================

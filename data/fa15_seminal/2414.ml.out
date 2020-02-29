@@ -1,0 +1,111 @@
+------------------------------------------------------------------
+File "2414.ml", line 8, characters 34-38:
+This pattern matches values of type bool
+but is here used to match values of type 'a list -> bool
+Relevant code: true
+------------------------------------------------------------------
+File "2414.ml", line 8, characters 26-26:
+Try replacing
+    (List.mem h)
+with
+    (List.mem h [[...]])
+of type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' = (match (List.mem h [[...]]) with 
+                                                   | true -> seen
+                                                   | false ->
+                                                     h ::
+                                                           seen) in let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================
+File "2414.ml", line 8, characters 26-26:
+Try replacing
+    (List.mem h)
+with
+    (List.mem [[...]] h)
+of type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' = (match (List.mem [[...]] h) with 
+                                                   | true -> seen
+                                                   | false ->
+                                                     h ::
+                                                           seen) in let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================
+Triaged the following locations:
+File "2414.ml", line 8, characters 43-47:
+File "2414.ml", line 8, characters 50-55:
+File "2414.ml", line 8, characters 60-69:
+And modified the following location:
+File "2414.ml", line 8, characters 34-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    true
+with
+    _
+The actual replacement has type
+    'b list -> bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' = (match (List.mem h) with 
+                                                   | _ -> [[...other program...]]
+                                                   |
+                                                     [[...other pattern...]]
+                                                     ->
+                                                     [[...other program...]]) in let
+                                           rest'
+                                           =
+                                           t
+                                           in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================
+Triaged the following locations:
+File "2414.ml", line 8, characters 34-38:
+File "2414.ml", line 8, characters 43-47:
+File "2414.ml", line 8, characters 60-69:
+And modified the following location:
+File "2414.ml", line 8, characters 50-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    false
+with
+    _
+The actual replacement has type
+    'c list -> bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' = (match (List.mem h) with 
+                                                   |
+                                                     [[...other pattern...]]
+                                                     ->
+                                                     [[...other program...]]
+                                                   | _ ->
+                                                     [[...other program...]]) in let
+                                           rest'
+                                           =
+                                           t
+                                           in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================

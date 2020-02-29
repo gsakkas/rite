@@ -1,0 +1,108 @@
+------------------------------------------------------------------
+File "1467.ml", line 25, characters 57-61:
+This expression has type 'a list * 'b list but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+File "1467.ml", line 23, characters 10-21:
+Try replacing
+    fun a x -> a + x
+with
+    fun a x -> a + x; [[...]]
+of type
+    'c
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f = fun a x -> a + x; [[...]] in
+              let base = [], [] in
+              let args = (f l1 l2) in
+              let (_, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1467.ml", line 25, characters 26-73:
+And modified the following location:
+File "1467.ml", line 25, characters 15-16:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    f
+with
+    f; [[...]]
+The actual replacement has type
+    'd -> 'e -> 'f
+within context
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = [], [] in
+        let args = ((f; [[...]]) l1 l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1467.ml", line 25, characters 26-73:
+And modified the following location:
+File "1467.ml", line 25, characters 15-16:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    f
+with
+    =
+The actual replacement has type
+    'g -> 'g -> bool
+within context
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = [], [] in let args = (= l1 l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1467.ml", line 25, characters 26-73:
+And modified the following location:
+File "1467.ml", line 25, characters 15-16:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    f
+with
+    >
+The actual replacement has type
+    'h -> 'h -> bool
+within context
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = [], [] in let args = (> l1 l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1467.ml", line 25, characters 26-73:
+And modified the following location:
+File "1467.ml", line 25, characters 15-16:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    f
+with
+    @
+The actual replacement has type
+    'i list -> 'i list -> 'i list
+within context
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = [], [] in let args = (@ l1 l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1467.ml", line 25, characters 26-73:
+And modified the following location:
+File "1467.ml", line 25, characters 4-73:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (f l1 l2) in let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'j
+within context
+    let add (l1, l2) =
+      let f a x = a + x in let base = [], [] in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "1032.ml", line 7, characters 36-59:
+This expression has type 'a list but is here used with type string
+Relevant code: List.fold_left f base l
+------------------------------------------------------------------
+File "1032.ml", line 4, characters 10-12:
+Try replacing
+    ""
+with
+    ""; [[...]]
+of type
+    'b list
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> (""; [[...]])
+                                | h :: t ->
+                                  (let f a x = (List.append h sep) in
+                                        let base = h in
+                                        let l = sl in
+                                        (List.fold_left f base  l))) ;; 
+==============================
+File "1032.ml", line 6, characters 6-98:
+Try replacing
+    let f a x = (List.append h sep) in
+      let base = h in let l = sl in (List.fold_left f base  l)
+with
+    let f a x = (List.append h sep) in
+      let base = h in let l = sl in (List.fold_left f base  l);
+    [[...]]
+of type
+    string
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = (List.append h sep) in
+                                        let base = h in
+                                        let l = sl in (List.fold_left f base  l);
+                                      [[...]])) ;; 
+==============================

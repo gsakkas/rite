@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "2029.ml", line 23, characters 35-39:
+This expression has type 'a list but is here used with type int * int list
+Relevant code: base
+------------------------------------------------------------------
+File "2029.ml", line 21, characters 15-17:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    'b
+within context
+    fun l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                               | (w, z) -> (match x with 
+                                                            | (x, y) ->
+                                                              (((x + y) + w) / 10,
+                                                                    (mod
+                                                                          ((x + y)
+                                                                              + w) 10)
+                                                                        ::
+                                                                        z))) in let
+            base
+            =
+            []; [[...]]
+            in
+            let args = (List.combine l1 l2) in
+            let (_, res) = (List.fold_left f base  args) in
+            res in (removeZero (add (padZero l1 l2))))
+==============================
+File "2029.ml", line 23, characters 35-39:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    int * int list
+within context
+    let f a x = (match a with 
+                 | (w, z) -> (match x with 
+                              | (x, y) ->
+                                (((x + y) + w) / 10,
+                                      (mod ((x + y) + w) 10) ::
+                                          z))) in let base = [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f (base; [[...]])  args) in res
+==============================
+File "2029.ml", line 23, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> int * int -> int * int list) ->
+    'c list -> ('d * 'e) list -> 'f * 'g
+within context
+    let f a x = (match a with 
+                 | (w, z) -> (match x with 
+                              | (x, y) ->
+                                (((x + y) + w) / 10,
+                                      (mod ((x + y) + w) 10) ::
+                                          z))) in let base = [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

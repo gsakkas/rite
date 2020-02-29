@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2601.ml", line 25, characters 44-58:
+This expression has type int but is here used with type 'a * 'b
+Relevant code: addHelp (n, 0)
+------------------------------------------------------------------
+File "2601.ml", line 25, characters 44-58:
+Try replacing
+    (addHelp (n, 0))
+with
+    (addHelp (n, 0)); [[...]]
+of type
+    'c * 'd
+within context
+    let rec additivePersistence n = let (a, b) = (addHelp (n, 0)); [[...]] in b ;; 
+==============================

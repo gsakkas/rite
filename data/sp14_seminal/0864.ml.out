@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "0864.ml", line 3, characters 47-54:
+This expression has type 'a list -> 'a list but is here used with type
+  int list
+Relevant code: List.tl
+------------------------------------------------------------------
+Triaged the following locations:
+File "0864.ml", line 3, characters 36-37:
+And modified the following location:
+File "0864.ml", line 3, characters 39-46:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    sumList
+with
+    sumList; [[...]]
+The actual replacement has type
+    ('b list -> 'b list) -> 'c
+within context
+    let rec sumList xs = (match xs with 
+                          | _ ->
+                            ((List.hd xs) +; [[...]] ((sumList; [[...]]) List.tl))
+                          | [] -> []) ;; 
+==============================
+Triaged the following locations:
+File "0864.ml", line 3, characters 36-37:
+And modified the following location:
+File "0864.ml", line 3, characters 47-54:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    List.tl
+with
+    List.tl; [[...]]
+The actual replacement has type
+    'd list
+within context
+    let rec sumList xs = (match xs with 
+                          | _ ->
+                            ((List.hd xs) +; [[...]] (sumList (List.tl; [[...]])))
+                          | [] -> []) ;; 
+==============================
+Triaged the following locations:
+File "0864.ml", line 3, characters 36-37:
+And modified the following location:
+File "0864.ml", line 3, characters 47-54:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    List.tl
+with
+    xs
+The actual replacement has type
+    'e list
+within context
+    let rec sumList xs = (match xs with 
+                          | _ -> ((List.hd xs) +; [[...]] (sumList xs))
+                          | [] -> []) ;; 
+==============================

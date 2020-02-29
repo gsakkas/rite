@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "3012.ml", line 25, characters 28-29:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "3012.ml", line 26, characters 4-88:
+And modified the following location:
+File "3012.ml", line 25, characters 19-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    int -> 'b
+within context
+    fun l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                               | (([], _), y) -> (([], 0), y)
+                                               | ((h :: t, carry), y) ->
+                                                 (let sum = (h + x) + carry in
+                                                       (t, sum / 10),
+                                                           (mod sum 10) ::
+                                                               y)) in let base =
+            (((List.rev; [[...]]) 0) :: l1, 0), []
+            in
+            [[...other program...]] in (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "3012.ml", line 26, characters 4-88:
+And modified the following location:
+File "3012.ml", line 25, characters 16-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.rev 0) :: l1, 0
+with
+    0
+The actual replacement has type
+    (int) * 'c list
+within context
+    fun l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                               | (([], _), y) -> (([], 0), y)
+                                               | ((h :: t, carry), y) ->
+                                                 (let sum = (h + x) + carry in
+                                                       (t, sum / 10),
+                                                           (mod sum 10) ::
+                                                               y)) in let base =
+            (0), []
+            in
+            [[...other program...]] in (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "3012.ml", line 26, characters 4-88:
+And modified the following location:
+File "3012.ml", line 25, characters 4-138:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let base = ((List.rev 0) :: l1, 0), [] in
+      let args = (List.rev 0) :: l2 in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'd
+==============================

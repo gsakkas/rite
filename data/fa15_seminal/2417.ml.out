@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "2417.ml", line 21, characters 28-36:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: (l1, l2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2417.ml", line 22, characters 4-51:
+And modified the following location:
+File "2417.ml", line 21, characters 28-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.combine (l1, l2))
+with
+    (List.combine l1 l2)
+The actual replacement has type
+    ('d * 'e) list
+within context
+    let add (l1, l2) =
+      let f a x = (x [0]) + (x [1]) :: a in
+        let base = [] in let args = (List.combine l1 l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "2417.ml", line 22, characters 4-51:
+And modified the following location:
+File "2417.ml", line 21, characters 15-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    List.combine; [[...]]
+The actual replacement has type
+    'f * 'g -> 'h
+within context
+    let add (l1, l2) =
+      let f a x = (x [0]) + (x [1]) :: a in
+        let base = [] in
+        let args = ((List.combine; [[...]]) (l1, l2)) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "2417.ml", line 22, characters 4-51:
+And modified the following location:
+File "2417.ml", line 21, characters 15-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    clone
+The actual replacement has type
+    'i * 'j -> int -> ('i * 'j) list
+within context
+    let add (l1, l2) =
+      let f a x = (x [0]) + (x [1]) :: a in
+        let base = [] in let args = (clone (l1, l2)) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

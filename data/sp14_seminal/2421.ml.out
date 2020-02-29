@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2421.ml", line 8, characters 29-61:
+This expression has type int but is here used with type int list
+Relevant code: ((prod / 10) + (mulByDigit i t))
+------------------------------------------------------------------
+File "2421.ml", line 8, characters 11-62:
+Try replacing
+    (mod prod 10) :: prod / 10 + (mulByDigit i t)
+with
+    [[...]]
+of type
+    int
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t ->
+                (let prod = h * i in
+                      (if prod > 10 then [[...]] :: t else (mod prod 10) :: t)))
+==============================

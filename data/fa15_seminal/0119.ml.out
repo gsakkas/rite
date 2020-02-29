@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0119.ml", line 3, characters 47-68:
+This expression has type 'a list but is here used with type 'a list list
+Relevant code: t @ (listReverse [h])
+------------------------------------------------------------------
+File "0119.ml", line 3, characters 34-35:
+Try replacing
+    h
+with
+    @
+of type
+    'b list -> 'b list -> 'b list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h -> [@]
+                             | h :: t -> t @ (listReverse [h])) ;; 
+==============================

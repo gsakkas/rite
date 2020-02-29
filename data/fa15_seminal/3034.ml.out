@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "3034.ml", line 27, characters 22-28:
+This expression has type 'a list but is here used with type int
+Relevant code: a :: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "3034.ml", line 27, characters 14-20:
+And modified the following location:
+File "3034.ml", line 27, characters 27-28:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    'b list
+within context
+    fun l2 ->
+      (let f a x = ((bigAdd; [[...]]) [a :: 0; [[...]]] (mulByDigit x l1)) in
+          let base = 0, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "3034.ml", line 27, characters 14-20:
+And modified the following location:
+File "3034.ml", line 27, characters 22-28:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    a :: 0
+with
+    a, 0
+The actual replacement has type
+    'c * int
+within context
+    fun l2 ->
+      (let f a x = ((bigAdd; [[...]]) [a, 0] (mulByDigit x l1)) in
+          let base = 0, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================

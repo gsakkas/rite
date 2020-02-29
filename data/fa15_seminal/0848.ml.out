@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "0848.ml", line 26, characters 29-39:
+This expression has type int * int but is here used with type 'a list
+Relevant code: (fst, sec)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0848.ml", line 25, characters 10-104:
+And modified the following location:
+File "0848.ml", line 21, characters 10-99:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if fst + sec > 9 then (fst + sec) - 10, 1 else fst + sec, 0)
+with
+    (if fst + sec > 9 then (fst + sec) - 10, 1 else fst + sec, 0); [[...]]
+The actual replacement has type
+    'b
+within context
+    fun (l1, l2) -> (let f a x = (match x, a with 
+                                  | ((fst, sec), _) ->
+                                    ((if fst + sec > 9 then (fst + sec) - 10, 1 else
+                                          fst + sec, 0);
+                                        [[...]])
+                                  | ((fst, sec), (carry, digits)) ->
+                                    [[...other program...]]) in let base = 0, [] in
+          let args = [0, 0] @ (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "0848.ml", line 21, characters 10-99:
+And modified the following location:
+File "0848.ml", line 25, characters 10-104:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if sec = 1 then 1, digits @ (fst, sec) else 0, digits @ (fst, sec))
+with
+    [[...]]
+The actual replacement has type
+    'c
+within context
+    fun (l1, l2) -> (let f a x = (match x, a with 
+                                  | ((fst, sec), _) -> [[...other program...]]
+                                  | ((fst, sec), (carry, digits)) ->
+                                    [[...]]) in let base = 0, [] in
+          let args = [0, 0] @ (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

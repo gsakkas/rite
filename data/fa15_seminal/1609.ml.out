@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "1609.ml", line 3, characters 31-41:
+This expression is not a function, it cannot be applied
+Relevant code: [n mod 10]
+------------------------------------------------------------------
+Triaged the following locations:
+File "1609.ml", line 3, characters 57-58:
+And modified the following location:
+File "1609.ml", line 3, characters 31-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /
+If you ignore other surrounding code, try replacing
+    [(mod n 10)]
+with
+    [(mod n 10)]; [[...]]
+The actual replacement has type
+    (int -> 'd list) -> int -> 'e
+within context
+    let rec digitsOfInt n =
+    (if n < 0 then [] else
+      [] @ ((digitsOfInt [(mod n 10)]; [[...]] n) /; [[...]] 10))
+    ;; 
+==============================

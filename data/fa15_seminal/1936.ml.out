@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1936.ml", line 22, characters 35-39:
+This expression has type 'a list but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+File "1936.ml", line 22, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int -> int -> int) -> 'b list -> int list -> 'c * 'd
+within context
+    let f a x = (mod (a + x) 10) in
+      let base = [] in
+      let args = (List.map addTuple (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2443.ml", line 8, characters 17-19:
+This expression is not a function, it cannot be applied
+Relevant code: l1
+------------------------------------------------------------------
+Triaged the following locations:
+File "2443.ml", line 7, characters 4-87:
+And modified the following location:
+File "2443.ml", line 13, characters 7-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.append (clone (0 l2G) l2))
+with
+    [[...]]
+The actual replacement has type
+    'g list * 'h list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then [[...other program...]] else
+      (if (List.length l1) < (List.length l2) then
+        (let l2G = (List.length l2) - (List.length l2) in [[...]])
+        else
+        l1, l2))
+    ;; 
+==============================

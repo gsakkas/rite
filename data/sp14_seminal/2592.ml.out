@@ -1,0 +1,76 @@
+------------------------------------------------------------------
+File "2592.ml", line 22, characters 42-46:
+This expression has type ('a * 'b) list but is here used with type
+  (int * int) list list
+Relevant code: args
+------------------------------------------------------------------
+File "2592.ml", line 19, characters 37-37:
+Try replacing
+    (List.hd x)
+with
+    (List.hd [[...]] x)
+of type
+    'c * 'd
+within context
+    fun (l1, l2) ->
+      (let f a x = let (a, b) = (List.hd [[...]] x) in [a + 1], [b + 2] in
+          let base = [], [] in
+          let args = [l1, l2] in
+          let (bar, res) = (List.fold_left f base  args) in res)
+==============================
+File "2592.ml", line 22, characters 35-36:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'e list * 'f list -> 'g * 'h -> 'e list * 'f list
+within context
+    let f a x = let (a, b) = (List.hd x) in [a + 1], [b + 2] in
+      let base = [], [] in
+      let args = [l1, l2] in
+      let (bar, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2592.ml", line 22, characters 42-46:
+Try replacing
+    args
+with
+    args; [[...]]
+of type
+    (int * int) list list
+within context
+    let f a x = let (a, b) = (List.hd x) in [a + 1], [b + 2] in
+      let base = [], [] in
+      let args = [l1, l2] in
+      let (bar, res) = (List.fold_left f base  (args; [[...]])) in res
+==============================
+File "2592.ml", line 21, characters 15-25:
+Try replacing
+    [l1, l2]
+with
+    [l1, l2]; [[...]]
+of type
+    'i
+within context
+    let add (l1, l2) =
+      let f a x = let (a, b) = (List.hd x) in [a + 1], [b + 2] in
+        let base = [], [] in
+        let args = [l1, l2]; [[...]] in
+        let (bar, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+File "2592.ml", line 22, characters 20-34:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('j -> (int * int) list -> int list * int list) ->
+    'k list * 'l list -> ('m * 'n) list -> 'o * 'p
+within context
+    let f a x = let (a, b) = (List.hd x) in [a + 1], [b + 2] in
+      let base = [], [] in
+      let args = [l1, l2] in
+      let (bar, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0326.ml", line 15, characters 14-24:
+This expression has type string but is here used with type int
+Relevant code: "sin (pi*"
+------------------------------------------------------------------
+File "0326.ml", line 15, characters 25-26:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    string -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e ->
+                                ("sin (pi*" +; [[...]] (exprToString e))) ;; 
+==============================

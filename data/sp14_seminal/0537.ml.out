@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "0537.ml", line 30, characters 6-9:
+This expression has type int ref but is here used with type int
+Relevant code: max
+------------------------------------------------------------------
+Triaged the following locations:
+File "0537.ml", line 30, characters 10-11:
+And modified the following location:
+File "0537.ml", line 31, characters 9-12:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    1.0
+with
+    1.0; [[...]]
+The actual replacement has type
+    float -> 'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine i -> (sin (pi *. (eval (i, x, y))))
+                              | Cosine i -> (cos (pi *. (eval (i, x, y))))
+                              | Average (i1, i2) ->
+                                (((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0)
+                              | Times (i1, i2) ->
+                                ((eval (i1, x, y)) *. (eval (i2, x, y)))
+                              | Thresh (i1, i2, i3, i4) ->
+                                (if (eval (i1, x, y)) < (eval (i2, x, y)) then
+                                    (eval (i3, x, y))
+                                    else
+                                    (eval (i4, x, y)))
+                              | ECosSin (a, b) ->
+                                (max -; [[...]]
+                                      ((1.0; [[...]])
+                                        (min
+                                          1.0
+                                          (2.71 **
+                                                (((sin (pi *. (eval (a, x, y))))
+                                                        +.
+                                                        (cos
+                                                          (pi *. (eval (b, x, y)))))
+                                                    -. 1.0)
+                                              -. 1.0))))
+                              | SinLog (a', b', c) -> 1.0) ;; 
+==============================
+Triaged the following locations:
+File "0537.ml", line 30, characters 10-11:
+And modified the following location:
+File "0537.ml", line 32, characters 11-207:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    (1.0
+      (min
+        1.0
+        (2.71 **
+              (((sin (pi *. (eval (a, x, y)))) +. (cos (pi *. (eval (b, x, y)))))
+                  -. 1.0)
+            -. 1.0)))
+with
+    1.0
+The actual replacement has type
+    float
+==============================

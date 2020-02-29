@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0438.ml", line 17, characters 20-22:
+This expression has type float but is here used with type int
+Relevant code: pi
+------------------------------------------------------------------
+File "0438.ml", line 17, characters 23-24:
+Try replacing
+    *
+with
+    *; [[...]]
+of type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 ->
+                                (sin (pi *; [[...]] (eval (e1, x, y))))) ;; 
+==============================

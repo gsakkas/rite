@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0344.ml", line 9, characters 7-34:
+This expression is not a function, it cannot be applied
+Relevant code: (clone 0 (padLength l1 l2))
+------------------------------------------------------------------
+File "0344.ml", line 9, characters 7-34:
+Try replacing
+    (clone 0 (padLength l1 l2))
+with
+    (clone 0 (padLength l1 l2)); [[...]]
+of type
+    'f list -> int list list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then (clone 0 (padLength l1 l2)) :: l1
+      else
+      (((clone 0 (padLength l1 l2)); [[...]]) l2))
+    ;; 
+==============================

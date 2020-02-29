@@ -1,0 +1,75 @@
+------------------------------------------------------------------
+File "0633.ml", line 18, characters 14-17:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: mul
+------------------------------------------------------------------
+File "0633.ml", line 18, characters 18-19:
+Try replacing
+    (mul i l)
+with
+    (mul (i, l))
+of type
+    int list
+within context
+    let rec mulByDigit i l =
+    let mul (i, l) =
+      let f a x =
+        let (a1, a2) = a in
+          let val1 = x * i + a1 in
+          (if val1 > 9 then val1 / 10, (mod val1 10) :: a2 else 0, val1 :: a2)
+        in
+        let base = 0, [] in
+        let args = (List.rev 0 :: l) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (mul (i, l)))
+    ;; 
+==============================
+File "0633.ml", line 18, characters 20-21:
+Try replacing
+    (mul i l)
+with
+    (mul i)
+of type
+    int list
+within context
+    let rec mulByDigit i l =
+    let mul (i, l) =
+      let f a x =
+        let (a1, a2) = a in
+          let val1 = x * i + a1 in
+          (if val1 > 9 then val1 / 10, (mod val1 10) :: a2 else 0, val1 :: a2)
+        in
+        let base = 0, [] in
+        let args = (List.rev 0 :: l) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (mul i))
+    ;; 
+==============================
+File "0633.ml", line 8, characters 10-15:
+Try replacing
+    fun (i, l) ->
+      (let f a x =
+          let (a1, a2) = a in
+            let val1 = x * i + a1 in
+            (if val1 > 9 then val1 / 10, (mod val1 10) :: a2 else 0, val1 :: a2)
+          in
+          let base = 0, [] in
+          let args = (List.rev 0 :: l) in
+          let (_, res) = (List.fold_left f base  args) in res)
+with
+    fun i
+      l ->
+        (let f a x =
+            let (a1, a2) = a in
+              let val1 = x * i + a1 in
+              (if val1 > 9 then val1 / 10, (mod val1 10) :: a2 else 0, val1 :: a2)
+            in
+            let base = 0, [] in
+            let args = (List.rev 0 :: l) in
+            let (_, res) = (List.fold_left f base  args) in res)
+of type
+    int -> int list -> int list
+==============================

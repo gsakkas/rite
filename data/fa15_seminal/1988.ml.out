@@ -1,0 +1,97 @@
+------------------------------------------------------------------
+File "1988.ml", line 8, characters 63-67:
+This expression has type string list but is here used with type string
+Relevant code: base
+------------------------------------------------------------------
+File "1988.ml", line 8, characters 63-69:
+Try replacing
+    (List.fold_left f base  l)
+with
+    (List.fold_left f l  base)
+of type
+    string
+within context
+    fun sl -> (match sl with 
+               | [] -> ""
+               | h :: t ->
+                 (let f a x = h ^ (sep ^ (sepConcat sep t)) in
+                       let base = t in
+                       let l = (failwith "to be implemented") in
+                       (List.fold_left f l  base)))
+==============================
+File "1988.ml", line 8, characters 46-60:
+Try replacing
+    List.fold_left
+with
+    l
+of type
+    ('a -> 'b -> string) -> string list -> 'c -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h ^ (sep ^ (sepConcat sep t)) in
+             let base = t in
+             let l = (failwith "to be implemented") in (l f base  l)))
+==============================
+File "1988.ml", line 8, characters 63-67:
+Try replacing
+    base
+with
+    sep
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h ^ (sep ^ (sepConcat sep t)) in
+             let base = t in
+             let l = (failwith "to be implemented") in (List.fold_left f sep  l)))
+==============================
+File "1988.ml", line 8, characters 63-67:
+Try replacing
+    base
+with
+    l
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h ^ (sep ^ (sepConcat sep t)) in
+             let base = t in
+             let l = (failwith "to be implemented") in (List.fold_left f l  l)))
+==============================
+File "1988.ml", line 8, characters 63-67:
+Try replacing
+    base
+with
+    h
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h ^ (sep ^ (sepConcat sep t)) in
+             let base = t in
+             let l = (failwith "to be implemented") in (List.fold_left f h  l)))
+==============================
+File "1988.ml", line 7, characters 17-18:
+Try replacing
+    t
+with
+    h
+of type
+    string
+within context
+    fun sep sl -> (match sl with 
+                   | [] -> ""
+                   | h :: t ->
+                     (let f a x = h ^ (sep ^ (sepConcat sep t)) in
+                           let base = h in
+                           let l = (failwith "to be implemented") in
+                           (List.fold_left f base  l)))
+==============================

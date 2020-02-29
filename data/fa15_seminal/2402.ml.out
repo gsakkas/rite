@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2402.ml", line 11, characters 46-69:
+This expression has type char list but is here used with type bool
+Relevant code: listReverse (explode w)
+------------------------------------------------------------------
+File "2402.ml", line 11, characters 31-35:
+Try replacing
+    true
+with
+    true; [[...]]
+of type
+    char list
+within context
+    let palindrome w = (match (explode w) with 
+                        | [] -> (true; [[...]])
+                        | h :: t -> (listReverse (explode w))) ;; 
+==============================
+File "2402.ml", line 11, characters 46-69:
+Try replacing
+    (listReverse (explode w))
+with
+    (listReverse (explode w)); [[...]]
+of type
+    bool
+within context
+    let palindrome w = (match (explode w) with 
+                        | [] -> true
+                        | h :: t -> ((listReverse (explode w)); [[...]])) ;; 
+==============================

@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "3245.ml", line 74, characters 52-55:
+This expression is not a function, it cannot be applied
+Relevant code: ")"
+------------------------------------------------------------------
+File "3245.ml", line 74, characters 56-59:
+Try replacing
+    (( ")" ) ")")
+with
+    ")"
+of type
+    string
+within context
+    (exprToString ex1) ^
+      ("*sin(" ^ ((exprToString ex2) ^ (")*cos(" ^ ((exprToString ex3) ^ ")"))))
+==============================

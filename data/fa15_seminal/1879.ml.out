@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "1879.ml", line 20, characters 6-57:
+This expression has type expr but is here used with type unit -> expr
+Relevant code: when n > 0 -> buildSine (build (rand, (depth - 1)))
+------------------------------------------------------------------
+File "1879.ml", line 20, characters 20-29:
+Try replacing
+    buildSine
+with
+    buildSine; [[...]]
+of type
+    (unit -> expr) -> unit -> expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 ->
+                                     (if (mod rand 2) = 0 then buildX else buildY)
+                                   | n ->
+                                     when n > 0 ->
+                                         ((buildSine; [[...]])
+                                             (build (rand, depth - 1)))) ;; 
+==============================
+File "1879.ml", line 19, characters 9-52:
+Try replacing
+    (if (mod rand 2) = 0 then buildX else buildY)
+with
+    (if (mod rand 2) = 0 then buildX else buildY); [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 ->
+                                     ((if (mod rand 2) = 0 then buildX else buildY);
+                                         [[...]])
+                                   | n ->
+                                     when n > 0 ->
+                                         (buildSine (build (rand, depth - 1)))) ;; 
+==============================

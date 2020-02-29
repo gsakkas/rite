@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1766.ml", line 19, characters 58-72:
+This expression has type int but is here used with type 'a list
+Relevant code: ((i + j) / 10)
+------------------------------------------------------------------
+File "1766.ml", line 19, characters 52-73:
+Try replacing
+    a :: (i + j) / 10
+with
+    [[...]]
+of type
+    int * 'b
+within context
+    let f a x = let (i, j) = x in (mod (i + j) 10), [[...]] in
+      let base = 0, [] in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

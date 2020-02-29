@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "2836.ml", line 2, characters 43-47:
+This expression is not a function, it cannot be applied
+Relevant code: "; "
+------------------------------------------------------------------
+Triaged the following locations:
+File "2836.ml", line 2, characters 31-39:
+And modified the following location:
+File "2836.ml", line 2, characters 43-47:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.map
+If you ignore other surrounding code, try replacing
+    "; "
+with
+    "; "; [[...]]
+The actual replacement has type
+    'a -> 'b
+within context
+    fun f l -> "[" ^ (((List.map; [[...]]) f (( "; "; [[...]] ) l)) ^ "]")
+==============================
+Triaged the following locations:
+File "2836.ml", line 2, characters 31-39:
+And modified the following location:
+File "2836.ml", line 2, characters 48-49:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.map
+If you ignore other surrounding code, try replacing
+    (( "; " ) l)
+with
+    "; "
+The actual replacement has type
+    string
+within context
+    fun f l -> "[" ^ (((List.map; [[...]]) f "; ") ^ "]")
+==============================

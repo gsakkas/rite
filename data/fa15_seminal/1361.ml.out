@@ -1,0 +1,75 @@
+------------------------------------------------------------------
+File "1361.ml", line 15, characters 27-31:
+This expression has type expr but is here used with type expr * 'a * 'a
+Relevant code: sine
+------------------------------------------------------------------
+Triaged the following locations:
+File "1361.ml", line 15, characters 17-20:
+And modified the following location:
+File "1361.ml", line 15, characters 22-26:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sin
+If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr -> 'b
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine sine -> ((sin; [[...]]) ((eval; [[...]]) sine))
+                              | Cosine cos -> "cos(pi*" ^ ((eval (cos, x, y)) ^ ")")
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((eval (e1, x, y)) ^
+                                        ("+" ^ ((eval (e2, x, y)) ^ ")/2)")))
+                              | Times (t1, t2) ->
+                                (eval (t1, x, y)) ^ ("*" ^ (eval (t2, x, y)))
+                              | Thresh (th1, th2, th3, th4) ->
+                                "(" ^
+                                    ((eval (th1, x, y)) ^
+                                        ("<*" ^
+                                            ((eval (th2, x, y)) ^
+                                                ("?" ^
+                                                    ((eval (th3, x, y)) ^
+                                                        (":" ^
+                                                            ((eval (th4, x, y))
+                                                                ^ ")")))))))) ;; 
+==============================
+Triaged the following locations:
+File "1361.ml", line 15, characters 17-20:
+And modified the following location:
+File "1361.ml", line 15, characters 27-31:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sin
+If you ignore other surrounding code, try replacing
+    sine
+with
+    sine; [[...]]
+The actual replacement has type
+    expr * string * string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine sine -> ((sin; [[...]]) (eval (sine; [[...]])))
+                              | Cosine cos -> "cos(pi*" ^ ((eval (cos, x, y)) ^ ")")
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((eval (e1, x, y)) ^
+                                        ("+" ^ ((eval (e2, x, y)) ^ ")/2)")))
+                              | Times (t1, t2) ->
+                                (eval (t1, x, y)) ^ ("*" ^ (eval (t2, x, y)))
+                              | Thresh (th1, th2, th3, th4) ->
+                                "(" ^
+                                    ((eval (th1, x, y)) ^
+                                        ("<*" ^
+                                            ((eval (th2, x, y)) ^
+                                                ("?" ^
+                                                    ((eval (th3, x, y)) ^
+                                                        (":" ^
+                                                            ((eval (th4, x, y))
+                                                                ^ ")")))))))) ;; 
+==============================

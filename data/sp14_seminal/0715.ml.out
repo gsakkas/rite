@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "0715.ml", line 16, characters 25-38:
+This expression has type 'a but is here used with type 'a list
+Relevant code: (List.hd lst)
+------------------------------------------------------------------
+File "0715.ml", line 16, characters 26-33:
+Try replacing
+    List.hd
+with
+    List.tl
+of type
+    'b list -> 'b list
+within context
+    fun lst ->
+      (if (List.length lst) < 2 then [] else
+        (if (List.tl lst) = (List.tl lst) then
+          (let b :: rest = lst in
+              let b2 :: rest2 = (listReverse rest) in (palHelper rest2))
+          else
+          [1]))
+==============================
+File "0715.ml", line 16, characters 10-17:
+Try replacing
+    List.tl
+with
+    List.hd
+of type
+    'c list -> 'c
+within context
+    fun lst ->
+      (if (List.length lst) < 2 then [] else
+        (if (List.hd lst) = (List.hd lst) then
+          (let b :: rest = lst in
+              let b2 :: rest2 = (listReverse rest) in (palHelper rest2))
+          else
+          [1]))
+==============================

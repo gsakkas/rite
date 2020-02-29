@@ -1,0 +1,440 @@
+------------------------------------------------------------------
+File "3097.ml", line 28, characters 27-31:
+This expression has type expr but is here used with type expr * float * float
+Relevant code: expr
+------------------------------------------------------------------
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 25-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    **
+The actual replacement has type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi ** (eval (expr, x, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 22-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    pi
+with
+    x
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (x *. (eval (expr, x, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 22-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    pi
+with
+    y
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (y *. (eval (expr, x, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 22-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    pi
+with
+    pi
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 29-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (expr, x, y))
+with
+    (eval ((expr, x, y)))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval ((expr, x, y)))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 35-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    expr
+with
+    expr
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 35-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    expr
+with
+    e
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, y, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 44-45:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 44-45:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, x))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 41-45:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    expr, x, y
+with
+    expr, y, x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, y, x))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 35-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    expr, x, y
+with
+    expr, x, y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 29-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3097.ml", line 20, characters 19-50:
+File "3097.ml", line 22, characters 6-59:
+File "3097.ml", line 23, characters 27-71:
+File "3097.ml", line 25, characters 6-112:
+File "3097.ml", line 28, characters 20-61:
+File "3097.ml", line 30, characters 6-58:
+And modified the following location:
+File "3097.ml", line 19, characters 17-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sin
+with
+    cos
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (cos (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) -> [[...other program...]]
+                              | Times (expr1, expr2) -> [[...other program...]]
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                [[...other program...]]
+                              | SumInts expr -> [[...other program...]]
+                              | Power (expr1, expr2, expr3) ->
+                                [[...other program...]]) ;; 
+==============================

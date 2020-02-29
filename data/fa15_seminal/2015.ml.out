@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2015.ml", line 6, characters 60-67:
+This expression has type ('a -> int) * int but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: (f', b)
+------------------------------------------------------------------
+File "2015.ml", line 6, characters 53-59:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('b -> int) * int -> ('b -> int) * int -> bool
+within context
+    let fixpoint (f, b) =
+    let f' x = (if (f x) = b then (f x) else (f x) + 1) in (= (f', b))
+    ;; 
+==============================

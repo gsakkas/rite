@@ -1,0 +1,153 @@
+------------------------------------------------------------------
+File "2033.ml", line 13, characters 48-49:
+This pattern matches values of type int
+but is here used to match values of type 'a * 'b -> 'c
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "2033.ml", line 13, characters 7-69:
+And modified the following location:
+File "2033.ml", line 15, characters 13-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun (a, b) -> rand
+with
+    fun (a, b) -> rand; [[...]]
+The actual replacement has type
+    'd
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then [[...other program...]] else
+      (let num = fun (a, b) -> rand; [[...]] in (match num with 
+                                                 | 0 ->
+                                                   (Sine (build (rand, depth - 1)))
+                                                 | _ ->
+                                                   (Cosine (build (rand, depth - 1))
+                                                       ))))
+    ;; 
+==============================
+Triaged the following locations:
+File "2033.ml", line 13, characters 7-69:
+And modified the following location:
+File "2033.ml", line 16, characters 11-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    num
+with
+    rand
+The actual replacement has type
+    int
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then [[...other program...]] else
+      (let num (a, b) = rand in (match rand with 
+                                 | 0 -> (Sine (build (rand, depth - 1)))
+                                 | _ -> (Cosine (build (rand, depth - 1))))))
+    ;; 
+==============================
+Triaged the following locations:
+File "2033.ml", line 13, characters 7-69:
+And modified the following location:
+File "2033.ml", line 16, characters 11-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    num
+with
+    num; [[...]]
+The actual replacement has type
+    int
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then [[...other program...]] else
+      (let num (a, b) = rand in (match (num; [[...]]) with 
+                                 | 0 -> (Sine (build (rand, depth - 1)))
+                                 | _ -> (Cosine (build (rand, depth - 1))))))
+    ;; 
+==============================
+Triaged the following locations:
+File "2033.ml", line 13, characters 7-69:
+And modified the following location:
+File "2033.ml", line 17, characters 7-8:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then [[...other program...]] else
+      (let num (a, b) = rand in (match num with 
+                                 | _ -> (Sine (build (rand, depth - 1)))
+                                 | _ -> (Cosine (build (rand, depth - 1))))))
+    ;; 
+==============================
+Triaged the following locations:
+File "2033.ml", line 15, characters 4-141:
+And modified the following location:
+File "2033.ml", line 13, characters 48-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then (let num (a, b) = rand in (match num with 
+                                                  | _ -> VarX
+                                                  | _ ->
+                                                    VarY)) else [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2033.ml", line 15, characters 4-141:
+And modified the following location:
+File "2033.ml", line 13, characters 37-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    num
+with
+    num; [[...]]
+The actual replacement has type
+    int
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then (let num (a, b) = rand in (match (num; [[...]]) with 
+                                                  | 0 -> VarX
+                                                  | _ ->
+                                                    VarY)) else [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2033.ml", line 15, characters 4-141:
+And modified the following location:
+File "2033.ml", line 13, characters 37-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    num
+with
+    rand
+The actual replacement has type
+    int
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then (let num (a, b) = rand in (match rand with 
+                                                  | 0 -> VarX
+                                                  | _ ->
+                                                    VarY)) else [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2033.ml", line 15, characters 4-141:
+And modified the following location:
+File "2033.ml", line 13, characters 15-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun (a, b) -> rand
+with
+    fun (a, b) -> rand; [[...]]
+The actual replacement has type
+    'e
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then (let num = fun (a, b) -> rand; [[...]] in (match num with 
+                                                                  | 0 -> VarX
+                                                                  | _ ->
+                                                                    VarY)) else [[...other program...]])
+    ;; 
+==============================

@@ -1,0 +1,105 @@
+------------------------------------------------------------------
+File "2673.ml", line 3, characters 62-63:
+This expression has type ('a -> 'b) -> ('c -> 'a) -> 'a -> 'c -> 'b
+but is here used with type ('a -> 'b) -> ('c -> 'a) -> 'a -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "2673.ml", line 3, characters 12-15:
+Try replacing
+    fun y c -> (a (x c))
+with
+    fun (y, c) -> (a (x c))
+of type
+    'd * 'e -> 'f
+within context
+    let pipe fs =
+    let f a x (y, c) = (a (x c)) in let base y = y in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2673.ml", line 3, characters 8-13:
+Try replacing
+    fun a x y c -> (a (x c))
+with
+    fun y x a c -> (a (x c))
+of type
+    'g -> ('h -> 'i) -> ('i -> 'j) -> 'h -> 'j
+within context
+    let pipe fs =
+    let f y x a c = (a (x c)) in let base y = y in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2673.ml", line 3, characters 47-63:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left (f base fs))
+of type
+    'k -> 'l list -> 'k
+within context
+    let pipe fs =
+    let f a x y c = (a (x c)) in let base y = y in (List.fold_left (f base fs))
+    ;; 
+==============================
+File "2673.ml", line 3, characters 47-61:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    (('m -> 'n) -> ('o -> 'm) -> 'p -> 'o -> 'n) ->
+    (('m -> 'n) -> 'm -> 'n) -> 'q -> ('m -> 'n) -> ('o -> 'm) -> 'p -> 'o -> 'n
+within context
+    let pipe fs = let f a x y c = (a (x c)) in let base y = y in (f f base  fs) ;; 
+==============================
+File "2673.ml", line 3, characters 47-61:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('r -> 'r) -> ('s -> 'r) -> 't -> 's -> 'r) ->
+    ('r -> 'r) -> ('s -> 'r) -> 't -> 's -> 'r
+within context
+    let pipe fs = let f a x y c = (a (x c)) in let base y = y in (base f base  fs)
+    ;; 
+==============================
+File "2673.ml", line 3, characters 18-19:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('u -> 'v -> 'u) -> 'u -> 'v list -> 'u
+within context
+    fun a x y c -> (List.fold_left (x c))
+==============================
+File "2673.ml", line 3, characters 18-19:
+Try replacing
+    a
+with
+    x
+of type
+    'w -> 'w
+within context
+    fun a x y c -> (x (x c))
+==============================
+File "2673.ml", line 3, characters 18-19:
+Try replacing
+    a
+with
+    c
+of type
+    'x -> 'y
+within context
+    fun a x y c -> (c (x c))
+==============================
+File "2673.ml", line 3, characters 18-19:
+Try replacing
+    a
+with
+    y
+of type
+    'z -> 'a1
+within context
+    fun a x y c -> (y (x c))
+==============================

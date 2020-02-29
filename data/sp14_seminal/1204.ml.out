@@ -1,0 +1,140 @@
+------------------------------------------------------------------
+File "1204.ml", line 52, characters 63-69:
+This expression has type int * int but is here used with type int * int list
+Relevant code: (0, 0)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1204.ml", line 53, characters 2-512:
+And modified the following location:
+File "1204.ml", line 52, characters 63-69:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0, 0
+with
+    0, 0; [[...]]
+The actual replacement has type
+    int * int list
+within context
+    let bigMul l1 l2 = let f a x = (match a with 
+                                    | (_, z) -> (0, (bigAdd z x))
+                                    | _ ->
+                                      (0, 0;
+                                          [[...]])) in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "1204.ml", line 53, characters 2-512:
+And modified the following location:
+File "1204.ml", line 52, characters 43-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    *
+The actual replacement has type
+    int -> int -> int
+within context
+    let bigMul l1 l2 = let f a x = (match a with 
+                                    | (_, z) -> (0, (* z x))
+                                    | _ -> (0, 0)) in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "1204.ml", line 53, characters 2-512:
+And modified the following location:
+File "1204.ml", line 52, characters 43-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    let bigMul l1 l2 = let f a x = (match a with 
+                                    | (_, z) -> (0, (+ z x))
+                                    | _ -> (0, 0)) in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "1204.ml", line 53, characters 2-512:
+And modified the following location:
+File "1204.ml", line 52, characters 43-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    -
+The actual replacement has type
+    int -> int -> int
+within context
+    let bigMul l1 l2 = let f a x = (match a with 
+                                    | (_, z) -> (0, (- z x))
+                                    | _ -> (0, 0)) in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "1204.ml", line 53, characters 2-512:
+And modified the following location:
+File "1204.ml", line 52, characters 43-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    /
+The actual replacement has type
+    int -> int -> int
+within context
+    let bigMul l1 l2 = let f a x = (match a with 
+                                    | (_, z) -> (0, (/ z x))
+                                    | _ -> (0, 0)) in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "1204.ml", line 53, characters 2-512:
+And modified the following location:
+File "1204.ml", line 52, characters 38-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0, (bigAdd z x)
+with
+    0, (bigAdd z x); [[...]]
+The actual replacement has type
+    int * int
+within context
+    let bigMul l1 l2 = let f a x = (match a with 
+                                    | (_, z) -> (0, (bigAdd z x); [[...]])
+                                    | _ -> (0, 0)) in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "1204.ml", line 53, characters 2-512:
+And modified the following location:
+File "1204.ml", line 52, characters 2-585:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match a with 
+                 | (_, z) -> (0, (bigAdd z x))
+                 | _ ->
+                   (0,
+                         0)) in let base = [] in
+      let args = let rec digitProducts acc place l1 l2 = (match l1 with 
+                                                          | [] -> acc
+                                                          | h :: t ->
+                                                            (let placeHolders =
+                                                                  let rec buildZeros
+                                                                    a places
+                                                                    =
+                                                                    (if places = 0
+                                                                      then
+                                                                      a
+                                                                      else
+                                                                      (buildZeros
+                                                                        0 :: a
+                                                                        (places
+                                                                            - 1)))
+                                                                    in
+                                                                    (buildZeros
+                                                                        [] place)
+                                                                  in
+                                                                  let a =
+                                                                  (List.append
+                                                                    (mulByDigit
+                                                                      h l2) placeHolders)
+                                                                  in
+                                                                  (digitProducts
+                                                                      a :: acc (place + 1) t
+                                                                      l2))) in (digitProducts
+            [] 0  l1  l2) in let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

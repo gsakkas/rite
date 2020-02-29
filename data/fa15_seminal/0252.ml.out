@@ -1,0 +1,60 @@
+------------------------------------------------------------------
+File "0252.ml", line 27, characters 33-34:
+This expression has type int * int list -> int * int -> int list * int list
+but is here used with type int * int list -> int * int -> int * int list
+Relevant code: f
+------------------------------------------------------------------
+File "0252.ml", line 27, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'a list -> 'b * 'c -> int * 'a list
+within context
+    let f a x =
+      let (m, n) = x in
+        let (y, z) = a in
+        ((addition (m, n)) + y) / 10 :: z, [(mod ((addition (m, n)) + y) 10)] @ z
+      in
+      let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0252.ml", line 27, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> int * int -> int list * int list) ->
+    int * 'd list -> ('e * 'f) list -> 'g * 'h
+within context
+    let f a x =
+      let (m, n) = x in
+        let (y, z) = a in
+        ((addition (m, n)) + y) / 10 :: z, [(mod ((addition (m, n)) + y) 10)] @ z
+      in
+      let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0252.ml", line 20, characters 10-155:
+Try replacing
+    fun a
+      x ->
+        (let (m, n) = x in
+            let (y, z) = a in
+            ((addition (m, n)) + y) / 10 :: z,
+                [(mod ((addition (m, n)) + y) 10)] @ z)
+with
+    fun a
+      x ->
+        (let (m, n) = x in
+            let (y, z) = a in
+            ((addition (m, n)) + y) / 10 :: z,
+                [(mod ((addition (m, n)) + y) 10)] @ z);
+    [[...]]
+of type
+    'i
+==============================

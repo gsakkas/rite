@@ -1,0 +1,34 @@
+------------------------------------------------------------------
+File "2202.ml", line 29, characters 6-46:
+This expression is not a function, it cannot be applied
+Relevant code: ((eval (e1, x, y)) +. (eval (e2, x, y)))
+------------------------------------------------------------------
+File "2202.ml", line 29, characters 6-46:
+Try replacing
+    ((eval (e1, x, y)) +. (eval (e2, x, y)))
+with
+    ((eval (e1, x, y)) +. (eval (e2, x, y))); [[...]]
+of type
+    (float -> float) ->
+    (expr * float * float -> float) ->
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Mirana e -> (abs_float (eval (e, x, y)))
+                              | Darius (e1, e2, e3) ->
+                                ((((eval (e1, x, y)) +. (eval (e2, x, y))); [[...]])
+                                    log eval  (e3, x, y))) ;; 
+==============================

@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "3169.ml", line 10, characters 7-69:
+This expression has type int list list * int list but is here used with type
+  int list * int list
+Relevant code: ([l1], ((clone 0 ((List.length l1) - (List.length l2))) @ l2))
+------------------------------------------------------------------
+File "3169.ml", line 9, characters 7-67:
+Try replacing
+    (clone 0 ((List.length l2) - (List.length l1))) @ l1, l2
+with
+    (clone 0 ((List.length l2) - (List.length l1))) @ l1, l2; [[...]]
+of type
+    int list list * int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then
+      ((clone 0 ((List.length l2) - (List.length l1))) @ l1, l2; [[...]])
+      else
+      [l1], (clone 0 ((List.length l1) - (List.length l2))) @ l2)
+    ;; 
+==============================
+File "3169.ml", line 10, characters 7-69:
+Try replacing
+    [l1], (clone 0 ((List.length l1) - (List.length l2))) @ l2
+with
+    [l1], (clone 0 ((List.length l1) - (List.length l2))) @ l2; [[...]]
+of type
+    int list * int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then
+      (clone 0 ((List.length l2) - (List.length l1))) @ l1, l2
+      else
+      ([l1], (clone 0 ((List.length l1) - (List.length l2))) @ l2; [[...]]))
+    ;; 
+==============================

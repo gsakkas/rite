@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "0679.ml", line 3, characters 29-30:
+This expression has type 'a -> 'b but is here used with type 'a
+Relevant code: a
+------------------------------------------------------------------
+File "0679.ml", line 3, characters 18-19:
+Try replacing
+    a
+with
+    _
+of type
+    'c -> 'd
+within context
+    fun fs ->
+      (let f a x = let _ = x in (x a) in
+          let base x = x in (List.fold_left f base  fs))
+==============================
+File "0679.ml", line 3, characters 14-30:
+Try replacing
+    let a = x in (x a)
+with
+    (x a)
+of type
+    'e
+within context
+    let pipe fs = let f a x = (x a) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "0679.ml", line 3, characters 29-30:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('f -> 'g -> 'f) -> 'f -> 'g list -> 'f
+within context
+    let f a x = let a = x in (x List.fold_left) in
+      let base x = x in (List.fold_left f base  fs)
+==============================
+File "0679.ml", line 3, characters 22-23:
+Try replacing
+    x
+with
+    a
+of type
+    'h
+within context
+    fun fs ->
+      (let f a x = let a = a in (x a) in
+          let base x = x in (List.fold_left f base  fs))
+==============================
+File "0679.ml", line 3, characters 22-23:
+Try replacing
+    x
+with
+    List.fold_left
+of type
+    ('i -> 'j -> 'i) -> 'i -> 'j list -> 'i
+within context
+    fun fs ->
+      (let f a x = let a = List.fold_left in (x a) in
+          let base x = x in (List.fold_left f base  fs))
+==============================

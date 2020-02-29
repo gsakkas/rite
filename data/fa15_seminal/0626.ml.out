@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "0626.ml", line 21, characters 25-43:
+This expression has type 'a list -> (int * 'a) list
+but is here used with type 'b list
+Relevant code: (List.combine [0])
+------------------------------------------------------------------
+Triaged the following locations:
+File "0626.ml", line 21, characters 44-45:
+And modified the following location:
+File "0626.ml", line 21, characters 48-50:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    int list -> 'c list
+within context
+    let f a x =
+      let (a1, a2) = a in
+        let (x1, x2) = x in
+        let val1 = (a1 + x1) + x2 in
+        (if val1 > 9 then 1, val1 - 10 :: a2 else 0, val1 :: a2)
+      in
+      let base = 0, [] in
+      let args = (List.rev ((List.combine [0]) @; [[...]] ((l1; [[...]]) [0]) @ l2))
+      in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "0626.ml", line 21, characters 44-45:
+And modified the following location:
+File "0626.ml", line 21, characters 51-54:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    (l1 [0])
+with
+    l1
+The actual replacement has type
+    'd list
+within context
+    let f a x =
+      let (a1, a2) = a in
+        let (x1, x2) = x in
+        let val1 = (a1 + x1) + x2 in
+        (if val1 > 9 then 1, val1 - 10 :: a2 else 0, val1 :: a2)
+      in
+      let base = 0, [] in
+      let args = (List.rev ((List.combine [0]) @; [[...]] l1 @ l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

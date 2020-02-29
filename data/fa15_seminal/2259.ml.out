@@ -1,0 +1,68 @@
+------------------------------------------------------------------
+File "2259.ml", line 37, characters 57-58:
+This expression has type int * int -> 'a -> int * (int list -> int list)
+but is here used with type int * int -> 'a -> int * int
+Relevant code: f
+------------------------------------------------------------------
+File "2259.ml", line 37, characters 57-58:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> 'c -> int * 'b list
+within context
+    let f a digit = (match a with 
+                     | (place, l) ->
+                       (place + 1,
+                             (bigAdd
+                               (mulByDigit
+                                 l
+                                 l1)))) in let base = 1, [] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2259.ml", line 37, characters 42-56:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int -> 'd -> int * (int list -> int list)) ->
+    int * 'e list -> 'f list -> 'g * 'h
+within context
+    let f a digit = (match a with 
+                     | (place, l) ->
+                       (place + 1,
+                             (bigAdd
+                               (mulByDigit
+                                 l
+                                 l1)))) in let base = 1, [] in
+      let args = (List.rev l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2259.ml", line 34, characters 8-91:
+Try replacing
+    fun a digit -> (match a with 
+                    | (place, l) -> (place + 1, (bigAdd (mulByDigit l l1))))
+with
+    fun a digit -> (match a with 
+                    | (place, l) ->
+                      (place + 1, (bigAdd (mulByDigit l l1)))); [[...]]
+of type
+    'i
+within context
+    let bigMul l1 l2 = let f = fun a digit -> (match a with 
+                                               | (place, l) ->
+                                                 (place + 1,
+                                                       (bigAdd
+                                                         (mulByDigit
+                                                           l
+                                                           l1)))); [[...]] in let
+      base
+      =
+      1, []
+      in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res ;; 
+==============================

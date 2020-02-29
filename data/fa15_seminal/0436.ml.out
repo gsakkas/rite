@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "0436.ml", line 6, characters 38-57:
+This expression has type ('a -> 'b * 'c) * bool but is here used with type
+  'b * 'c
+Relevant code: (funt, ((f b) = b))
+------------------------------------------------------------------
+File "0436.ml", line 6, characters 39-43:
+Try replacing
+    funt
+with
+    x
+of type
+    'd * bool
+within context
+    let fixpoint (f, b) = let rec funt x = x, (f b) = b in (wwhile (funt, b)) ;; 
+==============================
+File "0436.ml", line 6, characters 39-43:
+Try replacing
+    funt
+with
+    =
+of type
+    ('e -> 'e -> bool) * bool
+within context
+    let fixpoint (f, b) = let rec funt x = =, (f b) = b in (wwhile (funt, b)) ;; 
+==============================
+File "0436.ml", line 6, characters 39-43:
+Try replacing
+    funt
+with
+    b
+of type
+    'f * bool
+within context
+    let fixpoint (f, b) = let rec funt x = b, (f b) = b in (wwhile (funt, b)) ;; 
+==============================

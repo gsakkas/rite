@@ -1,0 +1,78 @@
+------------------------------------------------------------------
+File "1416.ml", line 10, characters 45-46:
+This expression has type int list but is here used with type int
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "1416.ml", line 10, characters 47-48:
+And modified the following location:
+File "1416.ml", line 10, characters 63-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    sumList
+with
+    abs
+The actual replacement has type
+    int -> int
+within context
+    let rec digitalRoot n = (match (digits n) with 
+                             | x :: [] -> x
+                             | h :: t -> (t +; [[...]] (digitalRoot (abs h)))) ;; 
+==============================
+Triaged the following locations:
+File "1416.ml", line 10, characters 47-48:
+And modified the following location:
+File "1416.ml", line 10, characters 63-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    sumList
+with
+    sumList; [[...]]
+The actual replacement has type
+    int -> int
+within context
+    let rec digitalRoot n = (match (digits n) with 
+                             | x :: [] -> x
+                             | h :: t ->
+                               (t +; [[...]]
+                                     (digitalRoot ((sumList; [[...]]) h)))) ;; 
+==============================
+Triaged the following locations:
+File "1416.ml", line 10, characters 47-48:
+And modified the following location:
+File "1416.ml", line 10, characters 71-72:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    h
+with
+    h; [[...]]
+The actual replacement has type
+    int list
+within context
+    let rec digitalRoot n = (match (digits n) with 
+                             | x :: [] -> x
+                             | h :: t ->
+                               (t +; [[...]]
+                                     (digitalRoot (sumList (h; [[...]]))))) ;; 
+==============================
+Triaged the following locations:
+File "1416.ml", line 10, characters 47-48:
+And modified the following location:
+File "1416.ml", line 10, characters 71-72:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    h
+with
+    t
+The actual replacement has type
+    int list
+within context
+    let rec digitalRoot n = (match (digits n) with 
+                             | x :: [] -> x
+                             | h :: t ->
+                               (t +; [[...]] (digitalRoot (sumList t)))) ;; 
+==============================

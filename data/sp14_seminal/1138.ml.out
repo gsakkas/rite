@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "1138.ml", line 30, characters 9-18:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: abs_float
+------------------------------------------------------------------
+File "1138.ml", line 30, characters 19-22:
+Try replacing
+    (abs_float
+      sin
+      (((cos (pi *. (eval (e1, x, y)))) *. (cos (pi *. (eval (e2, x, y)))))
+          *. (cos (pi *. (eval (e3, x, y))))))
+with
+    (abs_float
+      (((cos (pi *. (eval (e1, x, y)))) *. (cos (pi *. (eval (e2, x, y)))))
+          *. (cos (pi *. (eval (e3, x, y))))))
+of type
+    float
+==============================
+File "1138.ml", line 30, characters 9-22:
+Try replacing
+    (abs_float
+      sin
+      (((cos (pi *. (eval (e1, x, y)))) *. (cos (pi *. (eval (e2, x, y)))))
+          *. (cos (pi *. (eval (e3, x, y))))))
+with
+    (abs_float
+      (sin
+        (((cos (pi *. (eval (e1, x, y)))) *. (cos (pi *. (eval (e2, x, y)))))
+            *. (cos (pi *. (eval (e3, x, y)))))))
+of type
+    float
+==============================

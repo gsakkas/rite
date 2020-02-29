@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "2482.ml", line 18, characters 28-32:
+The constructor Sine expects 1 argument(s),
+but is here applied to 0 argument(s)
+Relevant code: Sine
+------------------------------------------------------------------
+Triaged the following locations:
+File "2482.ml", line 18, characters 17-39:
+And modified the following location:
+File "2482.ml", line 19, characters 19-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    evalhelper
+with
+    evalhelper; [[...]]
+The actual replacement has type
+    (expr -> expr) ->
+    expr -> 'd -> 'd -> 'd
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 ->
+                                  ((evalhelper; [[...]])
+                                      buildCosine p1  x  y)) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2482.ml", line 19, characters 19-48:
+And modified the following location:
+File "2482.ml", line 18, characters 28-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (evalhelper Sine p1  x  y)
+with
+    (evalhelper p1 x  y)
+The actual replacement has type
+    'a
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (evalhelper p1 x  y)
+                                | Cosine p1 ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2482.ml", line 18, characters 17-39:
+And modified the following location:
+File "2482.ml", line 19, characters 30-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (evalhelper buildCosine p1  x  y)
+with
+    (evalhelper p1 x  y)
+The actual replacement has type
+    'c
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 ->
+                                  (evalhelper p1 x  y)) in (evalhelper e x  y)
+==============================

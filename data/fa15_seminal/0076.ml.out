@@ -1,0 +1,140 @@
+------------------------------------------------------------------
+File "0076.ml", line 32, characters 22-34:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+Triaged the following locations:
+File "0076.ml", line 32, characters 47-70:
+And modified the following location:
+File "0076.ml", line 32, characters 38-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString e2 "/3*")
+with
+    (exprToString e2)
+The actual replacement has type
+    string
+within context
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+     | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+     | Average (e1, e2) ->
+       "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+     | Times (e1, e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+     | Thresh (e1, e2, e3, e4) ->
+       "(" ^
+           ((exprToString e1) ^
+               ("<" ^
+                   ((exprToString e2) ^
+                       ("?" ^
+                           ((exprToString e3) ^
+                               (":" ^ ((exprToString e4) ^ ")")))))))
+     | Uncreative (e1, e2, e3) ->
+       "(" ^
+           ((exprToString e1) ^
+               ("/2*" ^ ((exprToString e2) ^ [[...other program...]])))
+     | Creative e1 -> "(-1*" ^ ((exprToString e1) ^ ")"))
+==============================
+Triaged the following locations:
+File "0076.ml", line 32, characters 21-44:
+And modified the following location:
+File "0076.ml", line 32, characters 48-60:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString; [[...]]
+The actual replacement has type
+    expr -> string -> string
+within context
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+     | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+     | Average (e1, e2) ->
+       "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+     | Times (e1, e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+     | Thresh (e1, e2, e3, e4) ->
+       "(" ^
+           ((exprToString e1) ^
+               ("<" ^
+                   ((exprToString e2) ^
+                       ("?" ^
+                           ((exprToString e3) ^
+                               (":" ^ ((exprToString e4) ^ ")")))))))
+     | Uncreative (e1, e2, e3) ->
+       "(" ^
+           ((exprToString e1) ^
+               ("/2*" ^
+                   ([[...other program...]] ^ ((exprToString; [[...]]) e3 "/4)"))))
+     | Creative e1 -> "(-1*" ^ ((exprToString e1) ^ ")"))
+==============================
+Triaged the following locations:
+File "0076.ml", line 32, characters 47-70:
+And modified the following location:
+File "0076.ml", line 32, characters 22-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString; [[...]]
+The actual replacement has type
+    expr -> string -> string
+within context
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+     | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+     | Average (e1, e2) ->
+       "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+     | Times (e1, e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+     | Thresh (e1, e2, e3, e4) ->
+       "(" ^
+           ((exprToString e1) ^
+               ("<" ^
+                   ((exprToString e2) ^
+                       ("?" ^
+                           ((exprToString e3) ^
+                               (":" ^ ((exprToString e4) ^ ")")))))))
+     | Uncreative (e1, e2, e3) ->
+       "(" ^
+           ((exprToString e1) ^
+               ("/2*" ^
+                   (((exprToString; [[...]]) e2 "/3*") ^ [[...other program...]])))
+     | Creative e1 -> "(-1*" ^ ((exprToString e1) ^ ")"))
+==============================
+Triaged the following locations:
+File "0076.ml", line 32, characters 21-44:
+And modified the following location:
+File "0076.ml", line 32, characters 64-69:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString e3 "/4)")
+with
+    (exprToString e3)
+The actual replacement has type
+    string
+within context
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+     | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+     | Average (e1, e2) ->
+       "((" ^ ((exprToString e1) ^ ("+" ^ ((exprToString e2) ^ ")/2)")))
+     | Times (e1, e2) -> (exprToString e1) ^ ("*" ^ (exprToString e2))
+     | Thresh (e1, e2, e3, e4) ->
+       "(" ^
+           ((exprToString e1) ^
+               ("<" ^
+                   ((exprToString e2) ^
+                       ("?" ^
+                           ((exprToString e3) ^
+                               (":" ^ ((exprToString e4) ^ ")")))))))
+     | Uncreative (e1, e2, e3) ->
+       "(" ^
+           ((exprToString e1) ^
+               ("/2*" ^ ([[...other program...]] ^ (exprToString e3))))
+     | Creative e1 -> "(-1*" ^ ((exprToString e1) ^ ")"))
+==============================

@@ -1,0 +1,74 @@
+------------------------------------------------------------------
+File "2589.ml", line 21, characters 59-63:
+This expression has type int but is here used with type 'a list
+Relevant code: args
+------------------------------------------------------------------
+File "2589.ml", line 19, characters 24-26:
+Try replacing
+    l1
+with
+    l1; [[...]]
+of type
+    'b
+within context
+    fun (l1, l2) ->
+      (let f a x = let a = l1; [[...]] in let b = l2 in [a + 1], [a + 2] in
+          let base = [], [] in
+          let args = l1 in let (bar, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "2589.ml", line 19, characters 45-52:
+And modified the following location:
+File "2589.ml", line 19, characters 55-56:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int
+within context
+    fun a
+      x -> (let a = l1 in let b = l2 in [[...other program...]], [(a; [[...]]) + 2])
+==============================
+Triaged the following locations:
+File "2589.ml", line 19, characters 45-52:
+And modified the following location:
+File "2589.ml", line 19, characters 57-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    'c list -> int -> 'd
+within context
+    fun a
+      x -> (let a = l1 in let b = l2 in [[...other program...]], [(a +; [[...]] 2)])
+==============================
+Triaged the following locations:
+File "2589.ml", line 19, characters 54-61:
+And modified the following location:
+File "2589.ml", line 19, characters 48-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    'e list -> int -> 'f
+within context
+    fun a
+      x -> (let a = l1 in let b = l2 in [(a +; [[...]] 1)], [[...other program...]])
+==============================
+Triaged the following locations:
+File "2589.ml", line 19, characters 54-61:
+And modified the following location:
+File "2589.ml", line 19, characters 46-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int
+within context
+    fun a
+      x -> (let a = l1 in let b = l2 in [(a; [[...]]) + 1], [[...other program...]])
+==============================

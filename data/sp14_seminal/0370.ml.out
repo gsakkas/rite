@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0370.ml", line 24, characters 29-30:
+This expression has type int -> int but is here used with type int list
+Relevant code: y
+------------------------------------------------------------------
+File "0370.ml", line 24, characters 29-30:
+Try replacing
+    y
+with
+    y; [[...]]
+of type
+    int list
+within context
+    let new_sum = (rem + el1) + el2 in
+      let new_rem = (if new_sum > 9 then 1 else 0) in
+      let norm_sum = (if new_sum > 9 then new_sum - 10 else new_sum) in
+      new_rem, norm_sum :: y; [[...]]
+==============================

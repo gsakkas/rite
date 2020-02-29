@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "1203.ml", line 66, characters 16-42:
+This expression has type int list but is here used with type 'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "1203.ml", line 66, characters 16-42:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f base  args); [[...]]
+of type
+    'c * 'd
+within context
+    fun l2 ->
+      (let f a x = (bigAdd a x) in
+          let base = [] in
+          let args = let rec digitProducts acc place l1 l2 = (match l1 with 
+                                                              | [] -> acc
+                                                              | h :: t ->
+                                                                (let placeHolders =
+                                                                      let rec
+                                                                        buildZeros
+                                                                        a places
+                                                                        =
+                                                                        (if
+                                                                          places = 0
+                                                                          then
+                                                                          a
+                                                                          else
+                                                                          (buildZeros
+                                                                            0 :: a
+                                                                            (places
+                                                                                -
+                                                                                1)))
+                                                                        in
+                                                                        (buildZeros
+                                                                            [] place)
+                                                                      in
+                                                                      let a =
+                                                                      (List.append
+                                                                        (mulByDigit
+                                                                          h l2)
+                                                                        placeHolders)
+                                                                      in
+                                                                      (digitProducts
+                                                                          a :: acc
+                                                                          (place
+                                                                              + 1) t
+                                                                          l2))) in (digitProducts
+                [] 0 l1
+                l2) in let (_, res) = (List.fold_left f base  args); [[...]] in res)
+==============================

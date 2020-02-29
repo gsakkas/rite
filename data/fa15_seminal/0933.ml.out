@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "0933.ml", line 37, characters 24-30:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: bigAdd
+------------------------------------------------------------------
+Triaged the following locations:
+File "0933.ml", line 37, characters 24-30:
+And modified the following location:
+File "0933.ml", line 37, characters 50-51:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    'b -> int
+within context
+    let rec mulByDigit i l =
+    (if (i <= 1) then l else
+      ((bigAdd; [[...]]) l mulByDigit  (i - ((1; [[...]]) l))))
+    ;; 
+==============================
+Triaged the following locations:
+File "0933.ml", line 37, characters 24-30:
+And modified the following location:
+File "0933.ml", line 37, characters 52-53:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (1 l)
+with
+    1
+The actual replacement has type
+    int
+within context
+    let rec mulByDigit i l =
+    (if (i <= 1) then l else ((bigAdd; [[...]]) l mulByDigit  (i - 1)))
+    ;; 
+==============================

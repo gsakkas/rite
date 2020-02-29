@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "3219.ml", line 3, characters 2-177:
+This expression has type int list but is here used with type int
+Relevant code: if l = []
+  then []
+  else
+    (let h::t = l in
+     let h2::t2 = t in
+     match t with
+     | [] -> [h]
+     | _ -> [(h * i) / 10] @ [mulByDigit i ([h2 + (h mod 10)] @ t2)])
+------------------------------------------------------------------
+File "3219.ml", line 2, characters 19-202:
+Try replacing
+    fun i
+      l ->
+        (if l = [] then [] else
+          (let h :: t = l in let h2 :: t2 = t in (match t with 
+                                                  | [] -> [h]
+                                                  | _ ->
+                                                    [(h * i) / 10] @
+                                                        [
+                                                            (mulByDigit
+                                                              i
+                                                              ([h2 + (mod h 10)]
+                                                                  @ t2))
+                                                            ])))
+with
+    fun i
+      l ->
+        (if l = [] then [] else
+          (let h :: t = l in let h2 :: t2 = t in (match t with 
+                                                  | [] -> [h]
+                                                  | _ ->
+                                                    [(h * i) / 10] @
+                                                        [
+                                                            (mulByDigit
+                                                              i
+                                                              ([h2 + (mod h 10)]
+                                                                  @ t2))
+                                                            ])));
+    [[...]]
+of type
+    int -> int list -> int
+==============================

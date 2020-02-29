@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "1803.ml", line 11, characters 13-47:
+This expression has type 'a list but is here used with type bool
+Relevant code: h :: (seen' helper (seen', rest'))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1803.ml", line 10, characters 13-21:
+And modified the following location:
+File "1803.ml", line 11, characters 19-24:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    rest = t
+If you ignore other surrounding code, try replacing
+    seen'
+with
+    seen'; [[...]]
+The actual replacement has type
+    ('b list * 'b list -> 'b list) -> 'c list * 'b list -> 'b list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' = [] in
+                                 let rest' = (List.rev t) in
+                                 (if (List.mem h rest') then (rest = t; [[...]])
+                                     else
+                                     h ::
+                                         ((seen'; [[...]]) helper (seen', rest')))))
+==============================

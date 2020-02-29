@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "1137.ml", line 45, characters 12-15:
+This expression has type int list but is here used with type int
+Relevant code: sum
+------------------------------------------------------------------
+File "1137.ml", line 44, characters 18-28:
+Try replacing
+    mulByDigit
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun x -> (let (s, t) = x in (match a with 
+                                 | (r, v) ->
+                                   (let sum =
+                                         (- (int_of_string (sepConcat "" l1)) s)
+                                         in
+                                         (if sum + r > 9 then
+                                             (sum + r) / 10, (mod (sum + r) 10) :: v
+                                             else
+                                             0, (mod (sum + r) 10) :: v))))
+==============================
+File "1137.ml", line 44, characters 18-28:
+Try replacing
+    mulByDigit
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun x -> (let (s, t) = x in (match a with 
+                                 | (r, v) ->
+                                   (let sum =
+                                         (+ (int_of_string (sepConcat "" l1)) s)
+                                         in
+                                         (if sum + r > 9 then
+                                             (sum + r) / 10, (mod (sum + r) 10) :: v
+                                             else
+                                             0, (mod (sum + r) 10) :: v))))
+==============================

@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "2648.ml", line 31, characters 48-62:
+This expression has type int list -> 'a but is here used with type int
+Relevant code: (mulByDigit i)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2648.ml", line 31, characters 63-64:
+And modified the following location:
+File "2648.ml", line 31, characters 66-67:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    int list -> 'b
+within context
+    fun l ->
+      (if i < 2 then l else
+        (let total = (bigAdd l l) in
+            (bigAdd total ((mulByDigit i) -; [[...]] ((1; [[...]]) l)))))
+==============================
+Triaged the following locations:
+File "2648.ml", line 31, characters 63-64:
+And modified the following location:
+File "2648.ml", line 31, characters 68-69:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    (1 l)
+with
+    1
+The actual replacement has type
+    int
+within context
+    fun l ->
+      (if i < 2 then l else
+        (let total = (bigAdd l l) in (bigAdd total ((mulByDigit i) -; [[...]] 1))))
+==============================

@@ -1,0 +1,121 @@
+------------------------------------------------------------------
+File "1866.ml", line 27, characters 20-22:
+This expression has type expr but is here used with type expr * float * float
+Relevant code: e1
+------------------------------------------------------------------
+Triaged the following locations:
+File "1866.ml", line 27, characters 28-44:
+And modified the following location:
+File "1866.ml", line 27, characters 20-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e1; [[...]]
+The actual replacement has type
+    expr * float * float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                      | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                      | Average (e1, e2) ->
+                        (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                      | Times (e1, e2) -> ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                      | Thresh (e1, e2, e3, e4) ->
+                        (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                            (eval (e3, x, y))
+                            else
+                            (eval (e4, x, y)))
+                      | Acossin (e1, e2) ->
+                        ((((acos (eval (e1; [[...]]))) *. [[...other program...]])
+                                  *. 2.0)
+                              /. (pi *. pi)))
+==============================
+Triaged the following locations:
+File "1866.ml", line 27, characters 28-44:
+And modified the following location:
+File "1866.ml", line 27, characters 15-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr -> float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                      | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                      | Average (e1, e2) ->
+                        (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                      | Times (e1, e2) -> ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                      | Thresh (e1, e2, e3, e4) ->
+                        (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                            (eval (e3, x, y))
+                            else
+                            (eval (e4, x, y)))
+                      | Acossin (e1, e2) ->
+                        ((((acos ((eval; [[...]]) e1)) *. [[...other program...]])
+                                  *. 2.0)
+                              /. (pi *. pi)))
+==============================
+Triaged the following locations:
+File "1866.ml", line 27, characters 8-24:
+And modified the following location:
+File "1866.ml", line 27, characters 35-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr -> float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                      | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                      | Average (e1, e2) ->
+                        (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                      | Times (e1, e2) -> ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                      | Thresh (e1, e2, e3, e4) ->
+                        (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                            (eval (e3, x, y))
+                            else
+                            (eval (e4, x, y)))
+                      | Acossin (e1, e2) ->
+                        ((([[...other program...]] *. (asin ((eval; [[...]]) e2)))
+                                  *. 2.0)
+                              /. (pi *. pi)))
+==============================
+Triaged the following locations:
+File "1866.ml", line 27, characters 8-24:
+And modified the following location:
+File "1866.ml", line 27, characters 40-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e2
+with
+    e2; [[...]]
+The actual replacement has type
+    expr * float * float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                      | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                      | Average (e1, e2) ->
+                        (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                      | Times (e1, e2) -> ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                      | Thresh (e1, e2, e3, e4) ->
+                        (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                            (eval (e3, x, y))
+                            else
+                            (eval (e4, x, y)))
+                      | Acossin (e1, e2) ->
+                        ((([[...other program...]] *. (asin (eval (e2; [[...]]))))
+                                  *. 2.0)
+                              /. (pi *. pi)))
+==============================

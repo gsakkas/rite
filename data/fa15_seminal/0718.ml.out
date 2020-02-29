@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0718.ml", line 8, characters 23-47:
+This expression has type ('a list -> bool) * 'b but is here used with type
+  bool
+Relevant code: ((List.mem seen'), seen)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0718.ml", line 8, characters 60-72:
+And modified the following location:
+File "0718.ml", line 8, characters 23-47:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    seen' @ seen
+If you ignore other surrounding code, try replacing
+    (List.mem seen'), seen
+with
+    (List.mem seen'), seen; [[...]]
+The actual replacement has type
+    bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' = h in
+                                 let rest' =
+                                 (if ((List.mem seen'), seen; [[...]]) then t else
+                                   (seen' @ seen; [[...]]))
+                                 in
+                                 (helper (seen', rest'))))
+==============================

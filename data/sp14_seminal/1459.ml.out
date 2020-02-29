@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1459.ml", line 3, characters 45-51:
+This expression has type 'a * 'b but is here used with type
+  'a * ('a -> 'b * bool)
+Relevant code: (f, x)
+------------------------------------------------------------------
+File "1459.ml", line 3, characters 49-50:
+Try replacing
+    x
+with
+    b
+of type
+    'c * ('c -> 'd * bool)
+within context
+    fun (f, b) -> (let (x, y) = (b f) in (if y = true then (wwhile (f, b)) else x))
+==============================

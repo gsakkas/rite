@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "2002.ml", line 22, characters 40-44:
+This expression has type int * int but is here used with type 'a list
+Relevant code: args
+------------------------------------------------------------------
+File "2002.ml", line 22, characters 39-39:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f [[...]]  base  args)
+of type
+    'b * 'c
+within context
+    fun (l1, l2) ->
+      (let f a x = let add (m, n) = m + n in a in
+          let base = [] in let args = (match (List.rev (List.combine l1 l2)) with 
+                                       | [] -> (0, 0)
+                                       | h :: t ->
+                                         h) in let (_, res) =
+          (List.fold_left f [[...]]  base  args)
+          in
+          res)
+==============================
+File "2002.ml", line 22, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('d -> 'e -> 'd) -> 'f list -> int * int -> 'g * 'h
+within context
+    let f a x = let add (m, n) = m + n in a in
+      let base = [] in let args = (match (List.rev (List.combine l1 l2)) with 
+                                   | [] -> (0, 0)
+                                   | h :: t ->
+                                     h) in let (_, res) =
+      ((List.fold_left; [[...]]) f base  args)
+      in
+      res
+==============================

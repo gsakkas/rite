@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "0034.ml", line 6, characters 41-77:
+This expression has type 'a list but is here used with type int
+Relevant code: (digitsOfInt (n / 10)) :: (n mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0034.ml", line 6, characters 27-35:
+And modified the following location:
+File "0034.ml", line 6, characters 41-77:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (mod n 10)
+If you ignore other surrounding code, try replacing
+    (digitsOfInt (n / 10)) :: (mod n 10)
+with
+    [[...]]
+The actual replacement has type
+    'b list
+within context
+    let rec digitsOfInt n = (match n < 0 with 
+                             | true -> []
+                             | false ->
+                               (if n / 10 = 0 then ((mod n 10); [[...]]) else
+                                   [[...]])) ;; 
+==============================

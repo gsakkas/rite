@@ -1,0 +1,89 @@
+------------------------------------------------------------------
+File "2838.ml", line 15, characters 73-74:
+This expression has type int but is here used with type int list
+Relevant code: x
+------------------------------------------------------------------
+File "2838.ml", line 15, characters 65-74:
+Try replacing
+    (if x > 9 then (digitalRoot x) else (sumList x))
+with
+    (if x > 9 then (digitalRoot x))
+of type
+    unit
+within context
+    let rec digitalRoot n =
+    let x = (sumList (digits n)) in (if x > 9 then (digitalRoot x))
+    ;; 
+==============================
+File "2838.ml", line 15, characters 65-72:
+Try replacing
+    sumList
+with
+    +
+of type
+    int -> int -> int
+within context
+    let rec digitalRoot n =
+    let x = (sumList (digits n)) in (if x > 9 then (digitalRoot x) else (+ x))
+    ;; 
+==============================
+File "2838.ml", line 15, characters 65-72:
+Try replacing
+    sumList
+with
+    <
+of type
+    int -> int -> bool
+within context
+    let rec digitalRoot n =
+    let x = (sumList (digits n)) in (if x > 9 then (digitalRoot x) else (< x))
+    ;; 
+==============================
+File "2838.ml", line 15, characters 65-72:
+Try replacing
+    sumList
+with
+    >
+of type
+    int -> int -> bool
+within context
+    let rec digitalRoot n =
+    let x = (sumList (digits n)) in (if x > 9 then (digitalRoot x) else (> x))
+    ;; 
+==============================
+File "2838.ml", line 15, characters 65-72:
+Try replacing
+    sumList
+with
+    =
+of type
+    int -> int -> bool
+within context
+    let rec digitalRoot n =
+    let x = (sumList (digits n)) in (if x > 9 then (digitalRoot x) else (= x))
+    ;; 
+==============================
+File "2838.ml", line 15, characters 65-72:
+Try replacing
+    sumList
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec digitalRoot n =
+    let x = (sumList (digits n)) in (if x > 9 then (digitalRoot x) else (/ x))
+    ;; 
+==============================
+File "2838.ml", line 15, characters 65-72:
+Try replacing
+    sumList
+with
+    abs
+of type
+    int -> int
+within context
+    let rec digitalRoot n =
+    let x = (sumList (digits n)) in (if x > 9 then (digitalRoot x) else (abs x))
+    ;; 
+==============================

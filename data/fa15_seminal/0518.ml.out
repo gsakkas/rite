@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0518.ml", line 2, characters 59-60:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "0518.ml", line 2, characters 15-30:
+Try replacing
+    List.fold_right
+with
+    xs
+of type
+    ('b -> int -> int) -> int -> 'c
+within context
+    let sqsum xs = (xs (fun x n -> n * n) 0) ;; 
+==============================

@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "1538.ml", line 4, characters 50-64:
+This expression has type int but is here used with type int list
+Relevant code: f (f hd hd) tl
+------------------------------------------------------------------
+File "1538.ml", line 4, characters 35-37:
+Try replacing
+    xs
+with
+    xs; [[...]]
+of type
+    int
+within context
+    let sqsum xs = let f a x = a * a in let base = (match xs with 
+                                                    | [] -> (xs; [[...]])
+                                                    | hd :: tl ->
+                                                      (f
+                                                          (f hd hd)
+                                                          tl)) in (List.fold_left
+          f base  xs) ;; 
+==============================
+File "1538.ml", line 3, characters 8-19:
+Try replacing
+    fun a x -> a * a
+with
+    fun a x -> a * a; [[...]]
+of type
+    'a
+within context
+    let sqsum xs = let f = fun a x -> a * a; [[...]] in let base = (match xs with 
+                                                                    | [] -> xs
+                                                                    | hd :: tl ->
+                                                                      (f
+                                                                          (f hd hd)
+                                                                          tl)) in (List.fold_left
+          f base  xs) ;; 
+==============================

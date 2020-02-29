@@ -1,0 +1,48 @@
+------------------------------------------------------------------
+File "3005.ml", line 22, characters 62-66:
+This expression has type 'a * int but is here used with type 'b list
+Relevant code: args
+------------------------------------------------------------------
+File "3005.ml", line 22, characters 62-66:
+Try replacing
+    args
+with
+    args; [[...]]
+of type
+    'c list
+within context
+    let f a x = [0], [0] in
+      let base = [0], [0] in
+      let args = l1, 2 in
+      let (_, res) = (List.fold_left f base  (args; [[...]])) in res
+==============================
+File "3005.ml", line 22, characters 15-22:
+Try replacing
+    l1, 2
+with
+    l1, 2; [[...]]
+of type
+    'd
+within context
+    let add (l1, l2) =
+      let f a x = [0], [0] in
+        let base = [0], [0] in
+        let args = l1, 2; [[...]] in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+File "3005.ml", line 22, characters 40-54:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('e -> 'f -> int list * int list) ->
+    int list * int list -> 'g * int -> 'h * 'i
+within context
+    let f a x = [0], [0] in
+      let base = [0], [0] in
+      let args = l1, 2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

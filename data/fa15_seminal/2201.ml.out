@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "2201.ml", line 29, characters 7-24:
+This expression has type float but is here used with type int
+Relevant code: (eval (e1, x, y))
+------------------------------------------------------------------
+File "2201.ml", line 29, characters 25-26:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    float ->
+    float ->
+    (float -> float) ->
+    (expr * float * float -> float) ->
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Mirana e -> (abs_float (eval (e, x, y)))
+                              | Darius (e1, e2, e3) ->
+                                (((eval (e1, x, y)) +; [[...]] (eval (e2, x, y)))
+                                    log eval  (e3, x, y))) ;; 
+==============================

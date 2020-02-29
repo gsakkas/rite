@@ -1,0 +1,102 @@
+------------------------------------------------------------------
+File "0731.ml", line 33, characters 24-61:
+This expression has type expr * (unit -> expr) but is here used with type
+  expr * expr
+Relevant code: ((build (rand, (depth - 1))), buildY)
+------------------------------------------------------------------
+File "0731.ml", line 33, characters 24-61:
+Try replacing
+    (build (rand, depth - 1)), buildY
+with
+    (build (rand, depth - 1)), buildY; [[...]]
+of type
+    expr * expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then (let rand' = (rand (1, 5)) in (match rand' with 
+                                                        | 1 ->
+                                                          (buildSine
+                                                              (build
+                                                                (rand, depth - 1)))
+                                                        | 2 ->
+                                                          (buildCosine
+                                                              (build
+                                                                (rand, depth - 1)))
+                                                        | 3 ->
+                                                          (buildTimes
+                                                              ((build
+                                                                    (rand,
+                                                                        depth - 1))
+                                                                  ,
+                                                                  (buildY ())))
+                                                        | 4 ->
+                                                          (buildAverage
+                                                              ((build
+                                                                    (rand,
+                                                                        depth - 1))
+                                                                  ,
+                                                                  buildY;
+                                                                [[...]]))
+                                                        | 5 ->
+                                                          (buildThresh
+                                                              ((buildX ()),
+                                                                  (buildY ()),
+                                                                  (build
+                                                                    (rand,
+                                                                        depth - 1))
+                                                                  ,
+                                                                  (build
+                                                                    (rand,
+                                                                        depth
+                                                                          -
+                                                                          1)))))) else (buildX
+          ()))
+==============================
+File "0731.ml", line 33, characters 11-23:
+Try replacing
+    buildAverage
+with
+    buildAverage; [[...]]
+of type
+    expr * (unit -> expr) ->
+    expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then (let rand' = (rand (1, 5)) in (match rand' with 
+                                                        | 1 ->
+                                                          (buildSine
+                                                              (build
+                                                                (rand, depth - 1)))
+                                                        | 2 ->
+                                                          (buildCosine
+                                                              (build
+                                                                (rand, depth - 1)))
+                                                        | 3 ->
+                                                          (buildTimes
+                                                              ((build
+                                                                    (rand,
+                                                                        depth - 1))
+                                                                  ,
+                                                                  (buildY ())))
+                                                        | 4 ->
+                                                          ((buildAverage; [[...]])
+                                                              ((build
+                                                                    (rand,
+                                                                        depth - 1))
+                                                                  ,
+                                                                  buildY))
+                                                        | 5 ->
+                                                          (buildThresh
+                                                              ((buildX ()),
+                                                                  (buildY ()),
+                                                                  (build
+                                                                    (rand,
+                                                                        depth - 1))
+                                                                  ,
+                                                                  (build
+                                                                    (rand,
+                                                                        depth
+                                                                          -
+                                                                          1)))))) else (buildX
+          ()))
+==============================

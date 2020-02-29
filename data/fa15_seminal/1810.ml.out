@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "1810.ml", line 9, characters 49-55:
+This expression has type ('a -> 'b -> 'c) * 'd list -> 'e
+but is here used with type 'a
+Relevant code: helper
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "1810.ml", line 9, characters 43-48:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    seen'
+with
+    seen'; [[...]]
+The actual replacement has type
+    ('f * 'g list -> 'f) -> 'f * 'g list -> 'f
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let rest' = (List.rev t) in
+                                 let seen' = seen in
+                                 (if (List.mem h rest') = false then
+                                     ((seen'; [[...]]) helper (seen', rest'))
+                                     else
+                                     [[...]])))
+==============================

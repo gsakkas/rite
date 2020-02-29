@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "2021.ml", line 40, characters 15-43:
+This expression has type int list but is here used with type int
+Relevant code: (bigAdd (mulByDigit x l2) h)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2021.ml", line 41, characters 2-94:
+And modified the following location:
+File "2021.ml", line 40, characters 14-59:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    [(bigAdd (mulByDigit x l2) h) / 10 ; (mod h 10)]
+with
+    [[...]]
+The actual replacement has type
+    int list list
+within context
+    let bigMul l1 l2 = let f a x = (match a with 
+                                    | [] -> (mulByDigit x l2) :: a
+                                    | h :: t ->
+                                      [[...]] @ t) in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "2021.ml", line 41, characters 2-94:
+And modified the following location:
+File "2021.ml", line 37, characters 2-227:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match a with 
+                 | [] -> (mulByDigit x l2) :: a
+                 | h :: t ->
+                   [(bigAdd (mulByDigit x l2) h) / 10 ; (mod h 10)]
+                       @
+                       t) in let base = [] in
+      let args = (List.rev l1) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

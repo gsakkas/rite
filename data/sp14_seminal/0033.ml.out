@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "0033.ml", line 26, characters 50-51:
+This expression has type 'a list -> 'b -> 'c * int list
+but is here used with type 'a list -> 'b -> 'a list
+Relevant code: f
+------------------------------------------------------------------
+File "0033.ml", line 26, characters 50-51:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'd * 'e list -> 'f -> 'd * 'e list
+within context
+    let f a x = (match a with 
+                 | [] -> (l1, [0 ; 0 ; 0 ; 0])
+                 | h1 :: t1 ->
+                   (l1,
+                         [0 ; 0 ; 0 ; 0
+                             ])) in let base = l1, [] in
+      let args = l2 in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0033.ml", line 26, characters 35-49:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('g list -> 'h -> 'i * int list) -> 'i * 'j list -> 'k -> 'l * 'm
+within context
+    let f a x = (match a with 
+                 | [] -> (l1, [0 ; 0 ; 0 ; 0])
+                 | h1 :: t1 ->
+                   (l1,
+                         [0 ; 0 ; 0 ; 0
+                             ])) in let base = l1, [] in
+      let args = l2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0033.ml", line 23, characters 10-92:
+Try replacing
+    fun a x -> (match a with 
+                | [] -> (l1, [0 ; 0 ; 0 ; 0])
+                | h1 :: t1 -> (l1, [0 ; 0 ; 0 ; 0]))
+with
+    fun a x -> (match a with 
+                | [] -> (l1, [0 ; 0 ; 0 ; 0])
+                | h1 :: t1 -> (l1, [0 ; 0 ; 0 ; 0])); [[...]]
+of type
+    'n
+==============================

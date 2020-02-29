@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "1748.ml", line 25, characters 8-10:
+This pattern matches values of type 'a list
+but is here used to match values of type 'b * 'c
+Relevant code: []
+------------------------------------------------------------------
+Triaged the following locations:
+File "1748.ml", line 26, characters 4-51:
+And modified the following location:
+File "1748.ml", line 24, characters 8-74:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (match combo with 
+     | (i, j) -> (if i + j > 9 then 1, (i + j) - 10 else 0, i + j)
+     | [] -> (0, 0))
+with
+    (match combo with 
+     | _ -> [[...]]
+     | [] -> (0, 0))
+The actual replacement has type
+    int * int
+==============================
+Triaged the following locations:
+File "1748.ml", line 26, characters 4-51:
+And modified the following location:
+File "1748.ml", line 21, characters 4-250:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args =
+      let combo = (List.combine (List.rev l1) (List.rev l2)) in (match combo with 
+                                                                 | (i, j) ->
+                                                                   (if i + j > 9
+                                                                       then
+                                                                       1,
+                                                                         (i + j)
+                                                                           - 10
+                                                                       else
+                                                                       0, i + j)
+                                                                 | [] -> (0, 0))
+      in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'd
+==============================

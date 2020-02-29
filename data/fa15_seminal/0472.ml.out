@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "0472.ml", line 11, characters 9-20:
+This expression has type ('a * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((gs b), b)
+------------------------------------------------------------------
+File "0472.ml", line 7, characters 9-130:
+Try replacing
+    fun x ->
+      (let isFPoint s = (f s) = s in
+          let rec go r = (if (isFPoint r) then r else (go (f r))) in
+          (go x), (isFPoint x))
+with
+    fun x
+      _ ->
+        (let isFPoint s = (f s) = s in
+            let rec go r = (if (isFPoint r) then r else (go (f r))) in
+            (go x), (isFPoint x))
+of type
+    'c -> 'd -> 'c * bool
+==============================
+File "0472.ml", line 7, characters 9-130:
+Try replacing
+    fun x ->
+      (let isFPoint s = (f s) = s in
+          let rec go r = (if (isFPoint r) then r else (go (f r))) in
+          (go x), (isFPoint x))
+with
+    fun _
+      x ->
+        (let isFPoint s = (f s) = s in
+            let rec go r = (if (isFPoint r) then r else (go (f r))) in
+            (go x), (isFPoint x))
+of type
+    'e -> 'f -> 'f * bool
+==============================
+File "0472.ml", line 11, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('g * bool) * 'g -> ('g * bool) * 'g -> bool
+within context
+    let fixpoint (f, b) =
+    let gs x =
+      let isFPoint s = (f s) = s in
+        let rec go r = (if (isFPoint r) then r else (go (f r))) in
+        (go x), (isFPoint x)
+      in
+      (= ((gs b), b))
+    ;; 
+==============================

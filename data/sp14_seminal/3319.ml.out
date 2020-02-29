@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "3319.ml", line 6, characters 25-26:
+This expression has type 'a list but is here used with type
+  ('a list -> 'b) list
+Relevant code: t
+------------------------------------------------------------------
+File "3319.ml", line 2, characters 19-166:
+Try replacing
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: m :: t ->
+                  (mulByDigit m) :: t @
+                      [(h * i) / 10 + (mod (m * i) 10) ; (mod (h * i) 10)])
+with
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: m :: t ->
+                  (mulByDigit m) :: t @
+                      [(h * i) / 10 + (mod (m * i) 10) ; (mod (h * i) 10)]); [[...]]
+of type
+    int -> int
+==============================

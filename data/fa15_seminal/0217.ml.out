@@ -1,0 +1,66 @@
+------------------------------------------------------------------
+File "0217.ml", line 6, characters 59-65:
+This expression has type (('a -> 'a) -> ('a -> 'a) * bool) * 'a
+but is here used with type (('a -> 'a) -> ('a -> 'a) * bool) * ('a -> 'a)
+Relevant code: (n, b)
+------------------------------------------------------------------
+File "0217.ml", line 6, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('b -> ('c -> 'c) * bool) * 'c -> ('b -> ('c -> 'c) * bool) * 'c -> bool
+within context
+    let fixpoint (f, b) = (= (let n z = f, b = (f b) in n, b)) ;; 
+==============================
+File "0217.ml", line 6, characters 63-64:
+Try replacing
+    b
+with
+    f
+of type
+    (('d -> 'd) -> ('d -> 'd) * bool) * ('d -> 'd)
+within context
+    let fixpoint (f, b) = (wwhile (let n z = f, b = (f b) in n, f)) ;; 
+==============================
+File "0217.ml", line 6, characters 40-41:
+Try replacing
+    f
+with
+    =
+of type
+    ('e -> 'e -> bool) * bool
+within context
+    fun (f, b) -> (wwhile (let n z = =, b = (f b) in n, b))
+==============================
+File "0217.ml", line 6, characters 40-41:
+Try replacing
+    f
+with
+    z
+of type
+    'f * bool
+within context
+    fun (f, b) -> (wwhile (let n z = z, b = (f b) in n, b))
+==============================
+File "0217.ml", line 6, characters 40-41:
+Try replacing
+    f
+with
+    wwhile
+of type
+    (('g -> 'g * bool) * 'g -> 'g) * bool
+within context
+    fun (f, b) -> (wwhile (let n z = wwhile, b = (f b) in n, b))
+==============================
+File "0217.ml", line 6, characters 40-41:
+Try replacing
+    f
+with
+    b
+of type
+    'h * bool
+within context
+    fun (f, b) -> (wwhile (let n z = b, b = (f b) in n, b))
+==============================

@@ -1,0 +1,72 @@
+------------------------------------------------------------------
+File "2536.ml", line 20, characters 10-68:
+This expression has type int * int but is here used with type 'a list
+Relevant code: if (j + k) > 10 then (1, ((j + k) - 10)) else (0, (j + k))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2536.ml", line 17, characters 14-16:
+File "2536.ml", line 18, characters 8-12:
+File "2536.ml", line 19, characters 22-23:
+File "2536.ml", line 20, characters 10-68:
+And modified the following location:
+File "2536.ml", line 17, characters 8-10:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    'b
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | _ -> [[...other program...]]
+                                  |
+                                    [[...other pattern...]]
+                                    ->
+                                    [[...other program...]]) in let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "2536.ml", line 17, characters 14-16:
+File "2536.ml", line 19, characters 22-23:
+File "2536.ml", line 20, characters 10-68:
+And modified the following location:
+File "2536.ml", line 16, characters 12-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'c list
+within context
+    fun (l1, l2) -> (let f a x = (match (a; [[...]]) with 
+                                  | [] -> [[...other program...]]
+                                  | h :: t ->
+                                    (let (j, k) = [[...other program...]] in
+                                          [[...other program...]])) in let base =
+          0, []
+          in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "2536.ml", line 17, characters 8-10:
+File "2536.ml", line 17, characters 14-16:
+File "2536.ml", line 19, characters 22-23:
+File "2536.ml", line 20, characters 10-68:
+And modified the following location:
+File "2536.ml", line 18, characters 8-12:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    'd
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  |[[...other pattern...]]->[[...other program...]]
+                                  | _ ->
+                                    [[...other program...]]) in let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

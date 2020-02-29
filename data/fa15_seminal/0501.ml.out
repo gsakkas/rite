@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "0501.ml", line 6, characters 69-73:
+This expression has type 'a list -> 'a list but is here used with type
+  int list
+Relevant code: args
+------------------------------------------------------------------
+File "0501.ml", line 6, characters 47-61:
+Try replacing
+    List.fold_left
+with
+    l
+of type
+    (int * int list -> int -> int * int list) ->
+    int * 'b list -> ('c list -> 'c list) -> 'd
+within context
+    fun l ->
+      (let f a x =
+          let (carry, acc) = a in
+            let res = x * i + carry in res / 10, (mod res 10) :: acc
+          in
+          let base = 0, [] in let args = List.rev in (l f base  args))
+==============================

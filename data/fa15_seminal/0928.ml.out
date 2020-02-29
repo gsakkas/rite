@@ -1,0 +1,60 @@
+------------------------------------------------------------------
+File "0928.ml", line 16, characters 38-42:
+This expression has type int list * int list list but is here used with type
+  'a list
+Relevant code: args
+------------------------------------------------------------------
+File "0928.ml", line 16, characters 16-30:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('b -> 'c -> 'd) -> int * 'e list -> int list * int list list -> 'f * 'g
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = 1, [] in
+      let args = (makeTuple l1 l2) in let (_, res) = (f f base  args) in res
+==============================
+File "0928.ml", line 15, characters 13-22:
+Try replacing
+    makeTuple
+with
+    clone
+of type
+    'h -> int -> 'h list
+within context
+    fun l2 ->
+      (let f a x = (failwith "to be implemented") in
+          let base = 1, [] in
+          let args = (clone l1 l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "0928.ml", line 15, characters 13-22:
+Try replacing
+    makeTuple
+with
+    f
+of type
+    'i -> 'j -> 'k
+within context
+    fun l2 ->
+      (let f a x = (failwith "to be implemented") in
+          let base = 1, [] in
+          let args = (f l1 l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "0928.ml", line 15, characters 13-22:
+Try replacing
+    makeTuple
+with
+    @
+of type
+    'l list -> 'l list -> 'l list
+within context
+    fun l2 ->
+      (let f a x = (failwith "to be implemented") in
+          let base = 1, [] in
+          let args = (@ l1 l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

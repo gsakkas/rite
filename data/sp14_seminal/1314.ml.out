@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "1314.ml", line 32, characters 62-64:
+This expression has type int but is here used with type float
+Relevant code: 10
+------------------------------------------------------------------
+File "1314.ml", line 32, characters 65-67:
+Try replacing
+    **
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun x -> (let (pos, total) = a in pos + 1, (mulByDigit (10 - pos) l2))
+==============================
+File "1314.ml", line 32, characters 65-67:
+Try replacing
+    **
+with
+    *
+of type
+    int -> int -> int
+within context
+    fun x -> (let (pos, total) = a in pos + 1, (mulByDigit (10 * pos) l2))
+==============================
+File "1314.ml", line 32, characters 65-67:
+Try replacing
+    **
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun x -> (let (pos, total) = a in pos + 1, (mulByDigit (10 + pos) l2))
+==============================
+File "1314.ml", line 32, characters 65-67:
+Try replacing
+    **
+with
+    /
+of type
+    int -> int -> int
+within context
+    fun x -> (let (pos, total) = a in pos + 1, (mulByDigit (10 / pos) l2))
+==============================

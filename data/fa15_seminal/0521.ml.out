@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0521.ml", line 3, characters 66-67:
+This expression has type 'a * 'b but is here used with type int
+Relevant code: h
+------------------------------------------------------------------
+File "0521.ml", line 3, characters 56-65:
+Try replacing
+    print_int
+with
+    k
+of type
+    'c * 'd -> int
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> -1
+                               | h :: l' -> (let (x, y) = h in (k h))) ;; 
+==============================
+File "0521.ml", line 3, characters 56-65:
+Try replacing
+    print_int
+with
+    d
+of type
+    'e * 'f -> int
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> -1
+                               | h :: l' -> (let (x, y) = h in (d h))) ;; 
+==============================

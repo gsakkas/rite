@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "1206.ml", line 13, characters 7-14:
+This expression is not a function, it cannot be applied
+Relevant code: length2
+------------------------------------------------------------------
+File "1206.ml", line 13, characters 7-14:
+Try replacing
+    length2
+with
+    length2; [[...]]
+of type
+    int -> bool
+within context
+    let length1 = (List.length l1) in
+      let length2 = (List.length l2) in
+      (if length1 > length2 then l1, (List.append (clone 0 (length1 - length2)) l2)
+          else
+          (if ((length2; [[...]]) length1) then
+            (List.append (clone 0 (length1 - length2)) l1), l2
+            else
+            l1, l2))
+==============================
+File "1206.ml", line 9, characters 16-30:
+Try replacing
+    (List.length l2)
+with
+    (List.length l2); [[...]]
+of type
+    'g
+within context
+    let padZero l1 l2 =
+    let length1 = (List.length l1) in
+      let length2 = (List.length l2); [[...]] in
+      (if length1 > length2 then l1, (List.append (clone 0 (length1 - length2)) l2)
+          else
+          (if (length2 length1) then
+            (List.append (clone 0 (length1 - length2)) l1), l2
+            else
+            l1, l2))
+    ;; 
+==============================

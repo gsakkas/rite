@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1105.ml", line 2, characters 68-69:
+This expression has type int but is here used with type 'a list
+Relevant code: 1
+------------------------------------------------------------------
+File "1105.ml", line 2, characters 68-69:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    'b list
+within context
+    let rec digitsOfInt n = (match (n <= 0) with 
+                             | true -> []
+                             | false -> (1; [[...]])) ;; 
+==============================
+File "1105.ml", line 2, characters 53-55:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int
+within context
+    let rec digitsOfInt n = (match (n <= 0) with 
+                             | true -> ([]; [[...]])
+                             | false -> 1) ;; 
+==============================

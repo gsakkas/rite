@@ -1,0 +1,101 @@
+------------------------------------------------------------------
+File "2440.ml", line 8, characters 16-38:
+This expression has type 'a list * (int -> ('a list * 'b list) list)
+but is here used with type 'c list
+Relevant code: (l1, (clone (l1, l2)))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2440.ml", line 10, characters 4-168:
+And modified the following location:
+File "2440.ml", line 8, characters 16-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1, (clone (l1, l2))
+with
+    l1, (clone (l1, l2)); [[...]]
+The actual replacement has type
+    'd list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      (let l1G = (List.length l1) - (List.length l2) in
+          (List.append (l1, (clone (l1, l2)); [[...]])))
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2440.ml", line 10, characters 4-168:
+And modified the following location:
+File "2440.ml", line 8, characters 4-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    <
+The actual replacement has type
+    'e list * (int -> ('e list * 'f list) list) ->
+    'e list * (int -> ('e list * 'f list) list) -> bool
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      (let l1G = (List.length l1) - (List.length l2) in (< (l1, (clone (l1, l2)))))
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2440.ml", line 10, characters 4-168:
+And modified the following location:
+File "2440.ml", line 8, characters 4-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    List.append; [[...]]
+The actual replacement has type
+    'g list * (int -> ('g list * 'h list) list) -> 'i
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      (let l1G = (List.length l1) - (List.length l2) in
+          ((List.append; [[...]]) (l1, (clone (l1, l2)))))
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2440.ml", line 10, characters 4-168:
+And modified the following location:
+File "2440.ml", line 8, characters 4-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    >
+The actual replacement has type
+    'j list * (int -> ('j list * 'k list) list) ->
+    'j list * (int -> ('j list * 'k list) list) -> bool
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      (let l1G = (List.length l1) - (List.length l2) in (> (l1, (clone (l1, l2)))))
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2440.ml", line 7, characters 4-91:
+And modified the following location:
+File "2440.ml", line 13, characters 7-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.append ((clone (l1 l2G)), l2))
+with
+    [[...]]
+The actual replacement has type
+    'l list * 'm list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then [[...other program...]] else
+      (if (List.length l1) < (List.length l2) then
+        (let l2G = (List.length l2) - (List.length l2) in [[...]])
+        else
+        l1, l2))
+    ;; 
+==============================

@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "0035.ml", line 3, characters 2-124:
+This expression has type int list but is here used with type int
+Relevant code: match n < 0 with
+  | true  -> []
+  | false  ->
+      if (n / 10) = 0 then [n mod 10] else [digitsOfInt (n / 10); n mod 10]
+------------------------------------------------------------------
+File "0035.ml", line 2, characters 20-148:
+Try replacing
+    fun n -> (match n < 0 with 
+              | true -> []
+              | false ->
+                (if n / 10 = 0 then [(mod n 10)] else
+                    [(digitsOfInt (n / 10)) ; (mod n 10)]))
+with
+    fun n -> (match n < 0 with 
+              | true -> []
+              | false ->
+                (if n / 10 = 0 then [(mod n 10)] else
+                    [(digitsOfInt (n / 10)) ; (mod n 10)])); [[...]]
+of type
+    int -> int
+==============================

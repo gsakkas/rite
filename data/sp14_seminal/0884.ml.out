@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0884.ml", line 3, characters 19-20:
+This expression has type int but is here used with type string
+Relevant code: 2
+------------------------------------------------------------------
+File "0884.ml", line 3, characters 14-26:
+Try replacing
+    a ^ 2 :: x
+with
+    [[...]]
+of type
+    'a
+within context
+    let sqsum xs =
+    let f a x = [[...]] in let base = 0 in (List.fold_left f base  xs)
+    ;; 
+==============================

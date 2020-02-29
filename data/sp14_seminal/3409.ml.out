@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "3409.ml", line 17, characters 30-33:
+This expression has type int but is here used with type int list
+Relevant code: num
+------------------------------------------------------------------
+Triaged the following locations:
+File "3409.ml", line 21, characters 10-175:
+And modified the following location:
+File "3409.ml", line 16, characters 15-169:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if num < 10 then (helper 0 num) :: (xs' xs) else
+      (helper 1 (mod (num / 10) 10)) :: (mod num 10) :: (xs' xs))
+with
+    [[...]]
+The actual replacement has type
+    int list
+within context
+    fun carry accum lrev -> (match lrev with 
+                             | [] -> (removeZero accum)
+                             | x :: xs -> (if carry = 1 then (match accum with 
+                                                              | x1' :: xs' ->
+                                                                (let num =
+                                                                      x * i + x1'
+                                                                      in
+                                                                      [[...]])) else [[...other program...]]))
+==============================
+Triaged the following locations:
+File "3409.ml", line 13, characters 10-265:
+And modified the following location:
+File "3409.ml", line 22, characters 11-144:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if num < 10 then (helper 0 num) :: (accum xs) else
+      (helper 1 (mod (num / 10) 10)) :: (mod num 10) :: (accum xs))
+with
+    [[...]]
+The actual replacement has type
+    int list
+within context
+    fun carry accum lrev -> (match lrev with 
+                             | [] -> (removeZero accum)
+                             | x :: xs ->
+                               (if carry = 1 then [[...other program...]] else
+                                   (let num = x * i in [[...]])))
+==============================

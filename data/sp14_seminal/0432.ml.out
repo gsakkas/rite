@@ -1,0 +1,268 @@
+------------------------------------------------------------------
+File "0432.ml", line 54, characters 27-46:
+This expression has type (int * int -> int) * int but is here used with type
+  expr
+Relevant code: (rand, (depth - 1))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0432.ml", line 54, characters 14-46:
+And modified the following location:
+File "0432.ml", line 57, characters 16-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildNegate
+with
+    buildNegate; [[...]]
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    fun (rand, depth) ->
+      (if depth = 0 then
+        (let num = (rand (1, 10)) in (if num > 4 then (buildX ()) else (buildY ())))
+        else
+        (let num = (rand (1, 10)) in (match num with 
+                                      | 1 | 2 ->
+                                        (buildSine (build (rand, depth - 1)))
+                                      | 3 | 4 ->
+                                        (buildCosine (build (rand, depth - 1)))
+                                      | 5 | 6 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 7 | 8 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 9 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | _ ->
+                                        (if (mod num 2) = 0 then
+                                            [[...other program...]]
+                                            else
+                                            (if (mod num 3) = 0 then
+                                              ((buildNegate; [[...]])
+                                                (rand, depth - 1))
+                                              else
+                                              (buildSumSquared
+                                                ((build (rand, depth - 1)),
+                                                    (build (rand, depth - 1)),
+                                                    (build (rand, depth - 1)))))))))
+==============================
+Triaged the following locations:
+File "0432.ml", line 54, characters 14-46:
+And modified the following location:
+File "0432.ml", line 57, characters 16-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildNegate
+with
+    build
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    fun (rand, depth) ->
+      (if depth = 0 then
+        (let num = (rand (1, 10)) in (if num > 4 then (buildX ()) else (buildY ())))
+        else
+        (let num = (rand (1, 10)) in (match num with 
+                                      | 1 | 2 ->
+                                        (buildSine (build (rand, depth - 1)))
+                                      | 3 | 4 ->
+                                        (buildCosine (build (rand, depth - 1)))
+                                      | 5 | 6 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 7 | 8 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 9 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | _ ->
+                                        (if (mod num 2) = 0 then
+                                            [[...other program...]]
+                                            else
+                                            (if (mod num 3) = 0 then
+                                              (build (rand, depth - 1))
+                                              else
+                                              (buildSumSquared
+                                                ((build (rand, depth - 1)),
+                                                    (build (rand, depth - 1)),
+                                                    (build (rand, depth - 1)))))))))
+==============================
+Triaged the following locations:
+File "0432.ml", line 54, characters 14-46:
+And modified the following location:
+File "0432.ml", line 57, characters 28-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand, depth - 1
+with
+    rand, depth - 1; [[...]]
+The actual replacement has type
+    expr
+within context
+    fun (rand, depth) ->
+      (if depth = 0 then
+        (let num = (rand (1, 10)) in (if num > 4 then (buildX ()) else (buildY ())))
+        else
+        (let num = (rand (1, 10)) in (match num with 
+                                      | 1 | 2 ->
+                                        (buildSine (build (rand, depth - 1)))
+                                      | 3 | 4 ->
+                                        (buildCosine (build (rand, depth - 1)))
+                                      | 5 | 6 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 7 | 8 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 9 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | _ ->
+                                        (if (mod num 2) = 0 then
+                                            [[...other program...]]
+                                            else
+                                            (if (mod num 3) = 0 then
+                                              (buildNegate
+                                                (rand, depth - 1; [[...]]))
+                                              else
+                                              (buildSumSquared
+                                                ((build (rand, depth - 1)),
+                                                    (build (rand, depth - 1)),
+                                                    (build (rand, depth - 1)))))))))
+==============================
+Triaged the following locations:
+File "0432.ml", line 56, characters 11-242:
+And modified the following location:
+File "0432.ml", line 54, characters 27-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand, depth - 1
+with
+    rand, depth - 1; [[...]]
+The actual replacement has type
+    expr
+within context
+    fun (rand, depth) ->
+      (if depth = 0 then
+        (let num = (rand (1, 10)) in (if num > 4 then (buildX ()) else (buildY ())))
+        else
+        (let num = (rand (1, 10)) in (match num with 
+                                      | 1 | 2 ->
+                                        (buildSine (build (rand, depth - 1)))
+                                      | 3 | 4 ->
+                                        (buildCosine (build (rand, depth - 1)))
+                                      | 5 | 6 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 7 | 8 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 9 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | _ ->
+                                        (if (mod num 2) = 0 then
+                                            (buildPercent
+                                              (rand, depth - 1; [[...]]))
+                                            else
+                                            [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "0432.ml", line 56, characters 11-242:
+And modified the following location:
+File "0432.ml", line 54, characters 14-26:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildPercent
+with
+    build
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    fun (rand, depth) ->
+      (if depth = 0 then
+        (let num = (rand (1, 10)) in (if num > 4 then (buildX ()) else (buildY ())))
+        else
+        (let num = (rand (1, 10)) in (match num with 
+                                      | 1 | 2 ->
+                                        (buildSine (build (rand, depth - 1)))
+                                      | 3 | 4 ->
+                                        (buildCosine (build (rand, depth - 1)))
+                                      | 5 | 6 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 7 | 8 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 9 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | _ ->
+                                        (if (mod num 2) = 0 then
+                                            (build (rand, depth - 1))
+                                            else
+                                            [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "0432.ml", line 56, characters 11-242:
+And modified the following location:
+File "0432.ml", line 54, characters 14-26:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildPercent
+with
+    buildPercent; [[...]]
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    fun (rand, depth) ->
+      (if depth = 0 then
+        (let num = (rand (1, 10)) in (if num > 4 then (buildX ()) else (buildY ())))
+        else
+        (let num = (rand (1, 10)) in (match num with 
+                                      | 1 | 2 ->
+                                        (buildSine (build (rand, depth - 1)))
+                                      | 3 | 4 ->
+                                        (buildCosine (build (rand, depth - 1)))
+                                      | 5 | 6 ->
+                                        (buildAverage
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 7 | 8 ->
+                                        (buildTimes
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | 9 ->
+                                        (buildThresh
+                                            ((build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1)),
+                                                (build (rand, depth - 1))))
+                                      | _ ->
+                                        (if (mod num 2) = 0 then
+                                            ((buildPercent; [[...]])
+                                              (rand, depth - 1))
+                                            else
+                                            [[...other program...]]))))
+==============================

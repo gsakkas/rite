@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "1317.ml", line 28, characters 25-37:
+This expression has type int list but is here used with type int
+Relevant code: (bigAdd l l)
+------------------------------------------------------------------
+File "1317.ml", line 28, characters 26-32:
+Try replacing
+    bigAdd
+with
+    +
+of type
+    int -> int -> int
+within context
+    let rec mulByDigit i l = (+ l l) + (mulByDigit (i - 1) l) ;; 
+==============================
+File "1317.ml", line 28, characters 26-32:
+Try replacing
+    bigAdd
+with
+    *
+of type
+    int -> int -> int
+within context
+    let rec mulByDigit i l = (* l l) + (mulByDigit (i - 1) l) ;; 
+==============================
+File "1317.ml", line 28, characters 26-32:
+Try replacing
+    bigAdd
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec mulByDigit i l = (/ l l) + (mulByDigit (i - 1) l) ;; 
+==============================
+File "1317.ml", line 28, characters 26-32:
+Try replacing
+    bigAdd
+with
+    -
+of type
+    int -> int -> int
+within context
+    let rec mulByDigit i l = (- l l) + (mulByDigit (i - 1) l) ;; 
+==============================

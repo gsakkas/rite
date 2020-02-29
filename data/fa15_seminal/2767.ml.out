@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "2767.ml", line 13, characters 34-47:
+This expression has type int -> int but is here used with type int
+Relevant code: (remainder h)
+------------------------------------------------------------------
+File "2767.ml", line 13, characters 46-46:
+Try replacing
+    (remainder h)
+with
+    (remainder [[...]] h)
+of type
+    int
+within context
+    (match (List.rev l) with 
+     | [] -> []
+     | h :: t -> (match t with 
+                  | [] -> [(remainder i h)]
+                  | h' :: t' -> [h' * i] @ [(remainder [[...]] h) * i]))
+==============================
+File "2767.ml", line 13, characters 47-47:
+Try replacing
+    (remainder h)
+with
+    (remainder h [[...]])
+of type
+    int
+within context
+    (match (List.rev l) with 
+     | [] -> []
+     | h :: t -> (match t with 
+                  | [] -> [(remainder i h)]
+                  | h' :: t' -> [h' * i] @ [(remainder h [[...]]) * i]))
+==============================
+File "2767.ml", line 13, characters 48-49:
+Try replacing
+    *
+with
+    *; [[...]]
+of type
+    (int -> int) -> int -> int
+within context
+    (match (List.rev l) with 
+     | [] -> []
+     | h :: t -> (match t with 
+                  | [] -> [(remainder i h)]
+                  | h' :: t' -> [h' * i] @ [((remainder h) *; [[...]] i)]))
+==============================

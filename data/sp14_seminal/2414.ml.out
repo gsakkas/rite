@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "2414.ml", line 7, characters 41-52:
+This expression has type int but is here used with type int list
+Relevant code: (prod / 10)
+------------------------------------------------------------------
+File "2414.ml", line 7, characters 41-52:
+Try replacing
+    prod / 10
+with
+    prod / 10; [[...]]
+of type
+    int list
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t ->
+                (let prod = h * i in
+                      (if prod > 10 then (mod prod 10) :: prod / 10; [[...]] else
+                          prod :: t)))
+==============================

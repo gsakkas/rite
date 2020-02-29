@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "1481.ml", line 5, characters 54-55:
+This expression has type 'a -> 'b but is here used with type 'a
+Relevant code: b
+------------------------------------------------------------------
+Triaged the following locations:
+File "1481.ml", line 5, characters 58-59:
+And modified the following location:
+File "1481.ml", line 5, characters 52-53:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    b
+If you ignore other surrounding code, try replacing
+    f
+with
+    f; [[...]]
+The actual replacement has type
+    ('c -> 'c * bool) * 'c -> 'c -> 'c * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile (if f = b then b else ((f; [[...]]) b), (b; [[...]])))
+    ;; 
+==============================

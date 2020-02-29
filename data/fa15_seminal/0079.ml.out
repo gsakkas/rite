@@ -1,0 +1,64 @@
+------------------------------------------------------------------
+File "0079.ml", line 5, characters 55-61:
+This expression has type ('a -> 'a) * 'a but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: (f, b)
+------------------------------------------------------------------
+File "0079.ml", line 5, characters 48-61:
+Try replacing
+    (if result = b then b else (wwhile (f, b)))
+with
+    (if result = b then b)
+of type
+    unit
+within context
+    let fixpoint (f, b) = let result = (f b) in (if result = b then b) ;; 
+==============================
+File "0079.ml", line 5, characters 25-31:
+Try replacing
+    result
+with
+    b
+of type
+    'b
+within context
+    let fixpoint (f, b) =
+    let result = (f b) in (if b = b then b else (wwhile (f, b)))
+    ;; 
+==============================
+File "0079.ml", line 5, characters 25-31:
+Try replacing
+    result
+with
+    =
+of type
+    'c -> 'c -> bool
+within context
+    let fixpoint (f, b) =
+    let result = (f b) in (if = = b then b else (wwhile (f, b)))
+    ;; 
+==============================
+File "0079.ml", line 5, characters 25-31:
+Try replacing
+    result
+with
+    wwhile
+of type
+    ('d -> 'd * bool) * 'd -> 'd
+within context
+    let fixpoint (f, b) =
+    let result = (f b) in (if wwhile = b then b else (wwhile (f, b)))
+    ;; 
+==============================
+File "0079.ml", line 5, characters 34-35:
+Try replacing
+    b
+with
+    result
+of type
+    'e * bool
+within context
+    let fixpoint (f, b) =
+    let result = (f b) in (if result = result then b else (wwhile (f, b)))
+    ;; 
+==============================

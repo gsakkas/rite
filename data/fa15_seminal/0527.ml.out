@@ -1,0 +1,61 @@
+------------------------------------------------------------------
+File "0527.ml", line 27, characters 18-19:
+This expression has type int but is here used with type float
+Relevant code: 0
+------------------------------------------------------------------
+File "0527.ml", line 27, characters 18-19:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine b -> (sin (pi *. (eval (b, x, y))))
+                              | Cosine b -> (cos (pi *. (eval (b, x, y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Logx a -> (log (0; [[...]]))
+                              | TripMult (a, b, c) ->
+                                (((eval (a, x, y)) *. (eval (b, x, y)))
+                                      *. (eval (c, x, y)))
+                              | _ -> 0.0) ;; 
+==============================
+File "0527.ml", line 27, characters 14-17:
+Try replacing
+    log
+with
+    log; [[...]]
+of type
+    int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine b -> (sin (pi *. (eval (b, x, y))))
+                              | Cosine b -> (cos (pi *. (eval (b, x, y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Logx a -> ((log; [[...]]) 0)
+                              | TripMult (a, b, c) ->
+                                (((eval (a, x, y)) *. (eval (b, x, y)))
+                                      *. (eval (c, x, y)))
+                              | _ -> 0.0) ;; 
+==============================

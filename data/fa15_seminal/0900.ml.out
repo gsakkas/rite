@@ -1,0 +1,56 @@
+------------------------------------------------------------------
+File "0900.ml", line 7, characters 38-39:
+This expression has type int but is here used with type string -> int
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "0900.ml", line 7, characters 55-64:
+And modified the following location:
+File "0900.ml", line 7, characters 38-39:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (explode w)
+If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    string -> int
+within context
+    let palindrome w =
+    (if String.length = (0; [[...]]) then true else ((explode w); [[...]]))
+    ;; 
+==============================
+Triaged the following locations:
+File "0900.ml", line 7, characters 55-64:
+And modified the following location:
+File "0900.ml", line 7, characters 36-37:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (explode w)
+If you ignore other surrounding code, try replacing
+    =
+with
+    =; [[...]]
+The actual replacement has type
+    (string -> int) -> int -> bool
+within context
+    let palindrome w =
+    (if (String.length =; [[...]] 0) then true else ((explode w); [[...]]))
+    ;; 
+==============================
+Triaged the following locations:
+File "0900.ml", line 7, characters 55-64:
+And modified the following location:
+File "0900.ml", line 7, characters 22-35:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (explode w)
+If you ignore other surrounding code, try replacing
+    String.length
+with
+    String.length; [[...]]
+The actual replacement has type
+    int
+within context
+    let palindrome w =
+    (if (String.length; [[...]]) = 0 then true else ((explode w); [[...]]))
+    ;; 
+==============================

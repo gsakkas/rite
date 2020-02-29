@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "0312.ml", line 6, characters 27-29:
+This expression has type 'a list but is here used with type string
+Relevant code: sl
+------------------------------------------------------------------
+File "0312.ml", line 6, characters 27-29:
+Try replacing
+    sl
+with
+    x
+of type
+    string
+within context
+    let f a x = a ^ (x ^ x) in
+      let base = h in let l = t in (List.fold_left f base  l)
+==============================
+File "0312.ml", line 6, characters 27-29:
+Try replacing
+    sl
+with
+    h
+of type
+    string
+within context
+    let f a x = a ^ (x ^ h) in
+      let base = h in let l = t in (List.fold_left f base  l)
+==============================
+File "0312.ml", line 6, characters 27-29:
+Try replacing
+    sl
+with
+    a
+of type
+    string
+within context
+    let f a x = a ^ (x ^ a) in
+      let base = h in let l = t in (List.fold_left f base  l)
+==============================
+File "0312.ml", line 6, characters 27-29:
+Try replacing
+    sl
+with
+    sep
+of type
+    string
+within context
+    let f a x = a ^ (x ^ sep) in
+      let base = h in let l = t in (List.fold_left f base  l)
+==============================
+File "0312.ml", line 3, characters 8-10:
+Try replacing
+    sl
+with
+    sep
+of type
+    string list
+within context
+    let rec sepConcat sep sl = (match sep with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = a ^ (x ^ sl) in
+                                        let base = h in
+                                        let l = t in
+                                        (List.fold_left f base  l))) ;; 
+==============================

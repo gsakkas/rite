@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "0265.ml", line 3, characters 28-29:
+This pattern matches values of type int
+but is here used to match values of type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "0265.ml", line 3, characters 23-25:
+File "0265.ml", line 3, characters 33-35:
+File "0265.ml", line 3, characters 48-76:
+And modified the following location:
+File "0265.ml", line 3, characters 28-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    _
+The actual replacement has type
+    'b list -> 'c
+within context
+    let rec mulByDigit i l = (match l with 
+                              | [] -> [[...other program...]]
+                              | _ -> [[...other program...]]
+                              | hd :: tl -> [[...other program...]]) ;; 
+==============================

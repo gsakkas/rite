@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2588.ml", line 5, characters 49-54:
+This expression has type 'a * bool but is here used with type 'a
+Relevant code: (f b)
+------------------------------------------------------------------
+File "2588.ml", line 5, characters 50-51:
+Try replacing
+    f
+with
+    not
+of type
+    bool -> bool
+within context
+    fun x -> ((wwhile (f, b)), (not (b = (not b))))
+==============================

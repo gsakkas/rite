@@ -1,0 +1,535 @@
+------------------------------------------------------------------
+File "2156.ml", line 26, characters 20-36:
+This expression has type float but is here used with type int
+Relevant code: (eval (v, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 23, characters 6-96:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 18, characters 32-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    v, x, y
+with
+    v, x, y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v ->
+                                                  (sin (pi *. (eval (v, x, y))))
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  [[...other program...]]
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 23, characters 6-96:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 18, characters 14-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sin
+with
+    sin
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v ->
+                                                  (sin (pi *. (eval (v, x, y))))
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  [[...other program...]]
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 23, characters 6-96:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 18, characters 14-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sin
+with
+    cos
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v ->
+                                                  (cos (pi *. (eval (v, x, y))))
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  [[...other program...]]
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 23, characters 6-96:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 18, characters 26-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v ->
+                                                  (sin (pi *. (eval (v, x, y))))
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  [[...other program...]]
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 23, characters 6-96:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 18, characters 35-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    v, x, y
+with
+    v, y, x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v ->
+                                                  (sin (pi *. (eval (v, y, x))))
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  [[...other program...]]
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 23, characters 6-96:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 18, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v ->
+                                                  (sin (pi *. (eval (v, x, y))))
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  [[...other program...]]
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 23, characters 6-96:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 18, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v ->
+                                                  (sin (pi *. (eval (v, x, y))))
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  [[...other program...]]
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 23, characters 6-96:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 18, characters 19-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    pi
+with
+    pi
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v ->
+                                                  (sin (pi *. (eval (v, x, y))))
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  [[...other program...]]
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 23, characters 6-96:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 18, characters 32-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    v
+with
+    e
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v ->
+                                                  (sin (pi *. (eval (e, x, y))))
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  [[...other program...]]
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 23, characters 6-96:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 18, characters 32-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    v
+with
+    v
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v ->
+                                                  (sin (pi *. (eval (v, x, y))))
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  [[...other program...]]
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 23, characters 6-96:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 18, characters 26-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (v, x, y))
+with
+    (eval ((v, x, y)))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v ->
+                                                  (sin (pi *. (eval ((v, x, y)))))
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  [[...other program...]]
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 18, characters 14-42:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 24, characters 17-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    q
+with
+    w
+The actual replacement has type
+    expr * 'a * 'a
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  (if
+                                                      (eval (v, x, y))
+                                                        < (eval (w, x, y))
+                                                      then
+                                                      (eval (w, x, y))
+                                                      else
+                                                      (eval (r, x, y)))
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 18, characters 14-42:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 24, characters 11-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (q, x, y))
+with
+    (eval ((q, x, y)))
+The actual replacement has type
+    'b
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  (if
+                                                      (eval (v, x, y))
+                                                        < (eval (w, x, y))
+                                                      then
+                                                      (eval ((q, x, y)))
+                                                      else
+                                                      (eval (r, x, y)))
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 18, characters 14-42:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 24, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    r
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  (if
+                                                      (eval (v, x, y))
+                                                        < (eval (w, x, y))
+                                                      then
+                                                      (eval (q, r, y))
+                                                      else
+                                                      (eval (r, x, y)))
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2156.ml", line 18, characters 14-42:
+File "2156.ml", line 19, characters 16-44:
+File "2156.ml", line 20, characters 21-66:
+File "2156.ml", line 21, characters 19-55:
+File "2156.ml", line 26, characters 20-55:
+File "2156.ml", line 27, characters 19-75:
+And modified the following location:
+File "2156.ml", line 24, characters 17-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    q
+with
+    q
+The actual replacement has type
+    expr * 'c * 'c
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, q, r) ->
+                                                  (if
+                                                      (eval (v, x, y))
+                                                        < (eval (w, x, y))
+                                                      then
+                                                      (eval (q, x, y))
+                                                      else
+                                                      (eval (r, x, y)))
+                                                | Divide (v, w) ->
+                                                  [[...other program...]]
+                                                | Super (v, w) ->
+                                                  [[...other program...]]) ;; 
+==============================

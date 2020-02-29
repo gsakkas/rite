@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "2444.ml", line 27, characters 33-34:
+This expression has type
+  (int list -> int) * int list -> int * int -> int list * int list
+but is here used with type
+  (int list -> int) * int list -> int * int -> (int list -> int) * int list
+Relevant code: f
+------------------------------------------------------------------
+File "2444.ml", line 23, characters 6-54:
+Try replacing
+    let a1 0 :: [] = (a1 [0]) + sum / 10 in 0 :: a2, (mod sum 10) :: a2
+with
+    let rec a1 0 :: [] = (a1 [0]) + sum / 10 in 0 :: a2, (mod sum 10) :: a2
+of type
+    int list * int list
+within context
+    fun a
+      x ->
+        (let (l1x, l2x) = x in
+            let (a1, a2) = a in
+            let sum = l1x + l2x in
+            let rec a1 0 :: [] = (a1 [0]) + sum / 10 in 0 :: a2, (mod sum 10) :: a2)
+==============================
+File "2444.ml", line 22, characters 6-83:
+Try replacing
+    let sum = l1x + l2x in
+      let a1 0 :: [] = (a1 [0]) + sum / 10 in 0 :: a2, (mod sum 10) :: a2
+with
+    let rec sum = l1x + l2x in 0 :: a2, (mod sum 10) :: a2
+of type
+    int list * int list
+within context
+    let f a x =
+      let (l1x, l2x) = x in
+        let (a1, a2) = a in let rec sum = l1x + l2x in 0 :: a2, (mod sum 10) :: a2
+      in
+      let base = [], [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "2444.ml", line 23, characters 6-87:
+Try replacing
+    let a1 0 :: [] = (a1 [0]) + sum / 10 in 0 :: a2, (mod sum 10) :: a2
+with
+    0 :: a2, (mod sum 10) :: a2
+of type
+    int list * int list
+within context
+    fun a
+      x ->
+        (let (l1x, l2x) = x in
+            let (a1, a2) = a in let sum = l1x + l2x in 0 :: a2, (mod sum 10) :: a2)
+==============================

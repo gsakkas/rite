@@ -1,0 +1,108 @@
+------------------------------------------------------------------
+File "0049.ml", line 8, characters 13-37:
+This expression has type int -> (int * int) list but is here used with type
+  'a list
+Relevant code: (clone (0, (ll1 - ll2)))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0049.ml", line 9, characters 7-44:
+And modified the following location:
+File "0049.ml", line 8, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    (int -> (int * int) list) -> 'b list -> 'c
+within context
+    let padZero l1 l2 =
+    let ll1 = (List.length l1) in
+      (if ll1 > ll2 then l1, ((clone (0, ll1 - ll2)) @; [[...]] l2) else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0049.ml", line 9, characters 7-44:
+And modified the following location:
+File "0049.ml", line 8, characters 37-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone (0, ll1 - ll2))
+with
+    (clone (0, ll1 - ll2) [[...]])
+The actual replacement has type
+    (int * int) list
+within context
+    let padZero l1 l2 =
+    let ll1 = (List.length l1) in
+      (if ll1 > ll2 then l1, (clone (0, ll1 - ll2) [[...]]) @ l2 else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0049.ml", line 9, characters 7-44:
+And modified the following location:
+File "0049.ml", line 8, characters 20-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone (0, ll1 - ll2))
+with
+    (clone 0 (ll1 - ll2))
+The actual replacement has type
+    int list
+within context
+    let padZero l1 l2 =
+    let ll1 = (List.length l1) in
+      (if ll1 > ll2 then l1, (clone 0 (ll1 - ll2)) @ l2 else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0049.ml", line 8, characters 7-44:
+And modified the following location:
+File "0049.ml", line 9, characters 16-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone (0, ll2 - ll1))
+with
+    (clone 0 (ll2 - ll1))
+The actual replacement has type
+    int list
+within context
+    let padZero l1 l2 =
+    let ll1 = (List.length l1) in
+      (if ll1 > ll2 then [[...other program...]] else
+          (clone 0 (ll2 - ll1)) @ l1, l2)
+    ;; 
+==============================
+Triaged the following locations:
+File "0049.ml", line 8, characters 7-44:
+And modified the following location:
+File "0049.ml", line 9, characters 33-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone (0, ll2 - ll1))
+with
+    (clone (0, ll2 - ll1) [[...]])
+The actual replacement has type
+    (int * int) list
+within context
+    let padZero l1 l2 =
+    let ll1 = (List.length l1) in
+      (if ll1 > ll2 then [[...other program...]] else
+          (clone (0, ll2 - ll1) [[...]]) @ l1, l2)
+    ;; 
+==============================
+Triaged the following locations:
+File "0049.ml", line 8, characters 7-44:
+And modified the following location:
+File "0049.ml", line 9, characters 34-35:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    (int -> (int * int) list) -> 'd list -> 'e
+within context
+    let padZero l1 l2 =
+    let ll1 = (List.length l1) in
+      (if ll1 > ll2 then [[...other program...]] else
+          ((clone (0, ll2 - ll1)) @; [[...]] l1), l2)
+    ;; 
+==============================

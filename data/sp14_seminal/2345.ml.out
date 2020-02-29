@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2345.ml", line 3, characters 68-69:
+This expression has type int but is here used with type unit
+Relevant code: 1
+------------------------------------------------------------------
+File "2345.ml", line 3, characters 68-69:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    unit
+within context
+    let padZero l1 l2 =
+    let (a, b) = (List.length l1), (List.length l2) in (if a < b then (1; [[...]]))
+    ;; 
+==============================

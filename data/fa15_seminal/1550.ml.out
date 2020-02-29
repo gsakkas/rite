@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "1550.ml", line 6, characters 9-65:
+This expression has type (int * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((let f' b = let b' = f b in (b', (b' = b)) in f' 1), b)
+------------------------------------------------------------------
+File "1550.ml", line 6, characters 18-52:
+Try replacing
+    fun b -> (let b' = (f b) in b', b' = b)
+with
+    fun b _ -> (let b' = (f b) in b', b' = b)
+of type
+    int -> 'c -> int * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile ((let f' b _ = let b' = (f b) in b', b' = b in (f' 1)), b))
+    ;; 
+==============================
+File "1550.ml", line 6, characters 18-52:
+Try replacing
+    fun b -> (let b' = (f b) in b', b' = b)
+with
+    fun _ b -> (let b' = (f b) in b', b' = b)
+of type
+    'd -> 'e -> 'e * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile ((let f' _ b = let b' = (f b) in b', b' = b in (f' 1)), b))
+    ;; 
+==============================
+File "1550.ml", line 6, characters 10-64:
+Try replacing
+    (let f' b = let b' = (f b) in b', b' = b in (f' 1)), b
+with
+    b, (let f' b = let b' = (f b) in b', b' = b in (f' 1))
+of type
+    (int * bool -> (int * bool) * bool) * (int * bool)
+within context
+    let fixpoint (f, b) =
+    (wwhile (b, (let f' b = let b' = (f b) in b', b' = b in (f' 1))))
+    ;; 
+==============================
+File "1550.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    (int * bool) * 'f -> (int * bool) * 'f -> bool
+within context
+    let fixpoint (f, b) =
+    (= ((let f' b = let b' = (f b) in b', b' = b in (f' 1)), b))
+    ;; 
+==============================

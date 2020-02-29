@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "1950.ml", line 46, characters 35-36:
+This expression has type 'a * int list -> 'b * int list -> int list
+but is here used with type 'a * int list -> 'b * int list -> 'a * int list
+Relevant code: f
+------------------------------------------------------------------
+File "1950.ml", line 46, characters 35-36:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'c list -> int -> int * 'c list
+within context
+    let f a x = let (x1, x2) = x in let (carry, res) = a in (match x2 with 
+                                                             | [] -> []
+                                                             | h :: t ->
+                                                               (bigAdd
+                                                                   (mulByDigit h l1)
+                                                                   res)) in let base
+      =
+      0, []
+      in
+      let args = (tenEx 0 l2) in
+      let (carry, res) = (List.fold_left (f; [[...]]) base  args) in [carry] @ res
+==============================
+File "1950.ml", line 46, characters 20-34:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('d * int list -> 'e * int list -> int list) ->
+    int * 'f list -> int list -> 'g * 'h
+within context
+    let f a x = let (x1, x2) = x in let (carry, res) = a in (match x2 with 
+                                                             | [] -> []
+                                                             | h :: t ->
+                                                               (bigAdd
+                                                                   (mulByDigit h l1)
+                                                                   res)) in let base
+      =
+      0, []
+      in
+      let args = (tenEx 0 l2) in
+      let (carry, res) = ((List.fold_left; [[...]]) f base  args) in [carry] @ res
+==============================
+File "1950.ml", line 40, characters 8-131:
+Try replacing
+    fun a x -> (let (x1, x2) = x in let (carry, res) = a in (match x2 with 
+                                                             | [] -> []
+                                                             | h :: t ->
+                                                               (bigAdd
+                                                                   (mulByDigit h l1) res)))
+with
+    fun a x -> (let (x1, x2) = x in let (carry, res) = a in (match x2 with 
+                                                             | [] -> []
+                                                             | h :: t ->
+                                                               (bigAdd
+                                                                   (mulByDigit h l1) res))); [[...]]
+of type
+    'i
+==============================

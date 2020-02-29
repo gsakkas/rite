@@ -1,0 +1,83 @@
+------------------------------------------------------------------
+File "0016.ml", line 31, characters 18-33:
+This expression has type int list * int list but is here used with type
+  int list * int list list
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "0016.ml", line 31, characters 18-33:
+Try replacing
+    (padZero l1 l2)
+with
+    (padZero l1 l2); [[...]]
+of type
+    int list * int list list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | (carry, h1 :: t1) ->
+                                                    (match x with 
+                                                     | h2 :: t2 ->
+                                                       (((h1 + h2) + carry) / 10,
+                                                             (mod (h1 + h2) 10) ::
+                                                                 t1))) in let base =
+              0, l1
+              in
+              let args = l2 in
+              let (_, res) = (List.fold_left f base  args) in
+              res in (removeZero (add ((padZero l1 l2); [[...]]))))
+==============================
+File "0016.ml", line 31, characters 14-17:
+Try replacing
+    add
+with
+    add; [[...]]
+of type
+    int list * int list -> int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | (carry, h1 :: t1) ->
+                                                    (match x with 
+                                                     | h2 :: t2 ->
+                                                       (((h1 + h2) + carry) / 10,
+                                                             (mod (h1 + h2) 10) ::
+                                                                 t1))) in let base =
+              0, l1
+              in
+              let args = l2 in
+              let (_, res) = (List.fold_left f base  args) in
+              res in (removeZero ((add; [[...]]) (padZero l1 l2))))
+==============================
+File "0016.ml", line 22, characters 10-298:
+Try replacing
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (carry, h1 :: t1) -> (match x with 
+                                                          | h2 :: t2 ->
+                                                            (((h1 + h2) + carry)
+                                                                    / 10
+                                                                  ,
+                                                                  (mod (h1 + h2) 10)
+                                                                      ::
+                                                                      t1))) in let
+          base
+          =
+          0, l1
+          in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+with
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (carry, h1 :: t1) -> (match x with 
+                                                          | h2 :: t2 ->
+                                                            (((h1 + h2) + carry)
+                                                                    / 10
+                                                                  ,
+                                                                  (mod (h1 + h2) 10)
+                                                                      ::
+                                                                      t1))) in let
+          base
+          =
+          0, l1
+          in
+          let args = l2 in
+          let (_, res) = (List.fold_left f base  args) in res); [[...]]
+of type
+    'a
+==============================

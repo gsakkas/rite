@@ -1,0 +1,236 @@
+------------------------------------------------------------------
+File "2337.ml", line 3, characters 42-43:
+This expression has type 'a but is here used with type 'a list
+Relevant code: h
+------------------------------------------------------------------
+Triaged the following locations:
+File "2337.ml", line 3, characters 38-43:
+And modified the following location:
+File "2337.ml", line 3, characters 56-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    assoc
+with
+    l
+The actual replacement has type
+    'b -> 'b list -> 'b list -> 'b
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if [[...other program...]] then h else
+                                     (l d k  t))) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 38-43:
+And modified the following location:
+File "2337.ml", line 3, characters 56-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    assoc
+with
+    assoc; [[...]]
+The actual replacement has type
+    'c -> 'c list -> 'c list -> 'c
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if [[...other program...]] then h else
+                                     ((assoc; [[...]]) d k  t))) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 56-67:
+And modified the following location:
+File "2337.ml", line 3, characters 42-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    k
+The actual replacement has type
+    'd list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if k = k then h else [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 56-67:
+And modified the following location:
+File "2337.ml", line 3, characters 42-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    h; [[...]]
+The actual replacement has type
+    'e list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if k = (h; [[...]]) then h else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 56-67:
+And modified the following location:
+File "2337.ml", line 3, characters 42-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    t
+The actual replacement has type
+    'f list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if k = t then h else [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 56-67:
+And modified the following location:
+File "2337.ml", line 3, characters 42-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    l
+The actual replacement has type
+    'g list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if k = l then h else [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 56-67:
+And modified the following location:
+File "2337.ml", line 3, characters 40-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    =
+with
+    =; [[...]]
+The actual replacement has type
+    'h list -> 'h -> bool
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if (k =; [[...]] h) then h else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 56-67:
+And modified the following location:
+File "2337.ml", line 3, characters 40-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    =
+with
+    l
+The actual replacement has type
+    'i list -> 'i -> bool
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if (k l h) then h else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 38-43:
+And modified the following location:
+File "2337.ml", line 3, characters 62-65:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (assoc d k  t)
+with
+    (assoc (d, k, t))
+The actual replacement has type
+    'j
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if [[...other program...]] then h else
+                                     (assoc (d, k, t)))) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 56-67:
+And modified the following location:
+File "2337.ml", line 3, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k
+with
+    k; [[...]]
+The actual replacement has type
+    'k
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if (k; [[...]]) = h then h else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 56-67:
+And modified the following location:
+File "2337.ml", line 3, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k
+with
+    l
+The actual replacement has type
+    'l
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if l = h then h else [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 56-67:
+And modified the following location:
+File "2337.ml", line 3, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k
+with
+    d
+The actual replacement has type
+    'm
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if d = h then h else [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 56-67:
+And modified the following location:
+File "2337.ml", line 3, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k
+with
+    =
+The actual replacement has type
+    'n -> 'n -> bool
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if = = h then h else [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2337.ml", line 3, characters 56-67:
+And modified the following location:
+File "2337.ml", line 3, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k
+with
+    h
+The actual replacement has type
+    'o
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | h :: t ->
+                                 (if h = h then h else [[...other program...]])) ;; 
+==============================

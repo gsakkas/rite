@@ -1,0 +1,92 @@
+------------------------------------------------------------------
+File "1778.ml", line 24, characters 40-44:
+This expression has type (int list * int list) list
+but is here used with type (int * int) list
+Relevant code: args
+------------------------------------------------------------------
+Triaged the following locations:
+File "1778.ml", line 23, characters 28-50:
+And modified the following location:
+File "1778.ml", line 23, characters 53-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.length
+The actual replacement has type
+    int list -> int
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (i, j) = x in
+            let (s, t) = a in ((i + j) + s) / 10, (mod ((i + j) + s) 10) :: t
+          in
+          let base = 0, [] in
+          let args = (List.combine [[...other program...]] (List.length [0]) :: l2)
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1778.ml", line 23, characters 28-50:
+And modified the following location:
+File "1778.ml", line 23, characters 52-66:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.rev [0])
+with
+    (List.rev [0]); [[...]]
+The actual replacement has type
+    int
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (i, j) = x in
+            let (s, t) = a in ((i + j) + s) / 10, (mod ((i + j) + s) 10) :: t
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine [[...other program...]] (List.rev [0]); [[...]] :: l2)
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1778.ml", line 23, characters 51-73:
+And modified the following location:
+File "1778.ml", line 23, characters 30-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.length
+The actual replacement has type
+    int list -> int
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (i, j) = x in
+            let (s, t) = a in ((i + j) + s) / 10, (mod ((i + j) + s) 10) :: t
+          in
+          let base = 0, [] in
+          let args = (List.combine (List.length [0]) :: l1 [[...other program...]])
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1778.ml", line 23, characters 51-73:
+And modified the following location:
+File "1778.ml", line 23, characters 29-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.rev [0])
+with
+    (List.rev [0]); [[...]]
+The actual replacement has type
+    int
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (i, j) = x in
+            let (s, t) = a in ((i + j) + s) / 10, (mod ((i + j) + s) 10) :: t
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine (List.rev [0]); [[...]] :: l1 [[...other program...]])
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

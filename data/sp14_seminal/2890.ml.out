@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "2890.ml", line 27, characters 49-51:
+This expression has type int but is here used with type float
+Relevant code: 10
+------------------------------------------------------------------
+File "2890.ml", line 27, characters 49-51:
+Try replacing
+    10
+with
+    10; [[...]]
+of type
+    float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                      | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                      | Average (e1, e2) ->
+                        (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                      | Times (e1, e2) -> ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                      | Thresh (e1, e2, e3, e4) ->
+                        (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                            (eval (e3, x, y))
+                            else
+                            (eval (e4, x, y)))
+                      | ModF e1 ->
+                        (match (modf ((eval (e1, x, y)) *. 10; [[...]])) with 
+                         | (f, i) -> f)
+                      | SumOfSquares (e1, e2, e3) ->
+                        ((((eval (e1, x, y)) ** 2.0 +. (eval (e2, x, y)) ** 2.0)
+                                  +. (eval (e3, x, y)) ** 2.0)
+                              /. 3.0))
+==============================
+File "2890.ml", line 27, characters 46-48:
+Try replacing
+    *.
+with
+    *.; [[...]]
+of type
+    float -> int -> float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                      | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                      | Average (e1, e2) ->
+                        (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                      | Times (e1, e2) -> ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                      | Thresh (e1, e2, e3, e4) ->
+                        (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                            (eval (e3, x, y))
+                            else
+                            (eval (e4, x, y)))
+                      | ModF e1 ->
+                        (match (modf ((eval (e1, x, y)) *.; [[...]] 10)) with 
+                         | (f, i) -> f)
+                      | SumOfSquares (e1, e2, e3) ->
+                        ((((eval (e1, x, y)) ** 2.0 +. (eval (e2, x, y)) ** 2.0)
+                                  +. (eval (e3, x, y)) ** 2.0)
+                              /. 3.0))
+==============================

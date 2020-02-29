@@ -1,0 +1,6 @@
+------------------------------------------------------------------
+File "1671.ml", line 12, characters 65-67:
+This expression has type expr but is here used with type expr * 'a * 'a
+Relevant code: e1
+------------------------------------------------------------------
+<pre>Couldn't find repairs.</pre>

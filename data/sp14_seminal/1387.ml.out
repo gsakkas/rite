@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1387.ml", line 12, characters 32-33:
+This expression has type int * int list -> int -> int * int list
+but is here used with type int * int list -> int -> int
+Relevant code: f
+------------------------------------------------------------------
+File "1387.ml", line 12, characters 16-31:
+Try replacing
+    List.fold_right
+with
+    List.fold_right; [[...]]
+of type
+    (int * int list -> int -> int * int list) ->
+    int * 'a list -> 'b list -> 'c * 'd
+within context
+    fun l -> (let f a x = (match a with 
+                           | (carry, rest) ->
+                             (let new_carry = (i * x + carry) / 10 in
+                                   let result = (mod (i * x + carry) 10) :: rest in
+                                   (if
+                                       (List.length result) = (List.length l)
+                                         && new_carry > 0
+                                       then
+                                       0, new_carry :: result
+                                       else
+                                       new_carry,
+                                         result))) in let base = 0, [] in
+          let (_, res) = ((List.fold_right; [[...]]) f base  (List.rev l)) in res)
+==============================

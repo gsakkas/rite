@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0504.ml", line 3, characters 61-62:
+This expression has type ('a -> 'b) -> 'c -> 'a -> 'a -> 'b
+but is here used with type ('a -> 'b) -> 'c -> 'a -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "0504.ml", line 3, characters 46-60:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    (('d -> 'e) -> 'f -> 'g -> 'd -> 'e) ->
+    int -> 'h -> ('d -> 'e) -> 'f -> 'g -> 'd -> 'e
+within context
+    let pipe fs = let f a x result x = (a x) in let base = 1 in (f f base  fs) ;; 
+==============================

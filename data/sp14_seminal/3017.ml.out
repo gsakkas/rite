@@ -1,0 +1,117 @@
+------------------------------------------------------------------
+File "3017.ml", line 12, characters 21-47:
+This expression has type int list * int but is here used with type 'a list
+Relevant code: ((clone 0 (- diff)), len1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3017.ml", line 12, characters 7-55:
+And modified the following location:
+File "3017.ml", line 13, characters 9-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    List.append; [[...]]
+The actual replacement has type
+    int list * int -> 'b
+within context
+    fun l2 ->
+      (let len1 = (List.length l1) in
+          let len2 = (List.length l2) in
+          let diff = len1 - len2 in
+          (if diff < 0 then [[...other program...]] else
+              ((List.append; [[...]]) ((clone 0 diff), len2)), len1))
+==============================
+Triaged the following locations:
+File "3017.ml", line 12, characters 7-55:
+And modified the following location:
+File "3017.ml", line 13, characters 9-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    <
+The actual replacement has type
+    int list * int -> int list * int -> bool
+within context
+    fun l2 ->
+      (let len1 = (List.length l1) in
+          let len2 = (List.length l2) in
+          let diff = len1 - len2 in
+          (if diff < 0 then [[...other program...]] else
+              (< ((clone 0 diff), len2)), len1))
+==============================
+Triaged the following locations:
+File "3017.ml", line 13, characters 7-51:
+And modified the following location:
+File "3017.ml", line 12, characters 21-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 (( ~- ) diff)), len1
+with
+    (clone 0 (( ~- ) diff)), len1; [[...]]
+The actual replacement has type
+    'c list
+within context
+    fun l2 ->
+      (let len1 = (List.length l1) in
+          let len2 = (List.length l2) in
+          let diff = len1 - len2 in
+          (if diff < 0 then
+              (List.append ((clone 0 (( ~- ) diff)), len1; [[...]])), len2
+              else
+              [[...other program...]]))
+==============================
+Triaged the following locations:
+File "3017.ml", line 12, characters 7-55:
+And modified the following location:
+File "3017.ml", line 13, characters 21-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 diff), len2
+with
+    (clone 0 diff), len2; [[...]]
+The actual replacement has type
+    'd list
+within context
+    fun l2 ->
+      (let len1 = (List.length l1) in
+          let len2 = (List.length l2) in
+          let diff = len1 - len2 in
+          (if diff < 0 then [[...other program...]] else
+              (List.append ((clone 0 diff), len2; [[...]])), len1))
+==============================
+Triaged the following locations:
+File "3017.ml", line 13, characters 7-51:
+And modified the following location:
+File "3017.ml", line 12, characters 9-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    <
+The actual replacement has type
+    int list * int -> int list * int -> bool
+within context
+    fun l2 ->
+      (let len1 = (List.length l1) in
+          let len2 = (List.length l2) in
+          let diff = len1 - len2 in
+          (if diff < 0 then (< ((clone 0 (( ~- ) diff)), len1)), len2 else
+              [[...other program...]]))
+==============================
+Triaged the following locations:
+File "3017.ml", line 13, characters 7-51:
+And modified the following location:
+File "3017.ml", line 12, characters 9-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    List.append; [[...]]
+The actual replacement has type
+    int list * int -> 'e
+within context
+    fun l2 ->
+      (let len1 = (List.length l1) in
+          let len2 = (List.length l2) in
+          let diff = len1 - len2 in
+          (if diff < 0 then
+              ((List.append; [[...]]) ((clone 0 (( ~- ) diff)), len1)), len2
+              else
+              [[...other program...]]))
+==============================

@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "3292.ml", line 17, characters 33-34:
+This expression has type 'a list -> 'a * 'a -> 'a list * 'a list
+but is here used with type 'a list -> 'a * 'a -> 'a list
+Relevant code: f
+------------------------------------------------------------------
+File "3292.ml", line 17, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'b list * 'c list -> 'd * 'e -> 'b list * 'c list
+within context
+    let f a x = (match x with 
+                 | (v1, v2) ->
+                   (v1 :: a,
+                         v2 ::
+                             a)) in let base = [], [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "3292.ml", line 17, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('f list -> 'f * 'f -> 'f list * 'f list) ->
+    'g list * 'h list -> ('i * 'j) list -> 'k * 'l
+within context
+    let f a x = (match x with 
+                 | (v1, v2) ->
+                   (v1 :: a,
+                         v2 ::
+                             a)) in let base = [], [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "3292.ml", line 14, characters 10-64:
+Try replacing
+    fun a x -> (match x with 
+                | (v1, v2) -> (v1 :: a, v2 :: a))
+with
+    fun a x -> (match x with 
+                | (v1, v2) -> (v1 :: a, v2 :: a)); [[...]]
+of type
+    'm
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f = fun a x -> (match x with 
+                                                         | (v1, v2) ->
+                                                           (v1 :: a,
+                                                                 v2 ::
+                                                                     a)); [[...]] in let
+              base
+              =
+              [], []
+              in
+              let args = (List.combine l1 l2) in
+              let (_, res) = (List.fold_left f base  args) in
+              res in (removeZero (add (padZero l1 l2))))
+==============================

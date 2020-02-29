@@ -1,0 +1,83 @@
+------------------------------------------------------------------
+File "0371.ml", line 23, characters 28-29:
+This expression has type 'a list but is here used with type 'b * 'c
+Relevant code: x
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "0371.ml", line 18, characters 9-10:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    'd list
+within context
+    let f a x =
+      let (rem, acc) = a in
+        (if (x; [[...]]) = [] then
+            (if rem = 1 then 0, 1 :: acc else
+              (let (el1, el2) = x in
+                  let new_sum = (rem + el1) + el2 in
+                  let new_rem = (if new_sum > 9 then 1 else 0) in
+                  let norm_sum = (if new_sum > 9 then new_sum - 10 else new_sum) in
+                  new_rem, norm_sum :: acc))
+            else
+            [[...]])
+      in
+      let base = 0, [] in
+      let args = (List.rev ([] @ (List.combine l1 l2))) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+And modified the following location:
+File "0371.ml", line 18, characters 11-12:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    =
+with
+    =; [[...]]
+The actual replacement has type
+    int * int -> 'e list -> bool
+within context
+    let f a x =
+      let (rem, acc) = a in
+        (if (x =; [[...]] []) then
+            (if rem = 1 then 0, 1 :: acc else
+              (let (el1, el2) = x in
+                  let new_sum = (rem + el1) + el2 in
+                  let new_rem = (if new_sum > 9 then 1 else 0) in
+                  let norm_sum = (if new_sum > 9 then new_sum - 10 else new_sum) in
+                  new_rem, norm_sum :: acc))
+            else
+            [[...]])
+      in
+      let base = 0, [] in
+      let args = (List.rev ([] @ (List.combine l1 l2))) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+And modified the following location:
+File "0371.ml", line 18, characters 13-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    []; [[...]]
+The actual replacement has type
+    int * int
+within context
+    let f a x =
+      let (rem, acc) = a in
+        (if x = ([]; [[...]]) then
+            (if rem = 1 then 0, 1 :: acc else
+              (let (el1, el2) = x in
+                  let new_sum = (rem + el1) + el2 in
+                  let new_rem = (if new_sum > 9 then 1 else 0) in
+                  let norm_sum = (if new_sum > 9 then new_sum - 10 else new_sum) in
+                  new_rem, norm_sum :: acc))
+            else
+            [[...]])
+      in
+      let base = 0, [] in
+      let args = (List.rev ([] @ (List.combine l1 l2))) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

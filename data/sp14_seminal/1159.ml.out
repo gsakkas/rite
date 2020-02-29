@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1159.ml", line 4, characters 52-53:
+This expression has type 'a list but is here used with type int
+Relevant code: a
+------------------------------------------------------------------
+File "1159.ml", line 4, characters 52-53:
+Try replacing
+    a
+with
+    x
+of type
+    int
+within context
+    fun b -> (match a with 
+              | [] -> b
+              | x :: xs -> (integers xs (mod x 10) :: b))
+==============================

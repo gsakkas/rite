@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2344.ml", line 3, characters 68-69:
+This expression has type int but is here used with type unit
+Relevant code: a
+------------------------------------------------------------------
+File "2344.ml", line 3, characters 68-69:
+Try replacing
+    a
+with
+    a; [[...]]
+of type
+    unit
+within context
+    let padZero l1 l2 =
+    let (a, b) = (List.length l1), (List.length l2) in (if a < b then (a; [[...]]))
+    ;; 
+==============================
+File "2344.ml", line 3, characters 14-50:
+Try replacing
+    (List.length l1), (List.length l2)
+with
+    (List.length l1), (List.length l2); [[...]]
+of type
+    'a * 'b
+within context
+    let padZero l1 l2 =
+    let (a, b) = (List.length l1), (List.length l2); [[...]] in (if a < b then a)
+    ;; 
+==============================

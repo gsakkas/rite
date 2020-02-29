@@ -1,0 +1,76 @@
+------------------------------------------------------------------
+File "0125.ml", line 23, characters 17-18:
+This expression has type int * int list but is here used with type int list
+Relevant code: x
+------------------------------------------------------------------
+Triaged the following locations:
+File "0125.ml", line 24, characters 4-113:
+And modified the following location:
+File "0125.ml", line 23, characters 17-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | ([], []) ->
+                                                    (let (carry, num) = x in
+                                                          0,
+                                                              (if carry > 0 then
+                                                                carry :: num
+                                                                else
+                                                                num))
+                                                  | (l1, l2) -> (match x with 
+                                                                 | (carry, num) ->
+                                                                   (let addit =
+                                                                         ((List.hd
+                                                                                 l1)
+                                                                               +
+                                                                               (List.hd
+                                                                                 l2))
+                                                                           + carry
+                                                                         in
+                                                                         (if
+                                                                               addit
+                                                                                 >
+                                                                                 10
+                                                                               then
+                                                                               (mod
+                                                                                 addit
+                                                                                 10)
+                                                                               else
+                                                                               0)
+                                                                             ,
+                                                                             addit
+                                                                                   /
+                                                                                   10
+                                                                                 ::
+                                                                                 x;
+                                                                                 [[...]]))) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0125.ml", line 24, characters 4-113:
+And modified the following location:
+File "0125.ml", line 13, characters 4-496:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match a with 
+                 | ([], []) ->
+                   (let (carry, num) = x in
+                         0, (if carry > 0 then carry :: num else num))
+                 | (l1, l2) -> (match x with 
+                                | (carry, num) ->
+                                  (let addit = ((List.hd l1) + (List.hd l2)) + carry
+                                        in
+                                        (if addit > 10 then (mod addit 10) else 0),
+                                            addit / 10 ::
+                                                x))) in let base = 0, 0 in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

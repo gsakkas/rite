@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "1906.ml", line 5, characters 28-47:
+This expression has type (int * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((f, (f < 100)), b)
+------------------------------------------------------------------
+File "1906.ml", line 5, characters 29-46:
+Try replacing
+    (f, f < 100), b
+with
+    b, (f, f < 100)
+of type
+    (int * bool -> (int * bool) * bool) * (int * bool)
+within context
+    let fixpoint (f, b) = (wwhile (b, (f, f < 100))) ;; 
+==============================
+File "1906.ml", line 5, characters 21-27:
+Try replacing
+    wwhile
+with
+    <
+of type
+    (int * bool) * 'c -> (int * bool) * 'c -> bool
+within context
+    let fixpoint (f, b) = (< ((f, f < 100), b)) ;; 
+==============================

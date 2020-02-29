@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "0533.ml", line 37, characters 30-33:
+This expression is not a function, it cannot be applied
+Relevant code: max
+------------------------------------------------------------------
+Triaged the following locations:
+File "0533.ml", line 37, characters 44-64:
+And modified the following location:
+File "0533.ml", line 37, characters 30-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    max
+with
+    max; [[...]]
+The actual replacement has type
+    float -> 'u4 -> 'v4
+within context
+    let a = (abs_float (eval (a', x, y))) in
+      let b = (abs_float (eval (b', x, y))) in
+      let my_log l' = let l = ((max; [[...]]) 0.1 l') in [[...other program...]] in
+      (if (eval (c, x, y)) < 0.0 then
+          (my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0)) -. 1.0
+          else
+          (-1.0 *. (my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0))) -. 1.0))
+==============================
+Triaged the following locations:
+File "0533.ml", line 37, characters 44-64:
+And modified the following location:
+File "0533.ml", line 37, characters 30-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    max
+with
+    <
+The actual replacement has type
+    float -> float -> bool
+within context
+    let a = (abs_float (eval (a', x, y))) in
+      let b = (abs_float (eval (b', x, y))) in
+      let my_log l' = let l = (< 0.1 l') in [[...other program...]] in
+      (if (eval (c, x, y)) < 0.0 then
+          (my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0)) -. 1.0
+          else
+          (-1.0 *. (my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0))) -. 1.0))
+==============================
+Triaged the following locations:
+File "0533.ml", line 37, characters 44-64:
+And modified the following location:
+File "0533.ml", line 37, characters 22-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let l = (max 0.1 l') in (log l) / (log 10.0)
+with
+    [[...other program...]]
+The actual replacement has type
+    'a5
+within context
+    let a = (abs_float (eval (a', x, y))) in
+      let b = (abs_float (eval (b', x, y))) in
+      let my_log l' = [[...other program...]] in
+      (if (eval (c, x, y)) < 0.0 then
+          (my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0)) -. 1.0
+          else
+          (-1.0 *. (my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0))) -. 1.0))
+==============================

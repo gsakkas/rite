@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "1441.ml", line 23, characters 31-32:
+This expression has type expr but is here used with type expr * 'a * 'a
+Relevant code: e
+------------------------------------------------------------------
+Triaged the following locations:
+File "1441.ml", line 24, characters 16-46:
+And modified the following location:
+File "1441.ml", line 23, characters 14-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (sin (pi *. (eval e)))
+with
+    [[...]]
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> [[...]]
+                              | Cosine e -> [[...other program...]]
+                              | Average (e1, e2) -> (buildAverage (x, y))
+                              | Times (e1, e2) -> (buildTimes (x, y))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (buildThresh (x, y, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1441.ml", line 23, characters 14-34:
+And modified the following location:
+File "1441.ml", line 24, characters 16-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    cos * (pi *. (eval (e, x, y)))
+with
+    [[...]]
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> [[...other program...]]
+                              | Cosine e -> [[...]]
+                              | Average (e1, e2) -> (buildAverage (x, y))
+                              | Times (e1, e2) -> (buildTimes (x, y))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (buildThresh (x, y, x, y))) ;; 
+==============================

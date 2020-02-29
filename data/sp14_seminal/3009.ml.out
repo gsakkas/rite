@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "3009.ml", line 22, characters 20-25:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: clone
+------------------------------------------------------------------
+File "3009.ml", line 22, characters 15-44:
+Try replacing
+    0, (clone 0 List.length  l1)
+with
+    [[...]]
+of type
+    'f
+within context
+    let add (l1, l2) =
+      let f a x = 0, [] in
+        let base = 0, [] in
+        let args = [[...]] in let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

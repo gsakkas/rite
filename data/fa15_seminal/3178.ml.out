@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "3178.ml", line 25, characters 33-34:
+This expression has type int * 'a but is here used with type 'b list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "3178.ml", line 25, characters 32-63:
+And modified the following location:
+File "3178.ml", line 25, characters 21-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a1
+with
+    a1; [[...]]
+The actual replacement has type
+    int
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            [((x1 + x2) + (a1; [[...]])) / 10], [[...other program...]])
+==============================
+Triaged the following locations:
+File "3178.ml", line 25, characters 32-63:
+And modified the following location:
+File "3178.ml", line 25, characters 21-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a1
+with
+    x1
+The actual replacement has type
+    int
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in [((x1 + x2) + x1) / 10], [[...other program...]])
+==============================
+Triaged the following locations:
+File "3178.ml", line 25, characters 32-63:
+And modified the following location:
+File "3178.ml", line 25, characters 19-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    int -> 'c -> int
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            [(x1 + x2 +; [[...]] a1) / 10], [[...other program...]])
+==============================

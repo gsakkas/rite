@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "1493.ml", line 3, characters 48-65:
+This expression has type int but is here used with type 'a list
+Relevant code: ((clone x n) - 1)
+------------------------------------------------------------------
+File "1493.ml", line 3, characters 46-47:
+Try replacing
+    @
+with
+    clone
+of type
+    int -> int -> int
+within context
+    let rec clone x n = (match n = 0 with 
+                         | true -> x
+                         | false -> (x clone (clone x n) - 1)) ;; 
+==============================
+File "1493.ml", line 3, characters 46-47:
+Try replacing
+    @
+with
+    -
+of type
+    int -> int -> int
+within context
+    let rec clone x n = (match n = 0 with 
+                         | true -> x
+                         | false -> x - ((clone x n) - 1)) ;; 
+==============================
+File "1493.ml", line 3, characters 61-62:
+Try replacing
+    -
+with
+    clone
+of type
+    'b list -> int -> 'b list
+within context
+    fun x n -> (match n = 0 with 
+                | true -> x
+                | false -> x @ ((clone x n) clone 1))
+==============================

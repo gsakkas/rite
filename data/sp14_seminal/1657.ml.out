@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1657.ml", line 9, characters 16-22:
+This expression has type 'a * 'b but is here used with type 'c -> 'c
+Relevant code: (f, b)
+------------------------------------------------------------------
+File "1657.ml", line 8, characters 39-41:
+Try replacing
+    f'
+with
+    f
+of type
+    'd -> 'd
+within context
+    let whilesFun f' b' = let fOfB = (f b') in b', b' = fOfB in (whilesFun (f, b))
+==============================

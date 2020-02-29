@@ -1,0 +1,439 @@
+------------------------------------------------------------------
+File "1685.ml", line 32, characters 24-45:
+This expression has type expr but is here used with type expr * expr
+Relevant code: (build (rand, depth))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1685.ml", line 33, characters 11-43:
+File "1685.ml", line 34, characters 11-44:
+And modified the following location:
+File "1685.ml", line 32, characters 24-45:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, depth))
+with
+    (build (rand, depth)); [[...]]
+The actual replacement has type
+    expr * expr
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let depth = depth - 1 in (match (rand (0, 4)) with 
+                                                  | 0 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 1 ->
+                                                    (buildCosine
+                                                        (build (rand, depth)))
+                                                  | 2 ->
+                                                    (buildAverage
+                                                        ((build (rand, depth));
+                                                          [[...]]))
+                                                  | 3 -> [[...other program...]]
+                                                  | 4 ->
+                                                    [[...other program...]])) else (match
+                                                                                    (rand
+                                                                                      (0
+                                                                                          ,
+                                                                                          1))
+                                                                                    with
+                                                                                    
+                                                                                    |
+                                                                                      0
+                                                                                      ->
+                                                                                      (buildX
+                                                                                          ())
+                                                                                    |
+                                                                                      1
+                                                                                      ->
+                                                                                      (buildY
+                                                                                          ())))
+    ;; 
+==============================
+Triaged the following locations:
+File "1685.ml", line 33, characters 11-43:
+File "1685.ml", line 34, characters 11-44:
+And modified the following location:
+File "1685.ml", line 32, characters 11-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildAverage
+with
+    buildAverage; [[...]]
+The actual replacement has type
+    expr -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let depth = depth - 1 in (match (rand (0, 4)) with 
+                                                  | 0 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 1 ->
+                                                    (buildCosine
+                                                        (build (rand, depth)))
+                                                  | 2 ->
+                                                    ((buildAverage; [[...]])
+                                                        (build (rand, depth)))
+                                                  | 3 -> [[...other program...]]
+                                                  | 4 ->
+                                                    [[...other program...]])) else (match
+                                                                                    (rand
+                                                                                      (0
+                                                                                          ,
+                                                                                          1))
+                                                                                    with
+                                                                                    
+                                                                                    |
+                                                                                      0
+                                                                                      ->
+                                                                                      (buildX
+                                                                                          ())
+                                                                                    |
+                                                                                      1
+                                                                                      ->
+                                                                                      (buildY
+                                                                                          ())))
+    ;; 
+==============================
+Triaged the following locations:
+File "1685.ml", line 33, characters 11-43:
+File "1685.ml", line 34, characters 11-44:
+And modified the following location:
+File "1685.ml", line 32, characters 11-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildAverage
+with
+    buildSine
+The actual replacement has type
+    expr -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let depth = depth - 1 in (match (rand (0, 4)) with 
+                                                  | 0 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 1 ->
+                                                    (buildCosine
+                                                        (build (rand, depth)))
+                                                  | 2 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 3 -> [[...other program...]]
+                                                  | 4 ->
+                                                    [[...other program...]])) else (match
+                                                                                    (rand
+                                                                                      (0
+                                                                                          ,
+                                                                                          1))
+                                                                                    with
+                                                                                    
+                                                                                    |
+                                                                                      0
+                                                                                      ->
+                                                                                      (buildX
+                                                                                          ())
+                                                                                    |
+                                                                                      1
+                                                                                      ->
+                                                                                      (buildY
+                                                                                          ())))
+    ;; 
+==============================
+Triaged the following locations:
+File "1685.ml", line 32, characters 11-45:
+File "1685.ml", line 33, characters 11-43:
+And modified the following location:
+File "1685.ml", line 34, characters 11-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildThresh
+with
+    buildSine
+The actual replacement has type
+    expr -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let depth = depth - 1 in (match (rand (0, 4)) with 
+                                                  | 0 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 1 ->
+                                                    (buildCosine
+                                                        (build (rand, depth)))
+                                                  | 2 -> [[...other program...]]
+                                                  | 3 -> [[...other program...]]
+                                                  | 4 ->
+                                                    (buildSine
+                                                        (build
+                                                          (rand,
+                                                              depth))))) else (match
+                                                                               (rand
+                                                                                 (0,
+                                                                                     1))
+                                                                               with
+                                                                               
+                                                                               | 0
+                                                                                 ->
+                                                                                 (buildX
+                                                                                     ())
+                                                                               | 1
+                                                                                 ->
+                                                                                 (buildY
+                                                                                     ())))
+    ;; 
+==============================
+Triaged the following locations:
+File "1685.ml", line 32, characters 11-45:
+File "1685.ml", line 33, characters 11-43:
+And modified the following location:
+File "1685.ml", line 34, characters 11-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildThresh
+with
+    buildThresh; [[...]]
+The actual replacement has type
+    expr -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let depth = depth - 1 in (match (rand (0, 4)) with 
+                                                  | 0 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 1 ->
+                                                    (buildCosine
+                                                        (build (rand, depth)))
+                                                  | 2 -> [[...other program...]]
+                                                  | 3 -> [[...other program...]]
+                                                  | 4 ->
+                                                    ((buildThresh; [[...]])
+                                                        (build
+                                                          (rand,
+                                                              depth))))) else (match
+                                                                               (rand
+                                                                                 (0,
+                                                                                     1))
+                                                                               with
+                                                                               
+                                                                               | 0
+                                                                                 ->
+                                                                                 (buildX
+                                                                                     ())
+                                                                               | 1
+                                                                                 ->
+                                                                                 (buildY
+                                                                                     ())))
+    ;; 
+==============================
+Triaged the following locations:
+File "1685.ml", line 32, characters 11-45:
+File "1685.ml", line 34, characters 11-44:
+And modified the following location:
+File "1685.ml", line 33, characters 22-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, depth))
+with
+    (build (rand, depth)); [[...]]
+The actual replacement has type
+    expr * expr
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let depth = depth - 1 in (match (rand (0, 4)) with 
+                                                  | 0 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 1 ->
+                                                    (buildCosine
+                                                        (build (rand, depth)))
+                                                  | 2 -> [[...other program...]]
+                                                  | 3 ->
+                                                    (buildTimes
+                                                        ((build (rand, depth));
+                                                          [[...]]))
+                                                  | 4 ->
+                                                    [[...other program...]])) else (match
+                                                                                    (rand
+                                                                                      (0
+                                                                                          ,
+                                                                                          1))
+                                                                                    with
+                                                                                    
+                                                                                    |
+                                                                                      0
+                                                                                      ->
+                                                                                      (buildX
+                                                                                          ())
+                                                                                    |
+                                                                                      1
+                                                                                      ->
+                                                                                      (buildY
+                                                                                          ())))
+    ;; 
+==============================
+Triaged the following locations:
+File "1685.ml", line 32, characters 11-45:
+File "1685.ml", line 34, characters 11-44:
+And modified the following location:
+File "1685.ml", line 33, characters 11-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildSine
+The actual replacement has type
+    expr -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let depth = depth - 1 in (match (rand (0, 4)) with 
+                                                  | 0 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 1 ->
+                                                    (buildCosine
+                                                        (build (rand, depth)))
+                                                  | 2 -> [[...other program...]]
+                                                  | 3 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 4 ->
+                                                    [[...other program...]])) else (match
+                                                                                    (rand
+                                                                                      (0
+                                                                                          ,
+                                                                                          1))
+                                                                                    with
+                                                                                    
+                                                                                    |
+                                                                                      0
+                                                                                      ->
+                                                                                      (buildX
+                                                                                          ())
+                                                                                    |
+                                                                                      1
+                                                                                      ->
+                                                                                      (buildY
+                                                                                          ())))
+    ;; 
+==============================
+Triaged the following locations:
+File "1685.ml", line 32, characters 11-45:
+File "1685.ml", line 34, characters 11-44:
+And modified the following location:
+File "1685.ml", line 33, characters 11-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildCosine
+The actual replacement has type
+    expr -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let depth = depth - 1 in (match (rand (0, 4)) with 
+                                                  | 0 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 1 ->
+                                                    (buildCosine
+                                                        (build (rand, depth)))
+                                                  | 2 -> [[...other program...]]
+                                                  | 3 ->
+                                                    (buildCosine
+                                                        (build (rand, depth)))
+                                                  | 4 ->
+                                                    [[...other program...]])) else (match
+                                                                                    (rand
+                                                                                      (0
+                                                                                          ,
+                                                                                          1))
+                                                                                    with
+                                                                                    
+                                                                                    |
+                                                                                      0
+                                                                                      ->
+                                                                                      (buildX
+                                                                                          ())
+                                                                                    |
+                                                                                      1
+                                                                                      ->
+                                                                                      (buildY
+                                                                                          ())))
+    ;; 
+==============================
+Triaged the following locations:
+File "1685.ml", line 32, characters 11-45:
+File "1685.ml", line 34, characters 11-44:
+And modified the following location:
+File "1685.ml", line 33, characters 11-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    expr -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let depth = depth - 1 in (match (rand (0, 4)) with 
+                                                  | 0 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 1 ->
+                                                    (buildCosine
+                                                        (build (rand, depth)))
+                                                  | 2 -> [[...other program...]]
+                                                  | 3 ->
+                                                    ((buildTimes; [[...]])
+                                                        (build (rand, depth)))
+                                                  | 4 ->
+                                                    [[...other program...]])) else (match
+                                                                                    (rand
+                                                                                      (0
+                                                                                          ,
+                                                                                          1))
+                                                                                    with
+                                                                                    
+                                                                                    |
+                                                                                      0
+                                                                                      ->
+                                                                                      (buildX
+                                                                                          ())
+                                                                                    |
+                                                                                      1
+                                                                                      ->
+                                                                                      (buildY
+                                                                                          ())))
+    ;; 
+==============================
+Triaged the following locations:
+File "1685.ml", line 32, characters 11-45:
+File "1685.ml", line 33, characters 11-43:
+And modified the following location:
+File "1685.ml", line 34, characters 23-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, depth))
+with
+    (build (rand, depth)); [[...]]
+The actual replacement has type
+    expr * expr * expr *
+    expr
+within context
+    let rec build (rand, depth) =
+    (if depth > 0 then (let depth = depth - 1 in (match (rand (0, 4)) with 
+                                                  | 0 ->
+                                                    (buildSine
+                                                        (build (rand, depth)))
+                                                  | 1 ->
+                                                    (buildCosine
+                                                        (build (rand, depth)))
+                                                  | 2 -> [[...other program...]]
+                                                  | 3 -> [[...other program...]]
+                                                  | 4 ->
+                                                    (buildThresh
+                                                        ((build (rand, depth));
+                                                          [[...]])))) else (match
+                                                                            (rand
+                                                                              (0,
+                                                                                  1))
+                                                                            with
+                                                                            
+                                                                            | 0 ->
+                                                                              (buildX
+                                                                                  ())
+                                                                            | 1 ->
+                                                                              (buildY
+                                                                                  ())))
+    ;; 
+==============================

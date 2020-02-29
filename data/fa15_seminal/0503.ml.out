@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0503.ml", line 4, characters 33-34:
+This expression has type int -> 'a -> int -> int but is here used with type
+  int -> 'a -> int
+Relevant code: f
+------------------------------------------------------------------
+File "0503.ml", line 4, characters 33-34:
+Try replacing
+    f
+with
+    +
+of type
+    int -> int -> int
+within context
+    let pipe fs =
+    let f a x = ((fun result x -> a + x) 0) in
+      let base = 1 in (List.fold_left + base  fs)
+    ;; 
+==============================

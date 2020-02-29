@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0801.ml", line 5, characters 7-66:
+This expression should not be a function, the expected type is
+'a list
+Relevant code: (fun n  -> let d = digitsOfInt (n / 10) in (n mod 10) :: d)
+------------------------------------------------------------------
+File "0801.ml", line 5, characters 7-66:
+Try replacing
+    fun n -> (let d = (digitsOfInt (n / 10)) in (mod n 10) :: d)
+with
+    fun n -> (let d = (digitsOfInt (n / 10)) in (mod n 10) :: d); [[...]]
+of type
+    int list
+within context
+    let rec digitsOfInt n =
+    (if n < 0 then [] else
+      (fun n -> (let d = (digitsOfInt (n / 10)) in (mod n 10) :: d); [[...]]))
+    ;; 
+==============================

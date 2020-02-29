@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "3014.ml", line 3, characters 58-59:
+This expression has type 'a list but is here used with type 'a
+Relevant code: x
+------------------------------------------------------------------
+File "3014.ml", line 3, characters 51-56:
+Try replacing
+    clone
+with
+    clone_RT
+of type
+    'b list -> int -> 'b list
+within context
+    let rec clone_RT acc n = (if (n <= 0) then acc else (clone_RT x :: acc (n - 1)))
+      in
+      (clone_RT [] n)
+==============================
+File "3014.ml", line 3, characters 58-59:
+Try replacing
+    x
+with
+    n
+of type
+    int
+within context
+    fun acc n -> (if (n <= 0) then acc else (clone n :: acc (n - 1)))
+==============================
+File "3014.ml", line 3, characters 58-59:
+Try replacing
+    x
+with
+    <=
+of type
+    'c -> 'c -> bool
+within context
+    fun acc n -> (if (n <= 0) then acc else (clone <= :: acc (n - 1)))
+==============================
+File "3014.ml", line 3, characters 58-59:
+Try replacing
+    x
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun acc n -> (if (n <= 0) then acc else (clone - :: acc (n - 1)))
+==============================

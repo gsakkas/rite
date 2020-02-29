@@ -1,0 +1,66 @@
+------------------------------------------------------------------
+File "1102.ml", line 3, characters 59-63:
+This expression has type int but is here used with type float
+Relevant code: base
+------------------------------------------------------------------
+File "1102.ml", line 3, characters 37-38:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    'a
+within context
+    let sqsum xs =
+    let f a x = x ** 2.0 in let base = 0; [[...]] in (List.fold_left f base  xs)
+    ;; 
+==============================
+File "1102.ml", line 3, characters 57-58:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int -> 'b -> int
+within context
+    let sqsum xs =
+    let f a x = x ** 2.0 in let base = 0 in (List.fold_left (f; [[...]]) base  xs)
+    ;; 
+==============================
+File "1102.ml", line 3, characters 59-63:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    float
+within context
+    let sqsum xs =
+    let f a x = x ** 2.0 in let base = 0 in (List.fold_left f (base; [[...]])  xs)
+    ;; 
+==============================
+File "1102.ml", line 3, characters 42-56:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('c -> float -> float) -> int -> 'd -> 'e
+within context
+    let sqsum xs =
+    let f a x = x ** 2.0 in let base = 0 in ((List.fold_left; [[...]]) f base  xs)
+    ;; 
+==============================
+File "1102.ml", line 3, characters 8-22:
+Try replacing
+    fun a x -> x ** 2.0
+with
+    fun a x -> x ** 2.0; [[...]]
+of type
+    'f
+within context
+    let sqsum xs =
+    let f = fun a x -> x ** 2.0; [[...]] in
+      let base = 0 in (List.fold_left f base  xs)
+    ;; 
+==============================

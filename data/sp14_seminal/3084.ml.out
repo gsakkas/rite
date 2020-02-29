@@ -1,0 +1,61 @@
+------------------------------------------------------------------
+File "3084.ml", line 21, characters 37-63:
+This expression has type int but is here used with type 'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+Triaged the following locations:
+File "3084.ml", line 22, characters 2-56:
+And modified the following location:
+File "3084.ml", line 21, characters 37-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f base  args); [[...]]
+The actual replacement has type
+    'c * 'd
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = 0 in
+        let args = [l1] in
+        let (_, res) = (List.fold_left f base  args); [[...]] in res
+      in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "3084.ml", line 22, characters 2-56:
+And modified the following location:
+File "3084.ml", line 21, characters 37-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.fold_left
+with
+    l2
+The actual replacement has type
+    (int -> int -> int) -> int -> 'e list -> 'f * 'g
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = 0 in let args = [l1] in let (_, res) = (l2 f base  args) in res
+      in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "3084.ml", line 22, characters 2-56:
+And modified the following location:
+File "3084.ml", line 18, characters 2-195:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = 0 in
+        let args = [l1] in let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)) 0  0  9  9) + (1 0 0  2)
+with
+    [[...other program...]]
+The actual replacement has type
+    'h
+==============================

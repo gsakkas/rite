@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "2501.ml", line 16, characters 64-65:
+This expression has type int but is here used with type expr
+Relevant code: 2
+------------------------------------------------------------------
+File "2501.ml", line 16, characters 64-65:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> (sin (3.142 *. (exprToString e1)))
+                              | Cosine e1 -> (cos (exprToString e1))
+                              | Average (e1, e2) ->
+                                (((exprToString e1) +. (exprToString e2))
+                                      /. (exprToString (2; [[...]])))
+                              | Times (e1, e2) ->
+                                ((exprToString e1) *. (exprToString e2))) ;; 
+==============================
+File "2501.ml", line 16, characters 51-63:
+Try replacing
+    exprToString
+with
+    exprToString; [[...]]
+of type
+    int -> float
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> (sin (3.142 *. (exprToString e1)))
+                              | Cosine e1 -> (cos (exprToString e1))
+                              | Average (e1, e2) ->
+                                (((exprToString e1) +. (exprToString e2))
+                                      /. ((exprToString; [[...]]) 2))
+                              | Times (e1, e2) ->
+                                ((exprToString e1) *. (exprToString e2))) ;; 
+==============================

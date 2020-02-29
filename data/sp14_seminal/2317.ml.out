@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "2317.ml", line 22, characters 52-73:
+This expression has type int list * int list but is here used with type
+  int list
+Relevant code: (asd, ((x + h) :: b))
+------------------------------------------------------------------
+File "2317.ml", line 22, characters 44-51:
+Try replacing
+    padZero
+with
+    padZero; [[...]]
+of type
+    int list * int list -> int list
+within context
+    let (h :: t, b) = a in
+      (if x / h > 0 then
+          (let asd = x / h :: t in asd, ((padZero; [[...]]) (asd, x + h :: b)))
+          else
+          t, x + h :: b)
+==============================

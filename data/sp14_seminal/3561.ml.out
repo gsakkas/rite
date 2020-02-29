@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+File "3561.ml", line 15, characters 55-71:
+This expression has type int but is here used with type int list
+Relevant code: ((h + j) mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3561.ml", line 16, characters 4-203:
+And modified the following location:
+File "3561.ml", line 15, characters 55-71:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod (h + j) 10)
+with
+    (mod (h + j) 10); [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a, x with 
+                                                  |
+                                                    ((h :: i, j :: k),
+                                                        (d :: e, f :: g))
+                                                    ->
+                                                    (f + d) / 10 ::
+                                                          (mod (h + j) 10);
+                                                          [[...]]) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "3561.ml", line 16, characters 4-203:
+And modified the following location:
+File "3561.ml", line 15, characters 37-71:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (f + d) / 10 :: (mod (h + j) 10)
+with
+    (f + d) / 10, (mod (h + j) 10)
+The actual replacement has type
+    int * int
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a, x with 
+                                                  |
+                                                    ((h :: i, j :: k),
+                                                        (d :: e, f :: g))
+                                                    ->
+                                                    ((f + d) / 10,
+                                                          (mod
+                                                            (h + j)
+                                                            10))) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "3561.ml", line 16, characters 4-203:
+And modified the following location:
+File "3561.ml", line 13, characters 4-318:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match a, x with 
+                 | ((h :: i, j :: k), (d :: e, f :: g)) ->
+                   (f + d) / 10 ::
+                         (mod
+                           (h + j)
+                           10)) in let base = 0, 0 in
+      let args =
+      (List.rev
+        (List.combine (List.map (fun x -> [x]) l1) (List.map (fun x -> [x]) l2)))
+      in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

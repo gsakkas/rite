@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "1948.ml", line 43, characters 46-70:
+This expression has type int list * 'a but is here used with type int list
+Relevant code: ((mulByDigit h l1), res)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1948.ml", line 43, characters 26-28:
+And modified the following location:
+File "1948.ml", line 43, characters 39-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    []
+If you ignore other surrounding code, try replacing
+    (bigAdd ((mulByDigit h l1), res))
+with
+    [[...]]
+The actual replacement has type
+    'b
+within context
+    fun a x -> (let (x1, x2) = x in let (carry, res) = a in (match x2 with 
+                                                             | [] -> ([]; [[...]])
+                                                             | h :: t -> [[...]]))
+==============================

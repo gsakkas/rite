@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "3317.ml", line 5, characters 35-61:
+This expression has type int but is here used with type int list
+Relevant code: (((h * i) / 10) + (m * i))
+------------------------------------------------------------------
+File "3317.ml", line 5, characters 35-61:
+Try replacing
+    (h * i) / 10 + m * i
+with
+    (h * i) / 10 + m * i; [[...]]
+of type
+    int list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: m :: t ->
+                                (mod (h * i) 10) ::
+                                      (h * i) / 10 + m * i; [[...]]) ;; 
+==============================

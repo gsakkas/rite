@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2971.ml", line 9, characters 23-27:
+This expression has type 'a list but is here used with type string
+Relevant code: base
+------------------------------------------------------------------
+File "2971.ml", line 9, characters 23-29:
+Try replacing
+    (List.fold_left f base  l)
+with
+    (List.fold_left f l  base)
+of type
+    string
+within context
+    fun sl -> (match sl with 
+               | [] -> ""
+               | h :: t ->
+                 (let f a x = x ^ a in
+                       let base = (if ((List.length t) <> 0) then t else []) in
+                       let l = (if ((List.length t) <> 0) then "" else sep) in
+                       (List.fold_left f l  base)))
+==============================

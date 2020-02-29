@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0665.ml", line 3, characters 2-69:
+This expression has type int list but is here used with type int
+Relevant code: match l with | [] -> [1] | front::back -> [listReverse back; front]
+------------------------------------------------------------------
+File "0665.ml", line 2, characters 20-93:
+Try replacing
+    fun l -> (match l with 
+              | [] -> [1]
+              | front :: back -> [(listReverse back) ; front])
+with
+    fun l -> (match l with 
+              | [] -> [1]
+              | front :: back -> [(listReverse back) ; front]); [[...]]
+of type
+    int list -> int
+==============================

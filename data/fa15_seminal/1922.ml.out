@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1922.ml", line 3, characters 39-60:
+This expression is not a function, it cannot be applied
+Relevant code: [(digitsOfInt n) / 1]
+------------------------------------------------------------------
+File "1922.ml", line 3, characters 39-60:
+Try replacing
+    [(digitsOfInt n) / 1]
+with
+    [[...]]
+of type
+    int -> int list
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else (mod n 10) :: (( [[...]] ) 0))
+    ;; 
+==============================

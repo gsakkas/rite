@@ -1,0 +1,272 @@
+------------------------------------------------------------------
+File "0520.ml", line 26, characters 9-21:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: buildAverage
+------------------------------------------------------------------
+Triaged the following locations:
+File "0520.ml", line 27, characters 9-75:
+File "0520.ml", line 29, characters 6-137:
+And modified the following location:
+File "0520.ml", line 26, characters 9-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildAverage
+with
+    buildAverage; [[...]]
+The actual replacement has type
+    expr -> expr -> expr
+within context
+    let rec build (rand, depth) =
+    let r = (rand (if depth = 0 then 6, 7 else 1, 5)) in (match r with 
+                                                          | 1 ->
+                                                            (buildSine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 2 ->
+                                                            (buildCosine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 3 ->
+                                                            ((buildAverage; [[...]])
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 4 ->
+                                                            [[...other program...]]
+                                                          | 5 ->
+                                                            [[...other program...]]
+                                                          | 6 -> VarX
+                                                          | 7 -> VarY)
+    ;; 
+==============================
+Triaged the following locations:
+File "0520.ml", line 27, characters 9-75:
+File "0520.ml", line 29, characters 6-137:
+And modified the following location:
+File "0520.ml", line 26, characters 22-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildAverage (build (rand, depth - 1)) (build (rand, depth - 1)))
+with
+    (buildAverage ((build (rand, depth - 1)), (build (rand, depth - 1))))
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) =
+    let r = (rand (if depth = 0 then 6, 7 else 1, 5)) in (match r with 
+                                                          | 1 ->
+                                                            (buildSine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 2 ->
+                                                            (buildCosine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 3 ->
+                                                            (buildAverage
+                                                                ((build
+                                                                      (rand,
+                                                                          depth
+                                                                            - 1))
+                                                                    ,
+                                                                    (build
+                                                                      (rand,
+                                                                          depth
+                                                                            - 1))))
+                                                          | 4 ->
+                                                            [[...other program...]]
+                                                          | 5 ->
+                                                            [[...other program...]]
+                                                          | 6 -> VarX
+                                                          | 7 -> VarY)
+    ;; 
+==============================
+Triaged the following locations:
+File "0520.ml", line 26, characters 9-77:
+File "0520.ml", line 27, characters 9-75:
+And modified the following location:
+File "0520.ml", line 29, characters 6-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildThresh
+with
+    buildThresh; [[...]]
+The actual replacement has type
+    expr ->
+    expr ->
+    expr -> expr -> expr
+within context
+    let rec build (rand, depth) =
+    let r = (rand (if depth = 0 then 6, 7 else 1, 5)) in (match r with 
+                                                          | 1 ->
+                                                            (buildSine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 2 ->
+                                                            (buildCosine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 3 ->
+                                                            [[...other program...]]
+                                                          | 4 ->
+                                                            [[...other program...]]
+                                                          | 5 ->
+                                                            ((buildThresh; [[...]])
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 6 -> VarX
+                                                          | 7 -> VarY)
+    ;; 
+==============================
+Triaged the following locations:
+File "0520.ml", line 26, characters 9-77:
+File "0520.ml", line 27, characters 9-75:
+And modified the following location:
+File "0520.ml", line 29, characters 18-109:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildThresh
+      (build (rand, depth - 1)) (build (rand, depth - 1)) (build (rand, depth - 1)) (build (rand, depth - 1)))
+with
+    (buildThresh
+      ((build (rand, depth - 1)),
+          (build (rand, depth - 1)),
+          (build (rand, depth - 1)), (build (rand, depth - 1))))
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) =
+    let r = (rand (if depth = 0 then 6, 7 else 1, 5)) in (match r with 
+                                                          | 1 ->
+                                                            (buildSine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 2 ->
+                                                            (buildCosine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 3 ->
+                                                            [[...other program...]]
+                                                          | 4 ->
+                                                            [[...other program...]]
+                                                          | 5 ->
+                                                            (buildThresh
+                                                                ((build
+                                                                      (rand,
+                                                                          depth
+                                                                            - 1))
+                                                                    ,
+                                                                    (build
+                                                                      (rand,
+                                                                          depth
+                                                                            - 1))
+                                                                    ,
+                                                                    (build
+                                                                      (rand,
+                                                                          depth
+                                                                            - 1))
+                                                                    ,
+                                                                    (build
+                                                                      (rand,
+                                                                          depth
+                                                                            - 1))))
+                                                          | 6 -> VarX
+                                                          | 7 -> VarY)
+    ;; 
+==============================
+Triaged the following locations:
+File "0520.ml", line 26, characters 9-77:
+File "0520.ml", line 29, characters 6-137:
+And modified the following location:
+File "0520.ml", line 27, characters 20-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildTimes (build (rand, depth - 1)) (build (rand, depth - 1)))
+with
+    (buildTimes ((build (rand, depth - 1)), (build (rand, depth - 1))))
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) =
+    let r = (rand (if depth = 0 then 6, 7 else 1, 5)) in (match r with 
+                                                          | 1 ->
+                                                            (buildSine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 2 ->
+                                                            (buildCosine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 3 ->
+                                                            [[...other program...]]
+                                                          | 4 ->
+                                                            (buildTimes
+                                                                ((build
+                                                                      (rand,
+                                                                          depth
+                                                                            - 1))
+                                                                    ,
+                                                                    (build
+                                                                      (rand,
+                                                                          depth
+                                                                            - 1))))
+                                                          | 5 ->
+                                                            [[...other program...]]
+                                                          | 6 -> VarX
+                                                          | 7 -> VarY)
+    ;; 
+==============================
+Triaged the following locations:
+File "0520.ml", line 26, characters 9-77:
+File "0520.ml", line 29, characters 6-137:
+And modified the following location:
+File "0520.ml", line 27, characters 9-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    expr -> expr -> expr
+within context
+    let rec build (rand, depth) =
+    let r = (rand (if depth = 0 then 6, 7 else 1, 5)) in (match r with 
+                                                          | 1 ->
+                                                            (buildSine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 2 ->
+                                                            (buildCosine
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 3 ->
+                                                            [[...other program...]]
+                                                          | 4 ->
+                                                            ((buildTimes; [[...]])
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                          | 5 ->
+                                                            [[...other program...]]
+                                                          | 6 -> VarX
+                                                          | 7 -> VarY)
+    ;; 
+==============================

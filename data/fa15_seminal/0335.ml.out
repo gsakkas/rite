@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "0335.ml", line 8, characters 28-51:
+This expression has type ('a * bool) * 'b but is here used with type
+  ('c -> 'c * bool) * 'c
+Relevant code: ((fixpointHelper f), b)
+------------------------------------------------------------------
+File "0335.ml", line 8, characters 29-50:
+Try replacing
+    (fixpointHelper f), b
+with
+    b, (fixpointHelper f)
+of type
+    ('d * bool -> ('d * bool) * bool) * ('d * bool)
+within context
+    let fixpoint (f, b) = (wwhile (b, (fixpointHelper f))) ;; 
+==============================
+File "0335.ml", line 8, characters 21-27:
+Try replacing
+    wwhile
+with
+    fixpointHelper
+of type
+    ('e * bool) * bool -> ('e * bool) * bool
+within context
+    let fixpoint (f, b) = (fixpointHelper ((fixpointHelper f), b)) ;; 
+==============================
+File "0335.ml", line 8, characters 30-44:
+Try replacing
+    fixpointHelper
+with
+    wwhile
+of type
+    (('f -> 'f * bool) -> ('f -> 'f * bool) * bool) * ('f -> 'f * bool) ->
+    'f -> 'f * bool
+within context
+    let fixpoint (f, b) = (wwhile ((wwhile f), b)) ;; 
+==============================

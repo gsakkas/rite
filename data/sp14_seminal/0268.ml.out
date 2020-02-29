@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0268.ml", line 4, characters 2-71:
+This expression has type 'a list but is here used with type 'a
+Relevant code: if n <= 0 then [] else [digitsOfInt (n mod 10); digitsOfInt (n / 10)]
+------------------------------------------------------------------
+File "0268.ml", line 2, characters 20-116:
+Try replacing
+    fun n ->
+      (let myList = [] in
+          (if (n <= 0) then [] else
+              [(digitsOfInt (mod n 10)) ; (digitsOfInt (n / 10))]))
+with
+    fun n ->
+      (let myList = [] in
+          (if (n <= 0) then [] else
+              [(digitsOfInt (mod n 10)) ; (digitsOfInt (n / 10))]));
+    [[...]]
+of type
+    int -> 'b
+==============================

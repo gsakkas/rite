@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "3362.ml", line 5, characters 12-54:
+This expression has type int list but is here used with type int
+Relevant code: (List.rev (List.map (fun x  -> x * 10) t))
+------------------------------------------------------------------
+File "3362.ml", line 5, characters 12-54:
+Try replacing
+    (List.rev (List.map (fun x -> x * 10) t))
+with
+    (List.rev (List.map (fun x -> x * 10) t)); [[...]]
+of type
+    int
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> 0
+                              | h :: t ->
+                                ((List.rev (List.map (fun x -> x * 10) t)); [[...]])
+                                    + h * i) ;; 
+==============================
+File "3362.ml", line 5, characters 55-56:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int list -> int -> int
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> 0
+                              | h :: t ->
+                                ((List.rev (List.map (fun x -> x * 10) t))
+                                      +; [[...]] h * i)) ;; 
+==============================

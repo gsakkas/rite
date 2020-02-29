@@ -1,0 +1,66 @@
+------------------------------------------------------------------
+File "2746.ml", line 37, characters 27-57:
+This expression has type int list but is here used with type
+  (int -> int) list
+Relevant code: ([((h + x1) + x2) mod 10] @ t)
+------------------------------------------------------------------
+File "2746.ml", line 36, characters 47-47:
+Try replacing
+    (carry ((h + x1) + x2))
+with
+    (carry [[...]] ((h + x1) + x2))
+of type
+    int
+within context
+    (match cur with 
+     | [] ->
+       (if (car + x1) + x2 > 10 then
+           car + 1, [car + 1] @ [(remain ((car + x1) + x2))]
+           else
+           0, [car] @ [(car + x1) + x2])
+     | h :: t ->
+       (if (x1 + x2) + h < 10 then 0, [0] @ ([(x1 + x2) + h] @ t) else
+           car + 1,
+             [(carry [[...]] ((h + x1) + x2))] @ ([(mod ((h + x1) + x2) 10)] @ t)))
+==============================
+File "2746.ml", line 36, characters 47-47:
+Try replacing
+    (carry ((h + x1) + x2))
+with
+    (carry ((h + x1) + x2) [[...]])
+of type
+    int
+within context
+    (match cur with 
+     | [] ->
+       (if (car + x1) + x2 > 10 then
+           car + 1, [car + 1] @ [(remain ((car + x1) + x2))]
+           else
+           0, [car] @ [(car + x1) + x2])
+     | h :: t ->
+       (if (x1 + x2) + h < 10 then 0, [0] @ ([(x1 + x2) + h] @ t) else
+           car + 1,
+             [(carry ((h + x1) + x2) [[...]])] @ ([(mod ((h + x1) + x2) 10)] @ t)))
+==============================
+File "2746.ml", line 36, characters 49-50:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    (int -> int) list -> int list -> int list
+within context
+    (match a with 
+     | (car, cur) -> (match cur with 
+                      | [] ->
+                        (if (car + x1) + x2 > 10 then
+                            car + 1, [car + 1] @ [(remain ((car + x1) + x2))]
+                            else
+                            0, [car] @ [(car + x1) + x2])
+                      | h :: t ->
+                        (if (x1 + x2) + h < 10 then 0, [0] @ ([(x1 + x2) + h] @ t)
+                            else
+                            car + 1,
+                              ([(carry ((h + x1) + x2))] @; [[...]]
+                                  [(mod ((h + x1) + x2) 10)] @ t))))
+==============================

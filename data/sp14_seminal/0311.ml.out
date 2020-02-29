@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "0311.ml", line 32, characters 22-34:
+This expression has type expr * expr * expr * expr but is here used with type
+  expr * expr
+Relevant code: (e, e, e, e)
+------------------------------------------------------------------
+File "0311.ml", line 32, characters 22-34:
+Try replacing
+    e, e, e, e
+with
+    e, e, e, e; [[...]]
+of type
+    expr * expr
+within context
+    fun (rand, depth) ->
+      (let e = (build (rand, depth - 1)) in
+          (if depth > 0 then (match (rand 0 4) with 
+                              | 0 -> (buildSine e)
+                              | 1 -> (buildCosine e)
+                              | 2 -> (buildAverage (e, e))
+                              | 3 -> (buildTimes (e, e))
+                              | 4 ->
+                                (buildTimes
+                                    (e, e, e, e;
+                                      [[...]]))) else (match (rand 0 1) with 
+                                                       | 0 -> (buildX ())
+                                                       | 1 -> (buildY ()))))
+==============================
+File "0311.ml", line 32, characters 11-21:
+Try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+of type
+    expr * expr * expr *
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (let e = (build (rand, depth - 1)) in
+          (if depth > 0 then (match (rand 0 4) with 
+                              | 0 -> (buildSine e)
+                              | 1 -> (buildCosine e)
+                              | 2 -> (buildAverage (e, e))
+                              | 3 -> (buildTimes (e, e))
+                              | 4 ->
+                                ((buildTimes; [[...]])
+                                    (e, e, e, e))) else (match (rand 0 1) with 
+                                                         | 0 -> (buildX ())
+                                                         | 1 -> (buildY ()))))
+==============================

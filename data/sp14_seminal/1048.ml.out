@@ -1,0 +1,301 @@
+------------------------------------------------------------------
+File "1048.ml", line 39, characters 7-17:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: expChooser
+------------------------------------------------------------------
+Triaged the following locations:
+File "1048.ml", line 39, characters 7-35:
+And modified the following location:
+File "1048.ml", line 40, characters 7-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    expChooser
+with
+    expChooser; [[...]]
+The actual replacement has type
+    'c -> int * int -> int -> expr
+within context
+    let rec build (rand, depth) = let expChooser (r, d) = (match r with 
+                                                           | 0 -> (buildX ())
+                                                           | 1 -> (buildY ())
+                                                           | 2 ->
+                                                             (buildSine
+                                                                 (build
+                                                                   (rand, d - 1)))
+                                                           | 3 ->
+                                                             (buildCosine
+                                                                 (build
+                                                                   (rand, d - 1)))
+                                                           | 4 ->
+                                                             (buildAverage
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))))
+                                                           | 5 ->
+                                                             (buildTimes
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))))
+                                                           | 6 ->
+                                                             (buildThresh
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d
+                                                                             -
+                                                                             1))))) in (if
+          depth < 1
+          then
+          [[...other program...]]
+          else
+          ((expChooser; [[...]]) rand (2, 7)  depth)) ;; 
+==============================
+Triaged the following locations:
+File "1048.ml", line 39, characters 7-35:
+And modified the following location:
+File "1048.ml", line 40, characters 7-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (expChooser rand (2, 7)  depth)
+with
+    (expChooser (rand (2, 7) depth))
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) = let expChooser (r, d) = (match r with 
+                                                           | 0 -> (buildX ())
+                                                           | 1 -> (buildY ())
+                                                           | 2 ->
+                                                             (buildSine
+                                                                 (build
+                                                                   (rand, d - 1)))
+                                                           | 3 ->
+                                                             (buildCosine
+                                                                 (build
+                                                                   (rand, d - 1)))
+                                                           | 4 ->
+                                                             (buildAverage
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))))
+                                                           | 5 ->
+                                                             (buildTimes
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))))
+                                                           | 6 ->
+                                                             (buildThresh
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d
+                                                                             -
+                                                                             1))))) in (if
+          depth < 1
+          then
+          [[...other program...]]
+          else
+          (expChooser (rand (2, 7) depth))) ;; 
+==============================
+Triaged the following locations:
+File "1048.ml", line 40, characters 7-35:
+And modified the following location:
+File "1048.ml", line 39, characters 7-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (expChooser rand (0, 2)  depth)
+with
+    (expChooser (rand (0, 2) depth))
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) = let expChooser (r, d) = (match r with 
+                                                           | 0 -> (buildX ())
+                                                           | 1 -> (buildY ())
+                                                           | 2 ->
+                                                             (buildSine
+                                                                 (build
+                                                                   (rand, d - 1)))
+                                                           | 3 ->
+                                                             (buildCosine
+                                                                 (build
+                                                                   (rand, d - 1)))
+                                                           | 4 ->
+                                                             (buildAverage
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))))
+                                                           | 5 ->
+                                                             (buildTimes
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))))
+                                                           | 6 ->
+                                                             (buildThresh
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d
+                                                                             -
+                                                                             1))))) in (if
+          depth < 1
+          then
+          (expChooser (rand (0, 2) depth))
+          else
+          [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1048.ml", line 40, characters 7-35:
+And modified the following location:
+File "1048.ml", line 39, characters 7-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    expChooser
+with
+    expChooser; [[...]]
+The actual replacement has type
+    'a -> int * int -> int -> expr
+within context
+    let rec build (rand, depth) = let expChooser (r, d) = (match r with 
+                                                           | 0 -> (buildX ())
+                                                           | 1 -> (buildY ())
+                                                           | 2 ->
+                                                             (buildSine
+                                                                 (build
+                                                                   (rand, d - 1)))
+                                                           | 3 ->
+                                                             (buildCosine
+                                                                 (build
+                                                                   (rand, d - 1)))
+                                                           | 4 ->
+                                                             (buildAverage
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))))
+                                                           | 5 ->
+                                                             (buildTimes
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))))
+                                                           | 6 ->
+                                                             (buildThresh
+                                                                 ((build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           d
+                                                                             -
+                                                                             1))))) in (if
+          depth < 1
+          then
+          ((expChooser; [[...]]) rand (0, 2)  depth)
+          else
+          [[...other program...]]) ;; 
+==============================
+File "1048.ml", line 26, characters 17-477:
+Try replacing
+    fun (r, d) -> (match r with 
+                   | 0 -> (buildX ())
+                   | 1 -> (buildY ())
+                   | 2 -> (buildSine (build (rand, d - 1)))
+                   | 3 -> (buildCosine (build (rand, d - 1)))
+                   | 4 ->
+                     (buildAverage ((build (rand, d - 1)), (build (rand, d - 1))))
+                   | 5 ->
+                     (buildTimes ((build (rand, d - 1)), (build (rand, d - 1))))
+                   | 6 ->
+                     (buildThresh
+                         ((build (rand, d - 1)),
+                             (build (rand, d - 1)),
+                             (build (rand, d - 1)), (build (rand, d - 1)))))
+with
+    fun (r, d) -> (match r with 
+                   | 0 -> (buildX ())
+                   | 1 -> (buildY ())
+                   | 2 -> (buildSine (build (rand, d - 1)))
+                   | 3 -> (buildCosine (build (rand, d - 1)))
+                   | 4 ->
+                     (buildAverage ((build (rand, d - 1)), (build (rand, d - 1))))
+                   | 5 ->
+                     (buildTimes ((build (rand, d - 1)), (build (rand, d - 1))))
+                   | 6 ->
+                     (buildThresh
+                         ((build (rand, d - 1)),
+                             (build (rand, d - 1)),
+                             (build (rand, d - 1)),
+                             (build (rand, d - 1))))); [[...]]
+of type
+    'i
+==============================

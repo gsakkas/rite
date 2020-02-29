@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "2984.ml", line 5, characters 23-31:
+This expression is not a function, it cannot be applied
+Relevant code: [n / 10]
+------------------------------------------------------------------
+Triaged the following locations:
+File "2984.ml", line 5, characters 18-21:
+And modified the following location:
+File "2984.ml", line 5, characters 23-31:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    app
+If you ignore other surrounding code, try replacing
+    [n / 10]
+with
+    [n / 10]; [[...]]
+The actual replacement has type
+    int list -> 'a
+within context
+    let rec digitsOfInt n =
+    (if (n >= 10) then ((app; [[...]]) (( [n / 10]; [[...]] ) [(mod n 10)])) else
+      (app [3] [8]))
+    ;; 
+==============================
+Triaged the following locations:
+File "2984.ml", line 5, characters 18-21:
+And modified the following location:
+File "2984.ml", line 5, characters 32-42:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    app
+If you ignore other surrounding code, try replacing
+    (( [n / 10] ) [(mod n 10)])
+with
+    [n / 10]
+The actual replacement has type
+    int list
+within context
+    let rec digitsOfInt n =
+    (if (n >= 10) then ((app; [[...]]) [n / 10]) else (app [3] [8]))
+    ;; 
+==============================

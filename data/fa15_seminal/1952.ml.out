@@ -1,0 +1,75 @@
+------------------------------------------------------------------
+File "1952.ml", line 42, characters 38-73:
+This expression has type int * int list but is here used with type 'a list
+Relevant code: (0, (bigAdd (mulByDigit h l1) res))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1952.ml", line 42, characters 25-27:
+File "1952.ml", line 42, characters 38-73:
+And modified the following location:
+File "1952.ml", line 42, characters 10-11:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    'b list
+within context
+    let f a x = let (carry, res) = a in (match (x; [[...]]) with 
+                                         | [] -> [[...other program...]]
+                                         | h :: t ->
+                                           [[...other program...]]) in let base =
+      0, []
+      in
+      let args = (tenEx 0 l2) in
+      let (carry, res) = (List.fold_left f base  args) in [carry] @ res
+==============================
+Triaged the following locations:
+File "1952.ml", line 42, characters 25-27:
+File "1952.ml", line 42, characters 30-34:
+File "1952.ml", line 42, characters 38-73:
+And modified the following location:
+File "1952.ml", line 42, characters 19-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    'c
+within context
+    let f a x = let (carry, res) = a in (match x with 
+                                         | _ -> [[...other program...]]
+                                         |
+                                           [[...other pattern...]]
+                                           ->
+                                           [[...other program...]]) in let base =
+      0, []
+      in
+      let args = (tenEx 0 l2) in
+      let (carry, res) = (List.fold_left f base  args) in [carry] @ res
+==============================
+Triaged the following locations:
+File "1952.ml", line 42, characters 19-21:
+File "1952.ml", line 42, characters 25-27:
+File "1952.ml", line 42, characters 38-73:
+And modified the following location:
+File "1952.ml", line 42, characters 30-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    'd
+within context
+    let f a x = let (carry, res) = a in (match x with 
+                                         |
+                                           [[...other pattern...]]
+                                           ->
+                                           [[...other program...]]
+                                         | _ ->
+                                           [[...other program...]]) in let base =
+      0, []
+      in
+      let args = (tenEx 0 l2) in
+      let (carry, res) = (List.fold_left f base  args) in [carry] @ res
+==============================

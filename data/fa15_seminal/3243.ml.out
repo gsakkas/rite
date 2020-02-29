@@ -1,0 +1,76 @@
+------------------------------------------------------------------
+File "3243.ml", line 3, characters 60-61:
+This expression has type 'a -> 'b -> 'c -> ('a -> 'd) -> 'd
+but is here used with type 'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "3243.ml", line 3, characters 60-66:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left base f  fs)
+of type
+    'e -> 'f -> 'g -> ('e -> 'h) -> 'h
+within context
+    let pipe fs =
+    let f a x y x = (x a) in let base g x = x in (List.fold_left base f  fs)
+    ;; 
+==============================
+File "3243.ml", line 3, characters 8-15:
+Try replacing
+    fun a x y x -> (x a)
+with
+    fun x x y a -> (x a)
+of type
+    'i -> ('j -> 'k) -> 'l -> 'j -> 'k
+within context
+    let pipe fs =
+    let f x x y a = (x a) in let base g x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "3243.ml", line 3, characters 45-61:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left (f base fs))
+of type
+    'm -> (('n -> 'o -> 'o) -> 'm) list -> 'm
+within context
+    let pipe fs =
+    let f a x y x = (x a) in let base g x = x in (List.fold_left (f base fs))
+    ;; 
+==============================
+File "3243.ml", line 3, characters 45-59:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    ('p -> 'q -> 'r -> ('p -> 's) -> 's) -> ('t -> 'u -> 'u) -> 't -> 'u -> 'u
+within context
+    let pipe fs = let f a x y x = (x a) in let base g x = x in (base f base  fs) ;; 
+==============================
+File "3243.ml", line 3, characters 45-59:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('v -> 'w -> 'x -> ('v -> 'y) -> 'y) ->
+    ('z -> 'a1 -> 'a1) ->
+    'b1 -> (('v -> 'w -> 'x -> ('v -> 'y) -> 'y) -> 'c1) -> 'c1
+within context
+    let pipe fs = let f a x y x = (x a) in let base g x = x in (f f base  fs) ;; 
+==============================
+File "3243.ml", line 3, characters 60-61:
+Try replacing
+    f
+with
+    base
+of type
+    ('d1 -> 'e1 -> 'e1) -> ('d1 -> 'e1 -> 'e1) -> 'd1 -> 'e1 -> 'e1
+within context
+    let pipe fs =
+    let f a x y x = (x a) in let base g x = x in (List.fold_left base base  fs)
+    ;; 
+==============================

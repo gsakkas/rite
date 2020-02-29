@@ -1,0 +1,109 @@
+------------------------------------------------------------------
+File "2230.ml", line 5, characters 26-28:
+This expression has type 'a but is here used with type ('a * 'b) list
+Relevant code: lk
+------------------------------------------------------------------
+File "2230.ml", line 5, characters 26-28:
+Try replacing
+    lk
+with
+    ls
+of type
+    ('c * 'd) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if k = ls then lv else (assoc (d, k, ls)))) ;; 
+==============================
+File "2230.ml", line 5, characters 26-28:
+Try replacing
+    lk
+with
+    k
+of type
+    ('e * 'f) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if k = k then lv else (assoc (d, k, ls)))) ;; 
+==============================
+File "2230.ml", line 5, characters 26-28:
+Try replacing
+    lk
+with
+    l
+of type
+    ('g * 'h) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if k = l then lv else (assoc (d, k, ls)))) ;; 
+==============================
+File "2230.ml", line 3, characters 8-9:
+Try replacing
+    k
+with
+    l
+of type
+    ('i * 'j) list
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if k = lk then lv else (assoc (d, k, ls)))) ;; 
+==============================
+File "2230.ml", line 5, characters 22-23:
+Try replacing
+    k
+with
+    lv
+of type
+    'k
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if lv = lk then lv else (assoc (d, k, ls)))) ;; 
+==============================
+File "2230.ml", line 5, characters 22-23:
+Try replacing
+    k
+with
+    =
+of type
+    'l -> 'l -> bool
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if = = lk then lv else (assoc (d, k, ls)))) ;; 
+==============================
+File "2230.ml", line 5, characters 22-23:
+Try replacing
+    k
+with
+    d
+of type
+    'm
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if d = lk then lv else (assoc (d, k, ls)))) ;; 
+==============================
+File "2230.ml", line 5, characters 22-23:
+Try replacing
+    k
+with
+    lk
+of type
+    'n
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if lk = lk then lv else (assoc (d, k, ls)))) ;; 
+==============================

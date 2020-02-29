@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "3410.ml", line 18, characters 30-49:
+This expression has type int but is here used with type int list
+Relevant code: ((num / 10) mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3410.ml", line 21, characters 10-175:
+And modified the following location:
+File "3410.ml", line 18, characters 20-95:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (helper 1 (mod (num / 10) 10)) :: (mod num 10) :: (xs' xs)
+with
+    [[...]]
+The actual replacement has type
+    int list
+within context
+    fun carry accum lrev -> (match lrev with 
+                             | [] -> (removeZero accum)
+                             | x :: xs -> (if carry = 1 then (match accum with 
+                                                              | x1' :: xs' ->
+                                                                (let num =
+                                                                      x * i + x1'
+                                                                      in
+                                                                      (if num < 10
+                                                                          then
+                                                                          (helper
+                                                                            0
+                                                                            num ::
+                                                                                xs' xs)
+                                                                          else
+                                                                          [[...]]))) else [[...other program...]]))
+==============================
+Triaged the following locations:
+File "3410.ml", line 13, characters 10-263:
+And modified the following location:
+File "3410.ml", line 22, characters 11-144:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if num < 10 then (helper 0 num) :: (accum xs) else
+      (helper 1 (mod (num / 10) 10)) :: (mod num 10) :: (accum xs))
+with
+    [[...]]
+The actual replacement has type
+    int list
+within context
+    fun carry accum lrev -> (match lrev with 
+                             | [] -> (removeZero accum)
+                             | x :: xs ->
+                               (if carry = 1 then [[...other program...]] else
+                                   (let num = x * i in [[...]])))
+==============================

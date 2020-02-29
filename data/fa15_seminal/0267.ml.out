@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0267.ml", line 3, characters 59-63:
+This expression has type 'a list but is here used with type int
+Relevant code: [hd]
+------------------------------------------------------------------
+File "0267.ml", line 3, characters 64-65:
+Try replacing
+    *
+with
+    mulByDigit
+of type
+    'b list -> 'b list -> 'c list
+within context
+    fun i l -> (match l with 
+                | [] -> []
+                | hd :: tl -> (mulByDigit i tl) @ ([hd] mulByDigit i))
+==============================
+File "0267.ml", line 3, characters 64-65:
+Try replacing
+    *
+with
+    @
+of type
+    'd list -> 'd list -> 'd list
+within context
+    fun i l -> (match l with 
+                | [] -> []
+                | hd :: tl -> (mulByDigit i tl) @ ([hd] @ i))
+==============================

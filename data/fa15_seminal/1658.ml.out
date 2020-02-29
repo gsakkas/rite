@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "1658.ml", line 17, characters 11-42:
+This expression has type int * int list but is here used with type 'a list
+Relevant code: (0, (let (y,z) = x in [y + z]))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1658.ml", line 17, characters 11-46:
+And modified the following location:
+File "1658.ml", line 16, characters 54-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    (int * int) list -> 'b -> 'c
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          (if (let (y, z) = x in y + z > 9) then
+            ([1, (let (y, z) = x in (mod (y + z) 10))] @; [[...]] a)
+            else
+            [[...other program...]])
+          in
+          let base = 0, [] in
+          let args = (List.combine l1 l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1658.ml", line 16, characters 11-57:
+And modified the following location:
+File "1658.ml", line 17, characters 43-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int * int list -> 'd -> 'e
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          (if (let (y, z) = x in y + z > 9) then [[...other program...]] else
+            (0, (let (y, z) = x in [y + z]) @; [[...]] a))
+          in
+          let base = 0, [] in
+          let args = (List.combine l1 l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

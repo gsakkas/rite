@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "0369.ml", line 24, characters 38-46:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: (l1, l2)
+------------------------------------------------------------------
+File "0369.ml", line 24, characters 38-46:
+Try replacing
+    (List.combine (l1, l2))
+with
+    (List.combine l1 l2)
+of type
+    (int * int) list
+within context
+    fun (l1, l2) -> (let f a x = let rem = (match a with 
+                                            | (x, y) -> x) in (match x with 
+                                                               | (add_a, add_b) ->
+                                                                 (let new_carry =
+                                                                       ((rem +
+                                                                                 add_a)
+                                                                             +
+                                                                             add_b)
+                                                                         / 10
+                                                                       in
+                                                                       let digit =
+                                                                       (mod
+                                                                         ((rem +
+                                                                                 add_a)
+                                                                             +
+                                                                             add_b) 10)
+                                                                       in
+                                                                       (match a with
+                                                                        
+                                                                        | (x, y) ->
+                                                                          (new_carry
+                                                                                ,
+                                                                                digit
+                                                                                    ::
+                                                                                    y)))) in let
+          base
+          =
+          0, []
+          in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

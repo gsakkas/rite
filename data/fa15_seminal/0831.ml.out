@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "0831.ml", line 17, characters 4-137:
+This expression has type bool but is here used with type int
+Relevant code: (match n with
+     | n ->
+         let x_ = digitsOfInt n in
+         (sumList x_) = (let xx = sumList x_ in additivePersistence xx))
+------------------------------------------------------------------
+File "0831.ml", line 20, characters 22-23:
+Try replacing
+    =
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun n -> (if (lt10 n) then n else (match n with 
+                                       | n ->
+                                         (let x_ = (digitsOfInt n) in
+                                               (sumList x_) +
+                                                   (let xx = (sumList x_) in
+                                                       (additivePersistence xx)))))
+==============================
+File "0831.ml", line 20, characters 22-23:
+Try replacing
+    =
+with
+    /
+of type
+    int -> int -> int
+within context
+    fun n -> (if (lt10 n) then n else (match n with 
+                                       | n ->
+                                         (let x_ = (digitsOfInt n) in
+                                               (sumList x_) /
+                                                   (let xx = (sumList x_) in
+                                                       (additivePersistence xx)))))
+==============================

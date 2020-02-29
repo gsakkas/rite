@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0717.ml", line 3, characters 53-54:
+This expression has type 'a list but is here used with type int
+Relevant code: h
+------------------------------------------------------------------
+File "0717.ml", line 3, characters 55-56:
+Try replacing
+    +
+with
+    List.hd
+of type
+    (int -> int) list -> int -> int
+within context
+    let rec sumList xs =
+    (if (List.hd xs) = [] then 0 else (let h :: t = xs in (h List.hd (sumList t))))
+    ;; 
+==============================

@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1131.ml", line 26, characters 15-48:
+This expression has type int * int but is here used with type int * int list
+Relevant code: (0, (((fst x) + (snd x)) mod 10))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1131.ml", line 20, characters 10-152:
+And modified the following location:
+File "1131.ml", line 26, characters 15-48:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0, (mod ((fst x) + (snd x)) 10)
+with
+    0, (mod ((fst x) + (snd x)) 10); [[...]]
+The actual replacement has type
+    int * int list
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (c, d) -> [[...other program...]]
+                                  | (0, []) ->
+                                    (if (fst x) + (snd x) > 9 then
+                                        1, [(mod ((fst x) + (snd x)) 10)]
+                                        else
+                                        (0, (mod ((fst x) + (snd x)) 10);
+                                          [[...]]))) in let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

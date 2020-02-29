@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "3072.ml", line 3, characters 14-21:
+This expression has type int but is here used with type string
+Relevant code: (a + x)
+------------------------------------------------------------------
+File "3072.ml", line 3, characters 22-23:
+Try replacing
+    ^
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun xs ->
+      (let f a x = (a + x) + 2 in let base = 0 in (List.fold_left f base  xs))
+==============================

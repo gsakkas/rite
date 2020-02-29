@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "1884.ml", line 23, characters 49-61:
+This expression has type int * int but is here used with type
+  (int * int -> int) * int
+Relevant code: (x, (n - 1))
+------------------------------------------------------------------
+File "1884.ml", line 19, characters 14-282:
+Try replacing
+    fun (rand, depth) -> (match (rand (243, 98723)), depth with 
+                          | (x, 0) -> when (mod x 2) = 0 -> (buildY ())
+                          | (x, 0) -> when (mod x 2) = 1 -> (buildX ())
+                          | (x, n) ->
+                            when (mod n 5) = 0 -> (buildSine (build (x, n - 1)))
+                          | (x, n) ->
+                            when (mod n 5) = 4 -> (buildCosine (build (x, n - 1))))
+with
+    function | (rand, depth) -> (match (rand (243, 98723)), depth with 
+                                 | (x, 0) -> when (mod x 2) = 0 -> (buildY ())
+                                 | (x, 0) ->
+                                   when (mod x 2) = 1 ->
+                                       (buildX
+                                           ())) | (x, n) ->
+        when (mod n 5) = 0 ->
+          (buildSine
+              (build
+                (x,
+                    n
+                      -
+                      1))) | (x, n) ->
+        when (mod n 5) = 4 -> (buildCosine (build (x, n - 1)))
+of type
+    (int * int -> int) * int -> expr
+==============================

@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0241.ml", line 20, characters 27-34:
+This expression has type int list -> int but is here used with type int
+Relevant code: sumList
+------------------------------------------------------------------
+File "0241.ml", line 17, characters 28-127:
+Try replacing
+    fun n ->
+      (if (sumList (digits n)) < 10 then (numdigits (digits n)) else
+        (additivePersistence sumList n))
+with
+    fun _
+      n ->
+        (if (sumList (digits n)) < 10 then (numdigits (digits n)) else
+          (additivePersistence sumList n))
+of type
+    (int list -> int) -> int -> int
+==============================

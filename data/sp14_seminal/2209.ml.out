@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "2209.ml", line 30, characters 17-29:
+This expression is not a function, it cannot be applied
+Relevant code: (bigAdd l l)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2209.ml", line 30, characters 9-15:
+And modified the following location:
+File "2209.ml", line 30, characters 17-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (bigAdd l l)
+with
+    (bigAdd l l); [[...]]
+The actual replacement has type
+    int list -> 'd
+within context
+    let rec mulByDigit i l = (match i with 
+                              | 0 -> []
+                              | 1 -> l
+                              | _ ->
+                                ((bigAdd; [[...]])
+                                    (((bigAdd l l); [[...]])
+                                      (mulByDigit (i - 2) l)))) ;; 
+==============================
+Triaged the following locations:
+File "2209.ml", line 30, characters 9-15:
+And modified the following location:
+File "2209.ml", line 30, characters 30-52:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    ((bigAdd l l) (mulByDigit (i - 2) l))
+with
+    (bigAdd l l)
+The actual replacement has type
+    int list
+within context
+    let rec mulByDigit i l = (match i with 
+                              | 0 -> []
+                              | 1 -> l
+                              | _ -> ((bigAdd; [[...]]) (bigAdd l l))) ;; 
+==============================

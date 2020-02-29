@@ -1,0 +1,87 @@
+------------------------------------------------------------------
+File "0219.ml", line 7, characters 9-62:
+This expression has type (('a -> 'a) -> ('a -> 'a) * bool) * 'a
+but is here used with type (('a -> 'a) -> ('a -> 'a) * bool) * ('a -> 'a)
+Relevant code: ((let n z = let xx = f in (xx, (b = (f b))) in n), b)
+------------------------------------------------------------------
+File "0219.ml", line 7, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('b -> ('c -> 'c) * bool) * 'c -> ('b -> ('c -> 'c) * bool) * 'c -> bool
+within context
+    let fixpoint (f, b) = (= ((let n z = let xx = f in xx, b = (f b) in n), b)) ;; 
+==============================
+File "0219.ml", line 7, characters 36-38:
+Try replacing
+    xx
+with
+    =
+of type
+    ('d -> 'd -> bool) * bool
+within context
+    (let n z = let xx = f in =, b = (f b) in n), b
+==============================
+File "0219.ml", line 7, characters 36-38:
+Try replacing
+    xx
+with
+    z
+of type
+    'e * bool
+within context
+    (let n z = let xx = f in z, b = (f b) in n), b
+==============================
+File "0219.ml", line 7, characters 36-38:
+Try replacing
+    xx
+with
+    b
+of type
+    'f * bool
+within context
+    (let n z = let xx = f in b, b = (f b) in n), b
+==============================
+File "0219.ml", line 7, characters 60-61:
+Try replacing
+    b
+with
+    f
+of type
+    (('g -> 'g) -> ('g -> 'g) * bool) * ('g -> 'g)
+within context
+    let fixpoint (f, b) = (wwhile ((let n z = let xx = f in xx, b = (f b) in n), f))
+    ;; 
+==============================
+File "0219.ml", line 7, characters 30-31:
+Try replacing
+    f
+with
+    b
+of type
+    'h
+within context
+    (wwhile ((let n z = let xx = b in xx, b = (f b) in n), b))
+==============================
+File "0219.ml", line 7, characters 30-31:
+Try replacing
+    f
+with
+    z
+of type
+    'i
+within context
+    (wwhile ((let n z = let xx = z in xx, b = (f b) in n), b))
+==============================
+File "0219.ml", line 7, characters 30-31:
+Try replacing
+    f
+with
+    =
+of type
+    'j -> 'j -> bool
+within context
+    (wwhile ((let n z = let xx = = in xx, b = (f b) in n), b))
+==============================

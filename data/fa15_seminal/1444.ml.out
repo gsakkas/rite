@@ -1,0 +1,73 @@
+------------------------------------------------------------------
+File "1444.ml", line 23, characters 67-68:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+Triaged the following locations:
+File "1444.ml", line 19, characters 13-14:
+File "1444.ml", line 20, characters 13-14:
+File "1444.ml", line 24, characters 21-38:
+File "1444.ml", line 25, characters 28-52:
+And modified the following location:
+File "1444.ml", line 23, characters 67-68:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    2
+with
+    2; [[...]]
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y)))
+                                      /. 2; [[...]])
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1444.ml", line 19, characters 13-14:
+File "1444.ml", line 20, characters 13-14:
+File "1444.ml", line 24, characters 21-38:
+File "1444.ml", line 25, characters 28-52:
+And modified the following location:
+File "1444.ml", line 23, characters 64-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    /.
+with
+    /.; [[...]]
+The actual replacement has type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y)))
+                                      /.; [[...]] 2)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================

@@ -1,0 +1,77 @@
+------------------------------------------------------------------
+File "1105.ml", line 22, characters 13-34:
+This expression has type (int * int) list but is here used with type int list
+Relevant code: (add (padZero l1 l2))
+------------------------------------------------------------------
+File "1105.ml", line 22, characters 2-12:
+Try replacing
+    removeZero
+with
+    <
+of type
+    (int * int) list -> (int * int) list -> bool
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match a with 
+                                                       | h :: t ->
+                                                         (let sum =
+                                                               ((fst x) + (snd x))
+                                                                 + (fst h)
+                                                               in
+                                                               sum / 10,
+                                                                       (mod sum 10)
+                                                                     ::
+                                                                     t)) in let base
+        =
+        []
+        in
+        let args = (List.rev (List.combine l1 l2)) in
+        (List.fold_left f base  args) in (< (add (padZero l1 l2))) ;; 
+==============================
+File "1105.ml", line 22, characters 2-12:
+Try replacing
+    removeZero
+with
+    >
+of type
+    (int * int) list -> (int * int) list -> bool
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match a with 
+                                                       | h :: t ->
+                                                         (let sum =
+                                                               ((fst x) + (snd x))
+                                                                 + (fst h)
+                                                               in
+                                                               sum / 10,
+                                                                       (mod sum 10)
+                                                                     ::
+                                                                     t)) in let base
+        =
+        []
+        in
+        let args = (List.rev (List.combine l1 l2)) in
+        (List.fold_left f base  args) in (> (add (padZero l1 l2))) ;; 
+==============================
+File "1105.ml", line 22, characters 2-12:
+Try replacing
+    removeZero
+with
+    =
+of type
+    (int * int) list -> (int * int) list -> bool
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match a with 
+                                                       | h :: t ->
+                                                         (let sum =
+                                                               ((fst x) + (snd x))
+                                                                 + (fst h)
+                                                               in
+                                                               sum / 10,
+                                                                       (mod sum 10)
+                                                                     ::
+                                                                     t)) in let base
+        =
+        []
+        in
+        let args = (List.rev (List.combine l1 l2)) in
+        (List.fold_left f base  args) in (= (add (padZero l1 l2))) ;; 
+==============================

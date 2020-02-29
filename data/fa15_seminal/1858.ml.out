@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "1858.ml", line 21, characters 57-68:
+This expression has type int -> 'a but is here used with type int
+Relevant code: (count acc)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1858.ml", line 21, characters 69-70:
+And modified the following location:
+File "1858.ml", line 21, characters 72-73:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    int -> 'b
+within context
+    let rec count acc n =
+      (if (sumList (digits n)) / 10 = 0 then acc + 1 else
+        ((count acc) +; [[...]] ((1; [[...]]) n)))
+      in
+      (count 0 n)
+==============================
+Triaged the following locations:
+File "1858.ml", line 21, characters 69-70:
+And modified the following location:
+File "1858.ml", line 21, characters 74-75:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    (1 n)
+with
+    1
+The actual replacement has type
+    int
+within context
+    let rec count acc n =
+      (if (sumList (digits n)) / 10 = 0 then acc + 1 else
+        ((count acc) +; [[...]] 1))
+      in
+      (count 0 n)
+==============================

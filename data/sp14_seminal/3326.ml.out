@@ -1,0 +1,60 @@
+------------------------------------------------------------------
+File "3326.ml", line 5, characters 13-47:
+This expression is not a function, it cannot be applied
+Relevant code: ((mulByDigit i (List.rev t)) * 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3326.ml", line 5, characters 51-52:
+And modified the following location:
+File "3326.ml", line 5, characters 42-43:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    'g list -> int -> 'h -> 'i
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                ((((mulByDigit i (List.rev t)) *; [[...]] 10) h)
+                                      *; [[...]] i)) ;; 
+==============================
+Triaged the following locations:
+File "3326.ml", line 5, characters 51-52:
+And modified the following location:
+File "3326.ml", line 5, characters 42-43:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    *
+with
+    i
+The actual replacement has type
+    'j list -> int -> 'k -> 'l
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                ((((mulByDigit i (List.rev t)) i 10) h)
+                                      *; [[...]] i)) ;; 
+==============================
+Triaged the following locations:
+File "3326.ml", line 5, characters 51-52:
+And modified the following location:
+File "3326.ml", line 5, characters 14-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    (mulByDigit i (List.rev t)) * 10
+with
+    ( * ) 10
+The actual replacement has type
+    int -> int
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t -> (((( * ) 10) h) *; [[...]] i)) ;; 
+==============================

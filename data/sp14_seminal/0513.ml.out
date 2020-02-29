@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0513.ml", line 3, characters 18-28:
+This expression has type float but is here used with type int
+Relevant code: (x ** 2.0)
+------------------------------------------------------------------
+File "0513.ml", line 3, characters 18-28:
+Try replacing
+    x ** 2.0
+with
+    x ** 2.0; [[...]]
+of type
+    int
+within context
+    fun xs ->
+      (let f a x = a + (x ** 2.0; [[...]]) in
+          let base = 0 in (List.fold_left f base  xs))
+==============================
+File "0513.ml", line 3, characters 16-17:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    'a -> float -> 'b
+within context
+    fun xs ->
+      (let f a x = (a +; [[...]] x ** 2.0) in
+          let base = 0 in (List.fold_left f base  xs))
+==============================

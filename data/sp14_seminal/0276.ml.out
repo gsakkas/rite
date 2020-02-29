@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0276.ml", line 3, characters 2-64:
+This expression has type int list but is here used with type int
+Relevant code: match n with | 0 -> [] | _ -> [n mod 10; digitsOfInt (n / 10)]
+------------------------------------------------------------------
+File "0276.ml", line 2, characters 20-88:
+Try replacing
+    fun n -> (match n with 
+              | 0 -> []
+              | _ -> [(mod n 10) ; (digitsOfInt (n / 10))])
+with
+    fun n -> (match n with 
+              | 0 -> []
+              | _ -> [(mod n 10) ; (digitsOfInt (n / 10))]); [[...]]
+of type
+    int -> int
+==============================

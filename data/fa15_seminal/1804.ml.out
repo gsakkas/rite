@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1804.ml", line 11, characters 28-33:
+This expression is not a function, it cannot be applied
+Relevant code: seen'
+------------------------------------------------------------------
+Triaged the following locations:
+File "1804.ml", line 10, characters 13-21:
+And modified the following location:
+File "1804.ml", line 11, characters 13-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    rest = t
+If you ignore other surrounding code, try replacing
+    seen' = h :: (seen' helper (seen', rest'))
+with
+    [[...]]
+The actual replacement has type
+    'd
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' = [] in
+                                 let rest' = (List.rev t) in
+                                 (if (List.mem h rest') then (rest = t; [[...]])
+                                     else
+                                     [[...]])))
+==============================

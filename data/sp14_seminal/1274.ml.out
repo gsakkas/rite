@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "1274.ml", line 12, characters 52-53:
+This expression has type 'a list but is here used with type int
+Relevant code: n
+------------------------------------------------------------------
+Triaged the following locations:
+File "1274.ml", line 12, characters 9-28:
+And modified the following location:
+File "1274.ml", line 12, characters 30-55:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    additivePersistence
+If you ignore other surrounding code, try replacing
+    (sumList (digitsOfInt n))
+with
+    [[...]]
+The actual replacement has type
+    int -> 'b
+within context
+    let rec additivePersistence n count = (match n with 
+                                           | [] -> count
+                                           | _ ->
+                                             ((additivePersistence; [[...]])
+                                                 ([[...]] (count + 1)))) ;; 
+==============================

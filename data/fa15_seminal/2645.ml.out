@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "2645.ml", line 8, characters 36-37:
+This expression has type int list but is here used with type int
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "2645.ml", line 8, characters 20-38:
+And modified the following location:
+File "2645.ml", line 8, characters 50-70:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k + (mulByDigit t)
+with
+    [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l -> (match l with 
+              | [] -> []
+              | h :: t ->
+                (let x = (mod (h * i) 10) in
+                      let k = (h * i) / 10 in
+                      (if k = 0 then [[...other program...]] else [x] @ [[...]])))
+==============================

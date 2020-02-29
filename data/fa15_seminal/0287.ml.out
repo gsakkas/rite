@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "0287.ml", line 9, characters 24-44:
+This expression has type int list -> int list but is here used with type
+  'a list
+Relevant code: (cloneHelper 0 diff)
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "0287.ml", line 9, characters 44-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (cloneHelper 0 diff)
+with
+    (cloneHelper 0 diff  [[...]])
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let diff = (List.length l1) - (List.length l2) in
+            (if diff < 0 then (cloneHelper 0 (-1 * diff - 1)  l1) else
+                (if diff > 0 then (cloneHelper 0 diff  [[...]]) @ l2 else [[...]])))
+==============================
+Triaged the following locations:
+And modified the following location:
+File "0287.ml", line 9, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    (int list -> int list) -> 'b list -> int list
+within context
+    fun l1
+      l2 ->
+        (let diff = (List.length l1) - (List.length l2) in
+            (if diff < 0 then (cloneHelper 0 (-1 * diff - 1)  l1) else
+                (if diff > 0 then ((cloneHelper 0 diff) @; [[...]] l2) else
+                  [[...]])))
+==============================

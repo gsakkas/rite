@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1828.ml", line 2, characters 58-59:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "1828.ml", line 2, characters 58-59:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    'b list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: t -> (0; [[...]])) ;; 
+==============================
+File "1828.ml", line 2, characters 45-47:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> ([]; [[...]])
+                             | h :: t -> 0) ;; 
+==============================

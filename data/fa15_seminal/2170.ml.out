@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "2170.ml", line 17, characters 51-70:
+This expression has type int * int list but is here used with type 'a list
+Relevant code: (0, ((x + h) :: a))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2170.ml", line 18, characters 4-89:
+And modified the following location:
+File "2170.ml", line 17, characters 51-70:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0, x + h :: a
+with
+    0, x + h :: a; [[...]]
+The actual replacement has type
+    'b list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match l1 with 
+                                                  | [] -> []
+                                                  | h :: t ->
+                                                    (0, x + h :: a;
+                                                        [[...]])) in [[...other program...]] in (removeZero
+                (add (padZero (List.rev l1) (List.rev l2)))))
+==============================
+Triaged the following locations:
+File "2170.ml", line 18, characters 4-89:
+And modified the following location:
+File "2170.ml", line 17, characters 38-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    []; [[...]]
+The actual replacement has type
+    int * int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match l1 with 
+                                                  | [] -> ([]; [[...]])
+                                                  | h :: t ->
+                                                    (0,
+                                                          x + h ::
+                                                              a)) in [[...other program...]] in (removeZero
+                (add (padZero (List.rev l1) (List.rev l2)))))
+==============================
+Triaged the following locations:
+File "2170.ml", line 18, characters 4-89:
+And modified the following location:
+File "2170.ml", line 17, characters 4-163:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match l1 with 
+                 | [] -> []
+                 | h :: t ->
+                   (0,
+                         x + h ::
+                             a)) in let base = [] in
+      let args = l2 in let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'c
+==============================

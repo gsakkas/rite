@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "1929.ml", line 7, characters 38-43:
+This expression has type int but is here used with type 'a list
+Relevant code: digit
+------------------------------------------------------------------
+File "1929.ml", line 7, characters 38-43:
+Try replacing
+    digit
+with
+    digit; [[...]]
+of type
+    'b list
+within context
+    fun n -> (let digit = (mod n 10) in (match n with 
+                                         | _ -> when (n <= 0) -> []
+                                         | _ ->
+                                           when n > 0 ->
+                                               (digitsOfInt r) @ (digit; [[...]])))
+==============================
+File "1929.ml", line 7, characters 36-37:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    'c list -> int -> 'c list
+within context
+    fun n -> (let digit = (mod n 10) in (match n with 
+                                         | _ -> when (n <= 0) -> []
+                                         | _ ->
+                                           when n > 0 ->
+                                               ((digitsOfInt r) @; [[...]] digit)))
+==============================
+File "1929.ml", line 3, characters 14-22:
+Try replacing
+    (mod n 10)
+with
+    (mod n 10); [[...]]
+of type
+    'd
+within context
+    let rec digitsOfInt n = let digit = (mod n 10); [[...]] in (match n with 
+                                                                | _ ->
+                                                                  when (n <= 0) ->
+                                                                      []
+                                                                | _ ->
+                                                                  when n > 0 ->
+                                                                      (digitsOfInt
+                                                                            r)
+                                                                          @
+                                                                          digit) ;; 
+==============================

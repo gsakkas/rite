@@ -1,0 +1,91 @@
+------------------------------------------------------------------
+File "0165.ml", line 9, characters 19-26:
+This expression has type 'a list * 'b but is here used with type
+  bool * 'c list
+Relevant code: ([], l)
+------------------------------------------------------------------
+File "0165.ml", line 8, characters 48-54:
+Try replacing
+    helper
+with
+    h
+of type
+    bool * 'd -> 'e
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' = (if (List.mem h t) then true else false) in
+                                 let rest' = (failwith "to be written") in
+                                 (h (seen', rest'))))
+==============================
+File "0165.ml", line 8, characters 56-61:
+Try replacing
+    seen'
+with
+    t
+of type
+    'f list * 'f list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem h t) then true else false) in
+             let rest' = (failwith "to be written") in (helper (t, rest'))))
+==============================
+File "0165.ml", line 8, characters 56-61:
+Try replacing
+    seen'
+with
+    l
+of type
+    'g list * 'h list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem h t) then true else false) in
+             let rest' = (failwith "to be written") in (helper (l, rest'))))
+==============================
+File "0165.ml", line 8, characters 56-61:
+Try replacing
+    seen'
+with
+    seen
+of type
+    'i * 'j list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem h t) then true else false) in
+             let rest' = (failwith "to be written") in (helper (seen, rest'))))
+==============================
+File "0165.ml", line 8, characters 56-61:
+Try replacing
+    seen'
+with
+    h
+of type
+    'k * 'k list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem h t) then true else false) in
+             let rest' = (failwith "to be written") in (helper (h, rest'))))
+==============================
+File "0165.ml", line 8, characters 56-61:
+Try replacing
+    seen'
+with
+    rest'
+of type
+    'l * 'm list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem h t) then true else false) in
+             let rest' = (failwith "to be written") in (helper (rest', rest'))))
+==============================

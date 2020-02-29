@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2172.ml", line 9, characters 39-44:
+This expression has type 'a list but is here used with type string
+Relevant code: ["["]
+------------------------------------------------------------------
+File "2172.ml", line 9, characters 38-66:
+Try replacing
+    [["["] ; (List.map f l) ; ["]"]]
+with
+    [["["] ; (List.map f l) ; ["]"]]; [[...]]
+of type
+    string list
+within context
+    let stringOfList f l =
+    (sepConcat "; " ([["["] ; (List.map f l) ; ["]"]]; [[...]]))
+    ;; 
+==============================
+File "2172.ml", line 9, characters 23-32:
+Try replacing
+    sepConcat
+with
+    sepConcat; [[...]]
+of type
+    string -> string list list -> 'b
+within context
+    let stringOfList f l =
+    ((sepConcat; [[...]]) "; " [["["] ; (List.map f l) ; ["]"]])
+    ;; 
+==============================

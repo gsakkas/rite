@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2918.ml", line 17, characters 50-51:
+This expression has type 'a -> 'a list -> 'a list but is here used with type
+  'a -> 'a list -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "2918.ml", line 17, characters 35-49:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('b -> 'b list -> 'b list) -> 'c list -> 'd -> 'e * 'f
+within context
+    let f a x = a :: x in
+      let base = [] in
+      let args = l1 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

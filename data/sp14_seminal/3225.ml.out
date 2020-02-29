@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "3225.ml", line 17, characters 33-35:
+This expression is not a function, it cannot be applied
+Relevant code: ex
+------------------------------------------------------------------
+File "3225.ml", line 17, characters 33-35:
+Try replacing
+    ex
+with
+    ex; [[...]]
+of type
+    float -> float -> expr * float * float
+within context
+    (match e with 
+     | VarX -> x
+     | VarY -> y
+     | Sine ex -> (sin (pi *. (eval ((ex; [[...]]) x y)))))
+==============================

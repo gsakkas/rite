@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2276.ml", line 31, characters 58-65:
+This expression is not a function, it cannot be applied
+Relevant code: (i - 1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2276.ml", line 31, characters 46-56:
+And modified the following location:
+File "2276.ml", line 31, characters 58-65:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    i - 1
+with
+    i - 1; [[...]]
+The actual replacement has type
+    (int list -> int list -> int list) -> int list -> int list -> 'c
+within context
+    fun i
+      l ->
+        (if i = 0 then [0] else
+          (if i = 1 then l else
+            ((mulByDigit; [[...]]) ((i - 1; [[...]]) bigAdd l  l))))
+==============================

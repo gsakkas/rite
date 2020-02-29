@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "2090.ml", line 9, characters 34-51:
+This expression has type int but is here used with type string list
+Relevant code: ((clone x n) - 1)
+------------------------------------------------------------------
+File "2090.ml", line 9, characters 20-29:
+Try replacing
+    sepConcat
+with
+    n
+of type
+    string -> int -> int
+within context
+    let rec clone x n = (n ";" ((clone x n) - 1)) ;; 
+==============================
+File "2090.ml", line 9, characters 47-48:
+Try replacing
+    -
+with
+    x
+of type
+    string -> int -> string list
+within context
+    let rec clone x n = (sepConcat ";" ((clone x n) x 1)) ;; 
+==============================
+File "2090.ml", line 9, characters 47-48:
+Try replacing
+    -
+with
+    n
+of type
+    string -> int -> string list
+within context
+    let rec clone x n = (sepConcat ";" ((clone x n) n 1)) ;; 
+==============================

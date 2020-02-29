@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "0983.ml", line 52, characters 51-67:
+This expression has type int list * int list but is here used with type
+  int list
+Relevant code: (t, updateTotal)
+------------------------------------------------------------------
+File "0983.ml", line 49, characters 12-17:
+Try replacing
+    total
+with
+    a
+of type
+    int list * int list
+within context
+    let f a x = let (bottom_mult, total) = a in (match bottom_mult with 
+                                                 | [] -> a
+                                                 | h :: t ->
+                                                   (let newTotal = (mulByDigit h x)
+                                                         in
+                                                         let updateTotal =
+                                                         (bigAdd newTotal total)
+                                                         in
+                                                         t,
+                                                             updateTotal)) in let
+      base
+      =
+      l1, []
+      in
+      let args = l2 in let (_, res) = (List.fold_left f base  args) in res
+==============================

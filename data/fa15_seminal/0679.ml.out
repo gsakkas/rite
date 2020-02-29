@@ -1,0 +1,73 @@
+------------------------------------------------------------------
+File "0679.ml", line 25, characters 8-13:
+This pattern matches values of type 'a * 'b
+but is here used to match values of type expr
+Relevant code: (a,b)
+------------------------------------------------------------------
+File "0679.ml", line 25, characters 4-88:
+Try replacing
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine a -> "sin(pi*" ^ ((exp a) ^ ")")
+     | Cosine a -> "cos(pi*" ^ ((exp a) ^ ")")
+     | Average (a, b) -> "((" ^ ((exp a) ^ ("+" ^ ((exp b) ^ ")/2)")))
+     | Times (a, b) -> (exp a) ^ ("*" ^ (exp b))
+     | Thresh (a, b, c, d) ->
+       "(" ^
+           ((exp a) ^
+               ("<" ^ ((exp b) ^ ("?" ^ ((exp c) ^ (":" ^ ((exp d) ^ ")")))))))
+     | Hoi (a, b) ->
+       "sin(pi*" ^ ((exp a) ^ ("cos(pi*" ^ ((exp b) ^ ")") ")/(" ")")))
+with
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine a -> "sin(pi*" ^ ((exp a) ^ ")")
+     | Cosine a -> "cos(pi*" ^ ((exp a) ^ ")")
+     | Average (a, b) -> "((" ^ ((exp a) ^ ("+" ^ ((exp b) ^ ")/2)")))
+     | Times (a, b) -> (exp a) ^ ("*" ^ (exp b))
+     | Thresh (a, b, c, d) ->
+       "(" ^
+           ((exp a) ^
+               ("<" ^ ((exp b) ^ ("?" ^ ((exp c) ^ (":" ^ ((exp d) ^ ")")))))))
+     | _ -> [[...]])
+of type
+    string
+==============================
+Triaged the following locations:
+File "0679.ml", line 15, characters 13-16:
+File "0679.ml", line 16, characters 13-16:
+File "0679.ml", line 17, characters 14-41:
+File "0679.ml", line 18, characters 16-43:
+File "0679.ml", line 19, characters 21-66:
+File "0679.ml", line 20, characters 19-44:
+File "0679.ml", line 22, characters 6-106:
+File "0679.ml", line 26, characters 6-71:
+And modified the following location:
+File "0679.ml", line 25, characters 8-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a, b
+with
+    _
+The actual replacement has type
+    'c
+within context
+    let rec exprToString e = let exp = exprToString in (match e with 
+                                                        | VarX ->
+                                                          [[...other program...]]
+                                                        | VarY ->
+                                                          [[...other program...]]
+                                                        | Sine a ->
+                                                          [[...other program...]]
+                                                        | Cosine a ->
+                                                          [[...other program...]]
+                                                        | Average (a, b) ->
+                                                          [[...other program...]]
+                                                        | Times (a, b) ->
+                                                          [[...other program...]]
+                                                        | Thresh (a, b, c, d) ->
+                                                          [[...other program...]]
+                                                        | Hoi _ ->
+                                                          [[...other program...]]) ;; 
+==============================

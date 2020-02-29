@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "1797.ml", line 9, characters 34-51:
+This expression has type char list * string but is here used with type
+  string list * string
+Relevant code: ((explode w), "")
+------------------------------------------------------------------
+File "1797.ml", line 9, characters 34-51:
+Try replacing
+    (explode w), ""
+with
+    (explode w), ""; [[...]]
+of type
+    string list * string
+within context
+    let palindrome w =
+    (if w = (revexp ((explode w), ""; [[...]])) then true else false)
+    ;; 
+==============================
+File "1797.ml", line 9, characters 27-33:
+Try replacing
+    revexp
+with
+    revexp; [[...]]
+of type
+    char list * string -> string
+within context
+    let palindrome w =
+    (if w = ((revexp; [[...]]) ((explode w), "")) then true else false)
+    ;; 
+==============================

@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "1337.ml", line 3, characters 60-61:
+This expression has type (int -> int) -> int -> int
+but is here used with type (int -> int) -> int -> int -> int
+Relevant code: f
+------------------------------------------------------------------
+File "1337.ml", line 3, characters 10-23:
+Try replacing
+    fun x -> (a x) + x
+with
+    fun _ x -> (a x) + x
+of type
+    'a -> int -> int
+within context
+    let pipe fs =
+    let f a _ x = (a x) + x in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1337.ml", line 3, characters 10-23:
+Try replacing
+    fun x -> (a x) + x
+with
+    fun x _ -> (a x) + x
+of type
+    int -> 'b -> int
+within context
+    let pipe fs =
+    let f a x _ = (a x) + x in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1337.ml", line 3, characters 45-59:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    ((int -> int) -> int -> int) -> (int -> int) -> int -> int
+within context
+    let pipe fs = let f a x = (a x) + x in let base x = x in (base f base  fs) ;; 
+==============================

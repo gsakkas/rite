@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1027.ml", line 23, characters 60-66:
+This expression has type int * int but is here used with type ('a * 'b) list
+Relevant code: (0, 0)
+------------------------------------------------------------------
+File "1027.ml", line 23, characters 60-66:
+Try replacing
+    0, 0
+with
+    0, 0; [[...]]
+of type
+    (int * int) list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (y, z) = a in
+            let (r, s) = x in let m = (r + s) + y in m / 10, (mod m 10) :: z
+          in
+          let base = 0, [] in
+          let args = (List.combine (List.rev l1) (List.rev l2)) @ (0, 0; [[...]]) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "1027.ml", line 23, characters 58-59:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    ('c * 'd) list -> int * int -> 'e
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (y, z) = a in
+            let (r, s) = x in let m = (r + s) + y in m / 10, (mod m 10) :: z
+          in
+          let base = 0, [] in
+          let args = ((List.combine (List.rev l1) (List.rev l2)) @; [[...]] 0, 0) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

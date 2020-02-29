@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "0320.ml", line 34, characters 24-25:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "0320.ml", line 35, characters 2-114:
+And modified the following location:
+File "0320.ml", line 34, characters 24-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    int list
+within context
+    let bigMul l1 l2 =
+    let f a x =
+      let (bit, l) = a in
+        let movedList = l @ (0; [[...]]) in bit + 1, (bigAdd movedList x)
+      in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0320.ml", line 35, characters 2-114:
+And modified the following location:
+File "0320.ml", line 34, characters 22-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    'b -> int -> 'c
+within context
+    let bigMul l1 l2 =
+    let f a x =
+      let (bit, l) = a in
+        let movedList = (l @; [[...]] 0) in bit + 1, (bigAdd movedList x)
+      in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0320.ml", line 35, characters 2-114:
+And modified the following location:
+File "0320.ml", line 32, characters 2-217:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x =
+      let (bit, l) = a in let movedList = l @ 0 in bit + 1, (bigAdd movedList x)
+      in
+      let base = 0, [] in
+      let args = (List.map (mulByDigit l1)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'd
+==============================

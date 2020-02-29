@@ -1,0 +1,77 @@
+------------------------------------------------------------------
+File "2422.ml", line 23, characters 13-34:
+This expression has type int but is here used with type int list
+Relevant code: (add (padZero l1 l2))
+------------------------------------------------------------------
+File "2422.ml", line 23, characters 2-12:
+Try replacing
+    removeZero
+with
+    <
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = a in
+        let base = 1, 1 in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (< (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2422.ml", line 23, characters 2-12:
+Try replacing
+    removeZero
+with
+    -
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = a in
+        let base = 1, 1 in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (- (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2422.ml", line 23, characters 2-12:
+Try replacing
+    removeZero
+with
+    >
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = a in
+        let base = 1, 1 in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (> (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2422.ml", line 23, characters 2-12:
+Try replacing
+    removeZero
+with
+    =
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = a in
+        let base = 1, 1 in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (= (add (padZero l1 l2)))
+    ;; 
+==============================

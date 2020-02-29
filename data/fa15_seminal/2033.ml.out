@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2033.ml", line 19, characters 33-34:
+This expression has type 'a list * 'a list -> int * int -> int * 'a list
+but is here used with type
+  'a list * 'a list -> int * int -> 'a list * 'a list
+Relevant code: f
+------------------------------------------------------------------
+File "2033.ml", line 16, characters 68-69:
+Try replacing
+    w
+with
+    b
+of type
+    'b list
+within context
+    fun a x -> (match a, x with 
+                | ((w, b), (y, z)) -> (y + z, b @ b))
+==============================

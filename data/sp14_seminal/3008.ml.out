@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "3008.ml", line 22, characters 20-25:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: clone
+------------------------------------------------------------------
+Triaged the following locations:
+File "3008.ml", line 23, characters 4-51:
+And modified the following location:
+File "3008.ml", line 22, characters 26-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 List.length  l1)
+with
+    (clone (0, List.length, l1))
+The actual replacement has type
+    int * (int -> (int * ('i list -> int) * 'j) list)
+within context
+    let add (l1, l2) =
+      let f a x = [0], [0] in
+        let base = 0, [] in
+        let args = 0, (clone (0, List.length, l1)) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "3008.ml", line 23, characters 4-51:
+And modified the following location:
+File "3008.ml", line 22, characters 20-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    clone
+with
+    clone; [[...]]
+The actual replacement has type
+    int -> ('f list -> int) -> 'g -> 'h
+within context
+    let add (l1, l2) =
+      let f a x = [0], [0] in
+        let base = 0, [] in
+        let args = 0, ((clone; [[...]]) 0 List.length  l1) in
+        [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

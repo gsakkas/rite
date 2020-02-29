@@ -1,0 +1,77 @@
+------------------------------------------------------------------
+File "1055.ml", line 9, characters 39-40:
+This expression has type int but is here used with type int list list
+Relevant code: y
+------------------------------------------------------------------
+Triaged the following locations:
+File "1055.ml", line 10, characters 7-42:
+And modified the following location:
+File "1055.ml", line 9, characters 39-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y; [[...]]
+The actual replacement has type
+    int list list
+within context
+    fun l1
+      l2 ->
+        (let x = (List.length l1) in
+            let y = (List.length l2) in
+            (if x > y then (let z = x - y in (clone 0 z) :: y; [[...]]) else
+                [[...other program...]]))
+==============================
+Triaged the following locations:
+File "1055.ml", line 10, characters 7-42:
+And modified the following location:
+File "1055.ml", line 9, characters 24-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 z) :: y
+with
+    (clone 0 z), y
+The actual replacement has type
+    int list * int
+within context
+    fun l1
+      l2 ->
+        (let x = (List.length l1) in
+            let y = (List.length l2) in
+            (if x > y then (let z = x - y in (clone 0 z), y) else
+                [[...other program...]]))
+==============================
+Triaged the following locations:
+File "1055.ml", line 9, characters 7-40:
+And modified the following location:
+File "1055.ml", line 10, characters 40-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    int list list
+within context
+    fun l1
+      l2 ->
+        (let x = (List.length l1) in
+            let y = (List.length l2) in
+            (if x > y then [[...other program...]] else
+                (let z = y - x in (clone 0 z) :: x; [[...]])))
+==============================
+Triaged the following locations:
+File "1055.ml", line 9, characters 7-40:
+And modified the following location:
+File "1055.ml", line 10, characters 25-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 z) :: x
+with
+    (clone 0 z), x
+The actual replacement has type
+    int list * int
+within context
+    fun l1
+      l2 ->
+        (let x = (List.length l1) in
+            let y = (List.length l2) in
+            (if x > y then [[...other program...]] else
+                (let z = y - x in (clone 0 z), x)))
+==============================

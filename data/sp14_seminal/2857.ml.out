@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "2857.ml", line 7, characters 60-74:
+This expression has type 'a * bool but is here used with type 'a * 'a list
+Relevant code: (seen', rest')
+------------------------------------------------------------------
+File "2857.ml", line 7, characters 68-73:
+Try replacing
+    rest'
+with
+    t
+of type
+    'b list * 'b list list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = h in let rest' = (List.mem h l) in (helper (seen', t))))
+==============================
+File "2857.ml", line 7, characters 68-73:
+Try replacing
+    rest'
+with
+    l
+of type
+    'c list * 'c list list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = h in let rest' = (List.mem h l) in (helper (seen', l))))
+==============================
+File "2857.ml", line 7, characters 68-73:
+Try replacing
+    rest'
+with
+    rest
+of type
+    'd list * 'd list list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = h in let rest' = (List.mem h l) in (helper (seen', rest))))
+==============================

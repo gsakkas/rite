@@ -1,0 +1,92 @@
+------------------------------------------------------------------
+File "2489.ml", line 30, characters 6-46:
+This expression has type float but is here used with type int
+Relevant code: ((eval (e1, x, y)) *. (eval (e1, x, y)))
+------------------------------------------------------------------
+File "2489.ml", line 30, characters 47-48:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | TimesTimes (e1, e2, e3) ->
+                                (((eval (e1, x, y)) *. (eval (e2, x, y)))
+                                      *. (eval (e3, x, y)))
+                              | SqXPlusY (e1, e2) ->
+                                (((eval (e1, x, y)) *. (eval (e1, x, y)))
+                                      +; [[...]] (eval (e2, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2489.ml", line 19, characters 15-44:
+File "2489.ml", line 20, characters 17-46:
+File "2489.ml", line 21, characters 23-70:
+File "2489.ml", line 22, characters 21-59:
+File "2489.ml", line 24, characters 6-100:
+File "2489.ml", line 28, characters 6-67:
+And modified the following location:
+File "2489.ml", line 30, characters 25-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | TimesTimes (e1, e2, e3) -> [[...other program...]]
+                              | SqXPlusY (e1, e2) ->
+                                ((eval (e1, x, y)) + (eval (e1, x, y)))
+                                    + (eval (e2, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "2489.ml", line 19, characters 15-44:
+File "2489.ml", line 20, characters 17-46:
+File "2489.ml", line 21, characters 23-70:
+File "2489.ml", line 22, characters 21-59:
+File "2489.ml", line 24, characters 6-100:
+File "2489.ml", line 28, characters 6-67:
+And modified the following location:
+File "2489.ml", line 30, characters 25-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | TimesTimes (e1, e2, e3) -> [[...other program...]]
+                              | SqXPlusY (e1, e2) ->
+                                ((eval (e1, x, y)) *.; [[...]] (eval (e1, x, y)))
+                                    + (eval (e2, x, y))) ;; 
+==============================

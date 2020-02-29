@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "1939.ml", line 18, characters 15-21:
+This expression is not a function, it cannot be applied
+Relevant code: (0, 0)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1939.ml", line 19, characters 4-99:
+And modified the following location:
+File "1939.ml", line 18, characters 15-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0, 0
+with
+    0, 0; [[...]]
+The actual replacement has type
+    ('i list -> 'j list -> ('i * 'j) list) -> 'k -> 'l -> 'm
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x = let (x1, x2) = x in x1 + x2 in
+            let base = ((0, 0; [[...]]) List.combine l1  l2) in
+            [[...other program...]]
+          in
+          (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1939.ml", line 19, characters 4-99:
+And modified the following location:
+File "1939.ml", line 18, characters 4-143:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let base = ((0, 0) List.combine l1  l2) in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

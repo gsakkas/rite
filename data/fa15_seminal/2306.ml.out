@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "2306.ml", line 18, characters 7-11:
+This expression is not a function, it cannot be applied
+Relevant code: "(("
+------------------------------------------------------------------
+Triaged the following locations:
+File "2306.ml", line 18, characters 6-70:
+And modified the following location:
+File "2306.ml", line 19, characters 19-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString; [[...]]
+The actual replacement has type
+    expr ->
+    string ->
+    (expr -> string) -> expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+                              | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+                              | Average (x, y) -> [[...other program...]]
+                              | Times (x, y) ->
+                                ((exprToString; [[...]])
+                                    e "*"  exprToString  e)) ;; 
+==============================

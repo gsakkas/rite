@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1924.ml", line 7, characters 28-61:
+This expression has type ('a -> 'a) * 'a but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: (f, (if b = (f b) then b else b))
+------------------------------------------------------------------
+File "1924.ml", line 7, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('b -> 'b) * 'b -> ('b -> 'b) * 'b -> bool
+within context
+    let fixpoint (f, b) = (= (f, (if b = (f b) then b else b))) ;; 
+==============================

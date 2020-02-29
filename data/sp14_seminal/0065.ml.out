@@ -1,0 +1,82 @@
+------------------------------------------------------------------
+File "0065.ml", line 3, characters 58-59:
+This expression has type 'a -> 'b -> 'c -> ('a -> 'd) -> 'd
+but is here used with type 'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "0065.ml", line 3, characters 8-11:
+Try replacing
+    fun a x y z -> (z a)
+with
+    fun x a y z -> (z a)
+of type
+    'e -> 'f -> 'g -> ('f -> 'h) -> 'h
+within context
+    let pipe fs =
+    let f x a y z = (z a) in let base b = b in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "0065.ml", line 3, characters 43-59:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left (f base fs))
+of type
+    'i -> (('j -> 'j) -> 'i) list -> 'i
+within context
+    let pipe fs =
+    let f a x y z = (z a) in let base b = b in (List.fold_left (f base fs))
+    ;; 
+==============================
+File "0065.ml", line 3, characters 43-57:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('k -> 'l -> 'm -> ('k -> 'n) -> 'n) ->
+    ('o -> 'o) -> 'p -> (('k -> 'l -> 'm -> ('k -> 'n) -> 'n) -> 'q) -> 'q
+within context
+    let pipe fs = let f a x y z = (z a) in let base b = b in (f f base  fs) ;; 
+==============================
+File "0065.ml", line 3, characters 43-57:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('r -> 'r) -> 's -> 't -> (('r -> 'r) -> 'u) -> 'u) ->
+    ('r -> 'r) -> 's -> 't -> (('r -> 'r) -> 'u) -> 'u
+within context
+    let pipe fs = let f a x y z = (z a) in let base b = b in (base f base  fs) ;; 
+==============================
+File "0065.ml", line 3, characters 18-19:
+Try replacing
+    z
+with
+    x
+of type
+    'v -> 'w
+within context
+    fun a x y z -> (x a)
+==============================
+File "0065.ml", line 3, characters 20-21:
+Try replacing
+    a
+with
+    fs
+of type
+    'x list
+within context
+    fun a x y z -> (z fs)
+==============================
+File "0065.ml", line 3, characters 20-21:
+Try replacing
+    a
+with
+    x
+of type
+    'y
+within context
+    fun a x y z -> (z x)
+==============================

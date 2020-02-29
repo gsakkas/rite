@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0504.ml", line 2, characters 48-65:
+This expression has type int but is here used with type int list
+Relevant code: ((clone x n) - 1)
+------------------------------------------------------------------
+File "0504.ml", line 2, characters 61-62:
+Try replacing
+    -
+with
+    x
+of type
+    int list -> int -> int list
+within context
+    fun x n -> (if (n <= 0) then [] else n :: ((clone x n) x 1))
+==============================
+File "0504.ml", line 2, characters 61-62:
+Try replacing
+    -
+with
+    clone
+of type
+    int list -> int -> int list
+within context
+    fun x n -> (if (n <= 0) then [] else n :: ((clone x n) clone 1))
+==============================

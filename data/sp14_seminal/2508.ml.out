@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "2508.ml", line 7, characters 52-62:
+This expression has type bool * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((g b), b)
+------------------------------------------------------------------
+File "2508.ml", line 7, characters 40-41:
+Try replacing
+    (f x) = x
+with
+    (f (x = x))
+of type
+    'c -> 'c * bool
+within context
+    let fixpoint (f, b) = (wwhile (let g x = (f (x = x)) in (g b), b)) ;; 
+==============================
+File "2508.ml", line 7, characters 53-61:
+Try replacing
+    (g b), b
+with
+    b, (g b)
+of type
+    (bool -> bool * bool) * bool
+within context
+    let fixpoint (f, b) = (wwhile (let g x = (f x) = x in b, (g b))) ;; 
+==============================
+File "2508.ml", line 7, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    bool * 'd -> bool * 'd -> bool
+within context
+    let fixpoint (f, b) = (= (let g x = (f x) = x in (g b), b)) ;; 
+==============================
+File "2508.ml", line 7, characters 45-46:
+Try replacing
+    =
+with
+    wwhile
+of type
+    (('e -> 'e -> 'e * bool) -> ('e -> 'e -> 'e * bool) * bool) *
+    ('e -> 'e -> 'e * bool) -> 'e -> 'e -> 'e * bool
+within context
+    fun (f, b) -> (wwhile (let g x = ((f x) wwhile x) in (g b), b))
+==============================

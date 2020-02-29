@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0471.ml", line 15, characters 15-36:
+This expression has type float but is here used with type string
+Relevant code: sin (exprToString ex)
+------------------------------------------------------------------
+File "0471.ml", line 15, characters 15-18:
+Try replacing
+    sin
+with
+    sin; [[...]]
+of type
+    string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine ex -> ((sin; [[...]]) (exprToString ex))) ;; 
+==============================

@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "2484.ml", line 18, characters 28-43:
+This expression has type 'a -> 'a -> 'b but is here used with type float
+Relevant code: (evalhelper p1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2484.ml", line 19, characters 19-32:
+And modified the following location:
+File "2484.ml", line 18, characters 28-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (evalhelper p1)
+with
+    (evalhelper p1); [[...]]
+The actual replacement has type
+    float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *. (evalhelper p1); [[...]]))
+                                | Cosine p1 ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2484.ml", line 19, characters 19-32:
+And modified the following location:
+File "2484.ml", line 18, characters 25-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    float -> (float -> float -> float) -> float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *.; [[...]] (evalhelper p1)))
+                                | Cosine p1 ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================

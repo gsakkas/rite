@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "0752.ml", line 7, characters 10-25:
+This expression has type int list but is here used with type int
+Relevant code: (digitsOfInt n)
+------------------------------------------------------------------
+File "0752.ml", line 7, characters 11-22:
+Try replacing
+    (digitsOfInt n) * -1
+with
+    (digitsOfInt (n * -1))
+of type
+    int list
+within context
+    let rec digitsOfInt n =
+    (if n != 0 then
+      (if n > 0 then (digitsOfInt (n / 10)) @ [(mod n 10)] else
+        (digitsOfInt (n * -1)))
+      else
+      [])
+    ;; 
+==============================

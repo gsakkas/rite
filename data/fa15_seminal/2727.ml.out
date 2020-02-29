@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2727.ml", line 18, characters 56-57:
+This expression has type int -> int -> int list but is here used with type
+  int -> int -> int
+Relevant code: f
+------------------------------------------------------------------
+File "2727.ml", line 18, characters 41-55:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int -> int -> int list) -> 'a list -> 'b * 'c -> 'd * 'e
+within context
+    let f a x = [x + a] in
+      let base = [] in
+      let args = l1, l2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

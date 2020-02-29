@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2629.ml", line 20, characters 18-44:
+This expression has type int but is here used with type 'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "2629.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('c -> 'd -> 'e) -> int -> ('f * 'g) list -> 'h * 'i
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = 0 in
+      let args = (List.combine l1 l2) in let (_, res) = (f f base  args) in res
+==============================

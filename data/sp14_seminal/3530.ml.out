@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "3530.ml", line 3, characters 27-32:
+This pattern matches values of type 'a list
+but is here used to match values of type int
+Relevant code: _::tl
+------------------------------------------------------------------
+Triaged the following locations:
+File "3530.ml", line 3, characters 22-24:
+File "3530.ml", line 3, characters 36-57:
+And modified the following location:
+File "3530.ml", line 3, characters 17-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    _
+The actual replacement has type
+    'b list -> 'c
+within context
+    let rec listReverse l = (match l with 
+                             | _ -> [[...other program...]]
+                             | _ :: tl -> [[...other program...]]) ;; 
+==============================
+File "3530.ml", line 3, characters 27-57:
+Try replacing
+    (match l with 
+     | 0 -> []
+     | _ :: tl -> (listReverse tl) + tl)
+with
+    (match l with 
+     | 0 -> []
+     | _ -> [[...]])
+of type
+    'd list
+==============================
+Triaged the following locations:
+File "3530.ml", line 3, characters 22-24:
+File "3530.ml", line 3, characters 36-57:
+And modified the following location:
+File "3530.ml", line 3, characters 27-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    _ :: tl
+with
+    _
+The actual replacement has type
+    int -> 'e
+within context
+    let rec listReverse l = (match l with 
+                             | 0 -> [[...other program...]]
+                             | _ -> [[...other program...]]) ;; 
+==============================

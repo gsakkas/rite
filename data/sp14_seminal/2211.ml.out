@@ -1,0 +1,71 @@
+------------------------------------------------------------------
+File "2211.ml", line 9, characters 30-39:
+This expression has type string -> string list -> string
+but is here used with type string
+Relevant code: sepConcat
+------------------------------------------------------------------
+Triaged the following locations:
+File "2211.ml", line 9, characters 40-41:
+And modified the following location:
+File "2211.ml", line 9, characters 51-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    ^
+If you ignore other surrounding code, try replacing
+    List.map
+with
+    ^
+The actual replacement has type
+    string -> string -> string
+within context
+    let stringOfList f l = "[" ^ (sepConcat ^; [[...]] ";" ^ ((^ f l) ^ "]")) ;; 
+==============================
+Triaged the following locations:
+File "2211.ml", line 9, characters 40-41:
+And modified the following location:
+File "2211.ml", line 9, characters 50-64:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    ^
+If you ignore other surrounding code, try replacing
+    (List.map f l)
+with
+    (List.map f l); [[...]]
+The actual replacement has type
+    string
+within context
+    let stringOfList f l =
+    "[" ^ (sepConcat ^; [[...]] ";" ^ (((List.map f l); [[...]]) ^ "]"))
+    ;; 
+==============================
+Triaged the following locations:
+File "2211.ml", line 9, characters 40-41:
+And modified the following location:
+File "2211.ml", line 9, characters 65-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    ^
+If you ignore other surrounding code, try replacing
+    ^
+with
+    ^; [[...]]
+The actual replacement has type
+    'a list -> string -> string
+within context
+    let stringOfList f l =
+    "[" ^ (sepConcat ^; [[...]] ";" ^ ((List.map f l) ^; [[...]] "]"))
+    ;; 
+==============================
+Triaged the following locations:
+File "2211.ml", line 9, characters 40-41:
+And modified the following location:
+File "2211.ml", line 9, characters 65-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    ^
+If you ignore other surrounding code, try replacing
+    ^
+with
+    f
+The actual replacement has type
+    (string -> string) list -> string -> string
+within context
+    let stringOfList f l = "[" ^ (sepConcat ^; [[...]] ";" ^ ((List.map f l) f "]"))
+    ;; 
+==============================

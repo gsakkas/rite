@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "0663.ml", line 27, characters 53-63:
+This expression has type int list -> int list but is here used with type
+  int list
+Relevant code: bigAdd [0]
+------------------------------------------------------------------
+File "0663.ml", line 27, characters 16-24:
+Try replacing
+    (bigAdd l (mulByDigit (i - 1) l))
+with
+    (bigAdd (l (mulByDigit (i - 1) l)))
+of type
+    int list -> int list
+within context
+    let rec mulByDigit i l =
+    (if i > 0 then (bigAdd (l (mulByDigit (i - 1) l))) else (bigAdd [0]))
+    ;; 
+==============================
+File "0663.ml", line 27, characters 25-47:
+Try replacing
+    (bigAdd l (mulByDigit (i - 1) l))
+with
+    (bigAdd l)
+of type
+    int list -> int list
+within context
+    let rec mulByDigit i l = (if i > 0 then (bigAdd l) else (bigAdd [0])) ;; 
+==============================

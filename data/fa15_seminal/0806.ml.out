@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0806.ml", line 3, characters 2-67:
+This expression has type 'a list but is here used with type 'a
+Relevant code: match l with | [] -> [] | h::t -> let r = listReverse t in r :: h
+------------------------------------------------------------------
+File "0806.ml", line 3, characters 2-67:
+Try replacing
+    (match l with 
+     | [] -> []
+     | h :: t -> (let r = (listReverse t) in r :: h))
+with
+    (match l with 
+     | [] -> []
+     | h :: t -> (let r = (listReverse t) in r :: h)); [[...]]
+of type
+    'b
+==============================

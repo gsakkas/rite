@@ -1,0 +1,49 @@
+------------------------------------------------------------------
+File "2995.ml", line 30, characters 18-44:
+This expression has type int list but is here used with type 'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "2995.ml", line 30, characters 18-44:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f base  args); [[...]]
+of type
+    'c * 'd
+within context
+    fun (l1, l2) -> (let f a x = let (arg1, arg2) = x in (match a with 
+                                                          | [] ->
+                                                            (if arg1 + arg2 > 9 then
+                                                                [1] @
+                                                                  ([
+                                                                          (mod
+                                                                            (arg1
+                                                                                +
+                                                                                arg2) 10)
+                                                                          ]
+                                                                      @ a)
+                                                                else
+                                                                arg1 + arg2 :: a)
+                                                          | h :: t ->
+                                                            (if
+                                                                (arg1 + arg2) + h
+                                                                  > 9
+                                                                then
+                                                                [1] @
+                                                                  ([
+                                                                          (mod
+                                                                            ((arg1
+                                                                                    +
+                                                                                    arg2)
+                                                                                + h) 10)
+                                                                          ]
+                                                                      @ a)
+                                                                else
+                                                                (arg1 + arg2) + h ::
+                                                                    a)) in let base
+          =
+          []
+          in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args); [[...]] in res)
+==============================

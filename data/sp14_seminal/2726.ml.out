@@ -1,0 +1,46 @@
+------------------------------------------------------------------
+File "2726.ml", line 24, characters 46-59:
+This expression has type int list but is here used with type int
+Relevant code: (intlist sum)
+------------------------------------------------------------------
+File "2726.ml", line 24, characters 46-59:
+Try replacing
+    (intlist sum)
+with
+    (intlist sum); [[...]]
+of type
+    int
+within context
+    let rec intlist x = (if x < 10 then [x] else (intlist (x / 10)) @ [(mod x 10)])
+      in
+      (match x with 
+       | (z, y) -> (match a with 
+                    | [] -> (let sum = z + y in (intlist sum))
+                    | h :: t ->
+                      (let sum = (h + z) + y in (intlist sum); [[...]] :: t)))
+==============================
+Triaged the following locations:
+File "2726.ml", line 19, characters 23-26:
+And modified the following location:
+File "2726.ml", line 19, characters 51-52:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    [x]
+If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    'a -> int list -> 'a
+within context
+    fun a
+      x ->
+        (let rec intlist x =
+            (if x < 10 then ([x]; [[...]]) else
+              ((intlist (x / 10)) @; [[...]] [(mod x 10)]))
+            in
+            (match x with 
+             | (z, y) -> (match a with 
+                          | [] -> (let sum = z + y in (intlist sum))
+                          | h :: t ->
+                            (let sum = (h + z) + y in (intlist sum) :: t))))
+==============================

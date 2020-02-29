@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2329.ml", line 3, characters 57-62:
+This expression is not a function, it cannot be applied
+Relevant code: accum
+------------------------------------------------------------------
+File "2329.ml", line 3, characters 42-70:
+Try replacing
+    (clone x) :: (accum n) - 1
+with
+    [[...]]
+of type
+    'd list
+within context
+    let rec clone x n = let accum = [] in (if n < 1 then [] else [[...]]) ;; 
+==============================

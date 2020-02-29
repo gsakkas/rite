@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2478.ml", line 32, characters 50-51:
+This expression has type int list but is here used with type int list list
+Relevant code: t
+------------------------------------------------------------------
+File "2478.ml", line 31, characters 36-113:
+Try replacing
+    [((h + b) + c) / 10] :: [(mod ((h + b) + c) 10)] :: t
+with
+    [[...]]
+of type
+    int * int list
+within context
+    (match x with 
+     | (b, c) -> (match a with 
+                  | (carry, sum) -> (match sum with 
+                                     | [] ->
+                                       (if (carry + b) + c < 10 then
+                                           0, [carry ; (carry + b) + c]
+                                           else
+                                           carry + 1,
+                                             [carry + 1 ; (mod ((carry + b) + c) 10)
+                                                 ])
+                                     | h :: t ->
+                                       (if (b + c) + h < 10 then
+                                           0, [0] @ ([(b + c) + h] @ t)
+                                           else
+                                           carry + 1, [[...]]))))
+==============================

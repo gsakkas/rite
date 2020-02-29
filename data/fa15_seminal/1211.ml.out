@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1211.ml", line 3, characters 57-61:
+This expression has type 'a * bool but is here used with type 'a
+Relevant code: f b'
+------------------------------------------------------------------
+File "1211.ml", line 3, characters 57-61:
+Try replacing
+    (if c' = false then b' else (f b'))
+with
+    (if c' = false then b')
+of type
+    unit
+within context
+    let rec wwhile (f, b) = (match (f b) with 
+                             | (b', c') -> (if c' = false then b')) ;; 
+==============================
+File "1211.ml", line 3, characters 57-58:
+Try replacing
+    f
+with
+    b
+of type
+    'b -> 'b
+within context
+    let rec wwhile (f, b) = (match (f b) with 
+                             | (b', c') -> (if c' = false then b' else (b b'))) ;; 
+==============================

@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "0858.ml", line 9, characters 4-5:
+This pattern matches values of type int
+but is here used to match values of type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "0858.ml", line 8, characters 4-8:
+Try replacing
+    h :: t
+with
+    _
+of type
+    int list
+within context
+    let rec digitsOfInt n = let ns = [] in (match n with 
+                                            | _ -> (listReverse ns)
+                                            | 0 -> ns
+                                            | n ->
+                                              (if n < 0 then [] else
+                                                  (mod n 10) ::
+                                                      (digitsOfInt (n / 10)))) ;; 
+==============================

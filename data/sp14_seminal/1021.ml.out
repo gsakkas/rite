@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "1021.ml", line 5, characters 32-33:
+This expression is not a function, it cannot be applied
+Relevant code: a
+------------------------------------------------------------------
+File "1021.ml", line 5, characters 34-35:
+Try replacing
+    (a p)
+with
+    a
+of type
+    int
+within context
+    let pipe fs =
+    let f a x = x in let base p = a in (List.fold_left f base  (List.rev fs))
+    ;; 
+==============================
+File "1021.ml", line 5, characters 32-33:
+Try replacing
+    a
+with
+    List.rev
+of type
+    'k list -> 'k list
+within context
+    fun fs ->
+      (let f a x = x in
+          let base p = (List.rev p) in (List.fold_left f base  (List.rev fs)))
+==============================
+File "1021.ml", line 5, characters 32-33:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('l -> 'm -> 'l) -> 'l -> 'm list -> 'l
+within context
+    fun fs ->
+      (let f a x = x in
+          let base p = (List.fold_left p) in (List.fold_left f base  (List.rev fs)))
+==============================
+File "1021.ml", line 5, characters 32-33:
+Try replacing
+    a
+with
+    f
+of type
+    'i -> 'j -> 'j
+within context
+    fun fs ->
+      (let f a x = x in
+          let base p = (f p) in (List.fold_left f base  (List.rev fs)))
+==============================

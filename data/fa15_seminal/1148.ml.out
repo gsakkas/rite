@@ -1,0 +1,162 @@
+------------------------------------------------------------------
+File "1148.ml", line 59, characters 9-40:
+This expression has type unit but is here used with type int
+Relevant code: helper ((List.length l2) * 2) x
+------------------------------------------------------------------
+File "1148.ml", line 59, characters 2-5:
+Try replacing
+    res
+with
+    res; [[...]]
+of type
+    unit list
+within context
+    let f a x = let (s, t) = x in (match a with 
+                                   | (r, v) ->
+                                     (let sum =
+                                           (intListToInt
+                                             (mulByDigit (intListToInt l1) [s]))
+                                           in
+                                           (if sum + r > 9 then
+                                               (intListToInt
+                                                   (carryFunc
+                                                     (mulByDigit
+                                                       (intListToInt l1) [s])))
+                                                 ,
+                                                 (mod (sum + r) 10) :: v
+                                               else
+                                               0,
+                                                 (mod (sum + r) 10) ::
+                                                     v))) in let base = 0, [] in
+      let args = (List.rev (List.combine l2 l2)) in
+      let (x, res) = (List.fold_left f base  args) in
+      (res; [[...]]) @ [(helper ((List.length l2) * 2) x)]
+==============================
+File "1148.ml", line 58, characters 16-42:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f base  args); [[...]]
+of type
+    'a * 'b
+within context
+    fun l2 -> (let f a x = let (s, t) = x in (match a with 
+                                              | (r, v) ->
+                                                (let sum =
+                                                      (intListToInt
+                                                        (mulByDigit
+                                                          (intListToInt l1) [s]))
+                                                      in
+                                                      (if sum + r > 9 then
+                                                          (intListToInt
+                                                              (carryFunc
+                                                                (mulByDigit
+                                                                  (intListToInt l1) [s])))
+                                                            ,
+                                                            (mod (sum + r) 10) :: v
+                                                          else
+                                                          0,
+                                                            (mod (sum + r) 10) ::
+                                                                v))) in let base =
+          0, []
+          in
+          let args = (List.rev (List.combine l2 l2)) in
+          let (x, res) = (List.fold_left f base  args); [[...]] in
+          res @ [(helper ((List.length l2) * 2) x)])
+==============================
+File "1148.ml", line 59, characters 8-41:
+Try replacing
+    [(helper ((List.length l2) * 2) x)]
+with
+    [(helper ((List.length l2) * 2) x)]; [[...]]
+of type
+    int list
+within context
+    let f a x = let (s, t) = x in (match a with 
+                                   | (r, v) ->
+                                     (let sum =
+                                           (intListToInt
+                                             (mulByDigit (intListToInt l1) [s]))
+                                           in
+                                           (if sum + r > 9 then
+                                               (intListToInt
+                                                   (carryFunc
+                                                     (mulByDigit
+                                                       (intListToInt l1) [s])))
+                                                 ,
+                                                 (mod (sum + r) 10) :: v
+                                               else
+                                               0,
+                                                 (mod (sum + r) 10) ::
+                                                     v))) in let base = 0, [] in
+      let args = (List.rev (List.combine l2 l2)) in
+      let (x, res) = (List.fold_left f base  args) in
+      res @ ([(helper ((List.length l2) * 2) x)]; [[...]])
+==============================
+File "1148.ml", line 59, characters 6-7:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int list -> unit list -> 'c
+within context
+    let f a x = let (s, t) = x in (match a with 
+                                   | (r, v) ->
+                                     (let sum =
+                                           (intListToInt
+                                             (mulByDigit (intListToInt l1) [s]))
+                                           in
+                                           (if sum + r > 9 then
+                                               (intListToInt
+                                                   (carryFunc
+                                                     (mulByDigit
+                                                       (intListToInt l1) [s])))
+                                                 ,
+                                                 (mod (sum + r) 10) :: v
+                                               else
+                                               0,
+                                                 (mod (sum + r) 10) ::
+                                                     v))) in let base = 0, [] in
+      let args = (List.rev (List.combine l2 l2)) in
+      let (x, res) = (List.fold_left f base  args) in
+      (res @; [[...]] [(helper ((List.length l2) * 2) x)])
+==============================
+File "1148.ml", line 46, characters 8-330:
+Try replacing
+    fun a x -> (let (s, t) = x in (match a with 
+                                   | (r, v) ->
+                                     (let sum =
+                                           (intListToInt
+                                             (mulByDigit (intListToInt l1) [s]))
+                                           in
+                                           (if sum + r > 9 then
+                                               (intListToInt
+                                                   (carryFunc
+                                                     (mulByDigit
+                                                       (intListToInt l1) [s])))
+                                                 ,
+                                                 (mod (sum + r) 10) :: v
+                                               else
+                                               0, (mod (sum + r) 10) :: v))))
+with
+    fun a x -> (let (s, t) = x in (match a with 
+                                   | (r, v) ->
+                                     (let sum =
+                                           (intListToInt
+                                             (mulByDigit (intListToInt l1) [s]))
+                                           in
+                                           (if sum + r > 9 then
+                                               (intListToInt
+                                                   (carryFunc
+                                                     (mulByDigit
+                                                       (intListToInt l1) [s])))
+                                                 ,
+                                                 (mod (sum + r) 10) :: v
+                                               else
+                                               0,
+                                                 (mod (sum + r) 10) ::
+                                                     v)))); [[...]]
+of type
+    'd
+==============================

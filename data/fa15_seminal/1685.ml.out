@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1685.ml", line 3, characters 35-56:
+This expression has type 'a list but is here used with type int
+Relevant code: (listReverse t) @ [h]
+------------------------------------------------------------------
+File "1685.ml", line 3, characters 36-47:
+Try replacing
+    (listReverse t) @ [h]
+with
+    (listReverse (t @ [h]))
+of type
+    int
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> 0
+                             | h :: t -> (listReverse (t @ [h]))) ;; 
+==============================

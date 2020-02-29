@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0388.ml", line 15, characters 14-20:
+This expression has type string but is here used with type 'a list
+Relevant code: "sin("
+------------------------------------------------------------------
+Triaged the following locations:
+File "0388.ml", line 15, characters 21-22:
+And modified the following location:
+File "0388.ml", line 15, characters 41-42:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    string -> string -> 'b
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine x ->
+                                ("sin(" @; [[...]]
+                                      ((exprToString x) @; [[...]] ")"))) ;; 
+==============================

@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "1481.ml", line 54, characters 64-65:
+This expression has type int but is here used with type int list
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "1481.ml", line 54, characters 51-57:
+And modified the following location:
+File "1481.ml", line 54, characters 64-65:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    'a list
+within context
+    fun a x -> (match x with 
+                | (templ1, l2digit) ->
+                  (let multres = (mulByDigit l2digit templ1) in
+                        ((bigAdd; [[...]]) a :: 0; [[...]] multres)))
+==============================
+Triaged the following locations:
+File "1481.ml", line 54, characters 51-57:
+And modified the following location:
+File "1481.ml", line 54, characters 58-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    a :: 0
+with
+    a, 0
+The actual replacement has type
+    'b * int
+within context
+    fun a x -> (match x with 
+                | (templ1, l2digit) ->
+                  (let multres = (mulByDigit l2digit templ1) in
+                        ((bigAdd; [[...]]) (a, 0) multres)))
+==============================

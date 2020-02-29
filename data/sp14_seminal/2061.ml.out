@@ -1,0 +1,314 @@
+------------------------------------------------------------------
+File "2061.ml", line 18, characters 16-22:
+This expression has type float but is here used with type int
+Relevant code: cos pi
+------------------------------------------------------------------
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 36-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (a, x, y))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (a, x, y))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    e
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (e, x, y))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    c
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (c, x, y))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    d
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (d, x, y))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    b
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (b, x, y))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (a, x, y))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (a, y, y))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 36-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (a, x, x))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 33-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a, x, y
+with
+    a, y, x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (a, y, x))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 30-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a, x, y
+with
+    a, x, y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (a, x, y))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 15, characters 24-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> (eval (a, x, y))
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 15, characters 24-38:
+File "2061.ml", line 17, characters 21-62:
+File "2061.ml", line 19, characters 14-41:
+And modified the following location:
+File "2061.ml", line 16, characters 36-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *; [[...]] (eval (b, x, y)))
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> [[...other program...]]
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================
+Triaged the following locations:
+File "2061.ml", line 15, characters 24-38:
+File "2061.ml", line 16, characters 19-54:
+File "2061.ml", line 17, characters 21-62:
+And modified the following location:
+File "2061.ml", line 19, characters 22-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> (cos pi)
+                              | Sine a -> (sin (pi *; [[...]] (eval (a, x, y))))
+                              | VarY -> x
+                              | VarX -> y) ;; 
+==============================

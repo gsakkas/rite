@@ -1,0 +1,80 @@
+------------------------------------------------------------------
+File "2623.ml", line 19, characters 28-43:
+This expression has type int list * int list but is here used with type
+  'a list
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2623.ml", line 20, characters 4-51:
+And modified the following location:
+File "2623.ml", line 19, characters 28-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (padZero l1 l2)
+with
+    (padZero l1 l2); [[...]]
+The actual replacement has type
+    'b list
+within context
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = [] in
+        let args = (List.combine ((padZero l1 l2); [[...]])) in
+        [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "2623.ml", line 20, characters 4-51:
+And modified the following location:
+File "2623.ml", line 19, characters 15-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    List.combine; [[...]]
+The actual replacement has type
+    int list * int list -> 'c
+within context
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = [] in
+        let args = ((List.combine; [[...]]) (padZero l1 l2)) in
+        [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "2623.ml", line 20, characters 4-51:
+And modified the following location:
+File "2623.ml", line 19, characters 15-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    clone
+The actual replacement has type
+    int list * int list -> int -> (int list * int list) list
+within context
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = [] in
+        let args = (clone (padZero l1 l2)) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "2623.ml", line 20, characters 4-51:
+And modified the following location:
+File "2623.ml", line 19, characters 4-98:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (List.combine (padZero l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'd
+within context
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = [] in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

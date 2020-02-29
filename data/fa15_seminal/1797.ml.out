@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "1797.ml", line 16, characters 41-43:
+This expression has type expr -> 'a but is here used with type expr
+Relevant code: ex
+------------------------------------------------------------------
+File "1797.ml", line 12, characters 11-23:
+Try replacing
+    exprToString
+with
+    e
+of type
+    expr
+within context
+    let rec exprToString e = let ex = e in (match e with 
+                                            | VarX -> "x"
+                                            | VarY -> "y"
+                                            | Sine t ->
+                                              "sin(pi*" ^ ((exprToString ex) ^ ")")
+                                            | Cosine t ->
+                                              "cos(pi*" ^ ((exprToString ex) ^ ")")
+                                            | Average (ex1, ex2) ->
+                                              "(" ^
+                                                  ((exprToString ex1) ^
+                                                      ("*" ^
+                                                          ((exprToString ex2)
+                                                              ^ ")/2")))
+                                            | Times (ex1, ex2) ->
+                                              (exprToString ex1) ^
+                                                  ("*" ^ (exprToString ex2))
+                                            | Thresh (ex1, ex2, ex3, ex4) ->
+                                              "(" ^
+                                                  ((exprToString ex1) ^
+                                                      ("<" ^
+                                                          ((exprToString ex2) ^
+                                                              ("?" ^
+                                                                  ((exprToString
+                                                                        ex3)
+                                                                      ^
+                                                                      (":" ^
+                                                                          ((exprToString
+                                                                                ex4)
+                                                                              ^
+                                                                              ")")))))))) ;; 
+==============================

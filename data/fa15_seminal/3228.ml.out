@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "3228.ml", line 6, characters 65-74:
+This expression has type 'a list but is here used with type int
+Relevant code: x' :: x''
+------------------------------------------------------------------
+File "3228.ml", line 2, characters 19-148:
+Try replacing
+    fun i l -> (match l with 
+                | [] -> []
+                | x :: x' :: x'' ->
+                  [(x * i) / 10] @
+                      ([(mod (x * i) 10) + x'] @ (mulByDigit i [x' :: x''])))
+with
+    fun i l -> (match l with 
+                | [] -> []
+                | x :: x' :: x'' ->
+                  [(x * i) / 10] @
+                      ([(mod (x * i) 10) + x']
+                          @ (mulByDigit i [x' :: x'']))); [[...]]
+of type
+    int -> int list list -> int list
+==============================

@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "2533.ml", line 21, characters 21-22:
+This expression is not a function, it cannot be applied
+Relevant code: 1
+------------------------------------------------------------------
+Triaged the following locations:
+File "2533.ml", line 23, characters 4-135:
+And modified the following location:
+File "2533.ml", line 20, characters 10-113:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if j + k > 10 then (j = (1 k)) = (j + k) - 10 else (j = (0 k)) = (j + k) - 10)
+with
+    [[...]]
+The actual replacement has type
+    'd list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | [] -> []
+                                                  | h :: t ->
+                                                    (let (j, k) = h in
+                                                          [[...]])) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2533.ml", line 23, characters 4-135:
+And modified the following location:
+File "2533.ml", line 15, characters 4-347:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match a with 
+                 | [] -> []
+                 | h :: t ->
+                   (let (j, k) = h in
+                         (if j + k > 10 then (j = (1 k)) = (j + k) - 10 else
+                             (j = (0 k)) =
+                               (j + k)
+                                 -
+                                 10))) in let base = 0, 0 in
+      let args = (List.combine (clone l1 (List.length l2))) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'i
+==============================

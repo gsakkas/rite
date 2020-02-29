@@ -1,0 +1,104 @@
+------------------------------------------------------------------
+File "1023.ml", line 3, characters 57-58:
+This expression has type 'a -> 'b -> 'c -> 'a but is here used with type
+  'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "1023.ml", line 3, characters 8-11:
+Try replacing
+    fun a x p' -> a
+with
+    fun x a p' -> a
+of type
+    'd -> 'e -> 'f -> 'e
+within context
+    let pipe fs =
+    let f x a p' = a in let base a' = a' in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1023.ml", line 3, characters 10-14:
+Try replacing
+    fun x p' -> a
+with
+    fun (x, p') -> a
+of type
+    'g * 'h -> 'i
+within context
+    let pipe fs =
+    let f a (x, p') = a in let base a' = a' in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1023.ml", line 3, characters 42-58:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left (f base fs))
+of type
+    'j -> 'j list -> 'j
+within context
+    let pipe fs =
+    let f a x p' = a in let base a' = a' in (List.fold_left (f base fs))
+    ;; 
+==============================
+File "1023.ml", line 3, characters 42-56:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('k -> 'l -> 'm -> 'k) -> ('n -> 'n) -> 'o -> 'k -> 'l -> 'm -> 'k
+within context
+    let pipe fs = let f a x p' = a in let base a' = a' in (f f base  fs) ;; 
+==============================
+File "1023.ml", line 3, characters 42-56:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('p -> 'p) -> 'q -> 'r -> 'p -> 'p) -> ('p -> 'p) -> 'q -> 'r -> 'p -> 'p
+within context
+    let pipe fs = let f a x p' = a in let base a' = a' in (base f base  fs) ;; 
+==============================
+File "1023.ml", line 3, characters 17-18:
+Try replacing
+    a
+with
+    fs
+of type
+    's list
+within context
+    fun fs -> (let f a x p' = fs in let base a' = a' in (List.fold_left f base  fs))
+==============================
+File "1023.ml", line 3, characters 17-18:
+Try replacing
+    a
+with
+    x
+of type
+    't
+within context
+    fun fs -> (let f a x p' = x in let base a' = a' in (List.fold_left f base  fs))
+==============================
+File "1023.ml", line 3, characters 17-18:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('u -> 'v -> 'u) -> 'u -> 'v list -> 'u
+within context
+    fun fs ->
+      (let f a x p' = List.fold_left in
+          let base a' = a' in (List.fold_left f base  fs))
+==============================
+File "1023.ml", line 3, characters 17-18:
+Try replacing
+    a
+with
+    p'
+of type
+    'w
+within context
+    fun fs -> (let f a x p' = p' in let base a' = a' in (List.fold_left f base  fs))
+==============================

@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1429.ml", line 2, characters 67-68:
+This expression has type 'a list but is here used with type 'a
+Relevant code: t
+------------------------------------------------------------------
+File "1429.ml", line 2, characters 67-68:
+Try replacing
+    t
+with
+    h
+of type
+    'b
+within context
+    fun l -> (match l with 
+              | h :: t -> [h] @ (listReverse [h]))
+==============================
+File "1429.ml", line 2, characters 67-68:
+Try replacing
+    t
+with
+    @
+of type
+    'c list -> 'c list -> 'c list
+within context
+    fun l -> (match l with 
+              | h :: t -> [h] @ (listReverse [@]))
+==============================

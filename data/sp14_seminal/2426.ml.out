@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2426.ml", line 2, characters 64-72:
+This expression has type 'a list * 'b list but is here used with type unit
+Relevant code: (l1, l2)
+------------------------------------------------------------------
+File "2426.ml", line 2, characters 64-72:
+Try replacing
+    l1, l2
+with
+    l1, l2; [[...]]
+of type
+    unit
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) = (List.length l2) then (l1, l2; [[...]]))
+    ;; 
+==============================

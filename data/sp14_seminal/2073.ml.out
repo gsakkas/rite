@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2073.ml", line 27, characters 37-48:
+This expression has type expr * expr * expr * expr -> expr
+but is here used with type expr
+Relevant code: buildThresh
+------------------------------------------------------------------
+File "2073.ml", line 26, characters 2-328:
+Try replacing
+    (match e with 
+     | Thresh (a, b, c, d) -> (exprToString buildThresh (a, b, c, d))
+     | Times (a, b) -> (exprToString buildTimes (a, b))
+     | Average (a, b) -> (exprToString buildAverage (a, b))
+     | Cosine a -> (exprToString buildCosine a)
+     | Sine a -> (exprToString buildSine a)
+     | VarY -> (exprToString buildY)
+     | VarX -> (exprToString buildX))
+with
+    [[...]]
+of type
+    'a
+==============================

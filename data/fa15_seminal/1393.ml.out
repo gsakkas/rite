@@ -1,0 +1,49 @@
+------------------------------------------------------------------
+File "1393.ml", line 4, characters 65-73:
+This expression has type (('a -> 'a) * 'a -> 'a * bool) * 'b
+but is here used with type
+  (('a -> 'a) * 'a -> (('a -> 'a) * 'a) * bool) * (('a -> 'a) * 'a)
+Relevant code: (fin, b)
+------------------------------------------------------------------
+File "1393.ml", line 4, characters 66-72:
+Try replacing
+    fin, b
+with
+    b, fin
+of type
+    ((('c -> 'c) * 'c -> 'c * bool) -> (('c -> 'c) * 'c -> 'c * bool) * bool) *
+    (('c -> 'c) * 'c -> 'c * bool)
+within context
+    let fixpoint (f, b) = (wwhile (let fin (f, b) = b, (f b) = b in b, fin)) ;; 
+==============================
+File "1393.ml", line 4, characters 21-27:
+Try replacing
+    wwhile
+with
+    f
+of type
+    (('d -> 'd) * 'd -> 'd * bool) * 'e -> 'f
+within context
+    let fixpoint (f, b) = (f (let fin (f, b) = b, (f b) = b in fin, b)) ;; 
+==============================
+File "1393.ml", line 4, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    (('g -> 'g) * 'g -> 'g * bool) * 'h ->
+    (('g -> 'g) * 'g -> 'g * bool) * 'h -> bool
+within context
+    let fixpoint (f, b) = (= (let fin (f, b) = b, (f b) = b in fin, b)) ;; 
+==============================
+File "1393.ml", line 4, characters 66-69:
+Try replacing
+    fin
+with
+    f
+of type
+    ('i -> 'i * bool) * 'i
+within context
+    let fixpoint (f, b) = (wwhile (let fin (f, b) = b, (f b) = b in f, b)) ;; 
+==============================

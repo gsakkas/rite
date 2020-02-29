@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1528.ml", line 3, characters 19-20:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+File "1528.ml", line 3, characters 16-18:
+Try replacing
+    **
+with
+    **; [[...]]
+of type
+    'a -> int -> 'b
+within context
+    fun xs ->
+      (let f a x = (a **; [[...]] 2) in
+          let base = (f 2 xs) in (List.fold_left f base  xs))
+==============================

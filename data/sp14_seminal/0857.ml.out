@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "0857.ml", line 4, characters 2-96:
+This expression has type int list list but is here used with type int list
+Relevant code: match n with
+  | 0 -> ns
+  | n -> if n < 0 then [] else [(n mod 10) :: (digitsOfInt (n / 10))]
+------------------------------------------------------------------
+File "0857.ml", line 2, characters 20-137:
+Try replacing
+    fun n -> (let ns = [] in (match n with 
+                              | 0 -> ns
+                              | n ->
+                                (if n < 0 then [] else
+                                    [(mod n 10) :: (digitsOfInt (n / 10))])))
+with
+    fun n -> (let ns = [] in (match n with 
+                              | 0 -> ns
+                              | n ->
+                                (if n < 0 then [] else
+                                    [(mod n 10) :: (digitsOfInt (n / 10))
+                                        ]))); [[...]]
+of type
+    int -> int list
+==============================

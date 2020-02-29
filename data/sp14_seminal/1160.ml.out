@@ -1,0 +1,95 @@
+------------------------------------------------------------------
+File "1160.ml", line 5, characters 13-14:
+This expression has type int but is here used with type int list
+Relevant code: 0
+------------------------------------------------------------------
+File "1160.ml", line 5, characters 11-12:
+Try replacing
+    (integers n 0)
+with
+    (integers 0)
+of type
+    int list -> int list
+within context
+    let rec digitsOfInt n =
+    let rec integers a b =
+      (if a = 0 then b else (integers (a / 10) (mod a 10) :: b))
+      in
+      (integers 0)
+    ;; 
+==============================
+File "1160.ml", line 5, characters 11-14:
+Try replacing
+    (integers n 0)
+with
+    (integers 0 n)
+of type
+    int list
+within context
+    let rec digitsOfInt n =
+    let rec integers a b =
+      (if a = 0 then b else (integers (a / 10) (mod a 10) :: b))
+      in
+      (integers 0 n)
+    ;; 
+==============================
+File "1160.ml", line 5, characters 2-12:
+Try replacing
+    (integers n 0)
+with
+    (integers (n 0))
+of type
+    int list -> int list
+within context
+    let rec digitsOfInt n =
+    let rec integers a b =
+      (if a = 0 then b else (integers (a / 10) (mod a 10) :: b))
+      in
+      (integers (n 0))
+    ;; 
+==============================
+File "1160.ml", line 5, characters 2-10:
+Try replacing
+    integers
+with
+    mod
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n =
+    let rec integers a b =
+      (if a = 0 then b else (integers (a / 10) (mod a 10) :: b))
+      in
+      (mod n 0)
+    ;; 
+==============================
+File "1160.ml", line 5, characters 2-10:
+Try replacing
+    integers
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n =
+    let rec integers a b =
+      (if a = 0 then b else (integers (a / 10) (mod a 10) :: b))
+      in
+      (/ n 0)
+    ;; 
+==============================
+File "1160.ml", line 5, characters 2-10:
+Try replacing
+    integers
+with
+    =
+of type
+    int -> int -> bool
+within context
+    let rec digitsOfInt n =
+    let rec integers a b =
+      (if a = 0 then b else (integers (a / 10) (mod a 10) :: b))
+      in
+      (= n 0)
+    ;; 
+==============================

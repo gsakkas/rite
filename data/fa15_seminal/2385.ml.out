@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "2385.ml", line 25, characters 23-44:
+This expression has type char list but is here used with type 'a list list
+Relevant code: (getTail (explode w))
+------------------------------------------------------------------
+File "2385.ml", line 25, characters 23-44:
+Try replacing
+    (getTail (explode w))
+with
+    (getTail (explode w)); [[...]]
+of type
+    'b list list
+within context
+    let palindrome w = (match (explode w) with 
+                        | [] -> true
+                        | h :: t ->
+                          (matchHeads ((getTail (explode w)); [[...]]))) ;; 
+==============================
+File "2385.ml", line 25, characters 12-22:
+Try replacing
+    matchHeads
+with
+    matchHeads; [[...]]
+of type
+    char list -> bool
+within context
+    let palindrome w = (match (explode w) with 
+                        | [] -> true
+                        | h :: t ->
+                          ((matchHeads; [[...]]) (getTail (explode w)))) ;; 
+==============================

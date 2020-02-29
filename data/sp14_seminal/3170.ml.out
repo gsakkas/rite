@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "3170.ml", line 9, characters 10-21:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.append
+------------------------------------------------------------------
+File "3170.ml", line 9, characters 10-27:
+Try replacing
+    (List.append clone 0  ((List.length l2) - (List.length l1)))
+with
+    (List.append (clone 0 ((List.length l2) - (List.length l1))))
+of type
+    int list -> int list
+within context
+    fun l1
+      l2 ->
+        (if (List.length l1) < (List.length l2) then
+          ((List.append (clone 0 ((List.length l2) - (List.length l1)))) l1), l2
+          else
+          l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+==============================

@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "2388.ml", line 5, characters 52-58:
+This expression has type int but is here used with type 'a list
+Relevant code: result
+------------------------------------------------------------------
+File "2388.ml", line 5, characters 10-27:
+Try replacing
+    digitsOfIntHelper
+with
+    >
+of type
+    int -> int -> bool
+within context
+    fun n result -> (if n > 0 then (> (n / 10) (mod n 10)) :: result else result)
+==============================
+File "2388.ml", line 5, characters 10-27:
+Try replacing
+    digitsOfIntHelper
+with
+    /
+of type
+    int -> int -> int
+within context
+    fun n result -> (if n > 0 then (/ (n / 10) (mod n 10)) :: result else result)
+==============================
+File "2388.ml", line 5, characters 10-27:
+Try replacing
+    digitsOfIntHelper
+with
+    mod
+of type
+    int -> int -> int
+within context
+    fun n result -> (if n > 0 then (mod (n / 10) (mod n 10)) :: result else result)
+==============================

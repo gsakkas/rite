@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "1772.ml", line 22, characters 39-61:
+This expression has type int but is here used with type 'a list
+Relevant code: (((i + j) + s) mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1772.ml", line 22, characters 8-9:
+And modified the following location:
+File "1772.ml", line 22, characters 39-61:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    =
+If you ignore other surrounding code, try replacing
+    (mod ((i + j) + s) 10)
+with
+    (mod ((i + j) + s) 10); [[...]]
+The actual replacement has type
+    'b list
+within context
+    fun a
+      x ->
+        (let (i, j) = x in
+            let (s, t) = a in
+            (a =; [[...]] ((i + j) + s) / 10, t :: (mod ((i + j) + s) 10); [[...]]))
+==============================
+Triaged the following locations:
+File "1772.ml", line 22, characters 8-9:
+And modified the following location:
+File "1772.ml", line 22, characters 33-62:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    =
+If you ignore other surrounding code, try replacing
+    t :: (mod ((i + j) + s) 10)
+with
+    t, (mod ((i + j) + s) 10)
+The actual replacement has type
+    'c * int
+within context
+    fun a
+      x ->
+        (let (i, j) = x in
+            let (s, t) = a in
+            (a =; [[...]] ((i + j) + s) / 10, (t, (mod ((i + j) + s) 10))))
+==============================
+Triaged the following locations:
+File "1772.ml", line 22, characters 8-9:
+And modified the following location:
+File "1772.ml", line 22, characters 10-63:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    =
+If you ignore other surrounding code, try replacing
+    ((i + j) + s) / 10, t :: (mod ((i + j) + s) 10)
+with
+    ((i + j) + s) / 10
+The actual replacement has type
+    int
+within context
+    fun a
+      x -> (let (i, j) = x in let (s, t) = a in (a =; [[...]] ((i + j) + s) / 10))
+==============================

@@ -1,0 +1,187 @@
+------------------------------------------------------------------
+File "2053.ml", line 6, characters 25-26:
+This expression has type ('a * 'b) list but is here used with type 'a
+Relevant code: c
+------------------------------------------------------------------
+File "2053.ml", line 6, characters 23-24:
+Try replacing
+    =
+with
+    k
+of type
+    'c -> ('c * 'd) list -> bool
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if (n k c) then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 23-24:
+Try replacing
+    =
+with
+    b
+of type
+    'e -> ('e * 'f) list -> bool
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if (n b c) then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 21-22:
+Try replacing
+    n
+with
+    t
+of type
+    ('g * 'h) list
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if t = c then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 21-22:
+Try replacing
+    n
+with
+    k
+of type
+    ('i * 'j) list
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if k = c then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 21-22:
+Try replacing
+    n
+with
+    b
+of type
+    ('k * 'l) list
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if b = c then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 21-22:
+Try replacing
+    n
+with
+    c
+of type
+    ('m * 'n) list
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if c = c then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 25-26:
+Try replacing
+    c
+with
+    k
+of type
+    'o
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if n = k then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 25-26:
+Try replacing
+    c
+with
+    n
+of type
+    'p
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if n = n then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 21-22:
+Try replacing
+    n
+with
+    l
+of type
+    ('q * 'r) list
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if l = c then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 25-26:
+Try replacing
+    c
+with
+    b
+of type
+    's
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if n = b then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 25-26:
+Try replacing
+    c
+with
+    =
+of type
+    't -> 't -> bool
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if n = = then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 25-26:
+Try replacing
+    c
+with
+    a
+of type
+    'u
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if n = a then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================
+File "2053.ml", line 6, characters 25-26:
+Try replacing
+    c
+with
+    d
+of type
+    'v
+within context
+    let rec helper (a, b, c) = (match c with 
+                                | [] -> a
+                                | (n, v) :: t ->
+                                  (if n = d then v else
+                                      (helper (a, b, t)))) in (helper (d, k, l))
+==============================

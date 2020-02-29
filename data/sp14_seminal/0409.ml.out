@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0409.ml", line 20, characters 36-40:
+This expression has type int but is here used with type float
+Relevant code: (-1)
+------------------------------------------------------------------
+File "0409.ml", line 20, characters 41-43:
+Try replacing
+    *.
+with
+    *.; [[...]]
+of type
+    int -> expr -> float
+within context
+    (match e with 
+     | VarX -> x
+     | VarY -> y
+     | Sine a -> (sin (pi *. (eval (a, x, y))))
+     | Cosine a -> (cos (pi *. (eval (a, x, y))))
+     | Sigmoid a -> (1. /. 1. -. (exp (-1 *.; [[...]] a)))
+     | Average (a, b) -> (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.)
+     | Times (a, b) -> ((eval (a, x, y)) *. (eval (b, x, y)))
+     | Thresh (a, b, c, d) ->
+       (if (eval (a, x, y)) < (eval (b, x, y)) then (eval (c, x, y)) else
+           (eval (d, x, y))))
+==============================

@@ -1,0 +1,109 @@
+------------------------------------------------------------------
+File "0907.ml", line 21, characters 33-34:
+This expression has type int -> int * int -> int * int list
+but is here used with type int -> int * int -> int
+Relevant code: f
+------------------------------------------------------------------
+Triaged the following locations:
+File "0907.ml", line 22, characters 2-65:
+And modified the following location:
+File "0907.ml", line 21, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    f
+with
+    f; [[...]]
+The actual replacement has type
+    int * 'a list -> 'b * 'c -> int * 'a list
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match x with 
+                                                       | (l1e, l2e) ->
+                                                         (let num = (l1e + l2e) + a
+                                                               in
+                                                               (mod num 9),
+                                                                   [7
+                                                                       ])) in let
+        base
+        =
+        0, []
+        in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left (f; [[...]]) base  args) in
+        res in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "0907.ml", line 22, characters 2-65:
+And modified the following location:
+File "0907.ml", line 21, characters 18-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+The actual replacement has type
+    (int -> int * int -> int * int list) ->
+    int * 'd list -> ('e * 'f) list -> 'g * 'h
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match x with 
+                                                       | (l1e, l2e) ->
+                                                         (let num = (l1e + l2e) + a
+                                                               in
+                                                               (mod num 9),
+                                                                   [7
+                                                                       ])) in let
+        base
+        =
+        0, []
+        in
+        let args = (List.combine l1 l2) in
+        let (_, res) = ((List.fold_left; [[...]]) f base  args) in
+        res in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "0907.ml", line 22, characters 2-65:
+And modified the following location:
+File "0907.ml", line 16, characters 10-103:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun a x -> (match x with 
+                | (l1e, l2e) -> (let num = (l1e + l2e) + a in (mod num 9), [7]))
+with
+    fun a x -> (match x with 
+                | (l1e, l2e) ->
+                  (let num = (l1e + l2e) + a in (mod num 9), [7])); [[...]]
+The actual replacement has type
+    'i
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f = fun a x -> (match x with 
+                                                              | (l1e, l2e) ->
+                                                                (let num =
+                                                                      (l1e + l2e)
+                                                                        + a
+                                                                      in
+                                                                      (mod num 9),
+                                                                          [7
+                                                                              ])); [[...]] in let
+        base
+        =
+        0, []
+        in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in
+        res in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "0907.ml", line 22, characters 2-65:
+And modified the following location:
+File "0907.ml", line 15, characters 2-310:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (l1e, l2e) ->
+                                      (let num = (l1e + l2e) + a in
+                                            (mod num 9),
+                                                [7
+                                                    ])) in let base = 0, [] in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add ((padZero l1 l2) (if l1 > l2 then l1 else l2))))
+with
+    [[...other program...]]
+The actual replacement has type
+    'j
+==============================

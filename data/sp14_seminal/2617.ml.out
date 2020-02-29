@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2617.ml", line 11, characters 18-33:
+This expression has type int but is here used with type 'a list
+Relevant code: (l_diff * (-1))
+------------------------------------------------------------------
+File "2617.ml", line 11, characters 34-35:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> int list -> int
+within context
+    let l_diff = l1_len - l2_len in
+      (if l_diff < 0 then (clone 0 (l_diff * -1 @; [[...]] l1)), l2 else
+          l1, (clone 0 l_diff) @ l2)
+==============================

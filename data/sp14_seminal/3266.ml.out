@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "3266.ml", line 3, characters 60-64:
+This expression has type int but is here used with type 'a -> int -> int
+Relevant code: base
+------------------------------------------------------------------
+File "3266.ml", line 3, characters 43-59:
+Try replacing
+    (List.fold_left f base  xs)
+with
+    (List.fold_left (f base xs))
+of type
+    int -> int list -> int
+within context
+    let sqsum xs =
+    let f a x a x = x * x in let base = 0 in (List.fold_left (f base xs))
+    ;; 
+==============================
+File "3266.ml", line 3, characters 43-57:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('b -> 'c -> 'd -> int -> int) -> int -> 'e -> int -> int
+within context
+    let sqsum xs = let f a x a x = x * x in let base = 0 in (f f base  xs) ;; 
+==============================
+File "3266.ml", line 3, characters 60-64:
+Try replacing
+    base
+with
+    *
+of type
+    int -> int -> int
+within context
+    let sqsum xs = let f a x a x = x * x in let base = 0 in (List.fold_left f *  xs)
+    ;; 
+==============================
+File "3266.ml", line 3, characters 58-59:
+Try replacing
+    f
+with
+    *
+of type
+    int -> int -> int
+within context
+    let sqsum xs =
+    let f a x a x = x * x in let base = 0 in (List.fold_left * base  xs)
+    ;; 
+==============================

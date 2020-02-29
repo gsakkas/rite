@@ -1,0 +1,93 @@
+------------------------------------------------------------------
+File "1030.ml", line 23, characters 45-46:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "1030.ml", line 23, characters 48-67:
+And modified the following location:
+File "1030.ml", line 23, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (y, z) = a in
+            let (r, s) = x in let m = (r + s) + y in m / 10, (mod m 10) :: z
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine ((List.rev l1) @ (0; [[...]])) [[...other program...]])
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1030.ml", line 23, characters 48-67:
+And modified the following location:
+File "1030.ml", line 23, characters 43-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    'b list -> int -> 'c list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (y, z) = a in
+            let (r, s) = x in let m = (r + s) + y in m / 10, (mod m 10) :: z
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine ((List.rev l1) @; [[...]] 0) [[...other program...]])
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1030.ml", line 23, characters 28-47:
+And modified the following location:
+File "1030.ml", line 23, characters 63-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    'd list -> int -> 'e list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (y, z) = a in
+            let (r, s) = x in let m = (r + s) + y in m / 10, (mod m 10) :: z
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine [[...other program...]] ((List.rev l2) @; [[...]] 0))
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1030.ml", line 23, characters 28-47:
+And modified the following location:
+File "1030.ml", line 23, characters 65-66:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (y, z) = a in
+            let (r, s) = x in let m = (r + s) + y in m / 10, (mod m 10) :: z
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine [[...other program...]] ((List.rev l2) @ (0; [[...]])))
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

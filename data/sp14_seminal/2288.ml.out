@@ -1,0 +1,51 @@
+------------------------------------------------------------------
+File "2288.ml", line 7, characters 23-38:
+This expression has type ('a * 'a list) list -> bool
+but is here used with type bool
+Relevant code: List.mem (h, t)
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "2288.ml", line 7, characters 38-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.mem (h, t))
+with
+    (List.mem (h, t) [[...]])
+The actual replacement has type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if (List.mem (h, t) [[...]]) then h else
+                                             [[...]])
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================
+Triaged the following locations:
+And modified the following location:
+File "2288.ml", line 7, characters 32-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.mem (h, t))
+with
+    (List.mem h t)
+The actual replacement has type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if (List.mem h t) then h else [[...]])
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================

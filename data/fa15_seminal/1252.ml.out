@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1252.ml", line 10, characters 32-41:
+This expression has type 'a list but is here used with type int
+Relevant code: (0 :: l2)
+------------------------------------------------------------------
+File "1252.ml", line 10, characters 9-14:
+Try replacing
+    clone
+with
+    clone; [[...]]
+of type
+    int -> int list -> int list list list * int list
+within context
+    fun l1
+      l2 ->
+        (if (List.length l1) = (List.length l2) then l1, l2 else
+          (if (List.length l1) < (List.length l2) then
+            (clone 0 ((List.length l2) - (List.length l1))) :: l1, l2
+            else
+            ((clone; [[...]]) (List.length l1) 0 :: l2)))
+==============================

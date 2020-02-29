@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "1957.ml", line 43, characters 42-46:
+This expression has type int list but is here used with type int list list
+Relevant code: args
+------------------------------------------------------------------
+File "1957.ml", line 43, characters 20-34:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int list -> int list) -> 'a list -> int list -> 'b * 'c
+within context
+    let f a x = (match x with 
+                 | [] -> []
+                 | h :: t ->
+                   (bigAdd
+                       (mulByDigit h l1)
+                       a)) in let base = [] in
+      let args = (tenEx 0 l2) in
+      let (carry, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

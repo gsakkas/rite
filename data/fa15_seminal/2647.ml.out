@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "2647.ml", line 31, characters 35-40:
+This expression has type int list but is here used with type int
+Relevant code: total
+------------------------------------------------------------------
+Triaged the following locations:
+File "2647.ml", line 31, characters 59-60:
+File "2647.ml", line 31, characters 61-66:
+And modified the following location:
+File "2647.ml", line 31, characters 41-42:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    int list -> (int list -> int list) -> 'a
+within context
+    fun i
+      l ->
+        (if i < 2 then l else
+          (let total = (bigAdd l l) in
+              ((total +; [[...]] (mulByDigit i))
+                    -; [[...]] [[...other program...]])))
+==============================
+Triaged the following locations:
+File "2647.ml", line 31, characters 34-58:
+File "2647.ml", line 31, characters 59-60:
+And modified the following location:
+File "2647.ml", line 31, characters 62-63:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    int list -> 'b
+within context
+    fun i
+      l ->
+        (if i < 2 then l else
+          (let total = (bigAdd l l) in
+              ([[...other program...]] -; [[...]] ((1; [[...]]) l))))
+==============================
+Triaged the following locations:
+File "2647.ml", line 31, characters 34-58:
+File "2647.ml", line 31, characters 59-60:
+And modified the following location:
+File "2647.ml", line 31, characters 64-65:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    (1 l)
+with
+    1
+The actual replacement has type
+    int
+within context
+    fun i
+      l ->
+        (if i < 2 then l else
+          (let total = (bigAdd l l) in ([[...other program...]] -; [[...]] 1)))
+==============================

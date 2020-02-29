@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "2571.ml", line 31, characters 6-18:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+Triaged the following locations:
+File "2571.ml", line 31, characters 6-18:
+And modified the following location:
+File "2571.ml", line 31, characters 19-26:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    exprToString
+If you ignore other surrounding code, try replacing
+    Average
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+                              | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+                              | Average (ex1, ex2) ->
+                                "((" ^
+                                    ((exprToString ex1) ^
+                                        ("+" ^ ((exprToString ex2) ^ ")/2)")))
+                              | Times (ex1, ex2) ->
+                                (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+                              | Thresh (ex1, ex2, ex3, ex4) ->
+                                "(" ^
+                                    ((exprToString ex1) ^
+                                        ("<" ^
+                                            ((exprToString ex2) ^
+                                                ("?" ^
+                                                    ((exprToString ex3) ^
+                                                        (":" ^
+                                                            ((exprToString ex4)
+                                                                ^ ")")))))))
+                              | Square ex -> "(" ^ ((exprToString ex) ^ ") ^ 2")
+                              | Mix (ex1, ex2, ex3) ->
+                                ((exprToString; [[...]])
+                                    [[...]] ((Times ex1, ex2), (Times ex2, ex3)))) ;; 
+==============================

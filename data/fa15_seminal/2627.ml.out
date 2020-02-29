@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2627.ml", line 20, characters 18-44:
+This expression has type 'a list but is here used with type 'b * 'c
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "2627.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('d -> 'e -> 'f) -> 'g list -> ('h * 'i) list -> 'j * 'k
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (f f base  args) in res
+==============================

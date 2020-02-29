@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+File "2628.ml", line 7, characters 58-59:
+This expression has type string but is here used with type string list
+Relevant code: l
+------------------------------------------------------------------
+File "2628.ml", line 6, characters 19-20:
+Try replacing
+    h
+with
+    x
+of type
+    string
+within context
+    let f a x = (x ^ sep) ^ x in
+      let base = "" in let l = h in (List.fold_left f base  l)
+==============================
+File "2628.ml", line 7, characters 31-32:
+Try replacing
+    h
+with
+    t
+of type
+    string list
+within context
+    fun sl -> (match sl with 
+               | [] -> ""
+               | h :: t ->
+                 (let f a x = (h ^ sep) ^ x in
+                       let base = "" in let l = t in (List.fold_left f base  l)))
+==============================
+File "2628.ml", line 6, characters 19-20:
+Try replacing
+    h
+with
+    a
+of type
+    string
+within context
+    let f a x = (a ^ sep) ^ x in
+      let base = "" in let l = h in (List.fold_left f base  l)
+==============================
+File "2628.ml", line 7, characters 58-59:
+Try replacing
+    l
+with
+    sl
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (h ^ sep) ^ x in
+             let base = "" in let l = h in (List.fold_left f base  sl)))
+==============================
+File "2628.ml", line 7, characters 58-59:
+Try replacing
+    l
+with
+    t
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (h ^ sep) ^ x in
+             let base = "" in let l = h in (List.fold_left f base  t)))
+==============================

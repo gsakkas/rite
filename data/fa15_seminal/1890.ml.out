@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "1890.ml", line 30, characters 11-27:
+This expression has type float but is here used with type int
+Relevant code: (eval (a, x, y))
+------------------------------------------------------------------
+File "1890.ml", line 30, characters 28-31:
+Try replacing
+    mod
+with
+    mod; [[...]]
+of type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Power (a, b) ->
+                                (if x < 1.0 && x > -1.0 || y < 1.0 && y > -1.0 then
+                                    0.5
+                                    else
+                                    ((mod; [[...]])
+                                      (eval (a, x, y)) (eval (b, x, y))))
+                              | Tower (a, b, c) ->
+                                (if x < 1.0 && x > -1.0 || y < 1.0 && y > -1.0 then
+                                    0.5
+                                    else
+                                    (((eval (a, x, y)) +. (eval (b, x, y)))
+                                        +. (eval (c, x, y))))) ;; 
+==============================

@@ -1,0 +1,113 @@
+------------------------------------------------------------------
+File "0812.ml", line 30, characters 15-18:
+This expression has type float -> float but is here used with type float
+Relevant code: exp
+------------------------------------------------------------------
+Triaged the following locations:
+File "0812.ml", line 30, characters 20-21:
+And modified the following location:
+File "0812.ml", line 30, characters 15-18:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    exp
+with
+    x
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Sqrt e -> (sqrt (abs_float (eval (e, x, y))))
+                              | Gauss (e1, e2, e3) ->
+                                ((2.0 *. x) -; [[...]]
+                                        (((eval (e1, x, y)) -. (eval (e2, x, y)))
+                                              ** 2.0
+                                            /. (eval (e3, x, y))))
+                                    -. 1.0
+                              | _ -> (failwith "error")) ;; 
+==============================
+Triaged the following locations:
+File "0812.ml", line 30, characters 20-21:
+And modified the following location:
+File "0812.ml", line 30, characters 15-18:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    exp
+with
+    exp; [[...]]
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Sqrt e -> (sqrt (abs_float (eval (e, x, y))))
+                              | Gauss (e1, e2, e3) ->
+                                ((2.0 *. exp; [[...]]) -; [[...]]
+                                        (((eval (e1, x, y)) -. (eval (e2, x, y)))
+                                              ** 2.0
+                                            /. (eval (e3, x, y))))
+                                    -. 1.0
+                              | _ -> (failwith "error")) ;; 
+==============================
+Triaged the following locations:
+File "0812.ml", line 30, characters 20-21:
+And modified the following location:
+File "0812.ml", line 30, characters 12-14:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    float -> (float -> float) -> 'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Sqrt e -> (sqrt (abs_float (eval (e, x, y))))
+                              | Gauss (e1, e2, e3) ->
+                                ((2.0 *.; [[...]] exp) -; [[...]]
+                                        (((eval (e1, x, y)) -. (eval (e2, x, y)))
+                                              ** 2.0
+                                            /. (eval (e3, x, y))))
+                                    -. 1.0
+                              | _ -> (failwith "error")) ;; 
+==============================

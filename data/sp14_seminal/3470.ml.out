@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3470.ml", line 3, characters 25-63:
+This expression is not a function, it cannot be applied
+Relevant code: ((n mod 10) :: (digitsOfInt (n / 10)))
+------------------------------------------------------------------
+File "3470.ml", line 3, characters 64-72:
+Try replacing
+    ((mod n 10) :: (digitsOfInt (n / 10)) List.rev)
+with
+    (mod n 10) :: (digitsOfInt (n / 10))
+of type
+    int list
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [] else (mod n 10) :: (digitsOfInt (n / 10)))
+    ;; 
+==============================

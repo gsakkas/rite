@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "2358.ml", line 7, characters 20-21:
+This expression has type 'a list but is here used with type bool
+Relevant code: t
+------------------------------------------------------------------
+File "2358.ml", line 7, characters 20-21:
+Try replacing
+    t
+with
+    t; [[...]]
+of type
+    bool
+within context
+    fun sl -> (match sl with 
+               | [] -> ""
+               | h :: t ->
+                 (let f a x = a ^ (sep ^ x) in
+                       let base = (if (t; [[...]]) then "" else "a") in
+                       let l = sl in (List.fold_left f base  l)))
+==============================

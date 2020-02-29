@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2686.ml", line 9, characters 9-18:
+This expression has type 'a * 'b * 'c but is here used with type
+  ('d * 'e) list
+Relevant code: (d, k, l)
+------------------------------------------------------------------
+File "2686.ml", line 9, characters 9-22:
+Try replacing
+    (helper (d, k, l) acc)
+with
+    (helper acc (d, k, l))
+of type
+    'f
+within context
+    let rec assoc (d, k, l) =
+    let acc = l in let rec helper acc (d, k, l) = (match acc with 
+                                                   | [] -> d
+                                                   | h :: t -> (match h with 
+                                                                | (s, v) ->
+                                                                  (if s = k then v
+                                                                      else
+                                                                      (helper
+                                                                        t
+                                                                        (d,
+                                                                            k,
+                                                                            l))))) in (helper
+          acc (d, k, l))
+    ;; 
+==============================

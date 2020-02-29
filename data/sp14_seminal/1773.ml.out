@@ -1,0 +1,94 @@
+------------------------------------------------------------------
+File "1773.ml", line 23, characters 38-50:
+This expression has type int list -> int list * int list
+but is here used with type 'a list
+Relevant code: (padZero l1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1773.ml", line 23, characters 28-51:
+And modified the following location:
+File "1773.ml", line 23, characters 53-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    (int list -> int list * int list) -> 'b list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (i, j) = x in
+            let (s, t) = a in ((i + j) + s) / 10, (mod ((i + j) + s) 10) :: t
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine [[...other program...]] ((List.rev; [[...]]) (padZero l2)))
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1773.ml", line 23, characters 52-75:
+And modified the following location:
+File "1773.ml", line 23, characters 38-50:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (padZero l1)
+with
+    (padZero l1); [[...]]
+The actual replacement has type
+    'c list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (i, j) = x in
+            let (s, t) = a in ((i + j) + s) / 10, (mod ((i + j) + s) 10) :: t
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine (List.rev ((padZero l1); [[...]])) [[...other program...]])
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1773.ml", line 23, characters 52-75:
+And modified the following location:
+File "1773.ml", line 23, characters 29-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    (int list -> int list * int list) -> 'd list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (i, j) = x in
+            let (s, t) = a in ((i + j) + s) / 10, (mod ((i + j) + s) 10) :: t
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine ((List.rev; [[...]]) (padZero l1)) [[...other program...]])
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1773.ml", line 23, characters 28-51:
+And modified the following location:
+File "1773.ml", line 23, characters 62-74:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (padZero l2)
+with
+    (padZero l2); [[...]]
+The actual replacement has type
+    'e list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (i, j) = x in
+            let (s, t) = a in ((i + j) + s) / 10, (mod ((i + j) + s) 10) :: t
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine [[...other program...]] (List.rev ((padZero l2); [[...]])))
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

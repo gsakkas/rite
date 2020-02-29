@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "3076.ml", line 3, characters 48-52:
+This expression is not a function, it cannot be applied
+Relevant code: numL
+------------------------------------------------------------------
+File "3076.ml", line 3, characters 13-15:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    'f
+within context
+    let rec digitsOfInt n =
+    let numL = []; [[...]] in
+      (if n > 0 then (mod n 10) :: (numL digitsOfInt n) else numL)
+    ;; 
+==============================
+File "3076.ml", line 3, characters 48-52:
+Try replacing
+    numL
+with
+    numL; [[...]]
+of type
+    (int -> int list) -> int -> int list
+within context
+    fun n ->
+      (let numL = [] in
+          (if n > 0 then (mod n 10) :: ((numL; [[...]]) digitsOfInt n) else numL))
+==============================

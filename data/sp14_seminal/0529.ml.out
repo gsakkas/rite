@@ -1,0 +1,190 @@
+------------------------------------------------------------------
+File "0529.ml", line 33, characters 13-14:
+This expression has type int but is here used with type expr
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "0529.ml", line 34, characters 11-56:
+File "0529.ml", line 35, characters 11-68:
+And modified the following location:
+File "0529.ml", line 33, characters 13-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine i -> (sin (pi *. (eval (i, x, y))))
+                              | Cosine i -> (cos (pi *. (eval (i, x, y))))
+                              | Average (i1, i2) ->
+                                (((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0)
+                              | Times (i1, i2) ->
+                                ((eval (i1, x, y)) *. (eval (i2, x, y)))
+                              | Thresh (i1, i2, i3, i4) ->
+                                (if (eval (i1, x, y)) < (eval (i2, x, y)) then
+                                    (eval (i3, x, y))
+                                    else
+                                    (eval (i4, x, y)))
+                              | ECosSin (a, b) ->
+                                2.71 **
+                                      (((sin (pi *. (eval (a, x, y))))
+                                              +. (cos (pi *. (eval (b, x, y)))))
+                                          -. 1.0)
+                                    -. 1.0
+                              | SinLog (a, b, c) ->
+                                (if c < (0; [[...]]) then [[...other program...]]
+                                    else
+                                    [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "0529.ml", line 34, characters 11-56:
+File "0529.ml", line 35, characters 11-68:
+And modified the following location:
+File "0529.ml", line 33, characters 9-10:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    c
+with
+    c; [[...]]
+The actual replacement has type
+    int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine i -> (sin (pi *. (eval (i, x, y))))
+                              | Cosine i -> (cos (pi *. (eval (i, x, y))))
+                              | Average (i1, i2) ->
+                                (((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0)
+                              | Times (i1, i2) ->
+                                ((eval (i1, x, y)) *. (eval (i2, x, y)))
+                              | Thresh (i1, i2, i3, i4) ->
+                                (if (eval (i1, x, y)) < (eval (i2, x, y)) then
+                                    (eval (i3, x, y))
+                                    else
+                                    (eval (i4, x, y)))
+                              | ECosSin (a, b) ->
+                                2.71 **
+                                      (((sin (pi *. (eval (a, x, y))))
+                                              +. (cos (pi *. (eval (b, x, y)))))
+                                          -. 1.0)
+                                    -. 1.0
+                              | SinLog (a, b, c) ->
+                                (if (c; [[...]]) < 0 then [[...other program...]]
+                                    else
+                                    [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "0529.ml", line 34, characters 11-56:
+File "0529.ml", line 35, characters 11-68:
+And modified the following location:
+File "0529.ml", line 33, characters 11-12:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    <
+with
+    <; [[...]]
+The actual replacement has type
+    expr -> int -> bool
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine i -> (sin (pi *. (eval (i, x, y))))
+                              | Cosine i -> (cos (pi *. (eval (i, x, y))))
+                              | Average (i1, i2) ->
+                                (((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0)
+                              | Times (i1, i2) ->
+                                ((eval (i1, x, y)) *. (eval (i2, x, y)))
+                              | Thresh (i1, i2, i3, i4) ->
+                                (if (eval (i1, x, y)) < (eval (i2, x, y)) then
+                                    (eval (i3, x, y))
+                                    else
+                                    (eval (i4, x, y)))
+                              | ECosSin (a, b) ->
+                                2.71 **
+                                      (((sin (pi *. (eval (a, x, y))))
+                                              +. (cos (pi *. (eval (b, x, y)))))
+                                          -. 1.0)
+                                    -. 1.0
+                              | SinLog (a, b, c) ->
+                                (if (c <; [[...]] 0) then [[...other program...]]
+                                    else
+                                    [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "0529.ml", line 33, characters 9-14:
+File "0529.ml", line 34, characters 11-56:
+And modified the following location:
+File "0529.ml", line 35, characters 22-60:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (log (x *. 100)) ** (sin (x *. 100))
+with
+    [[...]]
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine i -> (sin (pi *. (eval (i, x, y))))
+                              | Cosine i -> (cos (pi *. (eval (i, x, y))))
+                              | Average (i1, i2) ->
+                                (((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0)
+                              | Times (i1, i2) ->
+                                ((eval (i1, x, y)) *. (eval (i2, x, y)))
+                              | Thresh (i1, i2, i3, i4) ->
+                                (if (eval (i1, x, y)) < (eval (i2, x, y)) then
+                                    (eval (i3, x, y))
+                                    else
+                                    (eval (i4, x, y)))
+                              | ECosSin (a, b) ->
+                                2.71 **
+                                      (((sin (pi *. (eval (a, x, y))))
+                                              +. (cos (pi *. (eval (b, x, y)))))
+                                          -. 1.0)
+                                    -. 1.0
+                              | SinLog (a, b, c) ->
+                                (if [[...other program...]] then
+                                    [[...other program...]]
+                                    else
+                                    (-1.0 *. [[...]] -. 1.0))) ;; 
+==============================
+Triaged the following locations:
+File "0529.ml", line 33, characters 9-14:
+File "0529.ml", line 35, characters 11-68:
+And modified the following location:
+File "0529.ml", line 34, characters 11-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (log (x *. 100)) ** (sin (x *. 100))
+with
+    [[...]]
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine i -> (sin (pi *. (eval (i, x, y))))
+                              | Cosine i -> (cos (pi *. (eval (i, x, y))))
+                              | Average (i1, i2) ->
+                                (((eval (i1, x, y)) +. (eval (i2, x, y))) /. 2.0)
+                              | Times (i1, i2) ->
+                                ((eval (i1, x, y)) *. (eval (i2, x, y)))
+                              | Thresh (i1, i2, i3, i4) ->
+                                (if (eval (i1, x, y)) < (eval (i2, x, y)) then
+                                    (eval (i3, x, y))
+                                    else
+                                    (eval (i4, x, y)))
+                              | ECosSin (a, b) ->
+                                2.71 **
+                                      (((sin (pi *. (eval (a, x, y))))
+                                              +. (cos (pi *. (eval (b, x, y)))))
+                                          -. 1.0)
+                                    -. 1.0
+                              | SinLog (a, b, c) ->
+                                (if [[...other program...]] then [[...]] -. 1.0 else
+                                    [[...other program...]])) ;; 
+==============================

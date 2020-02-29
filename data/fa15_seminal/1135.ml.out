@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "1135.ml", line 37, characters 32-65:
+This expression has type int list but is here used with type string
+Relevant code: (mulByDigit (int_of_string l1) s)
+------------------------------------------------------------------
+File "1135.ml", line 37, characters 32-65:
+Try replacing
+    (mulByDigit (int_of_string l1) s)
+with
+    (mulByDigit (int_of_string l1) s); [[...]]
+of type
+    string
+within context
+    fun x -> (let (s, t) = x in (match a with 
+                                 | (r, v) ->
+                                   (let sum =
+                                         (int_of_string
+                                           ((mulByDigit (int_of_string l1) s);
+                                             [[...]]))
+                                         in
+                                         (if sum + r > 9 then
+                                             (sum + r) / 10, (mod (sum + r) 10) :: v
+                                             else
+                                             0, (mod (sum + r) 10) :: v))))
+==============================
+File "1135.ml", line 37, characters 18-31:
+Try replacing
+    int_of_string
+with
+    int_of_string; [[...]]
+of type
+    int list -> 'a
+within context
+    fun x -> (let (s, t) = x in (match a with 
+                                 | (r, v) ->
+                                   (let sum =
+                                         ((int_of_string; [[...]])
+                                           (mulByDigit (int_of_string l1) s))
+                                         in
+                                         (if sum + r > 9 then
+                                             (sum + r) / 10, (mod (sum + r) 10) :: v
+                                             else
+                                             0, (mod (sum + r) 10) :: v))))
+==============================

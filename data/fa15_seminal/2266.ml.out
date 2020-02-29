@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2266.ml", line 30, characters 55-61:
+This expression has type 'a * 'a but is here used with type int list
+Relevant code: (l, l)
+------------------------------------------------------------------
+File "2266.ml", line 30, characters 55-61:
+Try replacing
+    (bigAdd (l, l))
+with
+    (bigAdd l l)
+of type
+    int list
+within context
+    let rec mulByDigit i l = (if i = 0 then [0] else (bigAdd l l)) ;; 
+==============================

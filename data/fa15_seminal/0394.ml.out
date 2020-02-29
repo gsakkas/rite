@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "0394.ml", line 8, characters 9-20:
+This expression has type int * int but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: ((fx b), b)
+------------------------------------------------------------------
+File "0394.ml", line 8, characters 2-8:
+Try replacing
+    wwhile
+with
+    f
+of type
+    int * int -> 'b
+within context
+    let fixpoint (f, b) =
+    let fx x = (if x = 0 then 0 else (if x > 1 then x - 1 else x + 1)) in
+      (f ((fx b), b))
+    ;; 
+==============================
+File "0394.ml", line 8, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    int * int -> int * int -> bool
+within context
+    let fixpoint (f, b) =
+    let fx x = (if x = 0 then 0 else (if x > 1 then x - 1 else x + 1)) in
+      (= ((fx b), b))
+    ;; 
+==============================
+File "0394.ml", line 8, characters 2-8:
+Try replacing
+    wwhile
+with
+    >
+of type
+    int * int -> int * int -> bool
+within context
+    let fixpoint (f, b) =
+    let fx x = (if x = 0 then 0 else (if x > 1 then x - 1 else x + 1)) in
+      (> ((fx b), b))
+    ;; 
+==============================
+File "0394.ml", line 8, characters 11-13:
+Try replacing
+    fx
+with
+    f
+of type
+    'c -> 'c -> 'c * bool
+within context
+    fun (f, b) ->
+      (let fx x = (if x = 0 then 0 else (if x > 1 then x - 1 else x + 1)) in
+          (wwhile ((f b), b)))
+==============================

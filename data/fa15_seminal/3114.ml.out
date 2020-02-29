@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "3114.ml", line 2, characters 54-56:
+This expression has type unit but is here used with type int
+Relevant code: ()
+------------------------------------------------------------------
+File "3114.ml", line 2, characters 35-36:
+Try replacing
+    n
+with
+    n; [[...]]
+of type
+    int
+within context
+    let rec additivePersistence n = (if (n; [[...]]) < 10 then n else ()) ;; 
+==============================
+File "3114.ml", line 2, characters 47-48:
+Try replacing
+    n
+with
+    n; [[...]]
+of type
+    unit
+within context
+    let rec additivePersistence n = (if n < 10 then (n; [[...]]) else ()) ;; 
+==============================
+File "3114.ml", line 2, characters 54-56:
+Try replacing
+    ()
+with
+    (); [[...]]
+of type
+    int
+within context
+    let rec additivePersistence n = (if n < 10 then n else ((); [[...]])) ;; 
+==============================
+File "3114.ml", line 2, characters 39-41:
+Try replacing
+    10
+with
+    10; [[...]]
+of type
+    unit
+within context
+    let rec additivePersistence n = (if n < (10; [[...]]) then n else ()) ;; 
+==============================
+File "3114.ml", line 2, characters 37-38:
+Try replacing
+    <
+with
+    <; [[...]]
+of type
+    unit -> int -> bool
+within context
+    let rec additivePersistence n = (if (n <; [[...]] 10) then n else ()) ;; 
+==============================

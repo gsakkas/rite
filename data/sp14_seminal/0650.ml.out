@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "0650.ml", line 32, characters 38-70:
+This expression has type int list -> int list but is here used with type
+  int list
+Relevant code: bigAdd ((mulByDigit (h l1')) a')
+------------------------------------------------------------------
+Triaged the following locations:
+File "0650.ml", line 32, characters 25-27:
+And modified the following location:
+File "0650.ml", line 32, characters 38-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    a'
+If you ignore other surrounding code, try replacing
+    (bigAdd ((mulByDigit (h l1')) a'))
+with
+    (bigAdd ((mulByDigit (h l1')) a')); [[...]]
+The actual replacement has type
+    'a
+within context
+    let f a x = let (l1', a') = a in (match x with 
+                                      | [] -> (a'; [[...]])
+                                      | h :: t ->
+                                        ((bigAdd ((mulByDigit (h l1')) a'));
+                                            [[...]])) in let base = l1, [0] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

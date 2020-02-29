@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "3377.ml", line 12, characters 27-57:
+This expression has type int but is here used with type 'a list
+Relevant code: List.fold_left f base (h :: t)
+------------------------------------------------------------------
+File "3377.ml", line 11, characters 11-89:
+Try replacing
+    let f a x = a + x in let base = 0 in (List.fold_left f base  h :: t)
+with
+    let f a x = a + x in let base = 0 in (List.fold_left f base  h :: t); [[...]]
+of type
+    int list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                (match
+                                 (mulByDigit
+                                     i (List.rev (List.map (fun x -> x * 10) t)))
+                                   @ [h * i]
+                                 with
+                                 
+                                 | [] -> []
+                                 | h :: t ->
+                                   (let f a x = a + x in
+                                         let base = 0 in
+                                         (List.fold_left f base  h :: t);
+                                       [[...]]))) ;; 
+==============================

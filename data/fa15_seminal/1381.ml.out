@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1381.ml", line 29, characters 21-38:
+This expression has type float but is here used with type int
+Relevant code: (eval (m4, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1381.ml", line 29, characters 39-40:
+And modified the following location:
+File "1381.ml", line 29, characters 41-56:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    (1 +. (sqrt 5))
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine sine -> (sin (pi *. (eval (sine, x, y))))
+                              | Cosine cosine -> (cos (pi *. (eval (cosine, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (t1, t2) ->
+                                ((eval (t1, x, y)) *. (eval (t2, x, y)))
+                              | Thresh (th1, th2, th3, th4) ->
+                                (if (eval (th1, x, y)) < (eval (th2, x, y)) then
+                                    (eval (th3, x, y))
+                                    else
+                                    (eval (th4, x, y)))
+                              | Circ (circ1, circ2) ->
+                                (sqrt
+                                    ((eval (circ1, x, y)) ** 2.0
+                                        +. (eval (circ2, x, y)) ** 2.0))
+                              | GoldTimes m4 ->
+                                (((eval (m4, x, y)) *; [[...]] [[...]]) /. 2.0)) ;; 
+==============================

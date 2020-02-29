@@ -1,0 +1,241 @@
+
+------------------------------------------------------------------
+File "0798.ml", line 40, characters 11-332:
+This expression has type expr but is here used with type unit -> expr
+Relevant code: (match rand (1, 7) with
+            | 1 -> buildSine next
+            | 2 -> buildCosine next
+            | 3 -> buildAverage (next, next)
+            | 4 -> buildTimes (next, next)
+            | 5 -> buildThresh (next, next, next, next)
+            | 6 -> buildSqrt next
+            | 7 -> buildGauss (next, next, next))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0798.ml", line 42, characters 19-35:
+File "0798.ml", line 43, characters 19-44:
+File "0798.ml", line 44, characters 19-42:
+File "0798.ml", line 45, characters 19-55:
+File "0798.ml", line 46, characters 19-33:
+File "0798.ml", line 47, characters 19-48:
+And modified the following location:
+File "0798.ml", line 41, characters 19-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildSine
+with
+    buildSine; [[...]]
+The actual replacement has type
+    (unit -> expr) -> unit -> expr
+within context
+    fun (rand, depth) -> (match depth with 
+                          | 0 -> (match (rand (1, 2)) with 
+                                  | 1 -> buildX
+                                  | 2 -> buildY
+                                  | _ ->
+                                    (let next = (build (rand, depth - 1)) in
+                                          (match (rand (1, 7)) with 
+                                           | 1 -> ((buildSine; [[...]]) next)
+                                           | 2 -> [[...other program...]]
+                                           | 3 -> [[...other program...]]
+                                           | 4 -> [[...other program...]]
+                                           | 5 -> [[...other program...]]
+                                           | 6 -> [[...other program...]]
+                                           | 7 -> [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "0798.ml", line 41, characters 19-33:
+File "0798.ml", line 42, characters 19-35:
+File "0798.ml", line 43, characters 19-44:
+File "0798.ml", line 44, characters 19-42:
+File "0798.ml", line 46, characters 19-33:
+File "0798.ml", line 47, characters 19-48:
+And modified the following location:
+File "0798.ml", line 45, characters 19-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildThresh
+with
+    buildThresh; [[...]]
+The actual replacement has type
+    (unit -> expr) * (unit -> expr) *
+    (unit -> expr) * (unit -> expr) ->
+    unit -> expr
+within context
+    fun (rand, depth) -> (match depth with 
+                          | 0 -> (match (rand (1, 2)) with 
+                                  | 1 -> buildX
+                                  | 2 -> buildY
+                                  | _ ->
+                                    (let next = (build (rand, depth - 1)) in
+                                          (match (rand (1, 7)) with 
+                                           | 1 -> [[...other program...]]
+                                           | 2 -> [[...other program...]]
+                                           | 3 -> [[...other program...]]
+                                           | 4 -> [[...other program...]]
+                                           | 5 ->
+                                             ((buildThresh; [[...]])
+                                                 (next, next, next, next))
+                                           | 6 -> [[...other program...]]
+                                           | 7 -> [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "0798.ml", line 41, characters 19-33:
+File "0798.ml", line 42, characters 19-35:
+File "0798.ml", line 43, characters 19-44:
+File "0798.ml", line 45, characters 19-55:
+File "0798.ml", line 46, characters 19-33:
+File "0798.ml", line 47, characters 19-48:
+And modified the following location:
+File "0798.ml", line 44, characters 19-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    (unit -> expr) * (unit -> expr) ->
+    unit -> expr
+within context
+    fun (rand, depth) -> (match depth with 
+                          | 0 -> (match (rand (1, 2)) with 
+                                  | 1 -> buildX
+                                  | 2 -> buildY
+                                  | _ ->
+                                    (let next = (build (rand, depth - 1)) in
+                                          (match (rand (1, 7)) with 
+                                           | 1 -> [[...other program...]]
+                                           | 2 -> [[...other program...]]
+                                           | 3 -> [[...other program...]]
+                                           | 4 ->
+                                             ((buildTimes; [[...]]) (next, next))
+                                           | 5 -> [[...other program...]]
+                                           | 6 -> [[...other program...]]
+                                           | 7 -> [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "0798.ml", line 41, characters 19-33:
+File "0798.ml", line 42, characters 19-35:
+File "0798.ml", line 44, characters 19-42:
+File "0798.ml", line 45, characters 19-55:
+File "0798.ml", line 46, characters 19-33:
+File "0798.ml", line 47, characters 19-48:
+And modified the following location:
+File "0798.ml", line 43, characters 19-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildAverage
+with
+    buildAverage; [[...]]
+The actual replacement has type
+    (unit -> expr) * (unit -> expr) ->
+    unit -> expr
+within context
+    fun (rand, depth) -> (match depth with 
+                          | 0 -> (match (rand (1, 2)) with 
+                                  | 1 -> buildX
+                                  | 2 -> buildY
+                                  | _ ->
+                                    (let next = (build (rand, depth - 1)) in
+                                          (match (rand (1, 7)) with 
+                                           | 1 -> [[...other program...]]
+                                           | 2 -> [[...other program...]]
+                                           | 3 ->
+                                             ((buildAverage; [[...]]) (next, next))
+                                           | 4 -> [[...other program...]]
+                                           | 5 -> [[...other program...]]
+                                           | 6 -> [[...other program...]]
+                                           | 7 -> [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "0798.ml", line 41, characters 19-33:
+File "0798.ml", line 43, characters 19-44:
+File "0798.ml", line 44, characters 19-42:
+File "0798.ml", line 45, characters 19-55:
+File "0798.ml", line 46, characters 19-33:
+File "0798.ml", line 47, characters 19-48:
+And modified the following location:
+File "0798.ml", line 42, characters 19-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildCosine
+with
+    buildCosine; [[...]]
+The actual replacement has type
+    (unit -> expr) -> unit -> expr
+within context
+    fun (rand, depth) -> (match depth with 
+                          | 0 -> (match (rand (1, 2)) with 
+                                  | 1 -> buildX
+                                  | 2 -> buildY
+                                  | _ ->
+                                    (let next = (build (rand, depth - 1)) in
+                                          (match (rand (1, 7)) with 
+                                           | 1 -> [[...other program...]]
+                                           | 2 -> ((buildCosine; [[...]]) next)
+                                           | 3 -> [[...other program...]]
+                                           | 4 -> [[...other program...]]
+                                           | 5 -> [[...other program...]]
+                                           | 6 -> [[...other program...]]
+                                           | 7 -> [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "0798.ml", line 41, characters 19-33:
+File "0798.ml", line 42, characters 19-35:
+File "0798.ml", line 43, characters 19-44:
+File "0798.ml", line 44, characters 19-42:
+File "0798.ml", line 45, characters 19-55:
+File "0798.ml", line 46, characters 19-33:
+And modified the following location:
+File "0798.ml", line 47, characters 19-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildGauss
+with
+    buildGauss; [[...]]
+The actual replacement has type
+    (unit -> expr) * (unit -> expr) *
+    (unit -> expr) -> unit -> expr
+within context
+    fun (rand, depth) -> (match depth with 
+                          | 0 -> (match (rand (1, 2)) with 
+                                  | 1 -> buildX
+                                  | 2 -> buildY
+                                  | _ ->
+                                    (let next = (build (rand, depth - 1)) in
+                                          (match (rand (1, 7)) with 
+                                           | 1 -> [[...other program...]]
+                                           | 2 -> [[...other program...]]
+                                           | 3 -> [[...other program...]]
+                                           | 4 -> [[...other program...]]
+                                           | 5 -> [[...other program...]]
+                                           | 6 -> [[...other program...]]
+                                           | 7 ->
+                                             ((buildGauss; [[...]])
+                                                 (next, next, next))))))
+==============================
+Triaged the following locations:
+File "0798.ml", line 41, characters 19-33:
+File "0798.ml", line 42, characters 19-35:
+File "0798.ml", line 43, characters 19-44:
+File "0798.ml", line 44, characters 19-42:
+File "0798.ml", line 45, characters 19-55:
+File "0798.ml", line 47, characters 19-48:
+And modified the following location:
+File "0798.ml", line 46, characters 19-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildSqrt
+with
+    buildSqrt; [[...]]
+The actual replacement has type
+    (unit -> expr) -> unit -> expr
+within context
+    fun (rand, depth) -> (match depth with 
+                          | 0 -> (match (rand (1, 2)) with 
+                                  | 1 -> buildX
+                                  | 2 -> buildY
+                                  | _ ->
+                                    (let next = (build (rand, depth - 1)) in
+                                          (match (rand (1, 7)) with 
+                                           | 1 -> [[...other program...]]
+                                           | 2 -> [[...other program...]]
+                                           | 3 -> [[...other program...]]
+                                           | 4 -> [[...other program...]]
+                                           | 5 -> [[...other program...]]
+                                           | 6 -> ((buildSqrt; [[...]]) next)
+                                           | 7 -> [[...other program...]]))))
+==============================

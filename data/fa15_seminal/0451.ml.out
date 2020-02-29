@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "0451.ml", line 8, characters 53-74:
+This expression has type ('a * 'b) * bool but is here used with type
+  int * bool
+Relevant code: ((test (f b)), false)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0451.ml", line 9, characters 2-22:
+And modified the following location:
+File "0451.ml", line 8, characters 55-59:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    test
+with
+    f
+The actual replacement has type
+    int -> int
+within context
+    let fixpoint (f, b) =
+    let isFPoint x = (f x) - x < 0 in
+      let rec test x = (if (isFPoint x) then x, true else (f (f b)), false) in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0451.ml", line 9, characters 2-22:
+And modified the following location:
+File "0451.ml", line 8, characters 15-74:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun x -> (if (isFPoint x) then x, true else (test (f b)), false)
+with
+    fun x -> (if (isFPoint x) then x, true else (test (f b)), false); [[...]]
+The actual replacement has type
+    int -> int
+within context
+    let fixpoint (f, b) =
+    let isFPoint x = (f x) - x < 0 in
+      let rec test =
+      fun x -> (if (isFPoint x) then x, true else (test (f b)), false); [[...]]
+      in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0451.ml", line 9, characters 2-22:
+And modified the following location:
+File "0451.ml", line 8, characters 2-100:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let rec test x = (if (isFPoint x) then x, true else (test (f b)), false) in
+      (wwhile (isFPoint, b))
+with
+    [[...other program...]]
+The actual replacement has type
+    'c
+within context
+    let fixpoint (f, b) = let isFPoint x = (f x) - x < 0 in [[...other program...]]
+    ;; 
+==============================

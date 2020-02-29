@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1588.ml", line 3, characters 24-46:
+This expression has type int but is here used with type 'a list
+Relevant code: ((digitsOfInt n) / 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1588.ml", line 3, characters 47-48:
+And modified the following location:
+File "1588.ml", line 3, characters 41-42:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    /
+with
+    /; [[...]]
+The actual replacement has type
+    'b list -> int -> 'c
+within context
+    let rec digitsOfInt n =
+    (if n < 0 then [] else (((digitsOfInt n) /; [[...]] 10) @; [[...]] (mod n 10)))
+    ;; 
+==============================
+Triaged the following locations:
+File "1588.ml", line 3, characters 47-48:
+And modified the following location:
+File "1588.ml", line 3, characters 26-37:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    (digitsOfInt n) / 10
+with
+    (digitsOfInt (n / 10))
+The actual replacement has type
+    'd list
+within context
+    let rec digitsOfInt n =
+    (if n < 0 then [] else ((digitsOfInt (n / 10)) @; [[...]] (mod n 10)))
+    ;; 
+==============================

@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "0246.ml", line 21, characters 35-39:
+This expression has type (int * int) list but is here used with type
+  int list * int list
+Relevant code: base
+------------------------------------------------------------------
+File "0246.ml", line 21, characters 35-44:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f args  base)
+of type
+    int list * int list
+within context
+    fun (l1, l2) ->
+      (let f a x = (padZero l1 l2) in
+          let base = (List.combine l1 l2) in
+          let args = (failwith "to be implemented") in
+          let (_, res) = (List.fold_left f args  base) in res)
+==============================
+File "0246.ml", line 21, characters 35-39:
+Try replacing
+    base
+with
+    args
+of type
+    int list * int list
+within context
+    let f a x = (padZero l1 l2) in
+      let base = (List.combine l1 l2) in
+      let args = (failwith "to be implemented") in
+      let (_, res) = (List.fold_left f args  args) in res
+==============================

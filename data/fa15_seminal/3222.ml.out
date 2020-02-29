@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "3222.ml", line 5, characters 49-66:
+This expression has type 'a list but is here used with type int
+Relevant code: [mulByDigit i x']
+------------------------------------------------------------------
+File "3222.ml", line 5, characters 47-48:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int -> int list list list -> int list
+within context
+    fun l -> (match l with 
+              | [] -> []
+              | x :: x' ->
+                [[(x * i) / 10] ; ((mod (x * i) 10) +; [[...]] [(mulByDigit i x')])
+                      ])
+==============================

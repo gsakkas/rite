@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "0358.ml", line 16, characters 24-36:
+This expression has type 'a list -> 'b list -> ('a * 'b) list
+but is here used with type string
+Relevant code: List.combine
+------------------------------------------------------------------
+Triaged the following locations:
+File "0358.ml", line 17, characters 4-51:
+And modified the following location:
+File "0358.ml", line 16, characters 15-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (failwith List.combine (l1 l2))
+with
+    [[...]]
+The actual replacement has type
+    'c
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x, y) ->
+                                      [a ; (mod (x + y) 10)
+                                            ]) in let base = [] in
+        let args = [[...]] in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0358.ml", line 17, characters 4-51:
+And modified the following location:
+File "0358.ml", line 16, characters 4-99:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (failwith List.combine (l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'd
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x, y) ->
+                                      [a ; (mod (x + y) 10)
+                                            ]) in let base = [] in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================

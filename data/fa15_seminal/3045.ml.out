@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "3045.ml", line 27, characters 14-20:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: bigAdd
+------------------------------------------------------------------
+Triaged the following locations:
+File "3045.ml", line 27, characters 14-20:
+And modified the following location:
+File "3045.ml", line 27, characters 22-23:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int
+within context
+    fun l2 ->
+      (let f a x = ((bigAdd; [[...]]) [a; [[...]] ; 0] mulByDigit  x  l1) in
+          let base = [] in let args = l2 in (List.fold_left f base  args))
+==============================
+Triaged the following locations:
+File "3045.ml", line 27, characters 14-20:
+And modified the following location:
+File "3045.ml", line 27, characters 21-27:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    [a ; 0]
+with
+    a, [0]
+The actual replacement has type
+    'b * int list
+within context
+    fun l2 ->
+      (let f a x = ((bigAdd; [[...]]) (a, [0]) mulByDigit  x  l1) in
+          let base = [] in let args = l2 in (List.fold_left f base  args))
+==============================
+Triaged the following locations:
+File "3045.ml", line 27, characters 14-20:
+And modified the following location:
+File "3045.ml", line 27, characters 25-27:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    [0]
+with
+    [0]; [[...]]
+The actual replacement has type
+    'e list
+within context
+    fun l2 ->
+      (let f a x = ((bigAdd; [[...]]) a :: [0]; [[...]] mulByDigit  x  l1) in
+          let base = [] in let args = l2 in (List.fold_left f base  args))
+==============================

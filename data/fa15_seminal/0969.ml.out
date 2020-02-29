@@ -1,0 +1,384 @@
+------------------------------------------------------------------
+File "0969.ml", line 23, characters 14-20:
+This expression is not a function, it cannot be applied
+Relevant code: buildX
+------------------------------------------------------------------
+Triaged the following locations:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 27, characters 23-74:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 23, characters 21-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildX ())
+with
+    buildX
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> buildX
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 27, characters 23-74:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 23, characters 14-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildX
+with
+    buildX; [[...]]
+The actual replacement has type
+    unit -> expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> ((buildX; [[...]]) ())
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 27, characters 67-68:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    e
+The actual replacement has type
+    expr * expr * 't2
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage
+                                    ((eval (e1, x, y)), (eval (e2, e, y))))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 27, characters 51-52:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    e
+The actual replacement has type
+    expr * 'd1 * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage
+                                    ((eval (e1, x, e)), (eval (e2, x, y))))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 27, characters 44-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    x
+The actual replacement has type
+    expr * expr * 'f
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage ((eval (x, x, y)), (eval (e2, x, y))))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 27, characters 23-74:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 24, characters 14-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildY
+with
+    buildY; [[...]]
+The actual replacement has type
+    unit -> expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> ((buildY; [[...]]) ())
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 27, characters 23-74:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 24, characters 21-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildY ())
+with
+    buildY
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> buildY
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 27, characters 38-53:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (e1, x, y))
+with
+    (eval ((e1, x, y)))
+The actual replacement has type
+    expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage
+                                    ((eval ((e1, x, y))), (eval (e2, x, y))))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 27, characters 44-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    y
+The actual replacement has type
+    expr * 'e * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage ((eval (y, x, y)), (eval (e2, x, y))))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 27, characters 48-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    expr * 's * 's
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage
+                                    ((eval (e1, y, y)), (eval (e2, x, y))))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 27, characters 44-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e
+The actual replacement has type
+    expr * 'i * 'j
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage ((eval (e, x, y)), (eval (e2, x, y))))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 27, characters 44-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e2
+The actual replacement has type
+    expr * 'g * 'h
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage
+                                    ((eval (e2, x, y)), (eval (e2, x, y))))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 27, characters 44-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e1
+The actual replacement has type
+    expr * 'k * 'l
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage
+                                    ((eval (e1, x, y)), (eval (e2, x, y))))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 27, characters 48-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    e2
+The actual replacement has type
+    expr * expr * 'q
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage
+                                    ((eval (e1, e2, y)), (eval (e2, x, y))))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0969.ml", line 23, characters 14-23:
+File "0969.ml", line 24, characters 14-23:
+File "0969.ml", line 28, characters 21-70:
+File "0969.ml", line 30, characters 6-55:
+And modified the following location:
+File "0969.ml", line 27, characters 48-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    e1
+The actual replacement has type
+    expr * expr * 'r
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | buildX -> [[...other program...]]
+                              | buildY -> [[...other program...]]
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage
+                                    ((eval (e1, e1, y)), (eval (e2, x, y))))
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]) ;; 
+==============================

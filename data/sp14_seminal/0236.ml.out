@@ -1,0 +1,77 @@
+------------------------------------------------------------------
+File "0236.ml", line 29, characters 65-66:
+This expression has type int but is here used with type float
+Relevant code: 1
+------------------------------------------------------------------
+File "0236.ml", line 29, characters 65-66:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine a -> (sin (pi *. (eval (a, x, y))))
+                      | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                      | Average (a, b) ->
+                        (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.)
+                      | Times (a, b) -> ((eval (a, x, y)) *. (eval (b, x, y)))
+                      | Thresh (a, b, c, d) ->
+                        (if (eval (a, x, y)) < (eval (b, x, y)) then
+                            (eval (c, x, y))
+                            else
+                            (eval (d, x, y)))
+                      | Inverse a ->
+                        (let result = (eval (a, x, y)) in
+                              (if result = 0. then 0. else (1; [[...]] /. result)))
+                      | Max (a, b) ->
+                        (let aResult = (eval (a, x, y)) in
+                              let bResult = (eval (b, x, y)) in
+                              (if aResult > bResult then aResult else bResult))
+                      | Range (a, b, c) ->
+                        (let aResult = (eval (a, x, y)) in
+                              let bResult = (eval (b, x, y)) in
+                              let cResult = (eval (c, x, y)) in
+                              (if aResult < bResult then bResult else
+                                  (if aResult < cResult then cResult else
+                                    aResult))))
+==============================
+File "0236.ml", line 29, characters 67-69:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    int -> float -> float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine a -> (sin (pi *. (eval (a, x, y))))
+                      | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                      | Average (a, b) ->
+                        (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.)
+                      | Times (a, b) -> ((eval (a, x, y)) *. (eval (b, x, y)))
+                      | Thresh (a, b, c, d) ->
+                        (if (eval (a, x, y)) < (eval (b, x, y)) then
+                            (eval (c, x, y))
+                            else
+                            (eval (d, x, y)))
+                      | Inverse a ->
+                        (let result = (eval (a, x, y)) in
+                              (if result = 0. then 0. else (1 /.; [[...]] result)))
+                      | Max (a, b) ->
+                        (let aResult = (eval (a, x, y)) in
+                              let bResult = (eval (b, x, y)) in
+                              (if aResult > bResult then aResult else bResult))
+                      | Range (a, b, c) ->
+                        (let aResult = (eval (a, x, y)) in
+                              let bResult = (eval (b, x, y)) in
+                              let cResult = (eval (c, x, y)) in
+                              (if aResult < bResult then bResult else
+                                  (if aResult < cResult then cResult else
+                                    aResult))))
+==============================

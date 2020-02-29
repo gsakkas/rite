@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "3580.ml", line 3, characters 14-23:
+This expression has type float but is here used with type int
+Relevant code: (a ** 2.)
+------------------------------------------------------------------
+File "3580.ml", line 3, characters 17-19:
+Try replacing
+    **
+with
+    **; [[...]]
+of type
+    'a -> float -> int
+within context
+    let f a x = (a **; [[...]] 2.) + x in
+      let base = 0 in (List.fold_left f base  xs)
+==============================

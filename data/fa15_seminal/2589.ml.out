@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "2589.ml", line 4, characters 63-68:
+This expression has type 'a * bool but is here used with type 'a
+Relevant code: (f b)
+------------------------------------------------------------------
+File "2589.ml", line 4, characters 55-55:
+Try replacing
+    (wwhile (f, b))
+with
+    (wwhile [[...]] (f, b))
+of type
+    'b
+within context
+    fun (f, b) -> (wwhile ((fun x -> ((wwhile [[...]] (f, b)), b = (f b))), b))
+==============================
+File "2589.ml", line 4, characters 59-60:
+Try replacing
+    b
+with
+    b; [[...]]
+of type
+    'c * bool
+within context
+    (wwhile ((fun x -> ((wwhile (f, b)), (b; [[...]]) = (f b))), b))
+==============================
+File "2589.ml", line 4, characters 63-68:
+Try replacing
+    (f b)
+with
+    (f b); [[...]]
+of type
+    'd
+within context
+    (wwhile ((fun x -> ((wwhile (f, b)), b = ((f b); [[...]]))), b))
+==============================
+File "2589.ml", line 4, characters 61-62:
+Try replacing
+    =
+with
+    =; [[...]]
+of type
+    'e -> 'e * bool -> bool
+within context
+    (wwhile ((fun x -> ((wwhile (f, b)), (b =; [[...]] (f b)))), b))
+==============================
+File "2589.ml", line 4, characters 42-48:
+Try replacing
+    wwhile
+with
+    wwhile; [[...]]
+of type
+    ('f -> 'f) * 'f -> 'f
+within context
+    (wwhile ((fun x -> (((wwhile; [[...]]) (f, b)), b = (f b))), b))
+==============================

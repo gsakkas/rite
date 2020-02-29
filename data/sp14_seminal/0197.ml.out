@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0197.ml", line 5, characters 2-62:
+This expression has type 'a list but is here used with type 'a
+Relevant code: match l with | [] -> [] | hd::tl -> join (listReverse tl) hd
+------------------------------------------------------------------
+File "0197.ml", line 5, characters 43-62:
+Try replacing
+    (join (listReverse tl) hd)
+with
+    (join hd (listReverse tl))
+of type
+    'b list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | hd :: tl -> (join hd (listReverse tl))) ;; 
+==============================

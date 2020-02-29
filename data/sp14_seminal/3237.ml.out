@@ -1,0 +1,165 @@
+------------------------------------------------------------------
+File "3237.ml", line 28, characters 32-50:
+This expression has type float but is here used with type int
+Relevant code: (eval (ex1, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "3237.ml", line 28, characters 6-272:
+File "3237.ml", line 33, characters 8-9:
+And modified the following location:
+File "3237.ml", line 34, characters 8-141:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    ((((eval (ex1, x, y)) + (eval (ex2, x, y))) + (eval (ex3, x, y)))
+          + (eval (ex4, x, y)))
+      + (eval (ex5, x, y))
+with
+    [[...]]
+The actual replacement has type
+    'a
+==============================
+Triaged the following locations:
+File "3237.ml", line 33, characters 8-9:
+File "3237.ml", line 34, characters 8-141:
+And modified the following location:
+File "3237.ml", line 28, characters 6-272:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    (((eval (ex1, x, y)) *. (eval (ex1, x, y)) + (eval (ex2, x, y))) *
+          (((eval (ex1, x, y)) + (eval (ex2, x, y))) + (eval (ex3, x, y))))
+      *
+      ((((eval (ex1, x, y)) + (eval (ex2, x, y))) + (eval (ex3, x, y)))
+          + (eval (ex4, x, y)))
+with
+    [[...]]
+The actual replacement has type
+    'b
+==============================
+Triaged the following locations:
+File "3237.ml", line 19, characters 15-44:
+File "3237.ml", line 20, characters 17-46:
+File "3237.ml", line 21, characters 25-73:
+File "3237.ml", line 22, characters 23-63:
+File "3237.ml", line 24, characters 6-104:
+And modified the following location:
+File "3237.ml", line 28, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine ex -> [[...other program...]]
+                              | Cosine ex -> [[...other program...]]
+                              | Average (ex1, ex2) -> [[...other program...]]
+                              | Times (ex1, ex2) -> [[...other program...]]
+                              | Thresh (ex1, ex2, ex3, ex4) ->
+                                [[...other program...]]
+                              | FiboPlus (ex1, ex2, ex3, ex4, ex5) ->
+                                ((((eval (ex1, x, y)) +
+                                                ((eval (ex1, x, y))
+                                                    + (eval (ex2, x, y))))
+                                            *
+                                            (((eval (ex1, x, y))
+                                                    + (eval (ex2, x, y)))
+                                                + (eval (ex3, x, y))))
+                                        *
+                                        ((((eval (ex1, x, y)) + (eval (ex2, x, y)))
+                                                + (eval (ex3, x, y)))
+                                            + (eval (ex4, x, y))))
+                                    *
+                                    (((((eval (ex1, x, y)) + (eval (ex2, x, y)))
+                                                + (eval (ex3, x, y)))
+                                            + (eval (ex4, x, y)))
+                                        + (eval (ex5, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3237.ml", line 19, characters 15-44:
+File "3237.ml", line 20, characters 17-46:
+File "3237.ml", line 21, characters 25-73:
+File "3237.ml", line 22, characters 23-63:
+File "3237.ml", line 24, characters 6-104:
+And modified the following location:
+File "3237.ml", line 28, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine ex -> [[...other program...]]
+                              | Cosine ex -> [[...other program...]]
+                              | Average (ex1, ex2) -> [[...other program...]]
+                              | Times (ex1, ex2) -> [[...other program...]]
+                              | Thresh (ex1, ex2, ex3, ex4) ->
+                                [[...other program...]]
+                              | FiboPlus (ex1, ex2, ex3, ex4, ex5) ->
+                                ((((eval (ex1, x, y)) *.; [[...]]
+                                                (eval (ex1, x, y))
+                                                  + (eval (ex2, x, y)))
+                                            *
+                                            (((eval (ex1, x, y))
+                                                    + (eval (ex2, x, y)))
+                                                + (eval (ex3, x, y))))
+                                        *
+                                        ((((eval (ex1, x, y)) + (eval (ex2, x, y)))
+                                                + (eval (ex3, x, y)))
+                                            + (eval (ex4, x, y))))
+                                    *
+                                    (((((eval (ex1, x, y)) + (eval (ex2, x, y)))
+                                                + (eval (ex3, x, y)))
+                                            + (eval (ex4, x, y)))
+                                        + (eval (ex5, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3237.ml", line 19, characters 15-44:
+File "3237.ml", line 20, characters 17-46:
+File "3237.ml", line 21, characters 25-73:
+File "3237.ml", line 22, characters 23-63:
+File "3237.ml", line 24, characters 6-104:
+And modified the following location:
+File "3237.ml", line 28, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine ex -> [[...other program...]]
+                              | Cosine ex -> [[...other program...]]
+                              | Average (ex1, ex2) -> [[...other program...]]
+                              | Times (ex1, ex2) -> [[...other program...]]
+                              | Thresh (ex1, ex2, ex3, ex4) ->
+                                [[...other program...]]
+                              | FiboPlus (ex1, ex2, ex3, ex4, ex5) ->
+                                ((((eval (ex1, x, y)) *
+                                                ((eval (ex1, x, y))
+                                                    + (eval (ex2, x, y))))
+                                            *
+                                            (((eval (ex1, x, y))
+                                                    + (eval (ex2, x, y)))
+                                                + (eval (ex3, x, y))))
+                                        *
+                                        ((((eval (ex1, x, y)) + (eval (ex2, x, y)))
+                                                + (eval (ex3, x, y)))
+                                            + (eval (ex4, x, y))))
+                                    *
+                                    (((((eval (ex1, x, y)) + (eval (ex2, x, y)))
+                                                + (eval (ex3, x, y)))
+                                            + (eval (ex4, x, y)))
+                                        + (eval (ex5, x, y)))) ;; 
+==============================

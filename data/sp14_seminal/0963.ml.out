@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0963.ml", line 24, characters 9-20:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.append
+------------------------------------------------------------------
+File "0963.ml", line 24, characters 9-20:
+Try replacing
+    List.append
+with
+    List.append; [[...]]
+of type
+    int -> ('h list -> 'h list -> 'h list) -> int list -> 'i -> 'j
+within context
+    let (n1, n2) = x in
+      let (c, l) = a in
+      let result = (n1 + n2) + c in
+      result / 10,
+          ((List.append; [[...]]) (result / 10) List.append  [(mod result 10)]  l)
+==============================

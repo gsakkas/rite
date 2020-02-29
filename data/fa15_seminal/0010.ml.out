@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "0010.ml", line 7, characters 42-51:
+This expression has type int -> (int * int) list but is here used with type
+  'a list
+Relevant code: listZeros
+------------------------------------------------------------------
+File "0010.ml", line 6, characters 24-43:
+Try replacing
+    (clone (0, (abs numZeros)))
+with
+    (clone 0 (abs numZeros))
+of type
+    int list
+within context
+    let padZero l1 l2 =
+    let numZeros = (List.length l1) - (List.length l2) in
+      let listZeros = (clone 0 (abs numZeros)) in
+      (if numZeros > 0 then [l1, l2] else [listZeros @ l1, l2])
+    ;; 
+==============================
+File "0010.ml", line 7, characters 42-51:
+Try replacing
+    listZeros
+with
+    l1
+of type
+    'b list
+within context
+    let listZeros = (clone (0, (abs numZeros))) in
+      (if numZeros > 0 then [l1, l2] else [l1 @ l1, l2])
+==============================
+File "0010.ml", line 7, characters 42-51:
+Try replacing
+    listZeros
+with
+    l2
+of type
+    'c list
+within context
+    let listZeros = (clone (0, (abs numZeros))) in
+      (if numZeros > 0 then [l1, l2] else [l2 @ l1, l2])
+==============================

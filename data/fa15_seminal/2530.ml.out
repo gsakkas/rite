@@ -1,0 +1,68 @@
+------------------------------------------------------------------
+File "2530.ml", line 20, characters 28-58:
+This expression has type 'a list * 'b list but is here used with type 'c list
+Relevant code: ((List.rev l1), (List.rev l2))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2530.ml", line 21, characters 4-51:
+And modified the following location:
+File "2530.ml", line 20, characters 28-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.combine ((List.rev l1), (List.rev l2)))
+with
+    (List.combine (List.rev l1) (List.rev l2))
+The actual replacement has type
+    ('d * 'e) list
+within context
+    let add (l1, l2) = let f a x = (match a with 
+                                    | [] -> []
+                                    | h :: t ->
+                                      (let (j, k) = x in
+                                            (if j + k > 10 then 1 :: h else
+                                                0 ::
+                                                    h))) in let base = 0, 0 in
+        let args = (List.combine (List.rev l1) (List.rev l2)) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "2530.ml", line 21, characters 4-51:
+And modified the following location:
+File "2530.ml", line 20, characters 15-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    List.combine; [[...]]
+The actual replacement has type
+    'f list * 'g list -> 'h
+within context
+    let add (l1, l2) = let f a x = (match a with 
+                                    | [] -> []
+                                    | h :: t ->
+                                      (let (j, k) = x in
+                                            (if j + k > 10 then 1 :: h else
+                                                0 ::
+                                                    h))) in let base = 0, 0 in
+        let args = ((List.combine; [[...]]) ((List.rev l1), (List.rev l2))) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "2530.ml", line 21, characters 4-51:
+And modified the following location:
+File "2530.ml", line 20, characters 15-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    clone
+The actual replacement has type
+    'i list * 'j list -> int -> ('i list * 'j list) list
+within context
+    let add (l1, l2) = let f a x = (match a with 
+                                    | [] -> []
+                                    | h :: t ->
+                                      (let (j, k) = x in
+                                            (if j + k > 10 then 1 :: h else
+                                                0 ::
+                                                    h))) in let base = 0, 0 in
+        let args = (clone ((List.rev l1), (List.rev l2))) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================

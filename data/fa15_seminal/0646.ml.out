@@ -1,0 +1,58 @@
+------------------------------------------------------------------
+File "0646.ml", line 4, characters 34-35:
+This expression has type ('a -> 'b -> 'b) -> 'b -> 'b
+but is here used with type ('a -> 'b -> 'b) -> 'b -> 'a -> 'b -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "0646.ml", line 3, characters 8-11:
+Try replacing
+    fun a x -> (List.fold_right a []  x)
+with
+    fun x a -> (List.fold_right a []  x)
+of type
+    'c -> ('d -> 'c -> 'c) -> 'c
+within context
+    let pipe fs =
+    let f x a = (List.fold_right a []  x) in
+      let base = [] in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "0646.ml", line 3, characters 30-36:
+Try replacing
+    (List.fold_right a []  x)
+with
+    (List.fold_right x []  a)
+of type
+    'e
+within context
+    let pipe fs =
+    let f a x = (List.fold_right x []  a) in
+      let base = [] in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "0646.ml", line 4, characters 34-43:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left fs f  base)
+of type
+    ('f -> 'g -> 'g) -> 'g -> 'g
+within context
+    let pipe fs =
+    let f a x = (List.fold_right a []  x) in
+      let base = [] in (List.fold_left fs f  base)
+    ;; 
+==============================
+File "0646.ml", line 4, characters 19-33:
+Try replacing
+    List.fold_left
+with
+    List.fold_right
+of type
+    (('h -> 'i -> 'i) -> 'i -> 'i) -> ('h -> 'i -> 'i) list -> 'i -> 'i
+within context
+    let pipe fs =
+    let f a x = (List.fold_right a []  x) in
+      let base = [] in (List.fold_right f base  fs)
+    ;; 
+==============================

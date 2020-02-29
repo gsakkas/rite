@@ -1,0 +1,66 @@
+------------------------------------------------------------------
+File "0921.ml", line 18, characters 72-73:
+This expression has type (int * int) list but is here used with type int list
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "0921.ml", line 16, characters 14-15:
+File "0921.ml", line 18, characters 10-75:
+And modified the following location:
+File "0921.ml", line 15, characters 12-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    'a list
+within context
+    fun (l1, l2) -> (let f a x = (match (x; [[...]]) with 
+                                  | [] -> [[...other program...]]
+                                  | h :: t ->
+                                    [[...other program...]]) in let base = 0, [] in
+          let args = [(List.combine l1), l2] in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "0921.ml", line 16, characters 14-15:
+File "0921.ml", line 17, characters 8-12:
+File "0921.ml", line 18, characters 10-75:
+And modified the following location:
+File "0921.ml", line 16, characters 8-10:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    'b
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | _ -> [[...other program...]]
+                                  |
+                                    [[...other pattern...]]
+                                    ->
+                                    [[...other program...]]) in let base = 0, [] in
+          let args = [(List.combine l1), l2] in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "0921.ml", line 16, characters 8-10:
+File "0921.ml", line 16, characters 14-15:
+File "0921.ml", line 18, characters 10-75:
+And modified the following location:
+File "0921.ml", line 17, characters 8-12:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    'c
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  |[[...other pattern...]]->[[...other program...]]
+                                  | _ ->
+                                    [[...other program...]]) in let base = 0, [] in
+          let args = [(List.combine l1), l2] in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

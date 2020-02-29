@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "0932.ml", line 37, characters 24-34:
+This expression has type int list -> int list but is here used with type int
+Relevant code: (bigAdd l)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0932.ml", line 37, characters 35-36:
+And modified the following location:
+File "0932.ml", line 37, characters 55-56:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    int list -> int
+within context
+    let rec mulByDigit i l =
+    (if i < 1 then [] else
+      ((bigAdd l) +; [[...]] (mulByDigit (i - ((1; [[...]]) l)))))
+    ;; 
+==============================
+Triaged the following locations:
+File "0932.ml", line 37, characters 35-36:
+And modified the following location:
+File "0932.ml", line 37, characters 57-58:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    (1 l)
+with
+    1
+The actual replacement has type
+    int
+within context
+    let rec mulByDigit i l =
+    (if i < 1 then [] else ((bigAdd l) +; [[...]] (mulByDigit (i - 1))))
+    ;; 
+==============================

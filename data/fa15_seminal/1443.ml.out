@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1443.ml", line 25, characters 36-42:
+This expression has type float * float but is here used with type expr * expr
+Relevant code: (x, y)
+------------------------------------------------------------------
+File "1443.ml", line 20, characters 2-267:
+Try replacing
+    (match e with 
+     | VarX -> x
+     | VarY -> y
+     | Sine e -> (sin (pi *. (eval (e, x, y))))
+     | Cosine e -> (cos (pi *. (eval (e, x, y))))
+     | Average (e1, e2) -> (buildAverage (x, y))
+     | Times (e1, e2) -> (buildTimes (x, y))
+     | Thresh (e1, e2, e3, e4) -> (buildThresh (x, y, x, y)))
+with
+    [[...]]
+of type
+    'a
+==============================

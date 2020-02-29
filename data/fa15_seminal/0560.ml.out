@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0560.ml", line 12, characters 64-66:
+This expression has type expr but is here used with type expr * 'a * 'a
+Relevant code: e1
+------------------------------------------------------------------
+File "0560.ml", line 11, characters 13-90:
+Try replacing
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine e1 -> (sin (eval e1)))
+with
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine e1 -> (sin (eval e1))); [[...]]
+of type
+    expr -> float
+==============================

@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1573.ml", line 11, characters 51-54:
+This expression has type float but is here used with type int
+Relevant code: 1.0
+------------------------------------------------------------------
+File "1573.ml", line 11, characters 47-50:
+Try replacing
+    x * 1.0
+with
+    ( * ) (x 1.0)
+of type
+    int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> ( * ) (x 1.0)) ;; 
+==============================
+File "1573.ml", line 11, characters 49-50:
+Try replacing
+    *
+with
+    y
+of type
+    'a -> float -> 'b
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x y 1.0)) ;; 
+==============================

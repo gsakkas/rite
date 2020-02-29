@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2594.ml", line 9, characters 32-39:
+This expression has type int list -> int but is here used with type int
+Relevant code: sumList
+------------------------------------------------------------------
+File "2594.ml", line 7, characters 28-114:
+Try replacing
+    fun n ->
+      (if n / 10 != 0 then 1 + (additivePersistence sumList digitsOfInt  n) else 0)
+with
+    fun n ->
+      (if n / 10 != 0 then 1 + (additivePersistence sumList digitsOfInt  n) else 0);
+    [[...]]
+of type
+    (int list -> int) -> (int -> int list) -> int -> int
+within context
+    let rec additivePersistence =
+    fun n ->
+      (if n / 10 != 0 then 1 + (additivePersistence sumList digitsOfInt  n) else 0);
+    [[...]]
+    ;; 
+==============================

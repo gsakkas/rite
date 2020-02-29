@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2538.ml", line 7, characters 36-37:
+This expression has type int but is here used with type 'a list list
+Relevant code: 2
+------------------------------------------------------------------
+File "2538.ml", line 7, characters 33-37:
+Try replacing
+    (List.mem tl 2)
+with
+    (List.mem 2 tl)
+of type
+    bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | hd :: tl ->
+                           (let seen' =
+                                 (if (List.mem 2 tl) = true then seen else
+                                   hd :: seen)
+                                 in
+                                 let rest' = tl in (helper (seen', rest'))))
+==============================

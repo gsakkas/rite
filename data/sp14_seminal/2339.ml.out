@@ -1,0 +1,60 @@
+------------------------------------------------------------------
+File "2339.ml", line 10, characters 29-40:
+This expression has type int list but is here used with type int
+Relevant code: (clone 0 b)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2339.ml", line 10, characters 16-27:
+And modified the following location:
+File "2339.ml", line 10, characters 30-35:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    clone
+with
+    -
+The actual replacement has type
+    int -> int -> int
+within context
+    fun l1
+      l2 ->
+        (let (a, b) = (List.length l1), (List.length l2) in
+            (if a < b then ((List.append; [[...]]) ((- 0 b) - a) l1)))
+==============================
+Triaged the following locations:
+File "2339.ml", line 10, characters 16-27:
+And modified the following location:
+File "2339.ml", line 10, characters 29-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    (clone 0 b)
+with
+    (clone 0 b); [[...]]
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let (a, b) = (List.length l1), (List.length l2) in
+            (if a < b then
+                ((List.append; [[...]]) (((clone 0 b); [[...]]) - a) l1)))
+==============================
+Triaged the following locations:
+File "2339.ml", line 10, characters 16-27:
+And modified the following location:
+File "2339.ml", line 10, characters 41-42:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    -
+with
+    -; [[...]]
+The actual replacement has type
+    int list -> int -> 'a
+within context
+    fun l1
+      l2 ->
+        (let (a, b) = (List.length l1), (List.length l2) in
+            (if a < b then ((List.append; [[...]]) ((clone 0 b) -; [[...]] a) l1)))
+==============================

@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0497.ml", line 19, characters 57-69:
+This expression has type int but is here used with type 'a list
+Relevant code: (sum mod 10)
+------------------------------------------------------------------
+File "0497.ml", line 19, characters 57-69:
+Try replacing
+    (mod sum 10)
+with
+    (mod sum 10); [[...]]
+of type
+    'b list
+within context
+    let (carry, acc) = a in
+      let (x1, x2) = x in
+      let sum = (x1 + x2) + carry in sum / 10, acc @ ((mod sum 10); [[...]])
+==============================
+File "0497.ml", line 19, characters 55-56:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    'c -> int -> 'd
+within context
+    let (carry, acc) = a in
+      let (x1, x2) = x in
+      let sum = (x1 + x2) + carry in sum / 10, (acc @; [[...]] (mod sum 10))
+==============================

@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "2475.ml", line 25, characters 39-56:
+This expression has type int but is here used with type int list
+Relevant code: ((carry + b) + c)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2475.ml", line 24, characters 20-234:
+And modified the following location:
+File "2475.ml", line 34, characters 50-72:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod ((h + b) + c) 10)
+with
+    (mod ((h + b) + c) 10); [[...]]
+The actual replacement has type
+    int list
+within context
+    fun a x -> (match x with 
+                | (b, c) -> (match a with 
+                             | (carry, sum) -> (match sum with 
+                                                | [] -> [[...other program...]]
+                                                | h :: t ->
+                                                  (if (b + c) + h < 10 then
+                                                      0, [0] @ ([(b + c) + h] @ t)
+                                                      else
+                                                      carry + 1,
+                                                        ((h + b) + c) / 10 ::
+                                                              (mod
+                                                                ((h + b) + c) 10);
+                                                              [[...]]
+                                                          @ t))))
+==============================

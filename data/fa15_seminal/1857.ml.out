@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "1857.ml", line 21, characters 33-35:
+This expression is not a function, it cannot be applied
+Relevant code: 10
+------------------------------------------------------------------
+Triaged the following locations:
+File "1857.ml", line 21, characters 28-31:
+And modified the following location:
+File "1857.ml", line 21, characters 33-35:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mod
+If you ignore other surrounding code, try replacing
+    10
+with
+    10; [[...]]
+The actual replacement has type
+    (bool -> bool) -> int -> 'c
+within context
+    let rec count acc n =
+      (if ((mod; [[...]]) (sumList (digits n)) ((10; [[...]]) not 0)) then acc else
+        acc + 1)
+      in
+      (count 1 n)
+==============================

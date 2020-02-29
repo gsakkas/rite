@@ -1,0 +1,114 @@
+------------------------------------------------------------------
+File "2041.ml", line 3, characters 58-59:
+This expression has type 'a -> 'b -> ('a -> 'c) -> 'd -> 'c
+but is here used with type 'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "2041.ml", line 3, characters 10-13:
+Try replacing
+    fun x m n -> (m a)
+with
+    fun m x n -> (m a)
+of type
+    ('e -> 'f) -> 'g -> 'h -> 'f
+within context
+    let pipe fs =
+    let f a m x n = (m a) in let base n = n in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2041.ml", line 3, characters 8-11:
+Try replacing
+    fun a x m n -> (m a)
+with
+    fun x a m n -> (m a)
+of type
+    'i -> 'j -> ('j -> 'k) -> 'l -> 'k
+within context
+    let pipe fs =
+    let f x a m n = (m a) in let base n = n in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2041.ml", line 3, characters 10-13:
+Try replacing
+    fun a x m n -> (m a)
+with
+    fun a m x n -> (m a)
+of type
+    'm -> ('m -> 'n) -> 'o -> 'p -> 'n
+within context
+    let pipe fs =
+    let f a m x n = (m a) in let base n = n in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2041.ml", line 3, characters 43-57:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('q -> 'q) -> 'r -> (('q -> 'q) -> 's) -> 't -> 's) ->
+    ('q -> 'q) -> 'r -> (('q -> 'q) -> 's) -> 't -> 's
+within context
+    let pipe fs = let f a x m n = (m a) in let base n = n in (base f base  fs) ;; 
+==============================
+File "2041.ml", line 3, characters 43-57:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('u -> 'v -> ('u -> 'w) -> 'x -> 'w) ->
+    ('y -> 'y) -> (('u -> 'v -> ('u -> 'w) -> 'x -> 'w) -> 'z) -> 'a1 -> 'z
+within context
+    let pipe fs = let f a x m n = (m a) in let base n = n in (f f base  fs) ;; 
+==============================
+File "2041.ml", line 3, characters 18-19:
+Try replacing
+    m
+with
+    x
+of type
+    'b1 -> 'c1
+within context
+    fun a x m n -> (x a)
+==============================
+File "2041.ml", line 3, characters 20-21:
+Try replacing
+    a
+with
+    x
+of type
+    'd1
+within context
+    fun a x m n -> (m x)
+==============================
+File "2041.ml", line 3, characters 20-21:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('e1 -> 'f1 -> 'e1) -> 'e1 -> 'f1 list -> 'e1
+within context
+    fun a x m n -> (m List.fold_left)
+==============================
+File "2041.ml", line 3, characters 20-21:
+Try replacing
+    a
+with
+    fs
+of type
+    'g1 list
+within context
+    fun a x m n -> (m fs)
+==============================
+File "2041.ml", line 3, characters 20-21:
+Try replacing
+    a
+with
+    n
+of type
+    'h1
+within context
+    fun a x m n -> (m n)
+==============================

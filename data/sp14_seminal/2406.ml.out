@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "2406.ml", line 19, characters 26-31:
+This pattern matches values of type 'a * 'b
+but is here used to match values of type int
+Relevant code: (x,y)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2406.ml", line 18, characters 10-109:
+And modified the following location:
+File "2406.ml", line 17, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    'c -> 'd -> int
+within context
+    let f a x = (match x with 
+                 | (d1, d2) ->
+                   (let new_carry = ((a +; [[...]] d1) + d2) / 10 in
+                         [[...other program...]])) in let base = 0, [] in
+      let args = (List.combine (List.rev 0 :: l1) (List.rev 0 :: l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "2406.ml", line 18, characters 10-109:
+And modified the following location:
+File "2406.ml", line 17, characters 28-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int
+within context
+    let f a x = (match x with 
+                 | (d1, d2) ->
+                   (let new_carry = (((a; [[...]]) + d1) + d2) / 10 in
+                         [[...other program...]])) in let base = 0, [] in
+      let args = (List.combine (List.rev 0 :: l1) (List.rev 0 :: l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "2406.ml", line 18, characters 10-109:
+And modified the following location:
+File "2406.ml", line 17, characters 10-159:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let new_carry = ((a + d1) + d2) / 10 in
+      let digit = (mod ((a + d1) + d2) 10) in (match a with 
+                                               | (x, y) -> (new_carry, digit :: y))
+with
+    [[...other program...]]
+The actual replacement has type
+    'e
+==============================

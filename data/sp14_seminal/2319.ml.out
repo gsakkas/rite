@@ -1,0 +1,73 @@
+------------------------------------------------------------------
+File "2319.ml", line 25, characters 48-52:
+This expression is not a function, it cannot be applied
+Relevant code: asd3
+------------------------------------------------------------------
+Triaged the following locations:
+File "2319.ml", line 25, characters 39-46:
+And modified the following location:
+File "2319.ml", line 25, characters 48-52:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    padZero
+If you ignore other surrounding code, try replacing
+    asd3
+with
+    asd3; [[...]]
+The actual replacement has type
+    int -> 'c
+within context
+    let asd = x / h in
+      let asd2 = (x + h) - asd * 10 in
+      let asd3 = asd :: t in asd3, ((padZero; [[...]]) ((asd3; [[...]]) asd2))
+==============================
+Triaged the following locations:
+File "2319.ml", line 25, characters 39-46:
+And modified the following location:
+File "2319.ml", line 25, characters 48-52:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    padZero
+If you ignore other surrounding code, try replacing
+    asd3
+with
+    *
+The actual replacement has type
+    int -> int -> int
+within context
+    let asd = x / h in
+      let asd2 = (x + h) - asd * 10 in
+      let asd3 = asd :: t in asd3, ((padZero; [[...]]) (* asd2))
+==============================
+Triaged the following locations:
+File "2319.ml", line 25, characters 39-46:
+And modified the following location:
+File "2319.ml", line 25, characters 48-52:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    padZero
+If you ignore other surrounding code, try replacing
+    asd3
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    let asd = x / h in
+      let asd2 = (x + h) - asd * 10 in
+      let asd3 = asd :: t in asd3, ((padZero; [[...]]) (+ asd2))
+==============================
+Triaged the following locations:
+File "2319.ml", line 25, characters 39-46:
+And modified the following location:
+File "2319.ml", line 25, characters 53-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    padZero
+If you ignore other surrounding code, try replacing
+    (asd3 asd2)
+with
+    asd3
+The actual replacement has type
+    int list
+within context
+    let asd = x / h in
+      let asd2 = (x + h) - asd * 10 in
+      let asd3 = asd :: t in asd3, ((padZero; [[...]]) asd3)
+==============================

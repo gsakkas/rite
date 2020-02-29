@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "2999.ml", line 8, characters 10-15:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: clone
+------------------------------------------------------------------
+File "2999.ml", line 8, characters 16-17:
+Try replacing
+    (clone 0 abs  diff)
+with
+    (clone abs diff)
+of type
+    (int -> int) list
+within context
+    fun l2 ->
+      (let diff = (List.length l1) - (List.length l2) in
+          (if (diff >= 0) then l1, (clone 0 diff) @ l2 else
+              (clone abs diff) @ l1, l2))
+==============================
+File "2999.ml", line 8, characters 18-21:
+Try replacing
+    (clone 0 abs  diff)
+with
+    (clone 0 diff)
+of type
+    int list
+within context
+    fun l2 ->
+      (let diff = (List.length l1) - (List.length l2) in
+          (if (diff >= 0) then l1, (clone 0 diff) @ l2 else
+              (clone 0 diff) @ l1, l2))
+==============================

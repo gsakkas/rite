@@ -1,0 +1,89 @@
+------------------------------------------------------------------
+File "2547.ml", line 28, characters 60-64:
+This expression has type int but is here used with type int list
+Relevant code: base
+------------------------------------------------------------------
+File "2547.ml", line 28, characters 43-57:
+Try replacing
+    List.fold_left
+with
+    i
+of type
+    (int list -> int list -> int list) -> int -> 'a list -> 'b
+within context
+    fun l ->
+      (let f a x = (bigAdd a x) in
+          let base = 0 in let args = (List.rev l) in (i f base  args))
+==============================
+File "2547.ml", line 27, characters 14-20:
+Try replacing
+    bigAdd
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun l ->
+      (let f a x = (+ a x) in
+          let base = 0 in let args = (List.rev l) in (List.fold_left f base  args))
+==============================
+File "2547.ml", line 27, characters 14-20:
+Try replacing
+    bigAdd
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun l ->
+      (let f a x = (- a x) in
+          let base = 0 in let args = (List.rev l) in (List.fold_left f base  args))
+==============================
+File "2547.ml", line 27, characters 14-20:
+Try replacing
+    bigAdd
+with
+    i
+of type
+    int -> 'c -> int
+within context
+    fun l ->
+      (let f a x = (i a x) in
+          let base = 0 in let args = (List.rev l) in (List.fold_left f base  args))
+==============================
+File "2547.ml", line 28, characters 58-59:
+Try replacing
+    f
+with
+    i
+of type
+    int -> 'd -> int
+within context
+    fun l ->
+      (let f a x = (bigAdd a x) in
+          let base = 0 in let args = (List.rev l) in (List.fold_left i base  args))
+==============================
+File "2547.ml", line 28, characters 58-59:
+Try replacing
+    f
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun l ->
+      (let f a x = (bigAdd a x) in
+          let base = 0 in let args = (List.rev l) in (List.fold_left + base  args))
+==============================
+File "2547.ml", line 28, characters 58-59:
+Try replacing
+    f
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun l ->
+      (let f a x = (bigAdd a x) in
+          let base = 0 in let args = (List.rev l) in (List.fold_left - base  args))
+==============================

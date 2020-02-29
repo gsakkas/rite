@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0262.ml", line 2, characters 24-69:
+This expression has type 'a list but is here used with type 'a
+Relevant code: if n <= 0 then [] else [digitsOfInt (n / 10)]
+------------------------------------------------------------------
+File "0262.ml", line 2, characters 48-59:
+Try replacing
+    digitsOfInt
+with
+    <=
+of type
+    int -> int -> bool
+within context
+    let rec digitsOfInt n = (if (n <= 0) then [] else [(<= (n / 10))]) ;; 
+==============================
+File "0262.ml", line 2, characters 48-59:
+Try replacing
+    digitsOfInt
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n = (if (n <= 0) then [] else [(/ (n / 10))]) ;; 
+==============================

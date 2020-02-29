@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "3382.ml", line 37, characters 6-12:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: bigAdd
+------------------------------------------------------------------
+File "3382.ml", line 37, characters 6-12:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    'n list -> (int list -> int -> int list) -> 'o list -> int -> 'n list
+within context
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t ->
+                  (let rec helper acc v =
+                        (if v = 0 then acc else (helper (mod v 10) :: acc (v / 10)))
+                        in
+                        ((bigAdd; [[...]])
+                            (mulByDigit i (List.rev (List.map (fun x -> x * 10) t))) helper [] (h * i))))
+==============================

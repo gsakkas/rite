@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "2928.ml", line 15, characters 35-37:
+This variable is bound several times in this matching
+Relevant code: h1
+------------------------------------------------------------------
+Triaged the following locations:
+File "2928.ml", line 16, characters 4-121:
+And modified the following location:
+File "2928.ml", line 15, characters 35-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h1, h1
+with
+    h1
+The actual replacement has type
+    'm -> 'n list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (h1) ->
+                                                    []) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2928.ml", line 16, characters 4-121:
+And modified the following location:
+File "2928.ml", line 15, characters 32-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h1, h1
+with
+    h1
+The actual replacement has type
+    'h -> 'i list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (h1) ->
+                                                    []) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2928.ml", line 16, characters 4-121:
+And modified the following location:
+File "2928.ml", line 15, characters 4-169:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match x with 
+                 | (h1, h1) ->
+                   []) in let base = [0] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'r
+==============================

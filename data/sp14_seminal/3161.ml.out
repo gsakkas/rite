@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "3161.ml", line 30, characters 18-47:
+This expression has type 'a list but is here used with type
+  int list * int list
+Relevant code: ((padZero 0) :: (l1 0) :: l2)
+------------------------------------------------------------------
+File "3161.ml", line 30, characters 18-47:
+Try replacing
+    (padZero 0) :: (l1 0) :: l2
+with
+    [[...]]
+of type
+    int list * int list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (o, p) = a in
+                let (d1, d2) = x in
+                ((d1 + d2) + o) / 10, (mod ((d1 + d2) + o) 10) :: p
+              in
+              let base = 0, [] in
+              let args = (List.rev (List.combine l1 l2)) in
+              let (_, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero (add [[...]])))
+==============================

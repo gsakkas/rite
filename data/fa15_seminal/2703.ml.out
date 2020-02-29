@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2703.ml", line 3, characters 47-51:
+This expression has type bool but is here used with type 'a list
+Relevant code: true
+------------------------------------------------------------------
+File "2703.ml", line 3, characters 43-44:
+Try replacing
+    t
+with
+    h
+of type
+    bool
+within context
+    fun (f, b) -> (let x = (f b) in (match x with 
+                                     | h :: t ->
+                                       (if h = true then (wwhile (f, h)) else h)))
+==============================
+File "2703.ml", line 3, characters 43-44:
+Try replacing
+    t
+with
+    b
+of type
+    bool
+within context
+    fun (f, b) -> (let x = (f b) in (match x with 
+                                     | h :: t ->
+                                       (if b = true then (wwhile (f, h)) else h)))
+==============================

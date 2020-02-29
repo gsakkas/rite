@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "3010.ml", line 2, characters 46-55:
+This expression has type int -> 'a but is here used with type 'b list
+Relevant code: (clone x)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3010.ml", line 2, characters 56-57:
+And modified the following location:
+File "3010.ml", line 2, characters 60-61:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    int -> int
+within context
+    let rec clone x n =
+    (if n = 1 then [] @ x else ((clone x) @; [[...]] ((x; [[...]]) n) - 1))
+    ;; 
+==============================

@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1434.ml", line 19, characters 49-58:
+This expression has type expr but is here used with type unit
+Relevant code: buildY ()
+------------------------------------------------------------------
+File "1434.ml", line 19, characters 35-58:
+Try replacing
+    (if r = 1 then (buildY ()))
+with
+    [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 ->
+                                     (let r = (rand (0, 1)) in
+                                           (if r = 0 then (buildX ()) else
+                                               [[...]]))) ;; 
+==============================

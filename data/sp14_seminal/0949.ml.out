@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "0949.ml", line 2, characters 66-70:
+This expression has type int but is here used with type 'a -> 'b
+Relevant code: base
+------------------------------------------------------------------
+File "0949.ml", line 2, characters 22-25:
+Try replacing
+    fun x a -> x
+with
+    fun (x, a) -> x
+of type
+    'c * 'd -> 'c
+within context
+    let pipe fs = let f a (x, a) = x in let base = 0 in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "0949.ml", line 2, characters 49-65:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left (f base fs))
+of type
+    'e -> 'f list -> 'e
+within context
+    let pipe fs = let f a x a = x in let base = 0 in (List.fold_left (f base fs))
+    ;; 
+==============================
+File "0949.ml", line 2, characters 49-63:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('g -> 'h -> 'i -> 'h) -> int -> 'j -> int
+within context
+    let pipe fs = let f a x a = x in let base = 0 in (f f base  fs) ;; 
+==============================
+File "0949.ml", line 2, characters 66-70:
+Try replacing
+    base
+with
+    List.fold_left
+of type
+    ('k -> 'l -> 'k) -> 'k -> 'l list -> 'k
+within context
+    let pipe fs =
+    let f a x a = x in let base = 0 in (List.fold_left f List.fold_left  fs)
+    ;; 
+==============================
+File "0949.ml", line 2, characters 66-70:
+Try replacing
+    base
+with
+    f
+of type
+    'm -> 'n -> 'o -> 'n
+within context
+    let pipe fs = let f a x a = x in let base = 0 in (List.fold_left f f  fs) ;; 
+==============================

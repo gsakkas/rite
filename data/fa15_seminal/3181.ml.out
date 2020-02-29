@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "3181.ml", line 26, characters 39-64:
+This expression has type int but is here used with type 'a list
+Relevant code: (((x1 + x2) + a1) mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3181.ml", line 25, characters 6-92:
+And modified the following location:
+File "3181.ml", line 24, characters 19-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'b list
+within context
+    let f a x =
+      let (x1, x2) = x in let ax :: a' = a; [[...]] in [[...other program...]]
+      in
+      let base = [], [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "3181.ml", line 25, characters 6-92:
+And modified the following location:
+File "3181.ml", line 24, characters 10-16:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ax :: a'
+with
+    _
+The actual replacement has type
+    'c
+within context
+    let f a x = let (x1, x2) = x in let _ = a in [[...other program...]] in
+      let base = [], [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "3181.ml", line 25, characters 6-92:
+And modified the following location:
+File "3181.ml", line 24, characters 6-116:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let ax :: a' = a in
+      let (a1, a2) = ax in
+      [((x1 + x2) + a1) / 10], [a2 :: (mod ((x1 + x2) + a1) 10)]
+with
+    [[...other program...]]
+The actual replacement has type
+    'd
+==============================

@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "0408.ml", line 20, characters 24-26:
+This expression has type float but is here used with type int
+Relevant code: 1.
+------------------------------------------------------------------
+Triaged the following locations:
+File "0408.ml", line 20, characters 27-28:
+And modified the following location:
+File "0408.ml", line 20, characters 40-42:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    int -> expr -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Sigmoid a ->
+                                (1. /. (1. -; [[...]] (exp (-1 *.; [[...]] a))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))) ;; 
+==============================

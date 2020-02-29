@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "1250.ml", line 10, characters 32-41:
+This expression has type 'a list but is here used with type int
+Relevant code: (0 :: l2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1250.ml", line 9, characters 9-41:
+And modified the following location:
+File "1250.ml", line 10, characters 9-14:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (clone 0 :: l1 (List.length l2))
+If you ignore other surrounding code, try replacing
+    clone
+with
+    clone; [[...]]
+The actual replacement has type
+    int -> int list -> int list * int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) = (List.length l2) then l1, l2 else
+      (if (List.length l1) < (List.length l2) then
+        ((clone 0 :: l1 (List.length l2)); [[...]])
+        else
+        ((clone; [[...]]) (List.length l1) 0 :: l2)))
+    ;; 
+==============================

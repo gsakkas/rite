@@ -1,0 +1,99 @@
+------------------------------------------------------------------
+File "1960.ml", line 6, characters 64-65:
+This expression has type 'a list * 'b but is here used with type 'a list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "1960.ml", line 7, characters 2-112:
+And modified the following location:
+File "1960.ml", line 6, characters 64-65:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'c list
+within context
+    let bigMul l1 l2 =
+    let f a x = let (x1, x2) = x in let (carry, res) = a in carry @ (a; [[...]]) in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "1960.ml", line 7, characters 2-112:
+And modified the following location:
+File "1960.ml", line 6, characters 62-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    'd -> 'd * 'e -> 'f
+within context
+    let bigMul l1 l2 =
+    let f a x = let (x1, x2) = x in let (carry, res) = a in (carry @; [[...]] a) in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "1960.ml", line 7, characters 2-112:
+And modified the following location:
+File "1960.ml", line 6, characters 62-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    l1
+The actual replacement has type
+    'g -> 'g * 'h -> 'i
+within context
+    let bigMul l1 l2 =
+    let f a x = let (x1, x2) = x in let (carry, res) = a in (carry l1 a) in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "1960.ml", line 7, characters 2-112:
+And modified the following location:
+File "1960.ml", line 6, characters 51-52:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'j * 'k
+within context
+    let bigMul l1 l2 =
+    let f a x = let (x1, x2) = x in let (carry, res) = a; [[...]] in carry @ a in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "1960.ml", line 7, characters 2-112:
+And modified the following location:
+File "1960.ml", line 6, characters 51-52:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    x
+The actual replacement has type
+    'l list * 'm
+within context
+    let bigMul l1 l2 =
+    let f a x = let (x1, x2) = x in let (carry, res) = x in carry @ a in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "1960.ml", line 7, characters 2-112:
+And modified the following location:
+File "1960.ml", line 6, characters 2-181:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = let (x1, x2) = x in let (carry, res) = a in carry @ a in
+      let base = [] in
+      let args = (List.rev (helper l1 l2)) in
+      let (carry, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'n
+==============================

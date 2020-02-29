@@ -1,0 +1,76 @@
+------------------------------------------------------------------
+File "3297.ml", line 27, characters 28-36:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+Triaged the following locations:
+File "3297.ml", line 27, characters 15-26:
+And modified the following location:
+File "3297.ml", line 27, characters 28-36:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    ('e * 'f) list -> int * int -> 'g
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (v1, v2) -> (match a with 
+                                                 | (list1, list2) ->
+                                                   (match list1 with 
+                                                    | [] ->
+                                                      ((v1 + v2) / 10 :: list1,
+                                                            (mod (v1 + v2) 10) ::
+                                                                list2)
+                                                    | h :: t ->
+                                                      (((v1 + v2) + h) / 10 :: list1
+                                                            ,
+                                                            (mod ((v1 + v2) + h) 10)
+                                                                ::
+                                                                list2)))) in let
+          base
+          =
+          [], []
+          in
+          let args =
+          ((List.append; [[...]]) ((List.rev; [[...]]) (List.combine l1 l2) (0, 0)))
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "3297.ml", line 27, characters 15-26:
+And modified the following location:
+File "3297.ml", line 27, characters 58-64:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    (List.rev (List.combine l1 l2) (0, 0))
+with
+    (List.rev (List.combine l1 l2))
+The actual replacement has type
+    ('h * 'i) list
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (v1, v2) -> (match a with 
+                                                 | (list1, list2) ->
+                                                   (match list1 with 
+                                                    | [] ->
+                                                      ((v1 + v2) / 10 :: list1,
+                                                            (mod (v1 + v2) 10) ::
+                                                                list2)
+                                                    | h :: t ->
+                                                      (((v1 + v2) + h) / 10 :: list1
+                                                            ,
+                                                            (mod ((v1 + v2) + h) 10)
+                                                                ::
+                                                                list2)))) in let
+          base
+          =
+          [], []
+          in
+          let args = ((List.append; [[...]]) (List.rev (List.combine l1 l2))) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

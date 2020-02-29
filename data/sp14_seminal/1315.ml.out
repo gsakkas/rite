@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1315.ml", line 33, characters 60-63:
+This expression has type int but is here used with type float
+Relevant code: pos
+------------------------------------------------------------------
+File "1315.ml", line 33, characters 57-59:
+Try replacing
+    **
+with
+    **; [[...]]
+of type
+    float -> int -> int
+within context
+    fun x ->
+      (let (pos, total) = a in pos + 1, (mulByDigit (10.0 **; [[...]] pos) l2))
+==============================

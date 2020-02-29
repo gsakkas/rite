@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0477.ml", line 9, characters 61-69:
+This expression has type int list but is here used with type int
+Relevant code: digits n
+------------------------------------------------------------------
+File "0477.ml", line 9, characters 61-67:
+Try replacing
+    digits
+with
+    abs
+of type
+    int -> int
+within context
+    let rec additivePersistence n = (if (n / 10 <= 0) then 0 else (abs n)) ;; 
+==============================

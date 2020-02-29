@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "2152.ml", line 5, characters 28-65:
+This expression has type int * int but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: ((f (if (f b) = b then 1 else 0)), b)
+------------------------------------------------------------------
+File "2152.ml", line 5, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    int * int -> int * int -> bool
+within context
+    let fixpoint (f, b) = (= ((f (if (f b) = b then 1 else 0)), b)) ;; 
+==============================
+File "2152.ml", line 5, characters 37-38:
+Try replacing
+    f
+with
+    not
+of type
+    bool -> bool
+within context
+    (f (if (not b) = b then 1 else 0)), b
+==============================

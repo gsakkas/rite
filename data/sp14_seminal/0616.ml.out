@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0616.ml", line 18, characters 11-12:
+This expression has type int * 'a but is here used with type (int * int) list
+Relevant code: a
+------------------------------------------------------------------
+File "0616.ml", line 17, characters 23-88:
+Try replacing
+    ((c + x') + x'') / 10, (mod ((c + x') + x'') 10) :: a
+with
+    [[...]]
+of type
+    'b
+within context
+    let f a x = let (x', x'') = x in let (c, s) = a in [[...]] in
+      let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

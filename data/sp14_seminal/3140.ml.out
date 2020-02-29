@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "3140.ml", line 23, characters 45-54:
+This expression has type int but is here used with type 'a list
+Relevant code: (h1 + h2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3140.ml", line 23, characters 45-58:
+And modified the following location:
+File "3140.ml", line 23, characters 31-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (h1, h2) :: t
+with
+    _
+The actual replacement has type
+    'b -> 'c
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | _ ->
+                                    [[...other program...]]) in let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "3140.ml", line 23, characters 45-58:
+And modified the following location:
+File "3140.ml", line 23, characters 22-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    ('d * 'e) list
+within context
+    fun (l1, l2) -> (let f a x = (match (x; [[...]]) with 
+                                  | (h1, h2) :: t ->
+                                    [[...other program...]]) in let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

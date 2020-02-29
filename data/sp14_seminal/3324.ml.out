@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "3324.ml", line 5, characters 43-44:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "3324.ml", line 5, characters 43-44:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    int list
+within context
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t -> ((mulByDigit i (List.rev t)) @ (0; [[...]])) @ [h * i])
+==============================
+File "3324.ml", line 5, characters 41-42:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int list -> int -> int list
+within context
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t -> ((mulByDigit i (List.rev t)) @; [[...]] 0) @ [h * i])
+==============================

@@ -1,0 +1,49 @@
+------------------------------------------------------------------
+File "0898.ml", line 16, characters 50-51:
+This expression has type 'a -> 'b -> 'a list but is here used with type
+  'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "0898.ml", line 16, characters 50-51:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'c list * 'd list -> 'e -> 'c list * 'd list
+within context
+    let f a x = [a] in
+      let base = [], [] in
+      let args = [] in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0898.ml", line 14, characters 10-19:
+Try replacing
+    fun a x -> [a]
+with
+    fun a x -> [a]; [[...]]
+of type
+    'f
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f = fun a x -> [a]; [[...]] in
+              let base = [], [] in
+              let args = [] in let (_, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+File "0898.ml", line 16, characters 35-49:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('g -> 'h -> 'g list) -> 'i list * 'j list -> 'k list -> 'l * 'm
+within context
+    let f a x = [a] in
+      let base = [], [] in
+      let args = [] in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

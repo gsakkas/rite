@@ -1,0 +1,74 @@
+------------------------------------------------------------------
+File "1047.ml", line 38, characters 20-30:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: expChooser
+------------------------------------------------------------------
+File "1047.ml", line 26, characters 17-477:
+Try replacing
+    fun (r, d) -> (match r with 
+                   | 0 -> (buildX ())
+                   | 1 -> (buildY ())
+                   | 2 -> (buildSine (build (rand, d - 1)))
+                   | 3 -> (buildCosine (build (rand, d - 1)))
+                   | 4 ->
+                     (buildAverage ((build (rand, d - 1)), (build (rand, d - 1))))
+                   | 5 ->
+                     (buildTimes ((build (rand, d - 1)), (build (rand, d - 1))))
+                   | 6 ->
+                     (buildThresh
+                         ((build (rand, d - 1)),
+                             (build (rand, d - 1)),
+                             (build (rand, d - 1)), (build (rand, d - 1)))))
+with
+    fun (r, d) _ -> (match r with 
+                     | 0 -> (buildX ())
+                     | 1 -> (buildY ())
+                     | 2 -> (buildSine (build (rand, d - 1)))
+                     | 3 -> (buildCosine (build (rand, d - 1)))
+                     | 4 ->
+                       (buildAverage ((build (rand, d - 1)), (build (rand, d - 1))))
+                     | 5 ->
+                       (buildTimes ((build (rand, d - 1)), (build (rand, d - 1))))
+                     | 6 ->
+                       (buildThresh
+                           ((build (rand, d - 1)),
+                               (build (rand, d - 1)),
+                               (build (rand, d - 1)), (build (rand, d - 1)))))
+of type
+    int * int -> 'l -> expr
+==============================
+File "1047.ml", line 26, characters 17-477:
+Try replacing
+    fun (r, d) -> (match r with 
+                   | 0 -> (buildX ())
+                   | 1 -> (buildY ())
+                   | 2 -> (buildSine (build (rand, d - 1)))
+                   | 3 -> (buildCosine (build (rand, d - 1)))
+                   | 4 ->
+                     (buildAverage ((build (rand, d - 1)), (build (rand, d - 1))))
+                   | 5 ->
+                     (buildTimes ((build (rand, d - 1)), (build (rand, d - 1))))
+                   | 6 ->
+                     (buildThresh
+                         ((build (rand, d - 1)),
+                             (build (rand, d - 1)),
+                             (build (rand, d - 1)), (build (rand, d - 1)))))
+with
+    fun _ (r, d) -> (match r with 
+                     | 0 -> (buildX ())
+                     | 1 -> (buildY ())
+                     | 2 -> (buildSine (build (rand, d - 1)))
+                     | 3 -> (buildCosine (build (rand, d - 1)))
+                     | 4 ->
+                       (buildAverage ((build (rand, d - 1)), (build (rand, d - 1))))
+                     | 5 ->
+                       (buildTimes ((build (rand, d - 1)), (build (rand, d - 1))))
+                     | 6 ->
+                       (buildThresh
+                           ((build (rand, d - 1)),
+                               (build (rand, d - 1)),
+                               (build (rand, d - 1)), (build (rand, d - 1)))))
+of type
+    'm -> int * int -> expr
+==============================

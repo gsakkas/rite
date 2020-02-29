@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "1254.ml", line 19, characters 53-56:
+This expression has type int but is here used with type int * int
+Relevant code: sum
+------------------------------------------------------------------
+Triaged the following locations:
+File "1254.ml", line 24, characters 4-131:
+And modified the following location:
+File "1254.ml", line 19, characters 30-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    [1, sum - 1]
+with
+    [1 ; sum - 1]
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (n1, n2) = x in let sum = n1 + n2 in (match a with 
+                                                                  | [] ->
+                                                                    (if sum > 9 then
+                                                                        [1 ; sum - 1
+                                                                            ]
+                                                                        else
+                                                                        [sum])
+                                                                  | c :: x' ->
+                                                                    (if sum + c > 9
+                                                                        then
+                                                                        1 ::
+                                                                            (sum
+                                                                                  +
+                                                                                  c)
+                                                                              - 10
+                                                                            ::
+                                                                            x'
+                                                                        else
+                                                                        sum + c ::
+                                                                            x')) in [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================

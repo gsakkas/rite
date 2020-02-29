@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "3200.ml", line 27, characters 35-36:
+This expression has type
+  int list * int list list -> int * int -> int list * int list
+but is here used with type
+  int list * int list list -> int * int -> int list * int list list
+Relevant code: f
+------------------------------------------------------------------
+File "3200.ml", line 24, characters 56-57:
+Try replacing
+    s
+with
+    s'
+of type
+    int list
+within context
+    let c :: c' :: c'' = a1 in
+      let s :: s' = a2 in
+      let v = (x1 + x2) + c' in [c + 1] @ [v / 10], s' @ [(mod v 10)]
+==============================

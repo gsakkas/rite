@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1173.ml", line 12, characters 57-62:
+This expression has type char list but is here used with type unit
+Relevant code: wList
+------------------------------------------------------------------
+File "1173.ml", line 12, characters 57-62:
+Try replacing
+    wList
+with
+    wList; [[...]]
+of type
+    unit
+within context
+    let palindrome w =
+    let wList = (explode w) in
+      let wReverse = (listReverse (explode w)) in (if true then (wList; [[...]]))
+    ;; 
+==============================
+File "1173.ml", line 11, characters 14-23:
+Try replacing
+    (explode w)
+with
+    (explode w); [[...]]
+of type
+    'a
+within context
+    let palindrome w =
+    let wList = (explode w); [[...]] in
+      let wReverse = (listReverse (explode w)) in (if true then wList)
+    ;; 
+==============================

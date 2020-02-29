@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0381.ml", line 35, characters 39-53:
+This expression has type 'a -> 'b but is here used with type int
+Relevant code: (mulByDigit i)
+------------------------------------------------------------------
+File "0381.ml", line 35, characters 54-55:
+Try replacing
+    -
+with
+    -; [[...]]
+of type
+    (int list -> int list) -> int -> int list
+within context
+    fun i l -> (match i with 
+                | 1 -> l
+                | _ -> (bigAdd ((mulByDigit i) -; [[...]] 1) l))
+==============================

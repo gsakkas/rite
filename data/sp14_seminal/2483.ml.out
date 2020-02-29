@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "2483.ml", line 18, characters 22-24:
+This expression has type float but is here used with type int
+Relevant code: pi
+------------------------------------------------------------------
+Triaged the following locations:
+File "2483.ml", line 19, characters 19-32:
+And modified the following location:
+File "2483.ml", line 18, characters 25-26:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    float -> (float -> float -> float) -> float
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> (sin (pi *; [[...]] (evalhelper p1)))
+                                | Cosine p1 ->
+                                  [[...other program...]]) in (evalhelper e x  y)
+==============================

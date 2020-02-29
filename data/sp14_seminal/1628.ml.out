@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "1628.ml", line 7, characters 55-59:
+This expression is not a function, it cannot be applied
+Relevant code: seen
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "1628.ml", line 7, characters 60-62:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (seen [])
+with
+    seen
+The actual replacement has type
+    'e list
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if (List.mem h seen) = false then
+                                             seen @ [h]
+                                             else
+                                             [[...]])
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================
+Triaged the following locations:
+And modified the following location:
+File "1628.ml", line 7, characters 55-59:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    seen
+with
+    seen; [[...]]
+The actual replacement has type
+    'f list -> 'g list
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if (List.mem h seen) = false then
+                                             ((seen; [[...]]) []) @ [h]
+                                             else
+                                             [[...]])
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================

@@ -1,0 +1,121 @@
+------------------------------------------------------------------
+File "1897.ml", line 26, characters 41-42:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+Triaged the following locations:
+File "1897.ml", line 26, characters 47-70:
+And modified the following location:
+File "1897.ml", line 26, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    2
+with
+    2; [[...]]
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | SqDist (a, b) ->
+                                ((eval (a, x, y)) ** (2; [[...]])
+                                      +. [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1897.ml", line 26, characters 47-70:
+And modified the following location:
+File "1897.ml", line 26, characters 38-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    **
+with
+    **; [[...]]
+The actual replacement has type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | SqDist (a, b) ->
+                                (((eval (a, x, y)) **; [[...]] 2)
+                                      +. [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1897.ml", line 26, characters 20-43:
+And modified the following location:
+File "1897.ml", line 26, characters 65-67:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    **
+with
+    **; [[...]]
+The actual replacement has type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | SqDist (a, b) ->
+                                ([[...other program...]] +.
+                                      ((eval (b, x, y)) **; [[...]] 2))) ;; 
+==============================
+Triaged the following locations:
+File "1897.ml", line 26, characters 20-43:
+And modified the following location:
+File "1897.ml", line 26, characters 68-69:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    2
+with
+    2; [[...]]
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | SqDist (a, b) ->
+                                ([[...other program...]] +.
+                                      (eval (b, x, y)) ** (2; [[...]]))) ;; 
+==============================

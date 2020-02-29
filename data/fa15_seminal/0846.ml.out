@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "0846.ml", line 23, characters 35-39:
+This expression has type int * 'a list but is here used with type int * int
+Relevant code: base
+------------------------------------------------------------------
+File "0846.ml", line 23, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> 'c * 'd -> int * 'b list
+within context
+    let f a x = (match x with 
+                 | (b, c) ->
+                   (if b + c > 9 then (b + c) - 10, 1 else
+                       b + c,
+                         0)) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0846.ml", line 23, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('e -> int * int -> int * int) -> int * 'f list -> ('g * 'h) list -> 'i * 'j
+within context
+    let f a x = (match x with 
+                 | (b, c) ->
+                   (if b + c > 9 then (b + c) - 10, 1 else
+                       b + c,
+                         0)) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0846.ml", line 18, characters 10-109:
+Try replacing
+    fun a x -> (match x with 
+                | (b, c) -> (if b + c > 9 then (b + c) - 10, 1 else b + c, 0))
+with
+    fun a x -> (match x with 
+                | (b, c) ->
+                  (if b + c > 9 then (b + c) - 10, 1 else b + c, 0)); [[...]]
+of type
+    'k
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f = fun a x -> (match x with 
+                                                         | (b, c) ->
+                                                           (if b + c > 9 then
+                                                               (b + c) - 10, 1
+                                                               else
+                                                               b + c,
+                                                                 0)); [[...]] in let
+              base
+              =
+              0, []
+              in
+              let args = (List.rev (List.combine l1 l2)) in
+              let (_, res) = (List.fold_left f base  args) in
+              res in (removeZero (add (padZero l1 l2))))
+==============================

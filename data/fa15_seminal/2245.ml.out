@@ -1,0 +1,119 @@
+------------------------------------------------------------------
+File "2245.ml", line 37, characters 19-37:
+This expression has type int list -> int list but is here used with type int
+Relevant code: (mulByDigit (x l))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2245.ml", line 37, characters 20-30:
+And modified the following location:
+File "2245.ml", line 37, characters 32-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    int list -> 'a
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = ((mulByDigit; [[...]]) ((x; [[...]]) l)) + o in
+                      (if prod < 10 then 0, prod :: l else
+                          prod / 10, (mod prod 10) :: l)))
+==============================
+Triaged the following locations:
+File "2245.ml", line 37, characters 20-30:
+And modified the following location:
+File "2245.ml", line 37, characters 32-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    x
+with
+    <
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = ((mulByDigit; [[...]]) (< l)) + o in
+                      (if prod < 10 then 0, prod :: l else
+                          prod / 10, (mod prod 10) :: l)))
+==============================
+Triaged the following locations:
+File "2245.ml", line 37, characters 20-30:
+And modified the following location:
+File "2245.ml", line 37, characters 32-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    x
+with
+    =
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = ((mulByDigit; [[...]]) (= l)) + o in
+                      (if prod < 10 then 0, prod :: l else
+                          prod / 10, (mod prod 10) :: l)))
+==============================
+Triaged the following locations:
+File "2245.ml", line 37, characters 20-30:
+And modified the following location:
+File "2245.ml", line 37, characters 32-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    x
+with
+    >
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = ((mulByDigit; [[...]]) (> l)) + o in
+                      (if prod < 10 then 0, prod :: l else
+                          prod / 10, (mod prod 10) :: l)))
+==============================
+Triaged the following locations:
+File "2245.ml", line 37, characters 20-30:
+And modified the following location:
+File "2245.ml", line 37, characters 32-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    x
+with
+    @
+The actual replacement has type
+    int list -> int list -> int list
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = ((mulByDigit; [[...]]) (@ l)) + o in
+                      (if prod < 10 then 0, prod :: l else
+                          prod / 10, (mod prod 10) :: l)))
+==============================
+Triaged the following locations:
+File "2245.ml", line 37, characters 20-30:
+And modified the following location:
+File "2245.ml", line 37, characters 34-35:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    (x l)
+with
+    x
+The actual replacement has type
+    'b
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = ((mulByDigit; [[...]]) x) + o in
+                      (if prod < 10 then 0, prod :: l else
+                          prod / 10, (mod prod 10) :: l)))
+==============================

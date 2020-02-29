@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "2183.ml", line 30, characters 11-12:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+File "2183.ml", line 30, characters 11-12:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Poly (a, b, c) ->
+                                ((((eval (a, x, y)) *. (eval (a, x, y)))
+                                          +. ((eval (b, x, y)) *. (eval (c, x, y))))
+                                      /. 2; [[...]])
+                              | Tan a ->
+                                ((sin (pi *. (eval (a, x, y))))
+                                      /. (cos (pi *. (eval (a, x, y)))))) ;; 
+==============================
+File "2183.ml", line 30, characters 8-10:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Poly (a, b, c) ->
+                                ((((eval (a, x, y)) *. (eval (a, x, y)))
+                                          +. ((eval (b, x, y)) *. (eval (c, x, y))))
+                                      /.; [[...]] 2)
+                              | Tan a ->
+                                ((sin (pi *. (eval (a, x, y))))
+                                      /. (cos (pi *. (eval (a, x, y)))))) ;; 
+==============================

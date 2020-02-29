@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1020.ml", line 4, characters 35-36:
+This expression has type ('a -> 'a -> 'b) -> 'a -> 'a -> 'b
+but is here used with type ('a -> 'a -> 'b) -> 'a -> 'a -> 'a -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "1020.ml", line 3, characters 16-19:
+Try replacing
+    (a x d)
+with
+    (a (x d))
+of type
+    'c
+within context
+    fun fs ->
+      (let f a x d = (a (x d)) in
+          let base p = p in (List.fold_left f base  (List.rev fs)))
+==============================
+File "1020.ml", line 3, characters 8-11:
+Try replacing
+    fun a x d -> (a x d)
+with
+    fun x a d -> (a x d)
+of type
+    'd -> ('d -> 'e -> 'f) -> 'e -> 'f
+within context
+    let pipe fs =
+    let f x a d = (a x d) in
+      let base p = p in (List.fold_left f base  (List.rev fs))
+    ;; 
+==============================

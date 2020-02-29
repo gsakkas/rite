@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1304.ml", line 21, characters 18-44:
+This expression has type int list but is here used with type 'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "1304.ml", line 21, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int list * int list -> int list) ->
+    int list -> ('c * 'd) list -> 'e * 'f
+within context
+    let f a x = (match x with 
+                 | (h1 :: t1, h2 :: t2) -> (h1 + h2) / 10 :: (mod (h1 + h2) 10) :: a
+                 | _ ->
+                   a) in let base = [0] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

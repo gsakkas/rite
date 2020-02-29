@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "0179.ml", line 11, characters 27-37:
+This expression has type int list but is here used with type int
+Relevant code: (digits n)
+------------------------------------------------------------------
+File "0179.ml", line 11, characters 7-26:
+Try replacing
+    additivePersistence
+with
+    List.length
+of type
+    int list -> int
+within context
+    let rec additivePersistence n =
+    (if (List.length (digits n)) = 1 then (List.hd (digits n)) else
+      (List.length (digits n)))
+    ;; 
+==============================
+File "0179.ml", line 11, characters 7-26:
+Try replacing
+    additivePersistence
+with
+    List.hd
+of type
+    int list -> int
+within context
+    let rec additivePersistence n =
+    (if (List.length (digits n)) = 1 then (List.hd (digits n)) else
+      (List.hd (digits n)))
+    ;; 
+==============================
+File "0179.ml", line 11, characters 28-34:
+Try replacing
+    digits
+with
+    abs
+of type
+    int -> int
+within context
+    let rec additivePersistence n =
+    (if (List.length (digits n)) = 1 then (List.hd (digits n)) else
+      (additivePersistence (abs n)))
+    ;; 
+==============================

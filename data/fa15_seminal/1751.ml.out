@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1751.ml", line 3, characters 2-85:
+This expression has type int list but is here used with type int
+Relevant code: match n <= 0 with
+  | true  -> []
+  | false  -> [digitsOfInt (n / 10)] @ [n mod 10]
+------------------------------------------------------------------
+File "1751.ml", line 2, characters 20-109:
+Try replacing
+    fun n -> (match (n <= 0) with 
+              | true -> []
+              | false -> [(digitsOfInt (n / 10))] @ [(mod n 10)])
+with
+    fun n -> (match (n <= 0) with 
+              | true -> []
+              | false -> [(digitsOfInt (n / 10))] @ [(mod n 10)]); [[...]]
+of type
+    int -> int
+==============================

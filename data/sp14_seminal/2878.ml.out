@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2878.ml", line 17, characters 14-42:
+This expression has type float but is here used with type int
+Relevant code: sin (pi *. (eval (e, 0, 0)))
+------------------------------------------------------------------
+File "2878.ml", line 13, characters 13-110:
+Try replacing
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine e -> (sin (pi *. (eval (e, 0, 0)))))
+with
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine e -> (sin (pi *. (eval (e, 0, 0))))); [[...]]
+of type
+    expr * int * int -> float
+==============================

@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0107.ml", line 6, characters 18-27:
+This expression is not a function, it cannot be applied
+Relevant code: (a ^ sep)
+------------------------------------------------------------------
+File "0107.ml", line 6, characters 28-29:
+Try replacing
+    ((a ^ sep) x)
+with
+    a ^ sep
+of type
+    string
+within context
+    fun sl -> (match sl with 
+               | [] -> ""
+               | h :: t ->
+                 (let f a x = a ^ sep in
+                       let base = h in let l = t in (List.fold_left f base  l)))
+==============================

@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "2175.ml", line 8, characters 38-49:
+This expression has type 'a list -> int but is here used with type int
+Relevant code: List.length
+------------------------------------------------------------------
+File "2175.ml", line 8, characters 38-49:
+Try replacing
+    List.length
+with
+    List.length; [[...]]
+of type
+    int
+within context
+    (if (List.length l1) > (List.length l2) then
+      l1, (clone 0 ((List.length l1) - (List.length l2))) @ l2
+      else
+      (clone 0 ((List.length l2) - (List.length; [[...]]))) @ l1, l2)
+==============================
+File "2175.ml", line 8, characters 36-37:
+Try replacing
+    -
+with
+    -; [[...]]
+of type
+    int -> ('b list -> int) -> int
+within context
+    (if (List.length l1) > (List.length l2) then
+      l1, (clone 0 ((List.length l1) - (List.length l2))) @ l2
+      else
+      (clone 0 ((List.length l2) -; [[...]] List.length)) @ l1, l2)
+==============================

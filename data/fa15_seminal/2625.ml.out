@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "2625.ml", line 20, characters 18-44:
+This expression has type 'a list but is here used with type 'b * 'c
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "2625.ml", line 20, characters 35-44:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f args  base)
+of type
+    'd * 'e
+within context
+    fun (l1, l2) ->
+      (let f a x = (failwith "to be implemented") in
+          let base = [] in
+          let args = (failwith "to be implemented") in
+          let (_, res) = (List.fold_left f args  base) in res)
+==============================
+File "2625.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('f -> 'g -> 'h) -> 'i list -> 'j -> 'k * 'l
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = [] in
+      let args = (failwith "to be implemented") in
+      let (_, res) = (f f base  args) in res
+==============================
+File "2625.ml", line 20, characters 35-39:
+Try replacing
+    base
+with
+    args
+of type
+    'm * 'n
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = [] in
+      let args = (failwith "to be implemented") in
+      let (_, res) = (List.fold_left f args  args) in res
+==============================

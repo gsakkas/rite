@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "1544.ml", line 4, characters 39-41:
+This expression has type 'a list but is here used with type int
+Relevant code: []
+------------------------------------------------------------------
+File "1544.ml", line 4, characters 39-41:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int
+within context
+    fun xs -> (let f a x = a + x * x in let base = (match xs with 
+                                                    | [] -> (f 0 ([]; [[...]]))
+                                                    | hd :: tl ->
+                                                      (f
+                                                          0
+                                                          hd)) in (List.fold_left
+              f base  xs))
+==============================
+File "1544.ml", line 4, characters 35-36:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int -> 'b list -> int
+within context
+    fun xs -> (let f a x = a + x * x in let base = (match xs with 
+                                                    | [] -> ((f; [[...]]) 0 [])
+                                                    | hd :: tl ->
+                                                      (f
+                                                          0
+                                                          hd)) in (List.fold_left
+              f base  xs))
+==============================
+File "1544.ml", line 3, characters 8-25:
+Try replacing
+    fun a x -> a + x * x
+with
+    fun a x -> a + x * x; [[...]]
+of type
+    'c
+within context
+    let sqsum xs =
+    let f = fun a x -> a + x * x; [[...]] in let base = (match xs with 
+                                                         | [] -> (f 0 [])
+                                                         | hd :: tl ->
+                                                           (f
+                                                               0
+                                                               hd)) in (List.fold_left
+          f base  xs)
+    ;; 
+==============================

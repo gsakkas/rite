@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0090.ml", line 19, characters 40-44:
+This expression has type ('a * 'b) list but is here used with type
+  'c list list
+Relevant code: args
+------------------------------------------------------------------
+File "0090.ml", line 19, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('d -> 'e list -> 'f list) -> 'g list -> ('h * 'i) list -> 'j * 'k
+within context
+    let f a x = (match x with 
+                 | [] ->
+                   []) in let base = [] in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "3225.ml", line 3, characters 2-97:
+This expression has type int list but is here used with type int
+Relevant code: match l with
+  | [] -> [0]
+  | x::x' -> [(x * i) / 10] @ [((x * i) mod 10) + (mulByDigit i x')]
+------------------------------------------------------------------
+File "3225.ml", line 2, characters 19-122:
+Try replacing
+    fun i l -> (match l with 
+                | [] -> [0]
+                | x :: x' ->
+                  [(x * i) / 10] @ [(mod (x * i) 10) + (mulByDigit i x')])
+with
+    fun i l -> (match l with 
+                | [] -> [0]
+                | x :: x' ->
+                  [(x * i) / 10] @ [(mod (x * i) 10) + (mulByDigit i x')]); [[...]]
+of type
+    int -> int list -> int
+==============================

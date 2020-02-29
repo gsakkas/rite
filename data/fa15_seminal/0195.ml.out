@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "0195.ml", line 11, characters 46-50:
+This pattern matches values of type expr
+but is here used to match values of type 'a * 'b * 'c
+Relevant code: VarX
+------------------------------------------------------------------
+Triaged the following locations:
+File "0195.ml", line 11, characters 55-56:
+File "0195.ml", line 11, characters 59-63:
+File "0195.ml", line 11, characters 68-69:
+And modified the following location:
+File "0195.ml", line 11, characters 46-50:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    VarX
+with
+    _
+The actual replacement has type
+    'd * 'e * 'f
+within context
+    let rec eval (e, x, y) = (match e, x, y with 
+                              | _ -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+File "0195.ml", line 11, characters 29-38:
+Try replacing
+    e, x, y
+with
+    e, x, y; [[...]]
+of type
+    expr
+within context
+    let rec eval (e, x, y) = (match (e, x, y; [[...]]) with 
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "0195.ml", line 11, characters 46-50:
+File "0195.ml", line 11, characters 55-56:
+File "0195.ml", line 11, characters 68-69:
+And modified the following location:
+File "0195.ml", line 11, characters 59-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    VarY
+with
+    _
+The actual replacement has type
+    'g * 'h * 'i
+within context
+    let rec eval (e, x, y) = (match e, x, y with 
+                              |[[...other pattern...]]->[[...other program...]]
+                              | _ -> [[...other program...]]) ;; 
+==============================

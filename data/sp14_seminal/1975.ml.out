@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1975.ml", line 3, characters 2-73:
+This expression has type int list but is here used with type
+  'a list -> int list
+Relevant code: if n < 0 then [] else (match n with | 0 -> [0] | _ -> digitsOfInt n [])
+------------------------------------------------------------------
+File "1975.ml", line 2, characters 20-97:
+Try replacing
+    fun n -> (if n < 0 then [] else (match n with 
+                                     | 0 -> [0]
+                                     | _ -> (digitsOfInt n [])))
+with
+    fun n _ -> (if n < 0 then [] else (match n with 
+                                       | 0 -> [0]
+                                       | _ -> (digitsOfInt n [])))
+of type
+    int -> 'b list -> int list
+==============================

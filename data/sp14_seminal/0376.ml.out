@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "0376.ml", line 27, characters 19-27:
+This expression has type int but is here used with type 'a list
+Relevant code: norm_sum
+------------------------------------------------------------------
+File "0376.ml", line 27, characters 19-27:
+Try replacing
+    norm_sum
+with
+    norm_sum; [[...]]
+of type
+    int list
+within context
+    let larger = (if (List.length l1) > (List.length l2) then l1 else l2) in
+      (if (List.length acc) = (List.length larger) - 1 then
+          (if rem = 1 then 0, [1 ; norm_sum] @ acc else
+            0, (norm_sum; [[...]]) @ acc)
+          else
+          new_rem, norm_sum :: acc)
+==============================
+File "0376.ml", line 27, characters 28-29:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> int list -> int list
+within context
+    let larger = (if (List.length l1) > (List.length l2) then l1 else l2) in
+      (if (List.length acc) = (List.length larger) - 1 then
+          (if rem = 1 then 0, [1 ; norm_sum] @ acc else
+            0, (norm_sum @; [[...]] acc))
+          else
+          new_rem, norm_sum :: acc)
+==============================
+File "0376.ml", line 21, characters 21-66:
+Try replacing
+    (if new_sum > 9 then new_sum - 10 else new_sum)
+with
+    (if new_sum > 9 then new_sum - 10 else new_sum); [[...]]
+of type
+    'b
+within context
+    let (rem, acc) = a in
+      let (el1, el2) = x in
+      let new_sum = (rem + el1) + el2 in
+      let new_rem = (if new_sum > 9 then 1 else 0) in
+      let norm_sum = (if new_sum > 9 then new_sum - 10 else new_sum); [[...]] in
+      let larger = (if (List.length l1) > (List.length l2) then l1 else l2) in
+      (if (List.length acc) = (List.length larger) - 1 then
+          (if rem = 1 then 0, [1 ; norm_sum] @ acc else 0, norm_sum @ acc)
+          else
+          new_rem, norm_sum :: acc)
+==============================

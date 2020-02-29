@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3224.ml", line 5, characters 14-28:
+This expression has type 'a list but is here used with type int
+Relevant code: [(x * i) / 10]
+------------------------------------------------------------------
+File "3224.ml", line 5, characters 13-67:
+Try replacing
+    [[(x * i) / 10] ; (mod (x * i) 10) + (mulByDigit i x')]
+with
+    [[...]]
+of type
+    int list
+within context
+    let rec mulByDigit i l = (match l with 
+                              | [] -> [0]
+                              | x :: x' -> [[...]]) ;; 
+==============================

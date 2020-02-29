@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "0037.ml", line 26, characters 13-20:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.tl
+------------------------------------------------------------------
+Triaged the following locations:
+File "0037.ml", line 26, characters 10-75:
+And modified the following location:
+File "0037.ml", line 28, characters 13-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.tl
+with
+    List.tl; [[...]]
+The actual replacement has type
+    ('f list -> 'f list) -> int -> int
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (h1 :: t1, []) -> [[...other program...]]
+                                  | (h1 :: t1, rh :: rt) ->
+                                    (((List.tl; [[...]]) List.rev h1) :: t1,
+                                          ((h1 + x) + rh) / 10 ::
+                                              (mod ((h1 + x) + rh) 10) ::
+                                              rt)) in let base = l1, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "0037.ml", line 28, characters 10-113:
+And modified the following location:
+File "0037.ml", line 26, characters 13-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.tl
+with
+    List.tl; [[...]]
+The actual replacement has type
+    ('b list -> 'b list) -> int -> int
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (h1 :: t1, []) ->
+                                    (((List.tl; [[...]]) List.rev h1) :: t1,
+                                          [(h1 + x) / 10 ; (mod (h1 + x) 10)])
+                                  | (h1 :: t1, rh :: rt) ->
+                                    [[...other program...]]) in let base = l1, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================

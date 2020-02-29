@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "1251.ml", line 19, characters 49-59:
+This expression has type int list * int list but is here used with type
+  ('a * 'b) list list
+Relevant code: ([0], [0])
+------------------------------------------------------------------
+File "1251.ml", line 19, characters 24-60:
+Try replacing
+    (List.combine l1 l2) :: [0] :: 0 :: []
+with
+    [[...]]
+of type
+    'c list
+within context
+    fun (l1, l2) -> (let f a x = let z = (fst x) + (snd x) in (match a with 
+                                                               | (w, y) ->
+                                                                 ((w + z) / 10,
+                                                                       (mod
+                                                                             (w + z) 10)
+                                                                           ::
+                                                                           y)) in let
+          base
+          =
+          0, []
+          in
+          let args = (List.rev [[...]]) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1490.ml", line 3, characters 35-52:
+This expression has type int but is here used with type 'a list
+Relevant code: ((clone x n) - 1)
+------------------------------------------------------------------
+File "1490.ml", line 3, characters 48-49:
+Try replacing
+    -
+with
+    -; [[...]]
+of type
+    'b list -> int -> 'b list
+within context
+    fun x n -> (match n > 0 with 
+                | true -> x :: ((clone x n) -; [[...]] 1)
+                | false -> [x])
+==============================

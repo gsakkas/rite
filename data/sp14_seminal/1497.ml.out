@@ -1,0 +1,82 @@
+------------------------------------------------------------------
+File "1497.ml", line 7, characters 2-13:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: clonehelper
+------------------------------------------------------------------
+File "1497.ml", line 7, characters 14-15:
+Try replacing
+    (clonehelper x abs  n)
+with
+    (clonehelper abs n)
+of type
+    (int -> int) list
+within context
+    let rec clone x n = let rec clonehelper tx tn = (match tn = 0 with 
+                                                     | true -> []
+                                                     | false ->
+                                                       tx ::
+                                                             (clonehelper
+                                                               tx
+                                                               (tn
+                                                                   -
+                                                                   1))) in (clonehelper
+          abs n) ;; 
+==============================
+File "1497.ml", line 7, characters 16-19:
+Try replacing
+    (clonehelper x abs  n)
+with
+    (clonehelper x n)
+of type
+    'z list
+within context
+    let rec clone x n = let rec clonehelper tx tn = (match tn = 0 with 
+                                                     | true -> []
+                                                     | false ->
+                                                       tx ::
+                                                             (clonehelper
+                                                               tx
+                                                               (tn
+                                                                   -
+                                                                   1))) in (clonehelper
+          x n) ;; 
+==============================
+File "1497.ml", line 7, characters 14-19:
+Try replacing
+    (clonehelper x abs  n)
+with
+    (clonehelper (x, abs, n))
+of type
+    int -> ('x * (int -> int) * 'y) list
+within context
+    let rec clone x n = let rec clonehelper tx tn = (match tn = 0 with 
+                                                     | true -> []
+                                                     | false ->
+                                                       tx ::
+                                                             (clonehelper
+                                                               tx
+                                                               (tn
+                                                                   -
+                                                                   1))) in (clonehelper
+          (x, abs, n)) ;; 
+==============================
+File "1497.ml", line 7, characters 2-15:
+Try replacing
+    (clonehelper x abs  n)
+with
+    (clonehelper (x abs n))
+of type
+    int -> 'w list
+within context
+    let rec clone x n = let rec clonehelper tx tn = (match tn = 0 with 
+                                                     | true -> []
+                                                     | false ->
+                                                       tx ::
+                                                             (clonehelper
+                                                               tx
+                                                               (tn
+                                                                   -
+                                                                   1))) in (clonehelper
+          (x abs n)) ;; 
+==============================

@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "0461.ml", line 16, characters 30-31:
+This expression has type string but is here used with type 'a list
+Relevant code: w
+------------------------------------------------------------------
+File "0461.ml", line 16, characters 30-31:
+Try replacing
+    w
+with
+    w; [[...]]
+of type
+    char list
+within context
+    fun w ->
+      (let converted = (explode w) in
+          (if converted = (listReverse (w; [[...]])) then true else false))
+==============================
+File "0461.ml", line 15, characters 26-27:
+Try replacing
+    w
+with
+    w; [[...]]
+of type
+    string
+within context
+    let palindrome w =
+    let converted = (explode (w; [[...]])) in
+      (if converted = (listReverse w) then true else false)
+    ;; 
+==============================
+File "0461.ml", line 15, characters 18-25:
+Try replacing
+    explode
+with
+    explode; [[...]]
+of type
+    'b list -> 'c
+within context
+    let palindrome w =
+    let converted = ((explode; [[...]]) w) in
+      (if converted = (listReverse w) then true else false)
+    ;; 
+==============================
+File "0461.ml", line 16, characters 18-29:
+Try replacing
+    listReverse
+with
+    listReverse; [[...]]
+of type
+    string -> char list
+within context
+    fun w ->
+      (let converted = (explode w) in
+          (if converted = ((listReverse; [[...]]) w) then true else false))
+==============================

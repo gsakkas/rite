@@ -1,0 +1,93 @@
+------------------------------------------------------------------
+File "2786.ml", line 30, characters 19-35:
+This expression has type float but is here used with type int
+Relevant code: (eval (f, x, y))
+------------------------------------------------------------------
+File "2786.ml", line 30, characters 36-37:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> (sin (pi *. (eval (e0, x, y))))
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Average (e2, e3) ->
+                                (((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0)
+                              | Times (e4, e5) ->
+                                ((eval (e4, x, y)) *. (eval (e5, x, y)))
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, x, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | POS (a, b, c, d) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y)))
+                                      *. ((eval (c, x, y)) +. (eval (d, x, y))))
+                              | SOP (f, g, h) ->
+                                ((eval (f, x, y)) +; [[...]]
+                                      ((eval (g, x, y)) *. (eval (h, x, y))))) ;; 
+==============================
+Triaged the following locations:
+File "2786.ml", line 19, characters 15-44:
+File "2786.ml", line 20, characters 17-46:
+File "2786.ml", line 21, characters 23-70:
+File "2786.ml", line 22, characters 21-59:
+File "2786.ml", line 24, characters 6-100:
+File "2786.ml", line 28, characters 6-94:
+And modified the following location:
+File "2786.ml", line 30, characters 56-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) -> [[...other program...]]
+                              | POS (a, b, c, d) -> [[...other program...]]
+                              | SOP (f, g, h) ->
+                                (eval (f, x, y)) +
+                                    ((eval (g, x, y))
+                                        *.; [[...]] (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2786.ml", line 19, characters 15-44:
+File "2786.ml", line 20, characters 17-46:
+File "2786.ml", line 21, characters 23-70:
+File "2786.ml", line 22, characters 21-59:
+File "2786.ml", line 24, characters 6-100:
+File "2786.ml", line 28, characters 6-94:
+And modified the following location:
+File "2786.ml", line 30, characters 56-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) -> [[...other program...]]
+                              | POS (a, b, c, d) -> [[...other program...]]
+                              | SOP (f, g, h) ->
+                                (eval (f, x, y)) +
+                                    ((eval (g, x, y)) + (eval (h, x, y)))) ;; 
+==============================

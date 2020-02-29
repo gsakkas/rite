@@ -1,0 +1,79 @@
+------------------------------------------------------------------
+File "1313.ml", line 8, characters 15-36:
+This expression has type int list but is here used with type 'a list list
+Relevant code: (clone 0 difference2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1313.ml", line 8, characters 7-42:
+And modified the following location:
+File "1313.ml", line 10, characters 34-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l2
+with
+    l2; [[...]]
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let difference1 = (List.length l1) - (List.length l2) in
+            let difference2 = (List.length l2) - (List.length l1) in
+            (if difference2 > 0 then [[...other program...]] else
+                (if difference1 > 0 then l1, l2; [[...]] :: (clone 0 difference1)
+                  else
+                  l1, l2)))
+==============================
+Triaged the following locations:
+File "1313.ml", line 10, characters 4-77:
+And modified the following location:
+File "1313.ml", line 8, characters 15-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 difference2)
+with
+    (clone 0 difference2); [[...]]
+The actual replacement has type
+    'b list list
+within context
+    fun l1
+      l2 ->
+        (let difference1 = (List.length l1) - (List.length l2) in
+            let difference2 = (List.length l2) - (List.length l1) in
+            (if difference2 > 0 then l1 :: (clone 0 difference2); [[...]], l2 else
+                [[...other program...]]))
+==============================
+Triaged the following locations:
+File "1313.ml", line 10, characters 4-77:
+And modified the following location:
+File "1313.ml", line 8, characters 9-11:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let difference1 = (List.length l1) - (List.length l2) in
+            let difference2 = (List.length l2) - (List.length l1) in
+            (if difference2 > 0 then l1; [[...]] :: (clone 0 difference2), l2 else
+                [[...other program...]]))
+==============================
+Triaged the following locations:
+File "1313.ml", line 10, characters 4-77:
+And modified the following location:
+File "1313.ml", line 8, characters 8-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1 :: (clone 0 difference2)
+with
+    l1, (clone 0 difference2)
+The actual replacement has type
+    'c list * int list
+within context
+    fun l1
+      l2 ->
+        (let difference1 = (List.length l1) - (List.length l2) in
+            let difference2 = (List.length l2) - (List.length l1) in
+            (if difference2 > 0 then (l1, (clone 0 difference2)), l2 else
+                [[...other program...]]))
+==============================

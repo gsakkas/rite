@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2397.ml", line 8, characters 23-24:
+This expression has type int but is here used with type int list
+Relevant code: 2
+------------------------------------------------------------------
+File "2397.ml", line 8, characters 23-24:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    int list
+within context
+    let rec digitsOfInt n = (match n > 0 with 
+                             | false -> []
+                             | true -> (match n > 9 with 
+                                        | false -> n :: (digitsOfInt (n / 10))
+                                        | true -> 1 :: 2; [[...]])) ;; 
+==============================

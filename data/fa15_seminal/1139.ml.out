@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "1139.ml", line 47, characters 12-15:
+This expression has type int list but is here used with type int
+Relevant code: sum
+------------------------------------------------------------------
+File "1139.ml", line 46, characters 30-42:
+Try replacing
+    (mulByDigit (intListToInt l1) s)
+with
+    (intListToInt (mulByDigit l1 s))
+of type
+    int
+within context
+    fun a x -> (let (s, t) = x in (match a with 
+                                   | (r, v) ->
+                                     (let sum = (intListToInt (mulByDigit l1 s)) in
+                                           (if sum + r > 9 then
+                                               (sum + r) / 10,
+                                                 (mod (sum + r) 10) :: v
+                                               else
+                                               0, (mod (sum + r) 10) :: v))))
+==============================
+File "1139.ml", line 46, characters 18-28:
+Try replacing
+    mulByDigit
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun x -> (let (s, t) = x in (match a with 
+                                 | (r, v) ->
+                                   (let sum = (- (intListToInt l1) s) in
+                                         (if sum + r > 9 then
+                                             (sum + r) / 10, (mod (sum + r) 10) :: v
+                                             else
+                                             0, (mod (sum + r) 10) :: v))))
+==============================
+File "1139.ml", line 46, characters 18-28:
+Try replacing
+    mulByDigit
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun x -> (let (s, t) = x in (match a with 
+                                 | (r, v) ->
+                                   (let sum = (+ (intListToInt l1) s) in
+                                         (if sum + r > 9 then
+                                             (sum + r) / 10, (mod (sum + r) 10) :: v
+                                             else
+                                             0, (mod (sum + r) 10) :: v))))
+==============================

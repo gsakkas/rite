@@ -1,0 +1,130 @@
+------------------------------------------------------------------
+File "1473.ml", line 16, characters 16-26:
+This expression is not a function, it cannot be applied
+Relevant code: "cos (pi*"
+------------------------------------------------------------------
+Triaged the following locations:
+File "1473.ml", line 17, characters 22-68:
+File "1473.ml", line 18, characters 20-54:
+File "1473.ml", line 20, characters 6-97:
+And modified the following location:
+File "1473.ml", line 16, characters 16-26:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    "cos (pi*"
+with
+    "cos (pi*"; [[...]]
+The actual replacement has type
+    (expr -> string) ->
+    expr -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e -> "sin (pi*" ^ ((exprToString e) ^ ")")
+                              | Cosine e ->
+                                (( "cos (pi*"; [[...]] ) exprToString e ")")
+                              | Average (e, ex) -> [[...other program...]]
+                              | Times (e, ex) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1473.ml", line 16, characters 16-45:
+File "1473.ml", line 18, characters 20-54:
+File "1473.ml", line 20, characters 6-97:
+And modified the following location:
+File "1473.ml", line 17, characters 22-26:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    "(("
+with
+    "(("; [[...]]
+The actual replacement has type
+    (expr -> string) ->
+    expr ->
+    string ->
+    (expr -> string) ->
+    expr -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e -> "sin (pi*" ^ ((exprToString e) ^ ")")
+                              | Cosine e -> [[...other program...]]
+                              | Average (e, ex) ->
+                                (( "(("; [[...]] )
+                                      exprToString e "+" exprToString ex ")/2)")
+                              | Times (e, ex) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1473.ml", line 16, characters 16-45:
+File "1473.ml", line 17, characters 22-68:
+File "1473.ml", line 18, characters 20-54:
+And modified the following location:
+File "1473.ml", line 20, characters 6-9:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    "("
+with
+    "("; [[...]]
+The actual replacement has type
+    (expr -> string) ->
+    expr ->
+    string ->
+    (expr -> string) ->
+    expr ->
+    string ->
+    (expr -> string) ->
+    expr ->
+    string ->
+    (expr -> string) ->
+    expr -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e -> "sin (pi*" ^ ((exprToString e) ^ ")")
+                              | Cosine e -> [[...other program...]]
+                              | Average (e, ex) -> [[...other program...]]
+                              | Times (e, ex) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                (( "("; [[...]] )
+                                      exprToString
+                                      e1
+                                      "<"
+                                      exprToString
+                                      e2
+                                      "?"
+                                      exprToString
+                                      e3
+                                      ":"
+                                      exprToString
+                                      e4
+                                      ")")) ;; 
+==============================
+Triaged the following locations:
+File "1473.ml", line 16, characters 16-45:
+File "1473.ml", line 17, characters 22-68:
+File "1473.ml", line 20, characters 6-97:
+And modified the following location:
+File "1473.ml", line 18, characters 20-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString; [[...]]
+The actual replacement has type
+    expr ->
+    string ->
+    (expr -> string) -> expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e -> "sin (pi*" ^ ((exprToString e) ^ ")")
+                              | Cosine e -> [[...other program...]]
+                              | Average (e, ex) -> [[...other program...]]
+                              | Times (e, ex) ->
+                                ((exprToString; [[...]]) e "*"  exprToString  ex)
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================

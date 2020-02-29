@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0895.ml", line 13, characters 20-22:
+This expression is not a function, it cannot be applied
+Relevant code: ""
+------------------------------------------------------------------
+Triaged the following locations:
+File "0895.ml", line 13, characters 9-18:
+And modified the following location:
+File "0895.ml", line 13, characters 20-22:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sepConcat
+If you ignore other surrounding code, try replacing
+    ""
+with
+    ""; [[...]]
+The actual replacement has type
+    (('f -> 'g) -> 'f list -> 'g list) -> 'h -> 'i
+within context
+    let stringOfList f l = (match l with 
+                            | [] -> "[]"
+                            | x :: [] -> "[" ^ (x ^ "]")
+                            | l ->
+                              ((sepConcat; [[...]])
+                                  (List.map ""; [[...]] (f l)))) ;; 
+==============================

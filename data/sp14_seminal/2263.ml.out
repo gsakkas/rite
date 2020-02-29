@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2263.ml", line 17, characters 22-23:
+This expression has type expr but is here used with type float
+Relevant code: x
+------------------------------------------------------------------
+File "2263.ml", line 14, characters 2-204:
+Try replacing
+    (match e with 
+     | Sine e -> (sin (pi *. (eval (e, x, y))))
+     | Cosine e -> (cos (pi *. (eval (e, x, y))))
+     | Average (x, y) -> ((x +. y) /. 2.0)
+     | Times (x, y) -> (x *. y)
+     | Thresh (e, f, g, h) -> (failwith "sad"))
+with
+    [[...]]
+of type
+    'a
+==============================

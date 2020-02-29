@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "0844.ml", line 15, characters 7-16:
+This expression has type char list but is here used with type bool
+Relevant code: explode w
+------------------------------------------------------------------
+File "0844.ml", line 14, characters 7-11:
+Try replacing
+    true
+with
+    true; [[...]]
+of type
+    char list
+within context
+    let palindrome w =
+    (if (checkSame ((listReverse (explode w)), (explode w))) then (true; [[...]])
+      else
+      (explode w))
+    ;; 
+==============================
+File "0844.ml", line 15, characters 7-16:
+Try replacing
+    (explode w)
+with
+    (explode w); [[...]]
+of type
+    bool
+within context
+    let palindrome w =
+    (if (checkSame ((listReverse (explode w)), (explode w))) then true else
+      ((explode w); [[...]]))
+    ;; 
+==============================

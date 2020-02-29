@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1257.ml", line 28, characters 53-60:
+This expression has type int but is here used with type int list
+Relevant code: (n - 1)
+------------------------------------------------------------------
+File "1257.ml", line 28, characters 60-60:
+Try replacing
+    (helper (n - 1) (bigAdd l lis))
+with
+    (helper [[...]] (n - 1)  (bigAdd l lis))
+of type
+    int list
+within context
+    let rec helper acc n lis = (match n with 
+                                | 1 -> (bigAdd lis acc)
+                                | _ ->
+                                  (helper
+                                      [[...]] (n - 1) (bigAdd l lis))) in (helper [0] i  l)
+==============================
+File "1257.ml", line 28, characters 46-52:
+Try replacing
+    helper
+with
+    helper; [[...]]
+of type
+    int -> int list -> int list
+within context
+    fun acc n lis -> (match n with 
+                      | 1 -> (bigAdd lis acc)
+                      | _ -> ((helper; [[...]]) (n - 1) (bigAdd l lis)))
+==============================

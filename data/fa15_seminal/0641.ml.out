@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "0641.ml", line 4, characters 35-39:
+This expression has type int but is here used with type bool
+Relevant code: base
+------------------------------------------------------------------
+File "0641.ml", line 4, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int -> ('a -> 'b) -> int
+within context
+    let pipe fs =
+    let f a x = let h :: t = fs in a = (h x) in
+      let base = 0 in (List.fold_left (f; [[...]]) base  fs)
+    ;; 
+==============================
+File "0641.ml", line 4, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('c -> 'd -> bool) -> int -> ('d -> 'c) list -> 'e
+within context
+    let pipe fs =
+    let f a x = let h :: t = fs in a = (h x) in
+      let base = 0 in ((List.fold_left; [[...]]) f base  fs)
+    ;; 
+==============================
+File "0641.ml", line 3, characters 8-40:
+Try replacing
+    fun a x -> (let h :: t = fs in a = (h x))
+with
+    fun a x -> (let h :: t = fs in a = (h x)); [[...]]
+of type
+    'f
+within context
+    let pipe fs =
+    let f = fun a x -> (let h :: t = fs in a = (h x)); [[...]] in
+      let base = 0 in (List.fold_left f base  fs)
+    ;; 
+==============================

@@ -1,0 +1,128 @@
+------------------------------------------------------------------
+File "1243.ml", line 22, characters 13-35:
+This expression has type int * int list but is here used with type int list
+Relevant code: ((z / 10), [z mod 10])
+------------------------------------------------------------------
+Triaged the following locations:
+File "1243.ml", line 23, characters 4-120:
+And modified the following location:
+File "1243.ml", line 22, characters 13-35:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    z / 10, [(mod z 10)]
+with
+    z / 10, [(mod z 10)]; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) = let f a x = let z = (fst x) + (snd x) in (match a with 
+                                                                      | h :: t ->
+                                                                        (h + z) / 10
+                                                                              ::
+                                                                              (mod
+                                                                                (h
+                                                                                    +
+                                                                                    z) 10)
+                                                                              ::
+                                                                              t
+                                                                      | _ ->
+                                                                        (z / 10,
+                                                                              [
+                                                                                  (mod
+                                                                                    z
+                                                                                    10)
+                                                                                  ];
+                                                                            [[...]])) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1243.ml", line 23, characters 4-120:
+And modified the following location:
+File "1243.ml", line 21, characters 16-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (h + z) / 10 :: (mod (h + z) 10) :: t
+with
+    (h + z) / 10 :: (mod (h + z) 10) :: t; [[...]]
+The actual replacement has type
+    int * int list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) = let f a x = let z = (fst x) + (snd x) in (match a with 
+                                                                      | h :: t ->
+                                                                        ((h + z)
+                                                                                  /
+                                                                                  10
+                                                                                ::
+                                                                                (mod
+                                                                                  (h
+                                                                                      +
+                                                                                      z)
+                                                                                  10)
+                                                                                ::
+                                                                                t;
+                                                                            [[...]])
+                                                                      | _ ->
+                                                                        (z / 10,
+                                                                              [
+                                                                                  (mod
+                                                                                    z
+                                                                                    10)
+                                                                                  ])) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1243.ml", line 23, characters 4-120:
+And modified the following location:
+File "1243.ml", line 21, characters 16-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (h + z) / 10 :: (mod (h + z) 10) :: t
+with
+    (h + z) / 10, (mod (h + z) 10) :: t
+The actual replacement has type
+    int * int list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) = let f a x = let z = (fst x) + (snd x) in (match a with 
+                                                                      | h :: t ->
+                                                                        ((h + z)
+                                                                                / 10
+                                                                              ,
+                                                                              (mod
+                                                                                    (h
+                                                                                        +
+                                                                                        z)
+                                                                                    10)
+                                                                                  ::
+                                                                                  t)
+                                                                      | _ ->
+                                                                        (z / 10,
+                                                                              [
+                                                                                  (mod
+                                                                                    z
+                                                                                    10)
+                                                                                  ])) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1243.ml", line 23, characters 4-120:
+And modified the following location:
+File "1243.ml", line 18, characters 4-285:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = let z = (fst x) + (snd x) in (match a with 
+                                              | h :: t ->
+                                                (h + z) / 10 ::
+                                                      (mod (h + z) 10) :: t
+                                              | _ ->
+                                                (z / 10,
+                                                      [(mod z 10)
+                                                          ])) in let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

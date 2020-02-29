@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1958.ml", line 9, characters 16-45:
+This expression has type 'a list but is here used with type 'b * 'c
+Relevant code: (mulHelper 0) :: (List.rev l)
+------------------------------------------------------------------
+File "1958.ml", line 9, characters 16-45:
+Try replacing
+    (mulHelper 0) :: (List.rev l)
+with
+    [[...]]
+of type
+    'd * 'e
+within context
+    let rec mulByDigit i l = let rec mulHelper l' = (match l' with 
+                                                     | [] -> (0, [])
+                                                     | h :: t ->
+                                                       (let (carry, rest) =
+                                                             (mulHelper t)
+                                                             in
+                                                             let prod =
+                                                             i * h + carry
+                                                             in
+                                                             prod / 10,
+                                                                 (mod prod 10) ::
+                                                                     rest)) in let
+      (_, ans)
+      =
+      [[...]]
+      in
+      ans ;; 
+==============================

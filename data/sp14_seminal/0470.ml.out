@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0470.ml", line 12, characters 58-61:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sin
+------------------------------------------------------------------
+File "0470.ml", line 12, characters 58-61:
+Try replacing
+    sin
+with
+    sin; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine ex -> ((sin; [[...]]) exprToString ex)) ;; 
+==============================

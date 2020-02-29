@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "0283.ml", line 8, characters 22-24:
+This expression has type 'a list but is here used with type int
+Relevant code: l1
+------------------------------------------------------------------
+Triaged the following locations:
+File "0283.ml", line 8, characters 7-38:
+And modified the following location:
+File "0283.ml", line 9, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    (int list -> int list) -> 'b list -> unit
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then [[...other program...]] else
+          (if diff > 0 then ((cloneHelper 0 diff) @; [[...]] l2)))
+    ;; 
+==============================
+Triaged the following locations:
+File "0283.ml", line 9, characters 7-49:
+And modified the following location:
+File "0283.ml", line 8, characters 8-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    cloneHelper
+with
+    cloneHelper; [[...]]
+The actual replacement has type
+    int -> 'c list -> int
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then ((cloneHelper; [[...]]) 0 l1) - 1 * diff else
+          [[...other program...]])
+    ;; 
+==============================

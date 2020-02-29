@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "1793.ml", line 7, characters 34-35:
+This expression has type 'a list but is here used with type 'a
+Relevant code: t
+------------------------------------------------------------------
+File "1793.ml", line 7, characters 17-18:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'b -> 'c
+within context
+    fun l -> (match l with 
+              | [] -> ""
+              | h :: t ->
+                (let g a x = a ^ (";" ^ x) in
+                      let base = ((f; [[...]]) h) in
+                      let x = (f t) in (List.fold_left g base  x)))
+==============================
+File "1793.ml", line 7, characters 32-33:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'd list -> 'e
+within context
+    (match l with 
+     | [] -> ""
+     | h :: t ->
+       (let g a x = a ^ (";" ^ x) in
+             let base = (f h) in
+             let x = ((f; [[...]]) t) in (List.fold_left g base  x)))
+==============================

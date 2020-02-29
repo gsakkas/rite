@@ -1,0 +1,85 @@
+------------------------------------------------------------------
+File "1015.ml", line 5, characters 56-69:
+This expression has type bool list but is here used with type bool
+Relevant code: wwhile (f, h)
+------------------------------------------------------------------
+File "1015.ml", line 5, characters 43-44:
+Try replacing
+    h
+with
+    l
+of type
+    bool list
+within context
+    fun (f, b) ->
+      (let x = (wwhile (f, b)) in let h :: t = x in let r :: l = t in (match r with 
+                                                                       | false -> l
+                                                                       | true ->
+                                                                         (wwhile
+                                                                             (f,
+                                                                                 h))))
+==============================
+File "1015.ml", line 5, characters 43-44:
+Try replacing
+    h
+with
+    f
+of type
+    bool list
+within context
+    fun (f, b) ->
+      (let x = (wwhile (f, b)) in let h :: t = x in let r :: l = t in (match r with 
+                                                                       | false -> f
+                                                                       | true ->
+                                                                         (wwhile
+                                                                             (f,
+                                                                                 h))))
+==============================
+File "1015.ml", line 5, characters 43-44:
+Try replacing
+    h
+with
+    x
+of type
+    bool list
+within context
+    fun (f, b) ->
+      (let x = (wwhile (f, b)) in let h :: t = x in let r :: l = t in (match r with 
+                                                                       | false -> x
+                                                                       | true ->
+                                                                         (wwhile
+                                                                             (f,
+                                                                                 h))))
+==============================
+File "1015.ml", line 5, characters 43-44:
+Try replacing
+    h
+with
+    t
+of type
+    bool list
+within context
+    fun (f, b) ->
+      (let x = (wwhile (f, b)) in let h :: t = x in let r :: l = t in (match r with 
+                                                                       | false -> t
+                                                                       | true ->
+                                                                         (wwhile
+                                                                             (f,
+                                                                                 h))))
+==============================
+File "1015.ml", line 4, characters 13-14:
+Try replacing
+    x
+with
+    f
+of type
+    bool list
+within context
+    let rec wwhile (f, b) =
+    let x = (wwhile (f, b)) in let h :: t = f in let r :: l = t in (match r with 
+                                                                    | false -> h
+                                                                    | true ->
+                                                                      (wwhile
+                                                                          (f, h)))
+    ;; 
+==============================

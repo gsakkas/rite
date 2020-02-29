@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2371.ml", line 20, characters 55-66:
+This expression has type char list but is here used with type 'a list list
+Relevant code: (explode w)
+------------------------------------------------------------------
+File "2371.ml", line 20, characters 44-54:
+Try replacing
+    matchHeads
+with
+    matchHeads; [[...]]
+of type
+    char list -> 'b list
+within context
+    let palindrome w = (match (explode w) with 
+                        | [] -> []
+                        | h :: t -> ((matchHeads; [[...]]) (explode w))) ;; 
+==============================

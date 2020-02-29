@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1980.ml", line 3, characters 57-58:
+This expression has type int -> int -> int list but is here used with type
+  int -> int -> int
+Relevant code: f
+------------------------------------------------------------------
+File "1980.ml", line 3, characters 15-18:
+Try replacing
+    x + a
+with
+    ( + ) (x a)
+of type
+    int -> int
+within context
+    fun fs ->
+      (let f a x = [( + ) (x a)] in let base = [] in (List.fold_left f base  fs))
+==============================
+File "1980.ml", line 3, characters 57-66:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left fs f  base)
+of type
+    int -> int -> int list
+within context
+    let pipe fs =
+    let f a x = [x + a] in let base = [] in (List.fold_left fs f  base)
+    ;; 
+==============================
+File "1980.ml", line 3, characters 19-20:
+Try replacing
+    a
+with
+    x
+of type
+    int
+within context
+    let f a x = [x + x] in let base = [] in (List.fold_left f base  fs)
+==============================

@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "2490.ml", line 20, characters 26-45:
+This expression has type float but is here used with type int
+Relevant code: (evalhelper p1 x y)
+------------------------------------------------------------------
+File "2490.ml", line 20, characters 46-47:
+Try replacing
+    *
+with
+    *; [[...]]
+of type
+    float -> float -> float
+within context
+    fun x y -> (match e with 
+                | VarX -> x
+                | VarY -> y
+                | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                | Cosine p1 -> (cos (pi *. (evalhelper p1 x  y)))
+                | Average (p1, p2) ->
+                  (((evalhelper p1 x  y) *; [[...]] (evalhelper p2 x  y)) /. 2.0))
+==============================
+Triaged the following locations:
+File "2490.ml", line 18, characters 17-48:
+File "2490.ml", line 19, characters 19-50:
+And modified the following location:
+File "2490.ml", line 20, characters 69-71:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    /.
+with
+    /.; [[...]]
+The actual replacement has type
+    int -> float -> int
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 x  y) * (evalhelper p2 x  y)
+                                        /.; [[...]] 2.0)) in (evalhelper e x  y)
+==============================

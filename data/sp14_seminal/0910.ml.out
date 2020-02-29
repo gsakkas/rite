@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0910.ml", line 16, characters 15-23:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+File "0910.ml", line 16, characters 15-23:
+Try replacing
+    List.rev
+with
+    List.rev; [[...]]
+of type
+    ('f list -> 'g list -> ('f * 'g) list) -> 'h * 'i -> 'j
+within context
+    fun (l1, l2) ->
+      (let f a x = (failwith "to be implemented") in
+          let base = [], [] in
+          let args = ((List.rev; [[...]]) List.combine (l1, l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

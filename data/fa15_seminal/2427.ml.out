@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2427.ml", line 22, characters 18-44:
+This expression has type (int * int) list but is here used with type 'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "2427.ml", line 20, characters 15-23:
+Try replacing
+    [0, 0]
+with
+    (0, 0), []
+of type
+    (int * int) * 'c list
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x = a in
+            let base = (0, 0), [] in
+            let args = (List.combine l1 l2) in
+            let (_, res) = (List.fold_left f base  args) in res
+          in
+          (removeZero (add (padZero l1 l2))))
+==============================

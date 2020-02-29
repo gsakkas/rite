@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "2326.ml", line 38, characters 55-56:
+This expression has type int but is here used with type int list
+Relevant code: q
+------------------------------------------------------------------
+File "2326.ml", line 38, characters 53-56:
+Try replacing
+    (mulByDigit x q)
+with
+    (mulByDigit q x)
+of type
+    int * int list
+within context
+    let f a x = let (q, w) = a in q + 1, (mulByDigit q x) in
+      let base = 0, [] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "2326.ml", line 38, characters 42-52:
+Try replacing
+    mulByDigit
+with
+    l1
+of type
+    'a -> int -> 'b list
+within context
+    fun a x -> (let (q, w) = a in q + 1, (l1 x q))
+==============================

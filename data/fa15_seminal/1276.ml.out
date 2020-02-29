@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1276.ml", line 6, characters 32-36:
+This expression has type 'a list but is here used with type 'a
+Relevant code: tail
+------------------------------------------------------------------
+File "1276.ml", line 6, characters 32-36:
+Try replacing
+    tail
+with
+    head
+of type
+    'b
+within context
+    fun l -> (match l with 
+              | [] -> []
+              | head :: [] -> [head]
+              | head :: tail -> (listReverse [head]) @ [head])
+==============================
+File "1276.ml", line 6, characters 32-36:
+Try replacing
+    tail
+with
+    @
+of type
+    'c list -> 'c list -> 'c list
+within context
+    fun l -> (match l with 
+              | [] -> []
+              | head :: [] -> [head]
+              | head :: tail -> (listReverse [@]) @ [head])
+==============================

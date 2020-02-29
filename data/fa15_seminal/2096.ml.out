@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "2096.ml", line 38, characters 51-63:
+This expression has type int * 'a but is here used with type int
+Relevant code: ((i - 1), l)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2096.ml", line 38, characters 28-34:
+And modified the following location:
+File "2096.ml", line 38, characters 40-50:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    mulByDigit; [[...]]
+The actual replacement has type
+    int * int -> 'b
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else
+            ((bigAdd; [[...]]) (l, ((mulByDigit; [[...]]) (i - 1, l))))))
+==============================
+Triaged the following locations:
+File "2096.ml", line 38, characters 28-34:
+And modified the following location:
+File "2096.ml", line 38, characters 51-63:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit (i - 1, l))
+with
+    (mulByDigit (i - 1) l)
+The actual replacement has type
+    int * int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else ((bigAdd; [[...]]) (l, (mulByDigit (i - 1) l)))))
+==============================

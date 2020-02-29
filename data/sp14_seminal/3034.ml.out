@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "3034.ml", line 3, characters 58-59:
+This expression has type (('a -> 'b) -> 'a) -> ('a -> 'b) -> 'b
+but is here used with type
+  (('a -> 'b) -> 'a) -> ('a -> 'b) -> ('a -> 'b) -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "3034.ml", line 3, characters 19-20:
+Try replacing
+    x
+with
+    List.fold_left
+of type
+    ('c -> 'd -> 'c) -> 'c -> 'd list -> 'c
+within context
+    let f a x = (x (a List.fold_left)) in
+      let base y = y in (List.fold_left f base  fs)
+==============================

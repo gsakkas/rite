@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+File "1479.ml", line 10, characters 31-32:
+This expression has type 'a list -> 'b list -> ('a * 'b) list
+but is here used with type 'a list -> 'b list -> 'a list
+Relevant code: f
+------------------------------------------------------------------
+File "1479.ml", line 10, characters 31-32:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'c list -> 'd * 'e -> int * 'c list
+within context
+    let f a x = (List.combine a x) in
+      let base = 0, [] in let args = let rec argmaker x y = (match y with 
+                                                             | hd :: tl ->
+                                                               (if tl = [] then
+                                                                   [x, hd]
+                                                                   else
+                                                                   x, hd ::
+                                                                       (argmaker
+                                                                         x
+                                                                         tl))) in (argmaker
+            l1 l2) in let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "1479.ml", line 10, characters 16-30:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('f list -> 'g list -> ('f * 'g) list) ->
+    int * 'h list -> ('i * 'j) list -> 'k * 'l
+within context
+    let f a x = (List.combine a x) in
+      let base = 0, [] in let args = let rec argmaker x y = (match y with 
+                                                             | hd :: tl ->
+                                                               (if tl = [] then
+                                                                   [x, hd]
+                                                                   else
+                                                                   x, hd ::
+                                                                       (argmaker
+                                                                         x
+                                                                         tl))) in (argmaker
+            l1 l2) in let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "1479.ml", line 3, characters 8-30:
+Try replacing
+    fun a x -> (List.combine a x)
+with
+    fun a x -> (List.combine a x); [[...]]
+of type
+    'm
+within context
+    let bigMul l1 l2 =
+    let f = fun a x -> (List.combine a x); [[...]] in
+      let base = 0, [] in let args = let rec argmaker x y = (match y with 
+                                                             | hd :: tl ->
+                                                               (if tl = [] then
+                                                                   [x, hd]
+                                                                   else
+                                                                   x, hd ::
+                                                                       (argmaker
+                                                                         x
+                                                                         tl))) in (argmaker
+            l1 l2) in let (_, res) = (List.fold_left f base  args) in res
+    ;; 
+==============================

@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0445.ml", line 8, characters 74-77:
+This expression has type int but is here used with type int * 'a
+Relevant code: f x
+------------------------------------------------------------------
+File "0445.ml", line 8, characters 44-56:
+Try replacing
+    when xx - x > 0 -> (x, b)
+with
+    x, b
+of type
+    bool * bool
+within context
+    fun (f, b) -> (let gs x = let xx = (f x) in (match xx with 
+                                                 | xx -> (x, b)
+                                                 | _ -> (f x)) in (wwhile (gs, b)))
+==============================

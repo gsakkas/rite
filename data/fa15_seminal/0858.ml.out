@@ -1,0 +1,34 @@
+------------------------------------------------------------------
+File "0858.ml", line 8, characters 9-61:
+This expression has type int list but is here used with type
+  int list * int list
+Relevant code: if n < 0 then (clone 0 n) @ l1 else (clone 0 n) @ l2
+------------------------------------------------------------------
+File "0858.ml", line 7, characters 9-17:
+Try replacing
+    l1, l2
+with
+    l1, l2; [[...]]
+of type
+    int list
+within context
+    let padZero l1 l2 = (match (List.length l1) - (List.length l2) with 
+                         | 0 -> (l1, l2; [[...]])
+                         | n ->
+                           (if n < 0 then (clone 0 n) @ l1 else
+                               (clone 0 n) @ l2)) ;; 
+==============================
+File "0858.ml", line 8, characters 9-61:
+Try replacing
+    (if n < 0 then (clone 0 n) @ l1 else (clone 0 n) @ l2)
+with
+    (if n < 0 then (clone 0 n) @ l1 else (clone 0 n) @ l2); [[...]]
+of type
+    int list * int list
+within context
+    let padZero l1 l2 = (match (List.length l1) - (List.length l2) with 
+                         | 0 -> (l1, l2)
+                         | n ->
+                           ((if n < 0 then (clone 0 n) @ l1 else (clone 0 n) @ l2);
+                               [[...]])) ;; 
+==============================

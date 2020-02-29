@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "2933.ml", line 18, characters 35-39:
+This expression has type int * 'a list but is here used with type 'b list
+Relevant code: base
+------------------------------------------------------------------
+File "2933.ml", line 15, characters 42-46:
+Try replacing
+    [h2]
+with
+    h2, []
+of type
+    'c * 'd list
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (h1, h2) ->
+                                    (h2,
+                                          [])) in let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

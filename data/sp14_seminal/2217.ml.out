@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2217.ml", line 17, characters 31-32:
+This expression has type expr but is here used with type expr * 'a * 'a
+Relevant code: x
+------------------------------------------------------------------
+File "2217.ml", line 13, characters 13-193:
+Try replacing
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine x -> (sin (pi *. (eval x)))
+                      | Cosine x -> (cos (pi *. (eval x)))
+                      | Average (x1, x2) -> (((eval x1) +. (eval x2)) /. 2.))
+with
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine x -> (sin (pi *. (eval x)))
+                      | Cosine x -> (cos (pi *. (eval x)))
+                      | Average (x1, x2) ->
+                        (((eval x1) +. (eval x2)) /. 2.)); [[...]]
+of type
+    expr -> float
+==============================

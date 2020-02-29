@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3567.ml", line 22, characters 25-54:
+This expression has type 'a but is here used with type
+  (int list -> int list -> int list) ->
+  (int list -> int list -> int list) -> 'a
+Relevant code: mulByDigit (i - 1) bigAdd l l
+------------------------------------------------------------------
+File "3567.ml", line 22, characters 21-54:
+Try replacing
+    fun l -> (mulByDigit (i - 1) bigAdd  l  l)
+with
+    fun l -> (mulByDigit (i - 1) bigAdd  l  l); [[...]]
+of type
+    (int list -> int list -> int list) -> 'b -> 'b -> 'c
+within context
+    let rec mulByDigit i = fun l -> (mulByDigit (i - 1) bigAdd  l  l); [[...]] ;; 
+==============================

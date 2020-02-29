@@ -1,0 +1,81 @@
+------------------------------------------------------------------
+File "3016.ml", line 6, characters 53-55:
+This expression has type int list but is here used with type int
+Relevant code: l1
+------------------------------------------------------------------
+Triaged the following locations:
+File "3016.ml", line 6, characters 71-72:
+And modified the following location:
+File "3016.ml", line 6, characters 56-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    *
+with
+    @
+The actual replacement has type
+    int list -> int list -> int list
+within context
+    fun l1
+      l2 ->
+        (let d = (List.length l1) - (List.length l2) in
+            (if d < 0 then (clone 0 (0 - d)) @ l1, l2 else
+                (l1 @ (clone 0 d) @; [[...]] l2)))
+==============================
+Triaged the following locations:
+File "3016.ml", line 6, characters 71-72:
+And modified the following location:
+File "3016.ml", line 6, characters 56-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    *
+with
+    <=
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    fun l1
+      l2 ->
+        (let d = (List.length l1) - (List.length l2) in
+            (if d < 0 then (clone 0 (0 - d)) @ l1, l2 else
+                ((l1 <= (clone 0 d)) @; [[...]] l2)))
+==============================
+Triaged the following locations:
+File "3016.ml", line 6, characters 71-72:
+And modified the following location:
+File "3016.ml", line 6, characters 56-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    int list -> int list -> 'a
+within context
+    fun l1
+      l2 ->
+        (let d = (List.length l1) - (List.length l2) in
+            (if d < 0 then (clone 0 (0 - d)) @ l1, l2 else
+                ((l1 *; [[...]] (clone 0 d)) @; [[...]] l2)))
+==============================
+Triaged the following locations:
+File "3016.ml", line 6, characters 71-72:
+And modified the following location:
+File "3016.ml", line 6, characters 56-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    *
+with
+    <
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    fun l1
+      l2 ->
+        (let d = (List.length l1) - (List.length l2) in
+            (if d < 0 then (clone 0 (0 - d)) @ l1, l2 else
+                (l1 < (clone 0 d) @; [[...]] l2)))
+==============================

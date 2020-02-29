@@ -1,0 +1,68 @@
+------------------------------------------------------------------
+File "1431.ml", line 22, characters 4-180:
+This expression has type expr but is here used with type unit
+Relevant code: match rand with
+    | (0,2) -> buildX ()
+    | (3,5) -> buildY ()
+    | (6,10) -> buildSine (build (rand, (depth - 1)))
+    | (11,18) -> buildCosine (build (rand, (depth - 1)))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1431.ml", line 23, characters 15-24:
+File "1431.ml", line 24, characters 15-24:
+File "1431.ml", line 25, characters 16-53:
+And modified the following location:
+File "1431.ml", line 26, characters 17-28:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildY ())
+
+    (buildX ())
+If you ignore other surrounding code, try replacing
+    buildCosine
+with
+    buildCosine; [[...]]
+The actual replacement has type
+    unit -> unit
+within context
+    let rec build (rand, depth) = (if depth > 0 then (match rand with 
+                                                      | (0, 2) ->
+                                                        ((buildX ()); [[...]])
+                                                      | (3, 5) ->
+                                                        ((buildY ()); [[...]])
+                                                      | (6, 10) ->
+                                                        [[...other program...]]
+                                                      | (11, 18) ->
+                                                        ((buildCosine; [[...]])
+                                                            (build
+                                                              (rand,
+                                                                  depth - 1))))) ;; 
+==============================
+Triaged the following locations:
+File "1431.ml", line 23, characters 15-24:
+File "1431.ml", line 24, characters 15-24:
+File "1431.ml", line 26, characters 17-56:
+And modified the following location:
+File "1431.ml", line 25, characters 16-25:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildY ())
+
+    (buildX ())
+If you ignore other surrounding code, try replacing
+    buildSine
+with
+    buildSine; [[...]]
+The actual replacement has type
+    unit -> unit
+within context
+    let rec build (rand, depth) = (if depth > 0 then (match rand with 
+                                                      | (0, 2) ->
+                                                        ((buildX ()); [[...]])
+                                                      | (3, 5) ->
+                                                        ((buildY ()); [[...]])
+                                                      | (6, 10) ->
+                                                        ((buildSine; [[...]])
+                                                            (build
+                                                              (rand, depth - 1)))
+                                                      | (11, 18) ->
+                                                        [[...other program...]])) ;; 
+==============================

@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "0812.ml", line 11, characters 48-56:
+This expression has type 'a -> 'b but is here used with type int
+Relevant code: (loop x)
+------------------------------------------------------------------
+File "0812.ml", line 11, characters 55-55:
+Try replacing
+    (loop x)
+with
+    (loop [[...]] x)
+of type
+    int
+within context
+    fun y -> (if x < 10 then y else (sumList (digitsOfInt (loop [[...]] x))) + y)
+==============================
+File "0812.ml", line 11, characters 56-56:
+Try replacing
+    (loop x)
+with
+    (loop x [[...]])
+of type
+    int
+within context
+    fun y -> (if x < 10 then y else (sumList (digitsOfInt (loop x [[...]]))) + y)
+==============================
+File "0812.ml", line 11, characters 36-47:
+Try replacing
+    digitsOfInt
+with
+    digitsOfInt; [[...]]
+of type
+    (int -> int) -> int list
+within context
+    fun y -> (if x < 10 then y else (sumList ((digitsOfInt; [[...]]) (loop x))) + y)
+==============================

@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "2240.ml", line 26, characters 59-63:
+This expression has type int but is here used with type int list
+Relevant code: (-1)
+------------------------------------------------------------------
+File "2240.ml", line 26, characters 59-63:
+Try replacing
+    -1
+with
+    -1; [[...]]
+of type
+    int list
+within context
+    let f a x = (match a with 
+                 | (o, l) ->
+                   (let sum = x + o in
+                         (if sum < 10 then 0, sum :: l else
+                             1,
+                               sum - 10 ::
+                                   l))) in let base = 0, [] in
+      let args =
+      let combine (a, b) = a + b in
+        (List.map combine (List.rev (List.combine l1 l2))) @ (-1; [[...]])
+      in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "2240.ml", line 26, characters 57-58:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int list -> int -> 'a
+within context
+    let f a x = (match a with 
+                 | (o, l) ->
+                   (let sum = x + o in
+                         (if sum < 10 then 0, sum :: l else
+                             1,
+                               sum - 10 ::
+                                   l))) in let base = 0, [] in
+      let args =
+      let combine (a, b) = a + b in
+        ((List.map combine (List.rev (List.combine l1 l2))) @; [[...]] -1)
+      in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

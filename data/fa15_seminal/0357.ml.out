@@ -1,0 +1,89 @@
+------------------------------------------------------------------
+File "0357.ml", line 24, characters 6-106:
+This expression has type expr but is here used with type unit -> expr
+Relevant code: if r = 0
+      then buildSine (build (rand, (d - 1)))
+      else buildCosine (build (rand, (d - 1)))
+------------------------------------------------------------------
+File "0357.ml", line 22, characters 9-49:
+Try replacing
+    (if (mod r 2) = 0 then buildX else buildY)
+with
+    (if (mod r 2) = 0 then buildX else buildY); [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) = let r = (rand 0.4) in (match depth with 
+                                                         | 0 ->
+                                                           ((if (mod r 2) = 0 then
+                                                                 buildX
+                                                                 else
+                                                                 buildY);
+                                                               [[...]])
+                                                         | d ->
+                                                           (if r = 0 then
+                                                               (buildSine
+                                                                 (build
+                                                                   (rand, d - 1)))
+                                                               else
+                                                               (buildCosine
+                                                                 (build
+                                                                   (rand,
+                                                                       d
+                                                                         -
+                                                                         1))))) ;; 
+==============================
+Triaged the following locations:
+File "0357.ml", line 25, characters 11-44:
+And modified the following location:
+File "0357.ml", line 26, characters 11-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildCosine
+with
+    buildCosine; [[...]]
+The actual replacement has type
+    (unit -> expr) -> unit -> expr
+within context
+    let rec build (rand, depth) = let r = (rand 0.4) in (match depth with 
+                                                         | 0 ->
+                                                           (if (mod r 2) = 0 then
+                                                               buildX
+                                                               else
+                                                               buildY)
+                                                         | d ->
+                                                           (if r = 0 then
+                                                               [[...other program...]]
+                                                               else
+                                                               ((buildCosine;
+                                                                   [[...]])
+                                                                 (build
+                                                                   (rand,
+                                                                       d
+                                                                         -
+                                                                         1))))) ;; 
+==============================
+Triaged the following locations:
+File "0357.ml", line 26, characters 11-46:
+And modified the following location:
+File "0357.ml", line 25, characters 11-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildSine
+with
+    buildSine; [[...]]
+The actual replacement has type
+    (unit -> expr) -> unit -> expr
+within context
+    let rec build (rand, depth) = let r = (rand 0.4) in (match depth with 
+                                                         | 0 ->
+                                                           (if (mod r 2) = 0 then
+                                                               buildX
+                                                               else
+                                                               buildY)
+                                                         | d ->
+                                                           (if r = 0 then
+                                                               ((buildSine; [[...]])
+                                                                 (build
+                                                                   (rand, d - 1)))
+                                                               else
+                                                               [[...other program...]])) ;; 
+==============================

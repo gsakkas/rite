@@ -1,0 +1,75 @@
+------------------------------------------------------------------
+File "2746.ml", line 4, characters 51-55:
+This expression has type ('a -> 'a) -> 'a -> 'a but is here used with type
+  ('a -> 'a) -> 'a
+Relevant code: base
+------------------------------------------------------------------
+File "2746.ml", line 4, characters 13-30:
+Try replacing
+    fun x -> x
+with
+    fun _ x -> x
+of type
+    'b -> 'c -> 'c
+within context
+    let pipe fs =
+    let f a x g = (g (a x)) in let base _ x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2746.ml", line 4, characters 34-48:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    (('d -> 'd) -> 'd -> ('d -> 'e) -> 'e) ->
+    ('d -> 'd) -> (('d -> ('d -> 'e) -> 'e) -> 'f) -> 'f
+within context
+    let pipe fs = let f a x g = (g (a x)) in let base x = x in (f f base  fs) ;; 
+==============================
+File "2746.ml", line 4, characters 34-48:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('g -> 'g) -> 'g -> ('g -> 'h) -> 'h) ->
+    ('g -> 'g) -> 'g -> ('g -> 'h) -> 'h
+within context
+    let pipe fs = let f a x g = (g (a x)) in let base x = x in (base f base  fs) ;; 
+==============================
+File "2746.ml", line 3, characters 30-31:
+Try replacing
+    g
+with
+    a
+of type
+    'i -> 'i
+within context
+    let f a x g = (a (a x)) in let base x = x in (List.fold_left f base  fs)
+==============================
+File "2746.ml", line 4, characters 29-30:
+Try replacing
+    x
+with
+    List.fold_left
+of type
+    ('j -> 'k -> 'j) -> 'j -> 'k list -> 'j
+within context
+    let pipe fs =
+    let f a x g = (g (a x)) in
+      let base x = List.fold_left in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2746.ml", line 4, characters 29-30:
+Try replacing
+    x
+with
+    f
+of type
+    ('l -> 'm) -> 'l -> ('m -> 'n) -> 'n
+within context
+    let pipe fs =
+    let f a x g = (g (a x)) in let base x = f in (List.fold_left f base  fs)
+    ;; 
+==============================

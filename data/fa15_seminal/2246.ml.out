@@ -1,0 +1,134 @@
+------------------------------------------------------------------
+File "2246.ml", line 38, characters 18-20:
+This expression has type int but is here used with type int list
+Relevant code: 10
+------------------------------------------------------------------
+File "2246.ml", line 37, characters 19-33:
+Try replacing
+    (mulByDigit x l)
+with
+    (mulByDigit x l); [[...]]
+of type
+    'a
+within context
+    let f a x = (match a with 
+                 | (o, l) ->
+                   (let prod = (mulByDigit x l); [[...]] in
+                         (if prod < 10 then 0, prod :: l else
+                             prod / 10,
+                               (mod prod 10) ::
+                                   l))) in let base = 0, [] in
+      let args =
+      let combine (a, b) = a + b in
+        (List.map combine (List.rev (List.combine l1 l2))) @ [0]
+      in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "2246.ml", line 39, characters 13-29:
+File "2246.ml", line 40, characters 13-48:
+And modified the following location:
+File "2246.ml", line 38, characters 16-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    <
+with
+    <; [[...]]
+The actual replacement has type
+    int list -> int -> bool
+within context
+    fun a x -> (match a with 
+                | (o, l) ->
+                  (let prod = (mulByDigit x l) in
+                        (if (prod <; [[...]] 10) then [[...other program...]] else
+                            [[...other program...]])))
+==============================
+Triaged the following locations:
+File "2246.ml", line 39, characters 13-29:
+File "2246.ml", line 40, characters 13-48:
+And modified the following location:
+File "2246.ml", line 38, characters 11-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    prod
+with
+    prod; [[...]]
+The actual replacement has type
+    int
+within context
+    fun a x -> (match a with 
+                | (o, l) ->
+                  (let prod = (mulByDigit x l) in
+                        (if (prod; [[...]]) < 10 then [[...other program...]] else
+                            [[...other program...]])))
+==============================
+Triaged the following locations:
+File "2246.ml", line 39, characters 13-29:
+File "2246.ml", line 40, characters 13-48:
+And modified the following location:
+File "2246.ml", line 38, characters 11-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    prod
+with
+    o
+The actual replacement has type
+    int
+within context
+    fun a x -> (match a with 
+                | (o, l) ->
+                  (let prod = (mulByDigit x l) in
+                        (if o < 10 then [[...other program...]] else
+                            [[...other program...]])))
+==============================
+Triaged the following locations:
+File "2246.ml", line 39, characters 13-29:
+File "2246.ml", line 40, characters 13-48:
+And modified the following location:
+File "2246.ml", line 38, characters 18-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    10
+with
+    10; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun a x -> (match a with 
+                | (o, l) ->
+                  (let prod = (mulByDigit x l) in
+                        (if prod < (10; [[...]]) then [[...other program...]] else
+                            [[...other program...]])))
+==============================
+Triaged the following locations:
+File "2246.ml", line 38, characters 11-20:
+File "2246.ml", line 40, characters 13-48:
+And modified the following location:
+File "2246.ml", line 39, characters 18-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    prod
+with
+    prod; [[...]]
+The actual replacement has type
+    int
+within context
+    fun a x -> (match a with 
+                | (o, l) ->
+                  (let prod = (mulByDigit x l) in
+                        (if [[...other program...]] then 0, prod; [[...]] :: l else
+                            [[...other program...]])))
+==============================
+Triaged the following locations:
+File "2246.ml", line 38, characters 11-20:
+File "2246.ml", line 40, characters 13-48:
+And modified the following location:
+File "2246.ml", line 39, characters 18-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    prod
+with
+    o
+The actual replacement has type
+    int
+within context
+    fun a x -> (match a with 
+                | (o, l) ->
+                  (let prod = (mulByDigit x l) in
+                        (if [[...other program...]] then 0, o :: l else
+                            [[...other program...]])))
+==============================

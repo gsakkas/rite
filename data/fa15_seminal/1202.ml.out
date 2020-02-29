@@ -1,0 +1,71 @@
+------------------------------------------------------------------
+File "1202.ml", line 2, characters 67-68:
+This expression has type bool but is here used with type unit
+Relevant code: t
+------------------------------------------------------------------
+File "1202.ml", line 2, characters 54-55:
+Try replacing
+    =
+with
+    h
+of type
+    unit -> bool -> bool
+within context
+    let rec wwhile (f, b) = (match (f b) with 
+                             | (h, t) -> (if (t h false) then t)) ;; 
+==============================
+File "1202.ml", line 2, characters 54-55:
+Try replacing
+    =
+with
+    b
+of type
+    unit -> bool -> bool
+within context
+    let rec wwhile (f, b) = (match (f b) with 
+                             | (h, t) -> (if (t b false) then t)) ;; 
+==============================
+File "1202.ml", line 2, characters 52-53:
+Try replacing
+    t
+with
+    b
+of type
+    bool
+within context
+    let rec wwhile (f, b) = (match (f b) with 
+                             | (h, t) -> (if b = false then t)) ;; 
+==============================
+File "1202.ml", line 2, characters 52-53:
+Try replacing
+    t
+with
+    h
+of type
+    bool
+within context
+    let rec wwhile (f, b) = (match (f b) with 
+                             | (h, t) -> (if h = false then t)) ;; 
+==============================
+File "1202.ml", line 2, characters 67-68:
+Try replacing
+    t
+with
+    h
+of type
+    unit
+within context
+    let rec wwhile (f, b) = (match (f b) with 
+                             | (h, t) -> (if t = false then h)) ;; 
+==============================
+File "1202.ml", line 2, characters 67-68:
+Try replacing
+    t
+with
+    b
+of type
+    unit
+within context
+    let rec wwhile (f, b) = (match (f b) with 
+                             | (h, t) -> (if t = false then b)) ;; 
+==============================

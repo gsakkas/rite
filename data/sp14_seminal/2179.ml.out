@@ -1,0 +1,106 @@
+------------------------------------------------------------------
+File "2179.ml", line 28, characters 13-22:
+This expression has type expr * float * float but is here used with type
+  float
+Relevant code: (a, x, y)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2179.ml", line 28, characters 38-39:
+File "2179.ml", line 28, characters 40-64:
+And modified the following location:
+File "2179.ml", line 28, characters 23-25:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    expr * float * float ->
+    expr * float * float ->
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Poly (a, b, c) ->
+                                ((eval (a, x, y *.; [[...]] a, x, y))
+                                      +; [[...]] [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2179.ml", line 28, characters 6-37:
+File "2179.ml", line 28, characters 38-39:
+And modified the following location:
+File "2179.ml", line 28, characters 51-53:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    expr * float * float ->
+    expr * float * float -> 'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Poly (a, b, c) ->
+                                ([[...other program...]] +; [[...]]
+                                      (b, x, y *.; [[...]] c, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "2179.ml", line 28, characters 6-37:
+File "2179.ml", line 28, characters 38-39:
+And modified the following location:
+File "2179.ml", line 28, characters 51-53:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    *.
+with
+    <
+The actual replacement has type
+    expr * float * float ->
+    expr * float * float -> bool
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Poly (a, b, c) ->
+                                ([[...other program...]] +; [[...]]
+                                      (b, x, y) < (c, x, y))) ;; 
+==============================

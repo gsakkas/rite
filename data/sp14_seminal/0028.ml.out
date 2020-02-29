@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0028.ml", line 22, characters 37-49:
+This expression has type 'a list but is here used with type 'b * 'c
+Relevant code: [0; 0; 0; 0]
+------------------------------------------------------------------
+File "0028.ml", line 22, characters 37-49:
+Try replacing
+    [0 ; 0 ; 0 ; 0]
+with
+    0, [0 ; 0 ; 0]
+of type
+    int * int list
+within context
+    fun l2 ->
+      (let add (l1, l2) = let (_, res) = 0; 0, [0 ; 0 ; 0] in res in
+          (removeZero (add (padZero l1 l2))))
+==============================

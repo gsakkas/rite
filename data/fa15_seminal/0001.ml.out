@@ -1,0 +1,258 @@
+------------------------------------------------------------------
+File "0001.ml", line 24, characters 15-32:
+This expression has type int but is here used with type 'a list
+Relevant code: valueToAddToArray
+------------------------------------------------------------------
+Triaged the following locations:
+File "0001.ml", line 25, characters 4-123:
+And modified the following location:
+File "0001.ml", line 24, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int -> 'b -> 'c
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (carry, currentSum) = a in
+                let (toSum1, toSum2) = x in
+                let intermediateValue = (toSum1 + toSum2) + carry in
+                let valueToAddToArray = (mod intermediateValue 10) in
+                let carry = intermediateValue / 10 in
+                carry, (valueToAddToArray @; [[...]] currentSum)
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0001.ml", line 25, characters 4-123:
+And modified the following location:
+File "0001.ml", line 24, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (carry, currentSum) = a in
+                let (toSum1, toSum2) = x in
+                let intermediateValue = (toSum1 + toSum2) + carry in
+                let valueToAddToArray = (mod intermediateValue 10) in
+                let carry = intermediateValue / 10 in
+                carry, valueToAddToArray + currentSum
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0001.ml", line 25, characters 4-123:
+And modified the following location:
+File "0001.ml", line 24, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    -
+The actual replacement has type
+    int -> int -> int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (carry, currentSum) = a in
+                let (toSum1, toSum2) = x in
+                let intermediateValue = (toSum1 + toSum2) + carry in
+                let valueToAddToArray = (mod intermediateValue 10) in
+                let carry = intermediateValue / 10 in
+                carry, valueToAddToArray - currentSum
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0001.ml", line 25, characters 4-123:
+And modified the following location:
+File "0001.ml", line 24, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    /
+The actual replacement has type
+    int -> int -> int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (carry, currentSum) = a in
+                let (toSum1, toSum2) = x in
+                let intermediateValue = (toSum1 + toSum2) + carry in
+                let valueToAddToArray = (mod intermediateValue 10) in
+                let carry = intermediateValue / 10 in
+                carry, valueToAddToArray / currentSum
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0001.ml", line 25, characters 4-123:
+And modified the following location:
+File "0001.ml", line 24, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    =
+The actual replacement has type
+    int -> int -> bool
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (carry, currentSum) = a in
+                let (toSum1, toSum2) = x in
+                let intermediateValue = (toSum1 + toSum2) + carry in
+                let valueToAddToArray = (mod intermediateValue 10) in
+                let carry = intermediateValue / 10 in
+                carry, valueToAddToArray = currentSum
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0001.ml", line 25, characters 4-123:
+And modified the following location:
+File "0001.ml", line 24, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    >
+The actual replacement has type
+    int -> int -> bool
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (carry, currentSum) = a in
+                let (toSum1, toSum2) = x in
+                let intermediateValue = (toSum1 + toSum2) + carry in
+                let valueToAddToArray = (mod intermediateValue 10) in
+                let carry = intermediateValue / 10 in
+                carry, valueToAddToArray > currentSum
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0001.ml", line 25, characters 4-123:
+And modified the following location:
+File "0001.ml", line 24, characters 15-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    valueToAddToArray
+with
+    valueToAddToArray; [[...]]
+The actual replacement has type
+    'd list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (carry, currentSum) = a in
+                let (toSum1, toSum2) = x in
+                let intermediateValue = (toSum1 + toSum2) + carry in
+                let valueToAddToArray = (mod intermediateValue 10) in
+                let carry = intermediateValue / 10 in
+                carry, (valueToAddToArray; [[...]]) @ currentSum
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0001.ml", line 25, characters 4-123:
+And modified the following location:
+File "0001.ml", line 24, characters 6-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    carry, valueToAddToArray @ currentSum
+with
+    carry
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (carry, currentSum) = a in
+                let (toSum1, toSum2) = x in
+                let intermediateValue = (toSum1 + toSum2) + carry in
+                let valueToAddToArray = (mod intermediateValue 10) in
+                let carry = intermediateValue / 10 in carry
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0001.ml", line 25, characters 4-123:
+And modified the following location:
+File "0001.ml", line 22, characters 30-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod intermediateValue 10)
+with
+    (mod intermediateValue 10); [[...]]
+The actual replacement has type
+    'e
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (carry, currentSum) = a in
+                let (toSum1, toSum2) = x in
+                let intermediateValue = (toSum1 + toSum2) + carry in
+                let valueToAddToArray = (mod intermediateValue 10); [[...]] in
+                let carry = intermediateValue / 10 in
+                carry, valueToAddToArray @ currentSum
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0001.ml", line 25, characters 4-123:
+And modified the following location:
+File "0001.ml", line 18, characters 4-420:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x =
+      let (carry, currentSum) = a in
+        let (toSum1, toSum2) = x in
+        let intermediateValue = (toSum1 + toSum2) + carry in
+        let valueToAddToArray = (mod intermediateValue 10) in
+        let carry = intermediateValue / 10 in carry, valueToAddToArray @ currentSum
+      in
+      let base = 0, [] in
+      let args = (List.rev List.combine l1  l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'f
+==============================

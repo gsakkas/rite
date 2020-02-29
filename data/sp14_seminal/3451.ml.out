@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3451.ml", line 13, characters 13-14:
+This expression is not a function, it cannot be applied
+Relevant code: x
+------------------------------------------------------------------
+File "3451.ml", line 13, characters 7-61:
+Try replacing
+    1 :: (x additivePersistence (sumList (digitsOfInt n)))
+with
+    [[...]]
+of type
+    int
+within context
+    let rec additivePersistence n =
+    let x = [0] in (if (sumList (digitsOfInt n)) > 9 then [[...]] else (sumList x))
+    ;; 
+==============================

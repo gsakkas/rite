@@ -1,0 +1,58 @@
+------------------------------------------------------------------
+File "0598.ml", line 18, characters 15-16:
+This expression is not a function, it cannot be applied
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "0598.ml", line 19, characters 4-99:
+And modified the following location:
+File "0598.ml", line 18, characters 17-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (0 [0])
+with
+    0
+The actual replacement has type
+    int
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x c =
+            let (s, t) = x in let sum = (c + s) + t in sum / 10, (mod sum 10) :: a
+            in
+            let base = 0 in [[...other program...]]
+          in
+          (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0598.ml", line 19, characters 4-99:
+And modified the following location:
+File "0598.ml", line 18, characters 15-16:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    int list -> 'e
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x c =
+            let (s, t) = x in let sum = (c + s) + t in sum / 10, (mod sum 10) :: a
+            in
+            let base = ((0; [[...]]) [0]) in [[...other program...]]
+          in
+          (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0598.ml", line 19, characters 4-99:
+And modified the following location:
+File "0598.ml", line 18, characters 4-123:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let base = (0 [0]) in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

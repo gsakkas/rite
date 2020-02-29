@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1384.ml", line 5, characters 62-63:
+This expression has type 'a but is here used with type 'a list
+Relevant code: h
+------------------------------------------------------------------
+File "1384.ml", line 5, characters 41-63:
+Try replacing
+    (clone t (n - 1)) :: h
+with
+    [[...]]
+of type
+    'b list
+within context
+    let rec clone x n = (if (n <= 0) then [] else (match x with 
+                                                   | [] -> x
+                                                   | h :: t -> [[...]])) ;; 
+==============================

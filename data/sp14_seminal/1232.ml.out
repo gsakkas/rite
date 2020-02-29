@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1232.ml", line 20, characters 48-54:
+This expression has type int * int but is here used with type ('a * 'b) list
+Relevant code: (0, 0)
+------------------------------------------------------------------
+File "1232.ml", line 20, characters 46-47:
+Try replacing
+    @
+with
+    f
+of type
+    ('c * 'd) list -> int * int -> 'e list
+within context
+    let f a x = (failwith "TBD") in
+      let base = (failwith "TBD") in
+      let args = (List.rev ((List.combine l1 l2) f 0, 0)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

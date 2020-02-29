@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "0941.ml", line 3, characters 58-59:
+This expression has type (int -> 'a) -> int -> 'a but is here used with type
+  (int -> 'a) -> int -> int -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "0941.ml", line 3, characters 8-11:
+Try replacing
+    fun a x -> (a (x + x))
+with
+    fun x a -> (a (x + x))
+of type
+    int -> (int -> 'b) -> 'b
+within context
+    let pipe fs =
+    let f x a = (a (x + x)) in let base = 3 in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "0941.ml", line 3, characters 58-59:
+Try replacing
+    f
+with
+    +
+of type
+    int -> int -> int
+within context
+    let pipe fs =
+    let f a x = (a (x + x)) in let base = 3 in (List.fold_left + base  fs)
+    ;; 
+==============================

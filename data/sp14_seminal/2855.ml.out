@@ -1,0 +1,211 @@
+------------------------------------------------------------------
+File "2855.ml", line 23, characters 28-45:
+This expression has type float but is here used with type int
+Relevant code: (eval (e1, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2855.ml", line 23, characters 23-46:
+And modified the following location:
+File "2855.ml", line 23, characters 51-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    abs
+with
+    sin
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | PowerUp (e1, e2) ->
+                                [[...other program...]] ** (sin (eval (e2, x, y)))
+                              | Square2 (e1, e2, e3) ->
+                                ((sqrt
+                                        (((eval (e1, x, y)) ** 2.
+                                                +. (eval (e2, x, y)) ** 2.)
+                                            +. (eval (e3, x, y)) ** 2.))
+                                      /. 2.)
+                              | Thresh (a, b, a_less, b_less) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (a_less, x, y))
+                                    else
+                                    (eval (b_less, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2855.ml", line 23, characters 23-46:
+And modified the following location:
+File "2855.ml", line 23, characters 51-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    abs
+with
+    abs; [[...]]
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | PowerUp (e1, e2) ->
+                                [[...other program...]] **
+                                    ((abs; [[...]]) (eval (e2, x, y)))
+                              | Square2 (e1, e2, e3) ->
+                                ((sqrt
+                                        (((eval (e1, x, y)) ** 2.
+                                                +. (eval (e2, x, y)) ** 2.)
+                                            +. (eval (e3, x, y)) ** 2.))
+                                      /. 2.)
+                              | Thresh (a, b, a_less, b_less) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (a_less, x, y))
+                                    else
+                                    (eval (b_less, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2855.ml", line 23, characters 23-46:
+And modified the following location:
+File "2855.ml", line 23, characters 51-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    abs
+with
+    cos
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | PowerUp (e1, e2) ->
+                                [[...other program...]] ** (cos (eval (e2, x, y)))
+                              | Square2 (e1, e2, e3) ->
+                                ((sqrt
+                                        (((eval (e1, x, y)) ** 2.
+                                                +. (eval (e2, x, y)) ** 2.)
+                                            +. (eval (e3, x, y)) ** 2.))
+                                      /. 2.)
+                              | Thresh (a, b, a_less, b_less) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (a_less, x, y))
+                                    else
+                                    (eval (b_less, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2855.ml", line 23, characters 50-73:
+And modified the following location:
+File "2855.ml", line 23, characters 24-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    abs
+with
+    cos
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | PowerUp (e1, e2) ->
+                                (cos (eval (e1, x, y))) ** [[...other program...]]
+                              | Square2 (e1, e2, e3) ->
+                                ((sqrt
+                                        (((eval (e1, x, y)) ** 2.
+                                                +. (eval (e2, x, y)) ** 2.)
+                                            +. (eval (e3, x, y)) ** 2.))
+                                      /. 2.)
+                              | Thresh (a, b, a_less, b_less) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (a_less, x, y))
+                                    else
+                                    (eval (b_less, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2855.ml", line 23, characters 50-73:
+And modified the following location:
+File "2855.ml", line 23, characters 24-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    abs
+with
+    sin
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | PowerUp (e1, e2) ->
+                                (sin (eval (e1, x, y))) ** [[...other program...]]
+                              | Square2 (e1, e2, e3) ->
+                                ((sqrt
+                                        (((eval (e1, x, y)) ** 2.
+                                                +. (eval (e2, x, y)) ** 2.)
+                                            +. (eval (e3, x, y)) ** 2.))
+                                      /. 2.)
+                              | Thresh (a, b, a_less, b_less) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (a_less, x, y))
+                                    else
+                                    (eval (b_less, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2855.ml", line 23, characters 50-73:
+And modified the following location:
+File "2855.ml", line 23, characters 24-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    abs
+with
+    abs; [[...]]
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | PowerUp (e1, e2) ->
+                                ((abs; [[...]]) (eval (e1, x, y)))
+                                    ** [[...other program...]]
+                              | Square2 (e1, e2, e3) ->
+                                ((sqrt
+                                        (((eval (e1, x, y)) ** 2.
+                                                +. (eval (e2, x, y)) ** 2.)
+                                            +. (eval (e3, x, y)) ** 2.))
+                                      /. 2.)
+                              | Thresh (a, b, a_less, b_less) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (a_less, x, y))
+                                    else
+                                    (eval (b_less, x, y)))) ;; 
+==============================

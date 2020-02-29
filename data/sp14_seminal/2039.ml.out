@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "2039.ml", line 20, characters 36-37:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+File "2039.ml", line 20, characters 36-37:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine m -> (sin (pi *. (eval (m, x, y))))
+                              | Cosine m -> (cos (pi *. (eval (m, x, y))))
+                              | Square m -> (eval (m, x, y)) ** (2; [[...]])
+                              | Average (m, n) ->
+                                (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.)
+                              | Times (m, n) ->
+                                ((eval (m, x, y)) *. (eval (n, x, y)))
+                              | Thresh (m, n, o, p) ->
+                                (if (eval (m, x, y)) < (eval (n, x, y)) then
+                                    (eval (o, x, y))
+                                    else
+                                    (eval (p, x, y)))) ;; 
+==============================
+File "2039.ml", line 20, characters 33-35:
+Try replacing
+    **
+with
+    **; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine m -> (sin (pi *. (eval (m, x, y))))
+                              | Cosine m -> (cos (pi *. (eval (m, x, y))))
+                              | Square m -> ((eval (m, x, y)) **; [[...]] 2)
+                              | Average (m, n) ->
+                                (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.)
+                              | Times (m, n) ->
+                                ((eval (m, x, y)) *. (eval (n, x, y)))
+                              | Thresh (m, n, o, p) ->
+                                (if (eval (m, x, y)) < (eval (n, x, y)) then
+                                    (eval (o, x, y))
+                                    else
+                                    (eval (p, x, y)))) ;; 
+==============================

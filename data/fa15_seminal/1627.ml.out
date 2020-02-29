@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1627.ml", line 3, characters 2-89:
+This expression has type int list but is here used with type int
+Relevant code: if n < 0
+  then []
+  else if (n mod 10) > 0 then [n mod 10] else [digitsOfInt (n / 10)]
+------------------------------------------------------------------
+File "1627.ml", line 2, characters 20-113:
+Try replacing
+    fun n ->
+      (if n < 0 then [] else
+        (if (mod n 10) > 0 then [(mod n 10)] else [(digitsOfInt (n / 10))]))
+with
+    fun n ->
+      (if n < 0 then [] else
+        (if (mod n 10) > 0 then [(mod n 10)] else [(digitsOfInt (n / 10))]));
+    [[...]]
+of type
+    int -> int
+==============================

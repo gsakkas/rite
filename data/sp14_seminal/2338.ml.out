@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2338.ml", line 10, characters 16-48:
+This expression has type int list but is here used with type unit
+Relevant code: List.append (clone 0 (b - a)) l1
+------------------------------------------------------------------
+File "2338.ml", line 10, characters 16-48:
+Try replacing
+    (List.append (clone 0 (b - a)) l1)
+with
+    (List.append (clone 0 (b - a)) l1); [[...]]
+of type
+    unit
+within context
+    let padZero l1 l2 =
+    let (a, b) = (List.length l1), (List.length l2) in
+      (if a < b then ((List.append (clone 0 (b - a)) l1); [[...]]))
+    ;; 
+==============================

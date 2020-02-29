@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "1972.ml", line 7, characters 72-73:
+This expression has type string list but is here used with type
+  string list list
+Relevant code: l
+------------------------------------------------------------------
+File "1972.ml", line 6, characters 23-32:
+Try replacing
+    sepConcat
+with
+    ^
+of type
+    string -> string -> string
+within context
+    let f a x = a ^ (^ a x) in
+      let base = h ^ sep in let l = (List.rev t) in (List.fold_left f base  l)
+==============================
+File "1972.ml", line 6, characters 35-36:
+Try replacing
+    x
+with
+    t
+of type
+    string list
+within context
+    let f a x = a ^ (sepConcat a t) in
+      let base = h ^ sep in let l = (List.rev t) in (List.fold_left f base  l)
+==============================
+File "1972.ml", line 7, characters 65-66:
+Try replacing
+    f
+with
+    ^
+of type
+    string -> string -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sepConcat a x) in
+             let base = h ^ sep in
+             let l = (List.rev t) in (List.fold_left ^ base  l)))
+==============================

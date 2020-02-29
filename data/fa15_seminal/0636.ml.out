@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0636.ml", line 4, characters 40-42:
+This expression has type (int -> 'a -> int) list but is here used with type
+  'a list
+Relevant code: fs
+------------------------------------------------------------------
+File "0636.ml", line 3, characters 35-36:
+Try replacing
+    x
+with
+    a
+of type
+    int
+within context
+    let f a x = let h :: t = fs in (h a a) in
+      let base = 0 in (List.fold_left f base  fs)
+==============================

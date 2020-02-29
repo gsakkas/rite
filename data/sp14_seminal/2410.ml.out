@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2410.ml", line 27, characters 38-60:
+This expression has type int list * int list but is here used with type
+  'a list
+Relevant code: ((0 :: l1), (0 :: l2))
+------------------------------------------------------------------
+File "2410.ml", line 27, characters 38-60:
+Try replacing
+    (List.combine (0 :: l1, 0 :: l2))
+with
+    (List.combine 0 :: l1 0 :: l2)
+of type
+    (int * int) list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (n1, n2) = x in
+            let (carry, rest) = a in
+            let total = (n1 + n2) + carry in total / 10, (mod total 10) :: rest
+          in
+          let base = 0, [] in
+          let args = (List.rev (List.combine 0 :: l1 0 :: l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

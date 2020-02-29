@@ -1,0 +1,61 @@
+------------------------------------------------------------------
+File "0226.ml", line 19, characters 36-37:
+This expression has type int but is here used with type float
+Relevant code: 7
+------------------------------------------------------------------
+File "0226.ml", line 19, characters 36-37:
+Try replacing
+    7
+with
+    7; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | MultDivPi (e1, e2, e3) ->
+                                ((((eval (e1, x, y)) *. (eval (e2, x, y)))
+                                          *. (eval (e3, x, y)))
+                                      /. pi)
+                              | Div7 e1 -> ((eval (e1, x, y)) /. 7; [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                              | VarY -> y
+                              | VarX -> x) ;; 
+==============================
+File "0226.ml", line 19, characters 33-35:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | MultDivPi (e1, e2, e3) ->
+                                ((((eval (e1, x, y)) *. (eval (e2, x, y)))
+                                          *. (eval (e3, x, y)))
+                                      /. pi)
+                              | Div7 e1 -> ((eval (e1, x, y)) /.; [[...]] 7)
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                              | VarY -> y
+                              | VarX -> x) ;; 
+==============================

@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0247.ml", line 18, characters 16-28:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.combine
+------------------------------------------------------------------
+File "0247.ml", line 18, characters 16-28:
+Try replacing
+    List.combine
+with
+    List.combine; [[...]]
+of type
+    (int list -> int list -> int list * int list) -> 'f -> 'g -> 'h
+within context
+    fun (l1, l2) ->
+      (let f a x = ((List.combine; [[...]]) padZero l1  l2) in
+          let base = (failwith "to be implemented") in
+          let args = (failwith "to be implemented") in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

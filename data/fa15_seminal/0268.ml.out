@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0268.ml", line 3, characters 38-46:
+This expression has type int but is here used with type 'a list
+Relevant code: (hd * i)
+------------------------------------------------------------------
+File "0268.ml", line 3, characters 47-48:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> 'b list list -> 'b list
+within context
+    let rec mulByDigit i l = (match l with 
+                              | [] -> []
+                              | hd :: tl ->
+                                (hd * i @; [[...]] [(mulByDigit i tl)])) ;; 
+==============================

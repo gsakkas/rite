@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "0681.ml", line 26, characters 30-33:
+This expression has type string but is here used with type int
+Relevant code: ")"
+------------------------------------------------------------------
+Triaged the following locations:
+File "0681.ml", line 26, characters 34-35:
+And modified the following location:
+File "0681.ml", line 26, characters 37-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /
+If you ignore other surrounding code, try replacing
+    "("
+with
+    "("; [[...]]
+The actual replacement has type
+    string -> string -> 'a
+within context
+    let exp = exprToString in (match e with 
+                               | VarX -> "x"
+                               | VarY -> "y"
+                               | Sine a -> "sin(pi*" ^ ((exp a) ^ ")")
+                               | Cosine a -> "cos(pi*" ^ ((exp a) ^ ")")
+                               | Average (a, b) ->
+                                 "((" ^ ((exp a) ^ ("+" ^ ((exp b) ^ ")/2)")))
+                               | Times (a, b) -> (exp a) ^ ("*" ^ (exp b))
+                               | Thresh (a, b, c, d) ->
+                                 "(" ^
+                                     ((exp a) ^
+                                         ("<" ^
+                                             ((exp b) ^
+                                                 ("?" ^
+                                                     ((exp c) ^
+                                                         (":" ^
+                                                             ((exp d) ^ ")")))))))
+                               | Hoi (a, b) ->
+                                 "sin(pi*" ^
+                                     ((exp a) ^
+                                         (")" /; [[...]]
+                                             ("cos(pi*" ^ ((exp b) ^ ")")
+                                                 "("; [[...]] ")"))))
+==============================

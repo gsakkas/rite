@@ -1,0 +1,365 @@
+------------------------------------------------------------------
+File "2407.ml", line 17, characters 22-38:
+This expression has type float but is here used with type int
+Relevant code: (eval (e, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 14-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (e, x, y)) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e
+with
+    e
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (e, x, y)) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e
+with
+    g
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (g, x, y)) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e
+with
+    h
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (h, x, y)) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e
+with
+    f
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (f, x, y)) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (e, x, y)) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 20-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e, x, y
+with
+    e, x, y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (e, x, y)) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 26-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (e, x, y)) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 23-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e, x, y
+with
+    e, y, x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (e, y, x)) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 14-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (e, x, y))
+with
+    (eval ((e, x, y)))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval ((e, x, y))) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    <
+with
+    <
+The actual replacement has type
+    float -> float -> bool
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (e, x, y)) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 33-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (e, x, y)) < (eval (f, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 39-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    f
+with
+    e
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (e, x, y)) < (eval (e, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 39-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    f
+with
+    h
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (e, x, y)) < (eval (h, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2407.ml", line 17, characters 21-62:
+File "2407.ml", line 18, characters 19-54:
+And modified the following location:
+File "2407.ml", line 20, characters 39-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    f
+with
+    g
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (eval (e, x, y)))
+                              | Cosine e -> (cos (eval (e, x, y)))
+                              | Average (e, f) -> [[...other program...]]
+                              | Times (e, f) -> [[...other program...]]
+                              | Thresh (e, f, g, h) ->
+                                (match (eval (e, x, y)) < (eval (g, x, y)) with 
+                                 | true -> (eval (g, x, y))
+                                 | false -> (eval (h, x, y)))) ;; 
+==============================

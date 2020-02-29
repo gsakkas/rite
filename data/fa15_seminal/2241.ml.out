@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "2241.ml", line 26, characters 60-66:
+This expression has type int * int but is here used with type int
+Relevant code: (0, 0)
+------------------------------------------------------------------
+File "2241.ml", line 26, characters 59-67:
+Try replacing
+    [0, 0]
+with
+    [0 ; 0]
+of type
+    int list
+within context
+    let f a x = (match a with 
+                 | (o, l) ->
+                   (let sum = x + o in
+                         (if sum < 10 then 0, sum :: l else
+                             1,
+                               sum - 10 ::
+                                   l))) in let base = 0, [] in
+      let args =
+      let combine (a, b) = a + b in
+        (List.map combine (List.rev (List.combine l1 l2))) @ [0 ; 0]
+      in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

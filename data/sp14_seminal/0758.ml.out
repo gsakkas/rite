@@ -1,0 +1,89 @@
+------------------------------------------------------------------
+File "0758.ml", line 9, characters 18-23:
+This expression has type 'a but is here used with type 'a list
+Relevant code: seen'
+------------------------------------------------------------------
+File "0758.ml", line 7, characters 20-21:
+Try replacing
+    h
+with
+    t
+of type
+    'b list
+within context
+    fun l -> (let rec helper (seen, rest) = (match rest with 
+                                             | [] -> seen
+                                             | h :: t ->
+                                               (let seen' = t in
+                                                     (if (List.mem h l) then
+                                                         h :: seen'
+                                                         else
+                                                         (let rest' = t in
+                                                             (helper
+                                                                 (seen',
+                                                                     rest')))))) in (List.rev
+              (helper ([], l))))
+==============================
+File "0758.ml", line 7, characters 20-21:
+Try replacing
+    h
+with
+    seen
+of type
+    'c list
+within context
+    fun l -> (let rec helper (seen, rest) = (match rest with 
+                                             | [] -> seen
+                                             | h :: t ->
+                                               (let seen' = seen in
+                                                     (if (List.mem h l) then
+                                                         h :: seen'
+                                                         else
+                                                         (let rest' = t in
+                                                             (helper
+                                                                 (seen',
+                                                                     rest')))))) in (List.rev
+              (helper ([], l))))
+==============================
+File "0758.ml", line 7, characters 20-21:
+Try replacing
+    h
+with
+    rest
+of type
+    'd list
+within context
+    fun l -> (let rec helper (seen, rest) = (match rest with 
+                                             | [] -> seen
+                                             | h :: t ->
+                                               (let seen' = rest in
+                                                     (if (List.mem h l) then
+                                                         h :: seen'
+                                                         else
+                                                         (let rest' = t in
+                                                             (helper
+                                                                 (seen',
+                                                                     rest')))))) in (List.rev
+              (helper ([], l))))
+==============================
+File "0758.ml", line 7, characters 20-21:
+Try replacing
+    h
+with
+    l
+of type
+    'e list
+within context
+    fun l -> (let rec helper (seen, rest) = (match rest with 
+                                             | [] -> seen
+                                             | h :: t ->
+                                               (let seen' = l in
+                                                     (if (List.mem h l) then
+                                                         h :: seen'
+                                                         else
+                                                         (let rest' = t in
+                                                             (helper
+                                                                 (seen',
+                                                                     rest')))))) in (List.rev
+              (helper ([], l))))
+==============================

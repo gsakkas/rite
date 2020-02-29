@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "1565.ml", line 7, characters 42-50:
+This expression has type bool but is here used with type int
+Relevant code: (n > 10)
+------------------------------------------------------------------
+File "1565.ml", line 7, characters 24-41:
+Try replacing
+    digitsOfIntHelper
+with
+    <
+of type
+    bool -> bool -> bool
+within context
+    let rec digitsOfInt n = (< (n > 10)) ;; 
+==============================
+File "1565.ml", line 7, characters 24-41:
+Try replacing
+    digitsOfIntHelper
+with
+    >
+of type
+    bool -> bool -> bool
+within context
+    let rec digitsOfInt n = (> (n > 10)) ;; 
+==============================
+File "1565.ml", line 7, characters 45-46:
+Try replacing
+    >
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n = (digitsOfIntHelper (n / 10)) ;; 
+==============================
+File "1565.ml", line 7, characters 45-46:
+Try replacing
+    >
+with
+    -
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n = (digitsOfIntHelper (n - 10)) ;; 
+==============================
+File "1565.ml", line 7, characters 45-46:
+Try replacing
+    >
+with
+    mod
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n = (digitsOfIntHelper (n mod 10)) ;; 
+==============================

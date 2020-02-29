@@ -1,0 +1,51 @@
+------------------------------------------------------------------
+File "0446.ml", line 10, characters 9-16:
+This expression has type (int -> int * bool) * bool
+but is here used with type (int -> int * bool) * int
+Relevant code: (gs, b)
+------------------------------------------------------------------
+File "0446.ml", line 9, characters 28-40:
+Try replacing
+    when xx - x > 0 -> (x, b)
+with
+    x, b
+of type
+    bool * bool
+within context
+    fun (f, b) -> (let gs x = let xx = (f x) in (match xx with 
+                                                 | xx -> (x, b)
+                                                 | _ ->
+                                                   ((f x), b)) in (wwhile (gs, b)))
+==============================
+File "0446.ml", line 10, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    (int -> int * 'a) * 'a -> (int -> int * 'a) * 'a -> bool
+within context
+    let fixpoint (f, b) = let gs x = let xx = (f x) in (match xx with 
+                                                        | xx ->
+                                                          when xx - x > 0 -> (x, b)
+                                                        | _ ->
+                                                          ((f x),
+                                                                b)) in (=
+          (gs, b)) ;; 
+==============================
+File "0446.ml", line 10, characters 2-8:
+Try replacing
+    wwhile
+with
+    >
+of type
+    (int -> int * 'b) * 'b -> (int -> int * 'b) * 'b -> bool
+within context
+    let fixpoint (f, b) = let gs x = let xx = (f x) in (match xx with 
+                                                        | xx ->
+                                                          when xx - x > 0 -> (x, b)
+                                                        | _ ->
+                                                          ((f x),
+                                                                b)) in (>
+          (gs, b)) ;; 
+==============================

@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "3011.ml", line 25, characters 22-40:
+This expression has type 'a list * int but is here used with type int list
+Relevant code: ((List.rev l1), 0)
+------------------------------------------------------------------
+File "3011.ml", line 25, characters 16-41:
+Try replacing
+    0 :: (List.rev l1) :: 0
+with
+    [[...]]
+of type
+    'b * 'c list
+within context
+    let add (l1, l2) = let f a x = (match a with 
+                                    | (([], _), y) -> (([], 0), y)
+                                    | ((h :: t, carry), y) ->
+                                      (let sum = (h + x) + carry in
+                                            (t, sum / 10),
+                                                (mod sum 10) ::
+                                                    y)) in let base = [[...]], [] in
+        let args = 0 :: (List.rev l2) in
+        let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add (padZero l1 l2)))
+==============================

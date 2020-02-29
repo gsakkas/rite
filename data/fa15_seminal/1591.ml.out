@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "1591.ml", line 10, characters 46-47:
+This expression has type string but is here used with type 'a list
+Relevant code: w
+------------------------------------------------------------------
+File "1591.ml", line 10, characters 46-47:
+Try replacing
+    w
+with
+    w; [[...]]
+of type
+    char list
+within context
+    let palindrome w = (explode w) = (listReverse (w; [[...]])) ;; 
+==============================
+File "1591.ml", line 10, characters 28-29:
+Try replacing
+    w
+with
+    w; [[...]]
+of type
+    string
+within context
+    let palindrome w = (explode (w; [[...]])) = (listReverse w) ;; 
+==============================
+File "1591.ml", line 10, characters 20-27:
+Try replacing
+    explode
+with
+    explode; [[...]]
+of type
+    'b list -> 'b list
+within context
+    let palindrome w = ((explode; [[...]]) w) = (listReverse w) ;; 
+==============================
+File "1591.ml", line 10, characters 34-45:
+Try replacing
+    listReverse
+with
+    listReverse; [[...]]
+of type
+    string -> char list
+within context
+    let palindrome w = (explode w) = ((listReverse; [[...]]) w) ;; 
+==============================

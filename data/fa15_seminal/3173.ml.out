@@ -1,0 +1,90 @@
+------------------------------------------------------------------
+File "3173.ml", line 27, characters 35-39:
+This expression has type 'a list * 'b list but is here used with type
+  int * int list
+Relevant code: base
+------------------------------------------------------------------
+File "3173.ml", line 27, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'c list * 'd list -> 'e * 'f -> 'c list * 'd list
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (c, ax) = a in (mod ((x1 + x2) + c) 10), [((x1 + x2) + c) / 10]
+      in
+      let base = [], [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "3173.ml", line 27, characters 35-39:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    int * int list
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (c, ax) = a in (mod ((x1 + x2) + c) 10), [((x1 + x2) + c) / 10]
+      in
+      let base = [], [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f (base; [[...]])  args) in res
+==============================
+File "3173.ml", line 25, characters 15-23:
+Try replacing
+    [], []
+with
+    [], []; [[...]]
+of type
+    'g
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x =
+            let (x1, x2) = x in
+              let (c, ax) = a in (mod ((x1 + x2) + c) 10), [((x1 + x2) + c) / 10]
+            in
+            let base = [], []; [[...]] in
+            let args = (List.combine l1 l2) in
+            let (_, res) = (List.fold_left f base  args) in res
+          in
+          (removeZero (add (padZero l1 l2))))
+==============================
+File "3173.ml", line 27, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * 'h -> int * int -> int * int list) ->
+    'i list * 'j list -> ('k * 'l) list -> 'm * 'n
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (c, ax) = a in (mod ((x1 + x2) + c) 10), [((x1 + x2) + c) / 10]
+      in
+      let base = [], [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "3173.ml", line 22, characters 10-115:
+Try replacing
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (c, ax) = a in (mod ((x1 + x2) + c) 10), [((x1 + x2) + c) / 10])
+with
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (c, ax) = a in (mod ((x1 + x2) + c) 10), [((x1 + x2) + c) / 10]);
+    [[...]]
+of type
+    'o
+==============================

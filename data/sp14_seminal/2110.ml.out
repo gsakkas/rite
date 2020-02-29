@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2110.ml", line 15, characters 23-25:
+This expression has type expr but is here used with type int
+Relevant code: a1
+------------------------------------------------------------------
+File "2110.ml", line 15, characters 26-27:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    expr -> expr -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x +. 0.0)
+                              | VarY -> (y +. 0.0)
+                              | Average (a1, a2) -> (a1 +; [[...]] a2)) ;; 
+==============================

@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "3252.ml", line 19, characters 33-34:
+This expression has type 'a * 'b -> 'c -> 'a but is here used with type
+  'a * 'b -> 'c -> 'a * 'b
+Relevant code: f
+------------------------------------------------------------------
+File "3252.ml", line 16, characters 40-41:
+Try replacing
+    x
+with
+    a
+of type
+    'd * 'e
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (x, y) ->
+                                    a) in let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

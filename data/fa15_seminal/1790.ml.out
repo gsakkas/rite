@@ -1,0 +1,77 @@
+------------------------------------------------------------------
+File "1790.ml", line 4, characters 59-65:
+This expression has type ('a -> ('a -> 'a) * bool) * 'b
+but is here used with type ('a -> 'a * bool) * 'a
+Relevant code: (h, b)
+------------------------------------------------------------------
+File "1790.ml", line 4, characters 45-46:
+Try replacing
+    (f x) = x
+with
+    (f (x = x))
+of type
+    (bool -> bool) * bool
+within context
+    fun (f, b) -> (wwhile (let h x = f, (f (x = x)) in h, b))
+==============================
+File "1790.ml", line 4, characters 60-64:
+Try replacing
+    h, b
+with
+    b, h
+of type
+    (('c -> ('c -> 'c) * bool) -> ('c -> ('c -> 'c) * bool) * bool) *
+    ('c -> ('c -> 'c) * bool)
+within context
+    let fixpoint (f, b) = (wwhile (let h x = f, (f x) = x in b, h)) ;; 
+==============================
+File "1790.ml", line 4, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('d -> ('d -> 'd) * bool) * 'e -> ('d -> ('d -> 'd) * bool) * 'e -> bool
+within context
+    let fixpoint (f, b) = (= (let h x = f, (f x) = x in h, b)) ;; 
+==============================
+File "1790.ml", line 4, characters 40-41:
+Try replacing
+    f
+with
+    =
+of type
+    ('f -> 'f -> bool) * bool
+within context
+    fun (f, b) -> (wwhile (let h x = =, (f x) = x in h, b))
+==============================
+File "1790.ml", line 4, characters 40-41:
+Try replacing
+    f
+with
+    x
+of type
+    'g * bool
+within context
+    fun (f, b) -> (wwhile (let h x = x, (f x) = x in h, b))
+==============================
+File "1790.ml", line 4, characters 40-41:
+Try replacing
+    f
+with
+    wwhile
+of type
+    (('h -> 'h * bool) * 'h -> 'h) * bool
+within context
+    fun (f, b) -> (wwhile (let h x = wwhile, (f x) = x in h, b))
+==============================
+File "1790.ml", line 4, characters 40-41:
+Try replacing
+    f
+with
+    b
+of type
+    'i * bool
+within context
+    fun (f, b) -> (wwhile (let h x = b, (f x) = x in h, b))
+==============================

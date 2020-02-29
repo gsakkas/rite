@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "3364.ml", line 5, characters 12-76:
+This expression has type 'a list but is here used with type int
+Relevant code: [mulByDigit i (List.rev (List.map (fun x  -> x * 10) t)); h * i]
+------------------------------------------------------------------
+File "3364.ml", line 5, characters 12-76:
+Try replacing
+    [(mulByDigit i (List.rev (List.map (fun x -> x * 10) t))) ; h * i]
+with
+    [(mulByDigit i (List.rev (List.map (fun x -> x * 10) t))) ; h * i]; [[...]]
+of type
+    int
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> 0
+                              | h :: t ->
+                                ([
+                                        (mulByDigit
+                                          i
+                                          (List.rev (List.map (fun x -> x * 10) t)))
+                                        ;
+                                        h * i
+                                        ];
+                                    [[...]])) ;; 
+==============================

@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2385.ml", line 3, characters 28-52:
+This expression has type 'a list but is here used with type int
+Relevant code: ((n mod 10) :: (n / 10))
+------------------------------------------------------------------
+File "2385.ml", line 3, characters 28-52:
+Try replacing
+    (mod n 10) :: n / 10
+with
+    [[...]]
+of type
+    int
+within context
+    let rec digitsOfInt n = (if n > 0 then (digitsOfInt [[...]]) else []) ;; 
+==============================

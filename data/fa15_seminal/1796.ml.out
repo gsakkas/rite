@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "1796.ml", line 14, characters 4-8:
+This pattern matches values of type expr
+but is here used to match values of type string
+Relevant code: VarY
+------------------------------------------------------------------
+File "1796.ml", line 13, characters 4-10:
+Try replacing
+    "VarX"
+with
+    _
+of type
+    expr -> string
+within context
+    let rec exprToString expr = (match expr with 
+                                 | _ -> "x"
+                                 | VarY -> "y"
+                                 | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+                                 | Cosine ex ->
+                                   "cos(pi*" ^ ((exprToString ex) ^ ")")
+                                 | Average (ex1, ex2) ->
+                                   "(" ^
+                                       ((exprToString ex1) ^
+                                           ("*" ^ ((exprToString ex2) ^ ")/2")))
+                                 | Times (ex1, ex2) ->
+                                   (exprToString ex1) ^ ("*" ^ (exprToString ex2))
+                                 | Thresh (ex1, ex2, ex3, ex4) ->
+                                   "(" ^
+                                       ((exprToString ex1) ^
+                                           ("<" ^
+                                               ((exprToString ex2) ^
+                                                   ("?" ^
+                                                       ((exprToString ex3) ^
+                                                           (":" ^
+                                                               ((exprToString ex4)
+                                                                   ^ ")")))))))) ;; 
+==============================

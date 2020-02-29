@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "3201.ml", line 3, characters 58-59:
+This expression has type int -> 'a -> 'b -> 'c -> int
+but is here used with type int -> 'a -> int
+Relevant code: f
+------------------------------------------------------------------
+File "3201.ml", line 3, characters 10-15:
+Try replacing
+    fun x f _ -> a * a
+with
+    fun (x, f, _) -> a * a
+of type
+    'd * 'e * 'f -> int
+within context
+    let sqsum xs =
+    let f a (x, f, _) = a * a in let base = 0 in (List.fold_left f base  xs)
+    ;; 
+==============================
+File "3201.ml", line 3, characters 43-59:
+Try replacing
+    (List.fold_left f base  xs)
+with
+    (List.fold_left (f base xs))
+of type
+    int -> 'g list -> int
+within context
+    let sqsum xs =
+    let f a x f _ = a * a in let base = 0 in (List.fold_left (f base xs))
+    ;; 
+==============================
+File "3201.ml", line 3, characters 58-59:
+Try replacing
+    f
+with
+    *
+of type
+    int -> int -> int
+within context
+    let sqsum xs =
+    let f a x f _ = a * a in let base = 0 in (List.fold_left * base  xs)
+    ;; 
+==============================

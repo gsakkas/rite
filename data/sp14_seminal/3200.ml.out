@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "3200.ml", line 6, characters 18-31:
+This expression has type 'a list -> 'b but is here used with type string
+Relevant code: (sepConcat h)
+------------------------------------------------------------------
+File "3200.ml", line 6, characters 19-28:
+Try replacing
+    sepConcat
+with
+    sepConcat; [[...]]
+of type
+    'c -> string
+within context
+    let f a x = ((sepConcat; [[...]]) h) ^ (sep t) in
+      let base = "" in let l = t in (List.fold_left f base  l)
+==============================

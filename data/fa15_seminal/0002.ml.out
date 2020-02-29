@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0002.ml", line 26, characters 15-23:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+File "0002.ml", line 26, characters 15-36:
+Try replacing
+    (List.rev List.combine l1  l2)
+with
+    (List.rev (List.combine l1 l2))
+of type
+    (int * int) list
+within context
+    let add (l1, l2) =
+      let f a x =
+        let (carry, currentSum) = a in
+          let (toSum1, toSum2) = x in
+          let intermediateValue = (toSum1 + toSum2) + carry in
+          let valueToAddToArray = (mod intermediateValue 10) in
+          let carry = intermediateValue / 10 in
+          carry, valueToAddToArray :: currentSum
+        in
+        let base = 0, [] in
+        let args = (List.rev (List.combine l1 l2)) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

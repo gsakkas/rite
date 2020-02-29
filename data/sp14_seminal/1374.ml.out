@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "1374.ml", line 21, characters 15-108:
+This expression has type int * int list but is here used with type int list
+Relevant code: ((((add1 + add2) + carry) / 10),
+                 ((((add1 + add2) + carry) mod 10) :: rest))
+------------------------------------------------------------------
+File "1374.ml", line 19, characters 22-35:
+Try replacing
+    carry :: rest
+with
+    carry, rest
+of type
+    int * int list
+within context
+    let f a x = (match a with 
+                 | (carry, rest) -> (match x with 
+                                     | (_, _) -> (carry, rest)
+                                     | (add1, add2) ->
+                                       (((add1 + add2) + carry) / 10,
+                                             (mod ((add1 + add2) + carry) 10) ::
+                                                 rest))) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

@@ -1,0 +1,98 @@
+------------------------------------------------------------------
+File "0660.ml", line 32, characters 53-63:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: mulByDigit
+------------------------------------------------------------------
+Triaged the following locations:
+File "0660.ml", line 32, characters 45-51:
+And modified the following location:
+File "0660.ml", line 32, characters 53-63:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    mulByDigit; [[...]]
+The actual replacement has type
+    'f -> 'g -> 'h -> 'i
+within context
+    fun a x -> (let (l1', a') = a in (match x with 
+                                      | [] -> (l1', a')
+                                      | h :: t ->
+                                        ((bigAdd; [[...]])
+                                            ((mulByDigit; [[...]]) h l1'  a'))))
+==============================
+Triaged the following locations:
+File "0660.ml", line 32, characters 45-51:
+And modified the following location:
+File "0660.ml", line 32, characters 53-65:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit h l1'  a')
+with
+    (mulByDigit (h l1' a'))
+The actual replacement has type
+    int list -> int list
+within context
+    fun a x -> (let (l1', a') = a in (match x with 
+                                      | [] -> (l1', a')
+                                      | h :: t ->
+                                        ((bigAdd; [[...]])
+                                            (mulByDigit (h l1' a')))))
+==============================
+Triaged the following locations:
+File "0660.ml", line 32, characters 45-51:
+And modified the following location:
+File "0660.ml", line 32, characters 64-65:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit h l1'  a')
+with
+    (mulByDigit l1' a')
+The actual replacement has type
+    int list
+within context
+    fun a x -> (let (l1', a') = a in (match x with 
+                                      | [] -> (l1', a')
+                                      | h :: t ->
+                                        ((bigAdd; [[...]]) (mulByDigit l1' a'))))
+==============================
+Triaged the following locations:
+File "0660.ml", line 32, characters 45-51:
+And modified the following location:
+File "0660.ml", line 32, characters 66-69:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit h l1'  a')
+with
+    (mulByDigit h a')
+The actual replacement has type
+    int list
+within context
+    fun a x -> (let (l1', a') = a in (match x with 
+                                      | [] -> (l1', a')
+                                      | h :: t ->
+                                        ((bigAdd; [[...]]) (mulByDigit h a'))))
+==============================
+Triaged the following locations:
+File "0660.ml", line 32, characters 45-51:
+And modified the following location:
+File "0660.ml", line 32, characters 70-72:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit h l1'  a')
+with
+    (mulByDigit h l1')
+The actual replacement has type
+    int list
+within context
+    fun a x -> (let (l1', a') = a in (match x with 
+                                      | [] -> (l1', a')
+                                      | h :: t ->
+                                        ((bigAdd; [[...]]) (mulByDigit h l1'))))
+==============================

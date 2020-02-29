@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2698.ml", line 9, characters 27-35:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: notEqual
+------------------------------------------------------------------
+File "2698.ml", line 9, characters 38-39:
+Try replacing
+    (notEqual b f  b)
+with
+    (notEqual b b)
+of type
+    'k * bool
+within context
+    let fixpoint (f, b) =
+    let newFunc b = (f b), (notEqual b b) in (wwhile (newFunc, b))
+    ;; 
+==============================

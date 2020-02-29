@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "0050.ml", line 8, characters 14-27:
+This expression has type int list but is here used with type int
+Relevant code: (clone 0 ll1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0050.ml", line 9, characters 7-43:
+And modified the following location:
+File "0050.ml", line 8, characters 28-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    -
+with
+    -; [[...]]
+The actual replacement has type
+    int list -> int -> 'a list
+within context
+    let padZero l1 l2 =
+    let ll1 = (List.length l1) in
+      (if ll1 > ll2 then l1, ((clone 0 ll1) -; [[...]] ll2) @ l2 else
+          [[...other program...]])
+    ;; 
+==============================

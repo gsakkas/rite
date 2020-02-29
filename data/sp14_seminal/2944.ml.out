@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "2944.ml", line 29, characters 24-76:
+This expression has type int list but is here used with type int
+Relevant code: if i = 1 then l else bigAdd (mulByDigit (i - 1) l) l
+------------------------------------------------------------------
+File "2944.ml", line 29, characters 45-51:
+Try replacing
+    bigAdd
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun i
+      l ->
+        (if (i <= 0) then 0 else
+          (if i = 1 then l else (- (mulByDigit (i - 1) l) l)))
+==============================
+File "2944.ml", line 29, characters 45-51:
+Try replacing
+    bigAdd
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun i
+      l ->
+        (if (i <= 0) then 0 else
+          (if i = 1 then l else (+ (mulByDigit (i - 1) l) l)))
+==============================

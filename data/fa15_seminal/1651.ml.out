@@ -1,0 +1,48 @@
+------------------------------------------------------------------
+File "1651.ml", line 16, characters 33-46:
+This expression has type int list but is here used with type int
+Relevant code: ([y + z] @ a)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1651.ml", line 18, characters 4-109:
+And modified the following location:
+File "1651.ml", line 16, characters 47-48:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    /
+with
+    /; [[...]]
+The actual replacement has type
+    int list -> int -> int list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              (if (let (y, z) = x in y + z > 9) then
+                1, (let (y, z) = x in ([y + z] @ a /; [[...]] 10))
+                else
+                0, (let (y, z) = x in [y + z] @ a))
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1651.ml", line 18, characters 4-109:
+And modified the following location:
+File "1651.ml", line 14, characters 4-269:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x =
+      (if (let (y, z) = x in y + z > 9) then
+        1, (let (y, z) = x in ([y + z] @ a) / 10)
+        else
+        0, (let (y, z) = x in [y + z] @ a))
+      in
+      let base = [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

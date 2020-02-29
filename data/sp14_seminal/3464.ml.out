@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "3464.ml", line 3, characters 36-57:
+This expression has type 'a list but is here used with type unit
+Relevant code: ([] mod 10) :: myList
+------------------------------------------------------------------
+File "3464.ml", line 3, characters 36-57:
+Try replacing
+    (mod [] 10) :: myList
+with
+    [[...]]
+of type
+    unit
+within context
+    let rec digitsOfInt n = let myList = [] in (if (n <= 0) then [[...]]) ;; 
+==============================

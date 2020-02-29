@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "1066.ml", line 4, characters 42-45:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: not
+------------------------------------------------------------------
+File "1066.ml", line 4, characters 46-47:
+Try replacing
+    (not f b)
+with
+    (not b)
+of type
+    bool
+within context
+    fun (f, b) -> (let fx b = (f b), (not b) = b in (wwhile (fx, b)))
+==============================
+File "1066.ml", line 4, characters 42-47:
+Try replacing
+    (not f b)
+with
+    (not (f b))
+of type
+    bool
+within context
+    fun (f, b) -> (let fx b = (f b), (not (f b)) = b in (wwhile (fx, b)))
+==============================

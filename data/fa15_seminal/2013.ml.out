@@ -1,0 +1,77 @@
+------------------------------------------------------------------
+File "2013.ml", line 35, characters 22-38:
+This expression is not a function, it cannot be applied
+Relevant code: (exprToString z)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2013.ml", line 35, characters 21-45:
+And modified the following location:
+File "2013.ml", line 39, characters 34-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    "+"
+with
+    "+"; [[...]]
+The actual replacement has type
+    string -> string
+within context
+    (exprToString x) ^
+      ("*" ^
+          ((exprToString y) ^
+              ("*" ^
+                  ([[...other program...]] ^
+                      ((exprToString x) ^
+                          ("+" ^
+                              ((exprToString y) ^
+                                  ((( "+"; [[...]] ) (exprToString z)) ^ ")"))))))))
+==============================
+Triaged the following locations:
+File "2013.ml", line 36, characters 23-190:
+And modified the following location:
+File "2013.ml", line 35, characters 39-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ((exprToString z) ")/(")
+with
+    (exprToString z)
+The actual replacement has type
+    string
+within context
+    (exprToString x) ^
+      ("*" ^
+          ((exprToString y) ^ ("*" ^ ((exprToString z) ^ [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "2013.ml", line 35, characters 21-45:
+And modified the following location:
+File "2013.ml", line 39, characters 38-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (( "+" ) (exprToString z))
+with
+    "+"
+The actual replacement has type
+    string
+within context
+    (exprToString x) ^
+      ("*" ^
+          ((exprToString y) ^
+              ("*" ^
+                  ([[...other program...]] ^
+                      ((exprToString x) ^
+                          ("+" ^ ((exprToString y) ^ ("+" ^ ")"))))))))
+==============================
+Triaged the following locations:
+File "2013.ml", line 36, characters 23-190:
+And modified the following location:
+File "2013.ml", line 35, characters 22-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString z)
+with
+    (exprToString z); [[...]]
+The actual replacement has type
+    string -> string
+within context
+    (exprToString x) ^
+      ("*" ^
+          ((exprToString y) ^
+              ("*" ^
+                  ((((exprToString z); [[...]]) ")/(") ^ [[...other program...]]))))
+==============================

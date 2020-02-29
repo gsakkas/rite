@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "1122.ml", line 24, characters 10-134:
+This expression has type int * int but is here used with type int * int list
+Relevant code: if ((fst x) + (snd x)) > 9
+          then (1, (((fst x) + (snd x)) mod 10))
+          else (0, (((fst x) + (snd x)) mod 10))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1122.ml", line 20, characters 10-166:
+File "1122.ml", line 24, characters 10-134:
+And modified the following location:
+File "1122.ml", line 18, characters 12-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'a list
+within context
+    fun (l1, l2) -> (let f a x = (match (a; [[...]]) with 
+                                  | h :: t -> [[...other program...]]
+                                  | _ ->
+                                    [[...other program...]]) in let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1122.ml", line 20, characters 10-166:
+File "1122.ml", line 24, characters 10-134:
+And modified the following location:
+File "1122.ml", line 19, characters 8-12:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    'b -> 'c
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | _ -> [[...other program...]]
+                                  | _ ->
+                                    [[...other program...]]) in let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

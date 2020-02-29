@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1178.ml", line 24, characters 49-53:
+This pattern matches values of type 'a list
+but is here used to match values of type int * 'b
+Relevant code: h::t
+------------------------------------------------------------------
+File "1178.ml", line 24, characters 40-41:
+Try replacing
+    a
+with
+    acc
+of type
+    int list
+within context
+    let (x1, x2) = x in
+      let sumInit = (x1 + x2) + carry in
+      let carry2 = sumInit / 10 in let dig = (mod sumInit 10) in (match acc with 
+                                                                  | h :: t ->
+                                                                    (carry2,
+                                                                          dig :: t))
+==============================

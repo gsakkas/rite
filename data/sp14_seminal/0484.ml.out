@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "0484.ml", line 28, characters 15-23:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+Triaged the following locations:
+File "0484.ml", line 29, characters 4-51:
+And modified the following location:
+File "0484.ml", line 28, characters 15-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.rev List.combine l1  l2)
+with
+    (List.rev (List.combine l1 l2))
+The actual replacement has type
+    ('b * 'c) list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) :: t ->
+                                      (let ha :: ht = a in
+                                            let (a1, a2) = ha in
+                                            let tens = (x1 + x2) + a1 / 10 in
+                                            let ones = (x1 + x2) + (mod a1 10) in
+                                            a @ [tens, ones])
+                                    | [] ->
+                                      a) in let base = [0, 0] in
+        let args = (List.rev (List.combine l1 l2)) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0484.ml", line 29, characters 4-51:
+And modified the following location:
+File "0484.ml", line 28, characters 15-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    ('d list -> 'e list -> ('d * 'e) list) -> 'f -> 'g -> 'h
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) :: t ->
+                                      (let ha :: ht = a in
+                                            let (a1, a2) = ha in
+                                            let tens = (x1 + x2) + a1 / 10 in
+                                            let ones = (x1 + x2) + (mod a1 10) in
+                                            a @ [tens, ones])
+                                    | [] ->
+                                      a) in let base = [0, 0] in
+        let args = ((List.rev; [[...]]) List.combine l1  l2) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================

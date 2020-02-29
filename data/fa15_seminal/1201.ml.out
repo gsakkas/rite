@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1201.ml", line 2, characters 67-68:
+This expression has type 'a -> 'b * bool but is here used with type unit
+Relevant code: f
+------------------------------------------------------------------
+File "1201.ml", line 2, characters 67-68:
+Try replacing
+    f
+with
+    h
+of type
+    unit
+within context
+    let rec wwhile (f, b) = (match (f b) with 
+                             | (h, t) -> (if t = false then h)) ;; 
+==============================
+File "1201.ml", line 2, characters 67-68:
+Try replacing
+    f
+with
+    b
+of type
+    unit
+within context
+    let rec wwhile (f, b) = (match (f b) with 
+                             | (h, t) -> (if t = false then b)) ;; 
+==============================

@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0635.ml", line 4, characters 34-35:
+This expression has type ('a -> 'a -> 'a) -> 'a list -> 'a -> 'a
+but is here used with type ('a -> 'a -> 'a) -> 'a list -> 'a -> 'a -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "0635.ml", line 4, characters 34-43:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left fs f  base)
+of type
+    ('b -> 'c -> 'c) -> 'b list -> 'c -> 'c
+within context
+    let pipe fs =
+    let f a x = (List.fold_right a x) in
+      let base = [] in (List.fold_left fs f  base)
+    ;; 
+==============================

@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0304.ml", line 5, characters 43-65:
+This expression has type 'a * 'b list but is here used with type 'c list
+Relevant code: ((listReverse t), [h])
+------------------------------------------------------------------
+File "0304.ml", line 5, characters 43-65:
+Try replacing
+    (append ((listReverse t), [h]))
+with
+    (append (listReverse t) [h])
+of type
+    'd list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: t -> (append (listReverse t) [h])) ;; 
+==============================

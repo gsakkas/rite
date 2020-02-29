@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "0599.ml", line 20, characters 33-34:
+This expression has type int list -> int * int -> int -> int * int list
+but is here used with type int list -> int * int -> int list
+Relevant code: f
+------------------------------------------------------------------
+File "0599.ml", line 20, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int list * int list -> 'a * 'b -> int list * int list
+within context
+    let f a x c =
+      let (s, t) = x in let sum = (c + s) + t in sum / 10, (mod sum 10) :: a
+      in
+      let base = [0], [0] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0599.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int * int -> int -> int * int list) ->
+    int list * int list -> ('c * 'd) list -> 'e * 'f
+within context
+    let f a x c =
+      let (s, t) = x in let sum = (c + s) + t in sum / 10, (mod sum 10) :: a
+      in
+      let base = [0], [0] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0599.ml", line 15, characters 10-105:
+Try replacing
+    fun a
+      x
+        c ->
+          (let (s, t) = x in let sum = (c + s) + t in sum / 10, (mod sum 10) :: a)
+with
+    fun a
+      x
+        c ->
+          (let (s, t) = x in let sum = (c + s) + t in sum / 10, (mod sum 10) :: a);
+    [[...]]
+of type
+    'g
+==============================

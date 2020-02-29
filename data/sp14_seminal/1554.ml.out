@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "1554.ml", line 2, characters 54-65:
+This expression has type int list -> int but is here used with type int
+Relevant code: (sumList t)
+------------------------------------------------------------------
+File "1554.ml", line 2, characters 16-34:
+Try replacing
+    fun xs -> function | [] -> 0 | h :: t -> h + (sumList t)
+with
+    fun [] xs -> 0
+of type
+    'a list -> 'b -> int
+within context
+    let rec sumList [] xs = 0 ;; 
+==============================
+File "1554.ml", line 2, characters 55-62:
+Try replacing
+    sumList
+with
+    xs
+of type
+    int list -> int
+within context
+    let rec sumList xs  function | [] -> 0 | h :: t -> h + (xs t) ;; 
+==============================

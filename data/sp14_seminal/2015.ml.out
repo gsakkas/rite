@@ -1,0 +1,90 @@
+------------------------------------------------------------------
+File "2015.ml", line 22, characters 13-34:
+This expression has type int but is here used with type int list
+Relevant code: (add (padZero l1 l2))
+------------------------------------------------------------------
+File "2015.ml", line 22, characters 2-12:
+Try replacing
+    removeZero
+with
+    +
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a (x, y) = ((x + y) + a) / 10 in
+        let base = 0 in
+        let args = (List.combine l1 l2) in (List.fold_left f base  args)
+      in
+      (+ (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2015.ml", line 22, characters 2-12:
+Try replacing
+    removeZero
+with
+    /
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a (x, y) = ((x + y) + a) / 10 in
+        let base = 0 in
+        let args = (List.combine l1 l2) in (List.fold_left f base  args)
+      in
+      (/ (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2015.ml", line 22, characters 2-12:
+Try replacing
+    removeZero
+with
+    -
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a (x, y) = ((x + y) + a) / 10 in
+        let base = 0 in
+        let args = (List.combine l1 l2) in (List.fold_left f base  args)
+      in
+      (- (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2015.ml", line 22, characters 2-12:
+Try replacing
+    removeZero
+with
+    >
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a (x, y) = ((x + y) + a) / 10 in
+        let base = 0 in
+        let args = (List.combine l1 l2) in (List.fold_left f base  args)
+      in
+      (> (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2015.ml", line 22, characters 2-12:
+Try replacing
+    removeZero
+with
+    =
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a (x, y) = ((x + y) + a) / 10 in
+        let base = 0 in
+        let args = (List.combine l1 l2) in (List.fold_left f base  args)
+      in
+      (= (add (padZero l1 l2)))
+    ;; 
+==============================

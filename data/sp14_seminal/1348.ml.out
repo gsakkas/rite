@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1348.ml", line 17, characters 35-61:
+This expression has type int but is here used with type 'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "1348.ml", line 17, characters 35-61:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f base  args); [[...]]
+of type
+    'c * 'd
+within context
+    fun (l1, l2) ->
+      (let f a x = (mod (a + x) 10) in
+          let base = 0 in
+          let args = [] in
+          let (_, res) = (List.fold_left f base  args); [[...]] in res)
+==============================

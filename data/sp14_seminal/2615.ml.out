@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "2615.ml", line 42, characters 13-14:
+This expression has type int but is here used with type int list
+Relevant code: 0
+------------------------------------------------------------------
+File "2615.ml", line 42, characters 9-14:
+Try replacing
+    (helper i l  0)
+with
+    (helper 0 l  i)
+of type
+    int list
+within context
+    let rec mulByDigit i l =
+    let rec helper a b acc =
+      (if a > 0 then (helper (a - 1) b  (bigAdd b b)) else acc)
+      in
+      (helper 0 l  i)
+    ;; 
+==============================
+File "2615.ml", line 42, characters 2-10:
+Try replacing
+    (helper i l  0)
+with
+    (helper (i l 0))
+of type
+    int list -> int list -> int list
+within context
+    let rec mulByDigit i l =
+    let rec helper a b acc =
+      (if a > 0 then (helper (a - 1) b  (bigAdd b b)) else acc)
+      in
+      (helper (i l 0))
+    ;; 
+==============================
+File "2615.ml", line 41, characters 36-42:
+Try replacing
+    bigAdd
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun b acc -> (if a > 0 then (helper (a - 1) b  (- b b)) else acc)
+==============================
+File "2615.ml", line 41, characters 36-42:
+Try replacing
+    bigAdd
+with
+    *
+of type
+    int -> int -> int
+within context
+    fun b acc -> (if a > 0 then (helper (a - 1) b  (* b b)) else acc)
+==============================
+File "2615.ml", line 41, characters 36-42:
+Try replacing
+    bigAdd
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun b acc -> (if a > 0 then (helper (a - 1) b  (+ b b)) else acc)
+==============================

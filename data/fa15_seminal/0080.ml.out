@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0080.ml", line 5, characters 55-66:
+This expression has type ('a -> 'a) * 'a but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: (f, result)
+------------------------------------------------------------------
+File "0080.ml", line 5, characters 48-66:
+Try replacing
+    (if result = b then b else (wwhile (f, result)))
+with
+    (if result = b then b)
+of type
+    unit
+within context
+    let fixpoint (f, b) = let result = (f b) in (if result = b then b) ;; 
+==============================

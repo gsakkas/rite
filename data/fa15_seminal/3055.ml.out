@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "3055.ml", line 27, characters 22-25:
+This expression has type 'a list but is here used with type int
+Relevant code: [a]
+------------------------------------------------------------------
+File "3055.ml", line 27, characters 22-25:
+Try replacing
+    [a]
+with
+    [a]; [[...]]
+of type
+    int
+within context
+    let f a x = (bigAdd [[a]; [[...]] ; 0] (mulByDigit x l1)) in
+      let base = [] in let args = l2 in (List.fold_left f base  args)
+==============================

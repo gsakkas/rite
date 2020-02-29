@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1415.ml", line 3, characters 51-61:
+This expression is not a function, it cannot be applied
+Relevant code: (n mod 10)
+------------------------------------------------------------------
+File "1415.ml", line 3, characters 24-65:
+Try replacing
+    (digitsOfInt (n / 10)) :: ((mod n 10) [])
+with
+    [[...]]
+of type
+    'c list
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else [[...]]) ;; 
+==============================

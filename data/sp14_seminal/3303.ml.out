@@ -1,0 +1,51 @@
+------------------------------------------------------------------
+File "3303.ml", line 11, characters 38-42:
+This expression has type (int * 'a) list but is here used with type int list
+Relevant code: args
+------------------------------------------------------------------
+File "3303.ml", line 4, characters 14-21:
+Try replacing
+    [], [0]
+with
+    [0], []
+of type
+    int list * 'b list
+within context
+    let bigMul l1 l2 =
+    let f a x = [0], [x] in
+      let base = [0], [] in let args = let rec helper acc l1 l2 = (match l1 with 
+                                                                   | [] -> acc
+                                                                   | h :: t ->
+                                                                     (helper
+                                                                         h, l2 ::
+                                                                             acc
+                                                                         (List.map
+                                                                           (fun x ->
+                                                                               x *
+                                                                                 10) t)
+                                                                         l2)) in (helper
+            [] (List.rev l1) l2) in let (_, res) = (List.fold_left f base  args) in res
+    ;; 
+==============================
+File "3303.ml", line 3, characters 15-23:
+Try replacing
+    [0], [x]
+with
+    [x], [0]
+of type
+    'c list * int list
+within context
+    fun l1
+      l2 ->
+        (let f a x = [x], [0] in
+            let base = [], [0] in
+            let args = let rec helper acc l1 l2 = (match l1 with 
+                                                   | [] -> acc
+                                                   | h :: t ->
+                                                     (helper
+                                                         h, l2 :: acc
+                                                         (List.map
+                                                           (fun x -> x * 10) t)
+                                                         l2)) in (helper
+                  [] (List.rev l1) l2) in let (_, res) = (List.fold_left f base  args) in res)
+==============================

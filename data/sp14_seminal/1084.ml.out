@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1084.ml", line 11, characters 24-53:
+This expression has type int list but is here used with type unit
+Relevant code: List.append (clone 0 diff) l2
+------------------------------------------------------------------
+File "1084.ml", line 11, characters 7-53:
+Try replacing
+    (if diff > 0 then (List.append (clone 0 diff) l2))
+with
+    [[...]]
+of type
+    int list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (List.append (clone 0 (abs diff)) l1) else [[...]])
+    ;; 
+==============================

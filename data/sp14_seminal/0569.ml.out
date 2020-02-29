@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0569.ml", line 6, characters 28-68:
+This expression has type ('a -> 'b -> 'c * bool) * 'd
+but is here used with type ('a -> 'a * bool) * 'a
+Relevant code: ((fun y  -> fun b  -> ((f b), true)), b)
+------------------------------------------------------------------
+File "0569.ml", line 6, characters 34-45:
+Try replacing
+    fun y b -> ((f b), true)
+with
+    fun (y, b) -> ((f b), true)
+of type
+    ('e * 'f -> ('e * 'f) * bool) * ('e * 'f)
+within context
+    let fixpoint (f, b) = (wwhile ((fun (y, b) -> ((f b), true)), b)) ;; 
+==============================

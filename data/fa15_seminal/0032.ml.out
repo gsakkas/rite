@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0032.ml", line 8, characters 37-47:
+This expression has type int but is here used with type int list
+Relevant code: (n mod 10)
+------------------------------------------------------------------
+File "0032.ml", line 8, characters 11-47:
+Try replacing
+    (digitsOfInt (n / 10)) :: (mod n 10)
+with
+    [[...]]
+of type
+    int list
+within context
+    let rec digitsOfInt n = (match n < 0 with 
+                             | true -> []
+                             | false ->
+                               (if n / 10 = 0 then [(mod n 10)] else [[...]])) ;; 
+==============================

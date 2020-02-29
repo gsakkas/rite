@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "0375.ml", line 20, characters 38-53:
+This expression has type int list * int list but is here used with type
+  'a list
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "0375.ml", line 20, characters 25-37:
+Try replacing
+    List.combine
+with
+    List.combine; [[...]]
+of type
+    int list * int list -> 'b list
+within context
+    (if
+      (List.length acc) =
+        (List.length ((List.combine; [[...]]) (padZero l1 l2))) - 1
+      then
+      (if rem = 1 then 0, [1 ; 0] @ acc else 0, acc)
+      else
+      (let (el1, el2) = x in
+          let new_sum = (rem + el1) + el2 in
+          let new_rem = (if new_sum > 9 then 1 else 0) in
+          let norm_sum = (if new_sum > 9 then new_sum - 10 else new_sum) in
+          new_rem, norm_sum :: acc))
+==============================

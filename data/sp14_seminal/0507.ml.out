@@ -1,0 +1,111 @@
+------------------------------------------------------------------
+File "0507.ml", line 7, characters 18-20:
+This expression has type int but is here used with type 'a list
+Relevant code: x1
+------------------------------------------------------------------
+Triaged the following locations:
+File "0507.ml", line 7, characters 18-42:
+And modified the following location:
+File "0507.ml", line 7, characters 48-50:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x2
+with
+    x2; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let x1 = (List.length l1) in
+            let x2 = (List.length l2) in
+            (if x1 < x2 then [[...other program...]] else
+                (x2; [[...]]) @ (clone 0 (x1 - x2))))
+==============================
+Triaged the following locations:
+File "0507.ml", line 7, characters 18-42:
+And modified the following location:
+File "0507.ml", line 7, characters 48-50:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x2
+with
+    l2
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let x1 = (List.length l1) in
+            let x2 = (List.length l2) in
+            (if x1 < x2 then [[...other program...]] else l2 @ (clone 0 (x1 - x2))))
+==============================
+Triaged the following locations:
+File "0507.ml", line 7, characters 18-42:
+And modified the following location:
+File "0507.ml", line 7, characters 51-52:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int -> int list -> 'b
+within context
+    fun l1
+      l2 ->
+        (let x1 = (List.length l1) in
+            let x2 = (List.length l2) in
+            (if x1 < x2 then [[...other program...]] else
+                (x2 @; [[...]] (clone 0 (x1 - x2)))))
+==============================
+Triaged the following locations:
+File "0507.ml", line 7, characters 48-72:
+And modified the following location:
+File "0507.ml", line 7, characters 21-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int -> int list -> 'c
+within context
+    fun l1
+      l2 ->
+        (let x1 = (List.length l1) in
+            let x2 = (List.length l2) in
+            (if x1 < x2 then (x1 @; [[...]] (clone 0 (x2 - x1))) else
+                [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0507.ml", line 7, characters 48-72:
+And modified the following location:
+File "0507.ml", line 7, characters 18-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x1
+with
+    l1
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let x1 = (List.length l1) in
+            let x2 = (List.length l2) in
+            (if x1 < x2 then l1 @ (clone 0 (x2 - x1)) else [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0507.ml", line 7, characters 48-72:
+And modified the following location:
+File "0507.ml", line 7, characters 18-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x1
+with
+    x1; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let x1 = (List.length l1) in
+            let x2 = (List.length l2) in
+            (if x1 < x2 then (x1; [[...]]) @ (clone 0 (x2 - x1)) else
+                [[...other program...]]))
+==============================

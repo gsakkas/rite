@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "2179.ml", line 2, characters 68-69:
+This expression has type 'a -> 'b -> ('a -> 'c) -> 'c
+but is here used with type 'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "2179.ml", line 2, characters 20-25:
+Try replacing
+    fun a x x -> (x a)
+with
+    fun x x a -> (x a)
+of type
+    'd -> ('e -> 'f) -> 'e -> 'f
+within context
+    let pipe fs =
+    let f x x a = (x a) in let base y = y in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2179.ml", line 2, characters 53-67:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('g -> 'g) -> 'h -> (('g -> 'g) -> 'i) -> 'i) ->
+    ('g -> 'g) -> 'h -> (('g -> 'g) -> 'i) -> 'i
+within context
+    let pipe fs = let f a x x = (x a) in let base y = y in (base f base  fs) ;; 
+==============================
+File "2179.ml", line 2, characters 53-67:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('j -> 'k -> ('j -> 'l) -> 'l) ->
+    ('m -> 'm) -> (('j -> 'k -> ('j -> 'l) -> 'l) -> 'n) -> 'n
+within context
+    let pipe fs = let f a x x = (x a) in let base y = y in (f f base  fs) ;; 
+==============================

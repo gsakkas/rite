@@ -1,0 +1,71 @@
+------------------------------------------------------------------
+File "3248.ml", line 19, characters 40-44:
+This expression has type int list * int list but is here used with type
+  'a list
+Relevant code: args
+------------------------------------------------------------------
+File "3248.ml", line 19, characters 35-44:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f args  base)
+of type
+    int list * int list
+within context
+    fun (l1, l2) ->
+      (let f a x = (failwith "to be implemented") in
+          let base = (failwith "to be implemented") in
+          let args = (padZero l1 l2) in
+          let (_, res) = (List.fold_left f args  base) in res)
+==============================
+File "3248.ml", line 19, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('b -> 'c -> 'd) -> 'e -> int list * int list -> 'f * 'g
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemented") in
+      let args = (padZero l1 l2) in let (_, res) = (f f base  args) in res
+==============================
+File "3248.ml", line 19, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    ('h -> 'i -> 'j) -> 'k -> int list * int list -> 'l * 'm
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemented") in
+      let args = (padZero l1 l2) in let (_, res) = (base f base  args) in res
+==============================
+File "3248.ml", line 18, characters 15-22:
+Try replacing
+    padZero
+with
+    base
+of type
+    'n -> 'o -> 'p
+within context
+    fun (l1, l2) ->
+      (let f a x = (failwith "to be implemented") in
+          let base = (failwith "to be implemented") in
+          let args = (base l1 l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "3248.ml", line 19, characters 40-44:
+Try replacing
+    args
+with
+    base
+of type
+    'q list
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemented") in
+      let args = (padZero l1 l2) in
+      let (_, res) = (List.fold_left f base  base) in res
+==============================

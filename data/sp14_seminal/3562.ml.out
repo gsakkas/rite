@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "3562.ml", line 15, characters 55-71:
+This expression has type int but is here used with type int list
+Relevant code: ((h + j) mod 10)
+------------------------------------------------------------------
+File "3562.ml", line 15, characters 37-71:
+Try replacing
+    (f + d) / 10 :: (mod (h + j) 10)
+with
+    [[...]]
+of type
+    'a
+within context
+    fun (l1, l2) -> (let f a x = (match a, x with 
+                                  | ((h :: i, j :: k), (d :: e, f :: g)) ->
+                                    [[...]]) in let base = [], [] in
+          let args =
+          (List.rev
+            (List.combine
+              (List.map (fun x -> [x]) l1) (List.map (fun x -> [x]) l2)))
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

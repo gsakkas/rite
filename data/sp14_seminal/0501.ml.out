@@ -1,0 +1,102 @@
+------------------------------------------------------------------
+File "0501.ml", line 26, characters 35-39:
+This expression has type int list * int list but is here used with type
+  int * int list
+Relevant code: base
+------------------------------------------------------------------
+File "0501.ml", line 26, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int list * int list -> 'a * 'b -> int list * int list
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (carry, res) = a in
+        let tens = (x1 + x2) + carry / 10 in
+        let ones = (x1 + x2) + (mod carry 10) in tens, tens :: ones :: res
+      in
+      let base = [0], [0] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0501.ml", line 26, characters 35-39:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    int * int list
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (carry, res) = a in
+        let tens = (x1 + x2) + carry / 10 in
+        let ones = (x1 + x2) + (mod carry 10) in tens, tens :: ones :: res
+      in
+      let base = [0], [0] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f (base; [[...]])  args) in res
+==============================
+File "0501.ml", line 24, characters 15-25:
+Try replacing
+    [0], [0]
+with
+    [0], [0]; [[...]]
+of type
+    'c
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x =
+            let (x1, x2) = x in
+              let (carry, res) = a in
+              let tens = (x1 + x2) + carry / 10 in
+              let ones = (x1 + x2) + (mod carry 10) in tens, tens :: ones :: res
+            in
+            let base = [0], [0]; [[...]] in
+            let args = (List.rev (List.combine l1 l2)) in
+            let (_, res) = (List.fold_left f base  args) in res
+          in
+          (removeZero (add (padZero l1 l2))))
+==============================
+File "0501.ml", line 26, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> int * int -> int * int list) ->
+    int list * int list -> ('d * 'e) list -> 'f * 'g
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (carry, res) = a in
+        let tens = (x1 + x2) + carry / 10 in
+        let ones = (x1 + x2) + (mod carry 10) in tens, tens :: ones :: res
+      in
+      let base = [0], [0] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0501.ml", line 19, characters 10-191:
+Try replacing
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (carry, res) = a in
+            let tens = (x1 + x2) + carry / 10 in
+            let ones = (x1 + x2) + (mod carry 10) in tens, tens :: ones :: res)
+with
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (carry, res) = a in
+            let tens = (x1 + x2) + carry / 10 in
+            let ones = (x1 + x2) + (mod carry 10) in tens, tens :: ones :: res);
+    [[...]]
+of type
+    'h
+==============================

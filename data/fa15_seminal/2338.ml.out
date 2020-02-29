@@ -1,0 +1,167 @@
+------------------------------------------------------------------
+File "2338.ml", line 5, characters 45-46:
+This expression has type 'a * ('b -> 'c) but is here used with type 'b
+Relevant code: h
+------------------------------------------------------------------
+Triaged the following locations:
+File "2338.ml", line 5, characters 43-46:
+And modified the following location:
+File "2338.ml", line 5, characters 52-57:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    assoc
+with
+    assoc; [[...]]
+The actual replacement has type
+    'd -> 'e -> ('e * 'f) list -> 'd
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: t ->
+                                 (let (f, s) = h in
+                                       (if k = f then [[...other program...]] else
+                                           ((assoc; [[...]]) d k  t)))) ;; 
+==============================
+Triaged the following locations:
+File "2338.ml", line 5, characters 43-46:
+And modified the following location:
+File "2338.ml", line 5, characters 58-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (assoc d k  t)
+with
+    (assoc (d, k, t))
+The actual replacement has type
+    'g
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: t ->
+                                 (let (f, s) = h in
+                                       (if k = f then [[...other program...]] else
+                                           (assoc (d, k, t))))) ;; 
+==============================
+Triaged the following locations:
+File "2338.ml", line 5, characters 52-63:
+And modified the following location:
+File "2338.ml", line 5, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    f
+The actual replacement has type
+    'h
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: t ->
+                                 (let (f, s) = h in
+                                       (if k = f then (s f) else
+                                           [[...other program...]]))) ;; 
+==============================
+Triaged the following locations:
+File "2338.ml", line 5, characters 52-63:
+And modified the following location:
+File "2338.ml", line 5, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    k
+The actual replacement has type
+    'i
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: t ->
+                                 (let (f, s) = h in
+                                       (if k = f then (s k) else
+                                           [[...other program...]]))) ;; 
+==============================
+Triaged the following locations:
+File "2338.ml", line 5, characters 52-63:
+And modified the following location:
+File "2338.ml", line 5, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    =
+The actual replacement has type
+    'j -> 'j -> bool
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: t ->
+                                 (let (f, s) = h in
+                                       (if k = f then (s =) else
+                                           [[...other program...]]))) ;; 
+==============================
+Triaged the following locations:
+File "2338.ml", line 5, characters 52-63:
+And modified the following location:
+File "2338.ml", line 5, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    d
+The actual replacement has type
+    'k
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: t ->
+                                 (let (f, s) = h in
+                                       (if k = f then (s d) else
+                                           [[...other program...]]))) ;; 
+==============================
+Triaged the following locations:
+File "2338.ml", line 5, characters 52-63:
+And modified the following location:
+File "2338.ml", line 5, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    h; [[...]]
+The actual replacement has type
+    'l
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: t ->
+                                 (let (f, s) = h in
+                                       (if k = f then (s (h; [[...]])) else
+                                           [[...other program...]]))) ;; 
+==============================
+Triaged the following locations:
+File "2338.ml", line 5, characters 52-63:
+And modified the following location:
+File "2338.ml", line 5, characters 43-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    s
+with
+    =
+The actual replacement has type
+    'm * 'n -> 'm * 'n -> bool
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: t ->
+                                 (let (f, s) = h in
+                                       (if k = f then (= h) else
+                                           [[...other program...]]))) ;; 
+==============================
+Triaged the following locations:
+File "2338.ml", line 5, characters 52-63:
+And modified the following location:
+File "2338.ml", line 5, characters 43-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    s
+with
+    s; [[...]]
+The actual replacement has type
+    'o * 'p -> 'q
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: t ->
+                                 (let (f, s) = h in
+                                       (if k = f then ((s; [[...]]) h) else
+                                           [[...other program...]]))) ;; 
+==============================

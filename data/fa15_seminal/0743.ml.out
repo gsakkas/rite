@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "0743.ml", line 31, characters 29-41:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+File "0743.ml", line 31, characters 29-41:
+Try replacing
+    exprToString
+with
+    exprToString; [[...]]
+of type
+    expr ->
+    string ->
+    (expr -> string) ->
+    expr -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine expr -> "sin(pi*" ^ ((exprToString expr) ^ ")")
+                              | Cosine expr ->
+                                "cos(pi*" ^ ((exprToString expr) ^ ")")
+                              | Average (expr1, expr2) ->
+                                "(" ^
+                                    ((exprToString expr1) ^
+                                        ("+" ^ ((exprToString expr2) ^ ")/2")))
+                              | Times (expr1, expr2) ->
+                                (exprToString expr1) ^ ("*" ^ (exprToString expr2))
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                "(" ^
+                                    ((exprToString expr1) ^
+                                        ("<" ^
+                                            ((exprToString expr2) ^
+                                                ("?" ^
+                                                    ((exprToString expr3) ^
+                                                        (":" ^
+                                                            ((exprToString expr4)
+                                                                ^ ")")))))))
+                              | Golden expr ->
+                                "cos(" ^
+                                    ((exprToString; [[...]])
+                                      expr "^2-"  exprToString  expr  "-1)")
+                              | MeanPi (expr1, expr2, expr3) ->
+                                "sin(" ^
+                                    ((exprToString expr1) ^
+                                        ("+" ^
+                                            ((exprToString expr2) ^
+                                                ("+" ^
+                                                    ((exprToString expr3)
+                                                        ^ ")")))))) ;; 
+==============================

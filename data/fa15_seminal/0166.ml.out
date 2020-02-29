@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "0166.ml", line 3, characters 16-59:
+This expression has type int but is here used with type unit
+Relevant code: (n mod 10) + ((additivePersistence n) / 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0166.ml", line 3, characters 27-28:
+And modified the following location:
+File "0166.ml", line 3, characters 31-50:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    (additivePersistence n) / 10
+with
+    (additivePersistence (n / 10))
+The actual replacement has type
+    unit
+within context
+    let rec additivePersistence n =
+    (if n > 0 then ((mod n 10) +; [[...]] (additivePersistence (n / 10))))
+    ;; 
+==============================
+Triaged the following locations:
+File "0166.ml", line 3, characters 27-28:
+And modified the following location:
+File "0166.ml", line 3, characters 54-55:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    /
+with
+    /; [[...]]
+The actual replacement has type
+    unit -> int -> 'a
+within context
+    let rec additivePersistence n =
+    (if n > 0 then ((mod n 10) +; [[...]] ((additivePersistence n) /; [[...]] 10)))
+    ;; 
+==============================

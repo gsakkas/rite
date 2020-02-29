@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "1958.ml", line 42, characters 59-63:
+This expression has type int list but is here used with type int list list
+Relevant code: args
+------------------------------------------------------------------
+File "1958.ml", line 42, characters 54-58:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f args)
+of type
+    int list list -> int list
+within context
+    fun l2 -> (let f a x = (match x with 
+                            | [] -> []
+                            | h :: t ->
+                              (bigAdd
+                                  (mulByDigit h l1)
+                                  a)) in let base = [] in
+          let args = (tenEx 0 l2) in let res = (List.fold_left f args) in res)
+==============================
+File "1958.ml", line 42, characters 54-63:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f args  base)
+of type
+    int list
+within context
+    fun l2 -> (let f a x = (match x with 
+                            | [] -> []
+                            | h :: t ->
+                              (bigAdd
+                                  (mulByDigit h l1)
+                                  a)) in let base = [] in
+          let args = (tenEx 0 l2) in let res = (List.fold_left f args  base) in res)
+==============================
+File "1958.ml", line 42, characters 59-63:
+Try replacing
+    args
+with
+    base
+of type
+    int list list
+within context
+    let f a x = (match x with 
+                 | [] -> []
+                 | h :: t ->
+                   (bigAdd
+                       (mulByDigit h l1)
+                       a)) in let base = [] in
+      let args = (tenEx 0 l2) in let res = (List.fold_left f base  base) in res
+==============================

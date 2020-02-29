@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "2525.ml", line 8, characters 56-62:
+This expression has type 'a -> 'b * bool but is here used with type
+  ('c -> 'c * bool) * 'c
+Relevant code: helper
+------------------------------------------------------------------
+File "2525.ml", line 8, characters 4-10:
+Try replacing
+    wwhile
+with
+    !=
+of type
+    ('d -> 'e * bool) -> ('d -> 'e * bool) -> bool
+within context
+    let fixpoint (f, b) = (!= (let helper x = (f x), (f x) != (f b) in helper)), b
+    ;; 
+==============================
+File "2525.ml", line 8, characters 4-10:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('f -> 'g * bool) -> ('f -> 'g * bool) -> bool
+within context
+    let fixpoint (f, b) = (= (let helper x = (f x), (f x) != (f b) in helper)), b
+    ;; 
+==============================
+File "2525.ml", line 8, characters 56-62:
+Try replacing
+    helper
+with
+    b
+of type
+    ('h -> 'h * bool) * 'h
+within context
+    let fixpoint (f, b) = (wwhile (let helper x = (f x), (f x) != (f b) in b)), b
+    ;; 
+==============================

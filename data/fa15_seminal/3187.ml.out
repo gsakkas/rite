@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "3187.ml", line 27, characters 21-22:
+This expression has type int but is here used with type int list list
+Relevant code: 3
+------------------------------------------------------------------
+Triaged the following locations:
+File "3187.ml", line 27, characters 25-34:
+And modified the following location:
+File "3187.ml", line 27, characters 14-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a1 :: 3
+with
+    [[...]]
+The actual replacement has type
+    int list
+within context
+    fun x -> (let (x1, x2) = x in let (a1, a2) = a in (match a1 with 
+                                                       | [] ->
+                                                         (a2 @ [(mod (x1 + x2) 10)],
+                                                               a1 @
+                                                                 [(x1 + x2) / 10])
+                                                       | _ ->
+                                                         ([[...]],
+                                                               [[...other program...]])))
+==============================
+Triaged the following locations:
+File "3187.ml", line 27, characters 14-23:
+And modified the following location:
+File "3187.ml", line 27, characters 25-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a2 :: 5
+with
+    [[...]]
+The actual replacement has type
+    int list
+within context
+    fun x -> (let (x1, x2) = x in let (a1, a2) = a in (match a1 with 
+                                                       | [] ->
+                                                         (a2 @ [(mod (x1 + x2) 10)],
+                                                               a1 @
+                                                                 [(x1 + x2) / 10])
+                                                       | _ ->
+                                                         ([[...other program...]],
+                                                               [[...]])))
+==============================

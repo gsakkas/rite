@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "3396.ml", line 6, characters 30-33:
+This expression is not a function, it cannot be applied
+Relevant code: " "
+------------------------------------------------------------------
+Triaged the following locations:
+File "3396.ml", line 7, characters 6-59:
+And modified the following location:
+File "3396.ml", line 6, characters 34-35:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (( " " ) x)
+with
+    " "
+The actual replacement has type
+    string
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = a ^ (sep ^ " ") in
+                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "3396.ml", line 7, characters 6-59:
+And modified the following location:
+File "3396.ml", line 6, characters 30-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    " "
+with
+    " "; [[...]]
+The actual replacement has type
+    'd -> string
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = a ^ (sep ^ (( " "; [[...]] ) x)) in
+                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "3396.ml", line 7, characters 6-59:
+And modified the following location:
+File "3396.ml", line 6, characters 6-100:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = a ^ (sep ^ (( " " ) x)) in
+      let base = [] in let l = t in (List.fold_left f base  l)
+with
+    [[...other program...]]
+The actual replacement has type
+    string
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t -> [[...other program...]]) ;; 
+==============================

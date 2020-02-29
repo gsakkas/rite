@@ -1,0 +1,115 @@
+------------------------------------------------------------------
+File "0683.ml", line 26, characters 6-35:
+This expression is not a function, it cannot be applied
+Relevant code: ("sin(pi*" ^ ((exp a) ^ ")"))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0683.ml", line 26, characters 6-35:
+And modified the following location:
+File "0683.ml", line 26, characters 55-62:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    "sin(pi*" ^ ((exp a) ^ ")")
+If you ignore other surrounding code, try replacing
+    (exp b)
+with
+    (exp b); [[...]]
+The actual replacement has type
+    string -> string
+within context
+    let rec exprToString e = let exp = exprToString in (match e with 
+                                                        | VarX -> "x"
+                                                        | VarY -> "y"
+                                                        | Sine a ->
+                                                          "sin(pi*" ^
+                                                              ((exp a) ^ ")")
+                                                        | Cosine a ->
+                                                          "cos(pi*" ^
+                                                              ((exp a) ^ ")")
+                                                        | Average (a, b) ->
+                                                          "((" ^
+                                                              ((exp a) ^
+                                                                  ("+" ^
+                                                                      ((exp b)
+                                                                          ^
+                                                                          ")/2)")))
+                                                        | Times (a, b) ->
+                                                          (exp a) ^ ("*" ^ (exp b))
+                                                        | Thresh (a, b, c, d) ->
+                                                          "(" ^
+                                                              ((exp a) ^
+                                                                  ("<" ^
+                                                                      ((exp b) ^
+                                                                          ("?" ^
+                                                                              ((exp
+                                                                                    c)
+                                                                                  ^
+                                                                                  (":"
+                                                                                      ^
+                                                                                      ((exp
+                                                                                            d)
+                                                                                          ^
+                                                                                          ")")))))))
+                                                        | Hoi (a, b) ->
+                                                          ("/("
+                                                                "sin(pi*" ^
+                                                                  ((exp a) ^ ")");
+                                                                [[...]]
+                                                                "cos(pi*" ^
+                                                                  (((exp b);
+                                                                      [[...]])
+                                                                    ")"))) ;; 
+==============================
+Triaged the following locations:
+File "0683.ml", line 26, characters 6-35:
+And modified the following location:
+File "0683.ml", line 26, characters 63-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    "sin(pi*" ^ ((exp a) ^ ")")
+If you ignore other surrounding code, try replacing
+    ((exp b) ")")
+with
+    (exp b)
+The actual replacement has type
+    string
+within context
+    let rec exprToString e = let exp = exprToString in (match e with 
+                                                        | VarX -> "x"
+                                                        | VarY -> "y"
+                                                        | Sine a ->
+                                                          "sin(pi*" ^
+                                                              ((exp a) ^ ")")
+                                                        | Cosine a ->
+                                                          "cos(pi*" ^
+                                                              ((exp a) ^ ")")
+                                                        | Average (a, b) ->
+                                                          "((" ^
+                                                              ((exp a) ^
+                                                                  ("+" ^
+                                                                      ((exp b)
+                                                                          ^
+                                                                          ")/2)")))
+                                                        | Times (a, b) ->
+                                                          (exp a) ^ ("*" ^ (exp b))
+                                                        | Thresh (a, b, c, d) ->
+                                                          "(" ^
+                                                              ((exp a) ^
+                                                                  ("<" ^
+                                                                      ((exp b) ^
+                                                                          ("?" ^
+                                                                              ((exp
+                                                                                    c)
+                                                                                  ^
+                                                                                  (":"
+                                                                                      ^
+                                                                                      ((exp
+                                                                                            d)
+                                                                                          ^
+                                                                                          ")")))))))
+                                                        | Hoi (a, b) ->
+                                                          ("/("
+                                                                "sin(pi*" ^
+                                                                  ((exp a) ^ ")");
+                                                                [[...]]
+                                                                "cos(pi*" ^
+                                                                  (exp b))) ;; 
+==============================

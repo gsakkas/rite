@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2450.ml", line 26, characters 16-58:
+This expression has type int list * int list but is here used with type
+  int * int list
+Relevant code: (((sum / 10) :: a1), ((sum mod 10) :: a2))
+------------------------------------------------------------------
+File "2450.ml", line 25, characters 14-53:
+Try replacing
+    0, sum / 10 :: (mod sum 10) :: a2
+with
+    0, sum / 10 :: (mod sum 10) :: a2; [[...]]
+of type
+    int list * int list
+within context
+    let (l1x, l2x) = x in let (a1, a2) = a in let test = (match a1 with 
+                                                          | [] -> 0
+                                                          | h :: t ->
+                                                            h) in let sum =
+      (l1x + l2x) + test
+      in
+      (match a2 with 
+       | [] -> (0, sum / 10 :: (mod sum 10) :: a2; [[...]])
+       | h :: t -> (sum / 10 :: a1, (mod sum 10) :: a2))
+==============================

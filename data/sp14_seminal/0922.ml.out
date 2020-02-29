@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "0922.ml", line 21, characters 35-39:
+This expression has type int * 'a list but is here used with type
+  (int * int) list
+Relevant code: base
+------------------------------------------------------------------
+File "0922.ml", line 21, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> ('c list -> ('d * 'c) list) * 'e -> int * 'b list
+within context
+    let f a x = (match x with 
+                 | [] -> a
+                 | h :: t ->
+                   ((fst h) + (snd h)) / 10, (mod ((fst h) + (snd h)) 10) ::
+                         t) in let base = 0, [] in
+      let args = [(List.combine l1), l2] in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0922.ml", line 21, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ((int * int) list -> (int * int) list -> (int * int) list) ->
+    int * 'f list -> (('g list -> ('h * 'g) list) * 'i) list -> 'j * 'k
+within context
+    let f a x = (match x with 
+                 | [] -> a
+                 | h :: t ->
+                   ((fst h) + (snd h)) / 10, (mod ((fst h) + (snd h)) 10) ::
+                         t) in let base = 0, [] in
+      let args = [(List.combine l1), l2] in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0922.ml", line 14, characters 10-140:
+Try replacing
+    fun a x -> (match x with 
+                | [] -> a
+                | h :: t ->
+                  ((fst h) + (snd h)) / 10, (mod ((fst h) + (snd h)) 10) :: t)
+with
+    fun a x -> (match x with 
+                | [] -> a
+                | h :: t ->
+                  ((fst h) + (snd h)) / 10, (mod ((fst h) + (snd h)) 10) ::
+                        t); [[...]]
+of type
+    'l
+==============================

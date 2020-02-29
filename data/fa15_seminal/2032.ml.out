@@ -1,0 +1,68 @@
+------------------------------------------------------------------
+File "2032.ml", line 20, characters 33-34:
+This expression has type int * int list -> 'a * 'b -> int list
+but is here used with type int * int list -> 'a * 'b -> int * int list
+Relevant code: f
+------------------------------------------------------------------
+File "2032.ml", line 20, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'c list -> 'd * 'e -> int * 'c list
+within context
+    let f a x = (match a, x with 
+                 | ((w, b), (y, z)) ->
+                   b @
+                       ([(mod w 10)]
+                           @
+                           [w / 10
+                               ])) in let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2032.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> 'f * 'g -> int list) ->
+    int * 'h list -> ('i * 'j) list -> 'k * 'l
+within context
+    let f a x = (match a, x with 
+                 | ((w, b), (y, z)) ->
+                   b @
+                       ([(mod w 10)]
+                           @
+                           [w / 10
+                               ])) in let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2032.ml", line 16, characters 10-86:
+Try replacing
+    fun a x -> (match a, x with 
+                | ((w, b), (y, z)) -> b @ ([(mod w 10)] @ [w / 10]))
+with
+    fun a x -> (match a, x with 
+                | ((w, b), (y, z)) -> b @ ([(mod w 10)] @ [w / 10])); [[...]]
+of type
+    'm
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f = fun a x -> (match a, x with 
+                                                         | ((w, b), (y, z)) ->
+                                                           b @
+                                                               ([(mod w 10)]
+                                                                   @
+                                                                   [w / 10
+                                                                       ])); [[...]] in let
+              base
+              =
+              0, []
+              in
+              let args = (List.combine l1 l2) in
+              let (_, res) = (List.fold_left f base  args) in
+              res in (removeZero (add (padZero l1 l2))))
+==============================

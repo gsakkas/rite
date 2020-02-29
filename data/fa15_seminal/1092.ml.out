@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "1092.ml", line 7, characters 49-51:
+This expression has type int list but is here used with type int list list
+Relevant code: xs
+------------------------------------------------------------------
+File "1092.ml", line 6, characters 10-27:
+Try replacing
+    fun x -> (helper (a, x))
+with
+    fun _ x -> (helper (a, x))
+of type
+    'a -> int list -> int
+within context
+    let sqsum xs =
+    let f a _ x = (helper (a, x)) in
+      let base = (List.hd xs) in (List.fold_left f base  xs)
+    ;; 
+==============================
+File "1092.ml", line 6, characters 25-26:
+Try replacing
+    x
+with
+    xs
+of type
+    'b * int list
+within context
+    let f a x = (helper (a, xs)) in
+      let base = (List.hd xs) in (List.fold_left f base  xs)
+==============================
+File "1092.ml", line 7, characters 42-43:
+Try replacing
+    f
+with
+    *
+of type
+    int -> int -> int
+within context
+    let sqsum xs =
+    let f a x = (helper (a, x)) in
+      let base = (List.hd xs) in (List.fold_left * base  xs)
+    ;; 
+==============================
+File "1092.ml", line 7, characters 42-43:
+Try replacing
+    f
+with
+    +
+of type
+    int -> int -> int
+within context
+    let sqsum xs =
+    let f a x = (helper (a, x)) in
+      let base = (List.hd xs) in (List.fold_left + base  xs)
+    ;; 
+==============================

@@ -1,0 +1,106 @@
+------------------------------------------------------------------
+File "2191.ml", line 4, characters 63-69:
+This expression has type (bool -> 'a) * (bool -> 'a)
+but is here used with type (bool -> 'a) * bool
+Relevant code: (f, x)
+------------------------------------------------------------------
+File "2191.ml", line 3, characters 16-17:
+Try replacing
+    (f b)
+with
+    f
+of type
+    bool
+within context
+    let rec wwhile (f, b) = let check = f in (match f, b with 
+                                              | (x, y) ->
+                                                (if y = false then x else
+                                                    (wwhile (f, x)))) ;; 
+==============================
+File "2191.ml", line 3, characters 2-90:
+Try replacing
+    let check = (f b) in (match f, b with 
+                          | (x, y) -> (if y = false then x else (wwhile (f, x))))
+with
+    (match f, b with 
+     | (x, y) -> (if y = false then x else (wwhile (f, x))))
+of type
+    bool
+within context
+    let rec wwhile (f, b) = (match f, b with 
+                             | (x, y) ->
+                               (if y = false then x else (wwhile (f, x)))) ;; 
+==============================
+File "2191.ml", line 3, characters 14-15:
+Try replacing
+    f
+with
+    =
+of type
+    bool -> bool -> bool
+within context
+    let rec wwhile (f, b) = let check = (= b) in (match f, b with 
+                                                  | (x, y) ->
+                                                    (if y = false then x else
+                                                        (wwhile (f, x)))) ;; 
+==============================
+File "2191.ml", line 4, characters 67-68:
+Try replacing
+    x
+with
+    b
+of type
+    (bool -> 'b) * bool
+within context
+    let check = (f b) in (match f, b with 
+                          | (x, y) -> (if y = false then x else (wwhile (f, b))))
+==============================
+File "2191.ml", line 4, characters 67-68:
+Try replacing
+    x
+with
+    y
+of type
+    (bool -> 'c) * bool
+within context
+    let check = (f b) in (match f, b with 
+                          | (x, y) -> (if y = false then x else (wwhile (f, y))))
+==============================
+File "2191.ml", line 4, characters 9-10:
+Try replacing
+    f
+with
+    b
+of type
+    bool * bool
+within context
+    let rec wwhile (f, b) = let check = (f b) in (match b, b with 
+                                                  | (x, y) ->
+                                                    (if y = false then x else
+                                                        (wwhile (f, x)))) ;; 
+==============================
+File "2191.ml", line 4, characters 9-10:
+Try replacing
+    f
+with
+    check
+of type
+    bool * bool
+within context
+    let rec wwhile (f, b) = let check = (f b) in (match check, b with 
+                                                  | (x, y) ->
+                                                    (if y = false then x else
+                                                        (wwhile (f, x)))) ;; 
+==============================
+File "2191.ml", line 4, characters 67-68:
+Try replacing
+    x
+with
+    check
+of type
+    (bool -> bool) * bool
+within context
+    let check = (f b) in (match f, b with 
+                          | (x, y) ->
+                            (if y = false then x else (wwhile (f, check))))
+==============================

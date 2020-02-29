@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "2775.ml", line 40, characters 32-65:
+This expression has type int list -> int list but is here used with type
+  'a list
+Relevant code: bigAdd ((mulByDigit (i - 1) l) l)
+------------------------------------------------------------------
+File "2775.ml", line 40, characters 22-24:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int list -> int list
+within context
+    let rec mulByDigit i l = (match i with 
+                              | 0 -> ([]; [[...]])
+                              | _ -> (bigAdd ((mulByDigit (i - 1) l) l))) ;; 
+==============================
+Triaged the following locations:
+File "2775.ml", line 40, characters 32-38:
+And modified the following location:
+File "2775.ml", line 40, characters 40-62:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit (i - 1) l)
+with
+    (mulByDigit (i - 1) l); [[...]]
+The actual replacement has type
+    'b -> 'c
+within context
+    let rec mulByDigit i l = (match i with 
+                              | 0 -> []
+                              | _ ->
+                                ((bigAdd; [[...]])
+                                    (((mulByDigit (i - 1) l); [[...]]) l))) ;; 
+==============================
+Triaged the following locations:
+File "2775.ml", line 40, characters 32-38:
+And modified the following location:
+File "2775.ml", line 40, characters 63-64:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    ((mulByDigit (i - 1) l) l)
+with
+    (mulByDigit (i - 1) l)
+The actual replacement has type
+    'd list
+within context
+    let rec mulByDigit i l = (match i with 
+                              | 0 -> []
+                              | _ -> ((bigAdd; [[...]]) (mulByDigit (i - 1) l))) ;; 
+==============================

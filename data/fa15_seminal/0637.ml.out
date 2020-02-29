@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "0637.ml", line 4, characters 41-43:
+This expression has type ('a list -> 'b -> 'a list) list
+but is here used with type 'b list
+Relevant code: fs
+------------------------------------------------------------------
+File "0637.ml", line 4, characters 41-43:
+Try replacing
+    fs
+with
+    base
+of type
+    'c list
+within context
+    let pipe fs =
+    let f a x = let h :: t = fs in (h a x) in
+      let base = [] in (List.fold_left f base  base)
+    ;; 
+==============================
+File "0637.ml", line 3, characters 35-36:
+Try replacing
+    x
+with
+    a
+of type
+    'd list
+within context
+    let f a x = let h :: t = fs in (h a a) in
+      let base = [] in (List.fold_left f base  fs)
+==============================

@@ -1,0 +1,77 @@
+------------------------------------------------------------------
+File "1056.ml", line 30, characters 6-18:
+This expression has type int -> float but is here used with type int
+Relevant code: float_of_int
+------------------------------------------------------------------
+Triaged the following locations:
+File "1056.ml", line 30, characters 19-20:
+And modified the following location:
+File "1056.ml", line 31, characters 11-12:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y)))
+                                      /. (float_of_int 2))
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Power (e1, e2) ->
+                                (eval (e1, x, y)) ** (eval (e2, x, y))
+                              | Comp (e1, e2, e3) ->
+                                (float_of_int -; [[...]]
+                                      (((1; [[...]] *. (eval (e1, x, y)))
+                                              *. (eval (e2, x, y)))
+                                          *. (eval (e3, x, y))))) ;; 
+==============================
+Triaged the following locations:
+File "1056.ml", line 30, characters 19-20:
+And modified the following location:
+File "1056.ml", line 31, characters 13-15:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    int -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y)))
+                                      /. (float_of_int 2))
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Power (e1, e2) ->
+                                (eval (e1, x, y)) ** (eval (e2, x, y))
+                              | Comp (e1, e2, e3) ->
+                                (float_of_int -; [[...]]
+                                      (((1 *.; [[...]] (eval (e1, x, y)))
+                                              *. (eval (e2, x, y)))
+                                          *. (eval (e3, x, y))))) ;; 
+==============================

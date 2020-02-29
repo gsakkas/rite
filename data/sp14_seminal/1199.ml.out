@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1199.ml", line 34, characters 49-52:
+This expression is not a function, it cannot be applied
+Relevant code: acc
+------------------------------------------------------------------
+File "1199.ml", line 34, characters 29-59:
+Try replacing
+    (pair (h1, h2)) :: (acc t1 t2)
+with
+    [[...]]
+of type
+    'j
+within context
+    let rec pair acc list1 list2 = (match list1, list2 with 
+                                    | (h1 :: t1, h2 :: t2) -> [[...]]
+                                    | (_, _) ->
+                                      acc) in (pair
+          [0, 0] (List.rev l1)  (List.rev l2))
+==============================

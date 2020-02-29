@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0061.ml", line 4, characters 13-14:
+This expression is not a function, it cannot be applied
+Relevant code: 0
+------------------------------------------------------------------
+File "0061.ml", line 4, characters 15-34:
+Try replacing
+    (0 "to be implemented")
+with
+    0
+of type
+    int
+within context
+    let pipe fs =
+    let f a x = (x a "to be implemented") in
+      let base = 0 in (List.fold_left f base  fs)
+    ;; 
+==============================

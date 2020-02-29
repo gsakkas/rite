@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "0975.ml", line 8, characters 41-42:
+This expression has type (string -> string) list but is here used with type
+  string list
+Relevant code: l
+------------------------------------------------------------------
+File "0975.ml", line 7, characters 19-38:
+Try replacing
+    (h "to be implemented")
+with
+    h
+of type
+    string
+within context
+    fun sep sl -> (match sl with 
+                   | [] -> ""
+                   | h :: t ->
+                     (let f a x = a ^ (sep ^ x) in
+                           let base = h in let l = t in (List.fold_left f base  l)))
+==============================
+File "0975.ml", line 6, characters 29-30:
+Try replacing
+    x
+with
+    a
+of type
+    string
+within context
+    let f a x = a ^ (sep ^ a) in
+      let base = (h "to be implemented") in let l = t in (List.fold_left f base  l)
+==============================

@@ -1,0 +1,22 @@
+
+
+
+
+------------------------------------------------------------------
+File "3378.ml", line 19, characters 44-63:
+This expression has type 'a list but is here used with type int
+Relevant code: ((v mod 10) :: acc)
+------------------------------------------------------------------
+File "3378.ml", line 19, characters 44-63:
+Try replacing
+    (mod v 10) :: acc
+with
+    (mod v 10) :: acc; [[...]]
+of type
+    int
+within context
+    fun acc
+      v ->
+        (if v = 0 then acc else
+          (mod (v / 10) 10) :: (mod v 10) :: acc; [[...]] :: acc)
+==============================

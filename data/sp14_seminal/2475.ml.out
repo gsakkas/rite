@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "2475.ml", line 31, characters 23-50:
+This expression has type 'a -> 'b but is here used with type expr
+Relevant code: (buildhelper 0 (depth - 1))
+------------------------------------------------------------------
+File "2475.ml", line 27, characters 4-846:
+Try replacing
+    (match num with 
+     | 0 -> (if (rand (0, 1)) = 0 then (buildX ()) else (buildY ()))
+     | 1 ->
+       (if (rand (0, 1)) = 0 then (buildSine (buildhelper 0 (depth - 1))) else
+           (buildCosine (buildhelper 0 (depth - 1))))
+     | 2 ->
+       (if (rand (0, 1)) = 0 then
+           (buildAverage
+             ((buildhelper (num - 1) (depth - 1)  expr),
+                 (buildhelper (num - 1) (depth - 1)  expr)))
+           else
+           (buildTimes
+             ((buildhelper (num - 1) (depth - 1)  expr),
+                 (buildhelper (num - 1) (depth - 1)  expr))))
+     | 3 -> (buildhelper (num - 1) depth  expr)
+     | 4 ->
+       (buildThresh
+           ((buildhelper (num - 2) (depth - 1)  expr),
+               (buildhelper (num - 2) (depth - 1)  expr),
+               (buildhelper (num - 2) (depth - 1)  expr),
+               (buildhelper (num - 2) (depth - 1)  expr))))
+with
+    [[...]]
+of type
+    'c
+==============================

@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "2084.ml", line 28, characters 39-40:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "2084.ml", line 28, characters 24-58:
+Try replacing
+    (List.combine 0) :: (l1 0) :: l2
+with
+    [[...]]
+of type
+    'b list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (val1, val2) = x in
+            let (lastCarry, lastTupleSum) = a in
+            let tupleSum = (val1 + val2) + lastCarry in
+            let newCarry = tupleSum / 10 in
+            let nextDigit = (mod tupleSum 10) in newCarry, nextDigit :: lastTupleSum
+          in
+          let base = 0, [] in
+          let args = (List.rev [[...]]) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

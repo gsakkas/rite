@@ -1,0 +1,49 @@
+------------------------------------------------------------------
+File "2031.ml", line 17, characters 62-70:
+This expression has type int but is here used with type int list
+Relevant code: (w / 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2031.ml", line 17, characters 45-46:
+And modified the following location:
+File "2031.ml", line 17, characters 62-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    w / 10
+with
+    w / 10; [[...]]
+The actual replacement has type
+    int list
+within context
+    let f a x = (match a, x with 
+                 | ((w, b), (y, z)) ->
+                   (b @; [[...]]
+                         (mod w 10) ::
+                             w / 10;
+                             [[...]])) in let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "2031.ml", line 17, characters 45-46:
+And modified the following location:
+File "2031.ml", line 17, characters 47-71:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    (mod w 10) :: w / 10
+with
+    (mod w 10), w / 10
+The actual replacement has type
+    int * int
+within context
+    let f a x = (match a, x with 
+                 | ((w, b), (y, z)) ->
+                   (b @; [[...]]
+                         (mod w 10),
+                           w /
+                             10)) in let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

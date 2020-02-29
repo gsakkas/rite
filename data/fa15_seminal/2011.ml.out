@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "2011.ml", line 28, characters 39-43:
+This expression is not a function, it cannot be applied
+Relevant code: "**"
+------------------------------------------------------------------
+File "2011.ml", line 28, characters 44-60:
+Try replacing
+    (( "**" ) (exprToString y))
+with
+    "**"
+of type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine n -> "sin(pi*" ^ ((exprToString n) ^ ")")
+                              | Cosine n -> "cos(pi*" ^ ((exprToString n) ^ ")")
+                              | Average (x, y) ->
+                                "((" ^
+                                    ((exprToString x) ^
+                                        ("+" ^ ((exprToString y) ^ ")/2)")))
+                              | Times (x, y) ->
+                                (exprToString x) ^ ("*" ^ (exprToString y))
+                              | Thresh (x, y, z, w) ->
+                                "(" ^
+                                    ((exprToString x) ^
+                                        ("<" ^
+                                            ((exprToString y) ^
+                                                ("?" ^
+                                                    ((exprToString z) ^
+                                                        (":" ^
+                                                            ((exprToString w)
+                                                                ^ ")")))))))
+                              | Power (x, y) -> (exprToString x) ^ "**"
+                              | Log n -> "log " ^ (exprToString n)) ;; 
+==============================

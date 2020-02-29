@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1316.ml", line 34, characters 28-56:
+This expression has type float but is here used with type int
+Relevant code: (10.0 ** (float_of_int pos))
+------------------------------------------------------------------
+File "1316.ml", line 34, characters 28-56:
+Try replacing
+    10.0 ** (float_of_int pos)
+with
+    10.0 ** (float_of_int pos); [[...]]
+of type
+    int
+within context
+    fun a
+      x ->
+        (let (pos, total) = a in
+            pos + 1, (mulByDigit (10.0 ** (float_of_int pos); [[...]]) l2))
+==============================
+File "1316.ml", line 34, characters 17-27:
+Try replacing
+    mulByDigit
+with
+    mulByDigit; [[...]]
+of type
+    float -> 'a -> 'b
+within context
+    fun a
+      x ->
+        (let (pos, total) = a in
+            pos + 1, ((mulByDigit; [[...]]) (10.0 ** (float_of_int pos)) l2))
+==============================

@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "2689.ml", line 18, characters 44-56:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+File "2689.ml", line 18, characters 60-66:
+Try replacing
+    (exprToString i2 ")/2)")
+with
+    (exprToString i2)
+of type
+    string
+within context
+    fun e -> (match e with 
+              | VarX -> "x"
+              | VarY -> "y"
+              | Sine i -> "sin" ^ ("(pi*" ^ ((exprToString i) ^ ")"))
+              | Cosine i -> "cos" ^ ("(pi*" ^ ((exprToString i) ^ ")"))
+              | Average (i1, i2) ->
+                "((" ^ ((exprToString i1) ^ (" + " ^ (exprToString i2)))
+              | Times (i1, i2) -> (exprToString i1) ^ (" * " ^ (exprToString i2))
+              | Thresh (i1, i2, i3, i4) ->
+                "(" ^
+                    ((exprToString i1) ^
+                        ("<" ^
+                            ((exprToString i2) ^
+                                (" ? " ^
+                                    ((exprToString i3) ^
+                                        (" : " ^ ((exprToString i3) ^ ")"))))))))
+==============================

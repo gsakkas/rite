@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2101.ml", line 36, characters 44-77:
+This expression has type int list but is here used with type int
+Relevant code: bigAdd [l] [mulByDigit (i - 1) l]
+------------------------------------------------------------------
+File "2101.ml", line 36, characters 44-77:
+Try replacing
+    (bigAdd [l] [(mulByDigit (i - 1) l)])
+with
+    (bigAdd [l] [(mulByDigit (i - 1) l)]); [[...]]
+of type
+    int
+within context
+    let rec mulByDigit i l =
+    (if i = 0 then 0 else
+      (if i = 1 then l else ((bigAdd [l] [(mulByDigit (i - 1) l)]); [[...]])))
+    ;; 
+==============================

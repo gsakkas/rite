@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "0607.ml", line 17, characters 43-53:
+This expression has type int but is here used with type 'a * 'b
+Relevant code: (sum / 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0607.ml", line 16, characters 18-19:
+File "0607.ml", line 17, characters 16-27:
+File "0607.ml", line 17, characters 31-75:
+And modified the following location:
+File "0607.ml", line 15, characters 14-116:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun c ->
+      (let (s, t) = x in
+          let sum = (c + s) + t in (List.split sum / 10 :: (mod sum 10) :: a))
+with
+    fun c ->
+      (let (s, t) = [[...other program...]] in
+          let sum = [[...other program...]] in [[...other program...]]);
+    [[...]]
+The actual replacement has type
+    'c
+==============================

@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "0117.ml", line 11, characters 5-11:
+This expression has type ('a * bool) * 'b but is here used with type
+  ('c -> 'c * bool) * 'c
+Relevant code: (g, b)
+------------------------------------------------------------------
+File "0117.ml", line 11, characters 6-10:
+Try replacing
+    g, b
+with
+    b, g
+of type
+    ('d * bool -> ('d * bool) * bool) * ('d * bool)
+within context
+    let fixpoint (f, b) = (wwhile (let g = let self = (f b) in (match self with 
+                                                                | b -> (self, true)
+                                                                | _ ->
+                                                                  (self,
+                                                                        false)) in b
+              ,
+              g)) ;; 
+==============================
+File "0117.ml", line 7, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('e * bool) * 'f -> ('e * bool) * 'f -> bool
+within context
+    let fixpoint (f, b) = (= (let g = let self = (f b) in (match self with 
+                                                           | b -> (self, true)
+                                                           | _ ->
+                                                             (self,
+                                                                   false)) in g,
+              b)) ;; 
+==============================
+File "0117.ml", line 11, characters 6-7:
+Try replacing
+    g
+with
+    f
+of type
+    ('g -> 'g * bool) * 'g
+within context
+    let fixpoint (f, b) = (wwhile (let g = let self = (f b) in (match self with 
+                                                                | b -> (self, true)
+                                                                | _ ->
+                                                                  (self,
+                                                                        false)) in f
+              ,
+              b)) ;; 
+==============================

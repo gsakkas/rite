@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0657.ml", line 6, characters 2-62:
+This expression has type 'a list but is here used with type
+  (('b list -> 'b list) list -> 'b -> 'b list) -> int list -> 'a list
+Relevant code: if n <= 0 then [] else (digitsOfInt (n / 10)) add [n mod 10]
+------------------------------------------------------------------
+File "0657.ml", line 6, characters 2-62:
+Try replacing
+    (if (n <= 0) then [] else ((digitsOfInt (n / 10)) add [(mod n 10)]))
+with
+    (if (n <= 0) then [] else ((digitsOfInt (n / 10)) add [(mod n 10)])); [[...]]
+of type
+    (('c list -> 'c list) list -> 'c -> 'c list) -> int list -> 'd list
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [] else ((digitsOfInt (n / 10)) add [(mod n 10)])); [[...]]
+    ;; 
+==============================

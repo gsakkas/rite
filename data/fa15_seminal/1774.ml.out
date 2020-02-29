@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "1774.ml", line 3, characters 49-55:
+This expression has type 'a * bool but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: (f b')
+------------------------------------------------------------------
+File "1774.ml", line 3, characters 49-55:
+Try replacing
+    (f b')
+with
+    (f b'); [[...]]
+of type
+    ('b -> 'b * bool) * 'b
+within context
+    let rec wwhile (f, b) =
+    let (b', c') = (f b) in (if c' = false then (wwhile ((f b'); [[...]])) else b')
+    ;; 
+==============================
+File "1774.ml", line 3, characters 42-48:
+Try replacing
+    wwhile
+with
+    wwhile; [[...]]
+of type
+    'c * bool -> 'c
+within context
+    let rec wwhile (f, b) =
+    let (b', c') = (f b) in (if c' = false then ((wwhile; [[...]]) (f b')) else b')
+    ;; 
+==============================

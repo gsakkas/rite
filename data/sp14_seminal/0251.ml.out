@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0251.ml", line 12, characters 70-72:
+This expression has type int but is here used with type unit
+Relevant code: 20
+------------------------------------------------------------------
+File "0251.ml", line 12, characters 70-72:
+Try replacing
+    20
+with
+    20; [[...]]
+of type
+    unit
+within context
+    let rec additivePersistence n =
+    (if (sumList (digitsOfInt n)) > 9 then (20; [[...]]))
+    ;; 
+==============================

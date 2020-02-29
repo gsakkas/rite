@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2833.ml", line 27, characters 27-50:
+This expression has type int * int list but is here used with type int
+Relevant code: ((i - 1), (bigAdd l l))
+------------------------------------------------------------------
+File "2833.ml", line 26, characters 19-22:
+Try replacing
+    fun i l -> (if i > 0 then (mulByDigit (i - 1, (bigAdd l l))) else l)
+with
+    fun (i, l) -> (if i > 0 then (mulByDigit (i - 1, (bigAdd l l))) else l)
+of type
+    int * int list -> int list
+within context
+    let rec mulByDigit (i, l) =
+    (if i > 0 then (mulByDigit (i - 1, (bigAdd l l))) else l)
+    ;; 
+==============================
+File "2833.ml", line 27, characters 27-50:
+Try replacing
+    (mulByDigit (i - 1, (bigAdd l l)))
+with
+    (mulByDigit (i - 1) (bigAdd l l))
+of type
+    int list
+within context
+    let rec mulByDigit i l =
+    (if i > 0 then (mulByDigit (i - 1) (bigAdd l l)) else l)
+    ;; 
+==============================

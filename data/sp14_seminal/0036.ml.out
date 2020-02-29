@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "0036.ml", line 28, characters 15-32:
+This expression has type 'a list but is here used with type
+  int list * int list
+Relevant code: [(h1 + x) mod 10]
+------------------------------------------------------------------
+Triaged the following locations:
+File "0036.ml", line 30, characters 10-170:
+And modified the following location:
+File "0036.ml", line 28, characters 15-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    [(mod (h1 + x) 10)]
+with
+    [(mod (h1 + x) 10)]; [[...]]
+The actual replacement has type
+    int list * int list
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (h1 :: t1, []) ->
+                                    (if h1 + x > 9 then
+                                        t1, [(h1 + x) / 10 ; (mod (h1 + x) 10)]
+                                        else
+                                        ([(mod (h1 + x) 10)]; [[...]]))
+                                  | (h1 :: t1, rh :: rt) ->
+                                    [[...other program...]]) in let base = l1, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "0036.ml", line 26, characters 10-112:
+And modified the following location:
+File "0036.ml", line 33, characters 15-45:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod ((h1 + x) + rh) 10) :: rt
+with
+    (mod ((h1 + x) + rh) 10) :: rt; [[...]]
+The actual replacement has type
+    int list * int list
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (h1 :: t1, []) -> [[...other program...]]
+                                  | (h1 :: t1, rh :: rt) ->
+                                    (if (h1 + x) + rh > 9 then
+                                        t1,
+                                          ((h1 + x) + rh) / 10 ::
+                                              (mod ((h1 + x) + rh) 10) :: rt
+                                        else
+                                        ((mod ((h1 + x) + rh) 10) :: rt;
+                                          [[...]]))) in let base = l1, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================

@@ -1,0 +1,162 @@
+------------------------------------------------------------------
+File "0134.ml", line 23, characters 40-44:
+This expression has type ('a * 'b) list but is here used with type
+  (int * int) list list
+Relevant code: args
+------------------------------------------------------------------
+File "0134.ml", line 23, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'c list -> 'd * 'e -> int * 'c list
+within context
+    let f a x = let (carry, num) = a in (match x with 
+                                         | [] ->
+                                           (0,
+                                                 (if carry > 0 then carry :: num
+                                                   else
+                                                   num))
+                                         | h :: t ->
+                                           (let (l1', l2') = h in
+                                                 let addit = (l1' + l2') + carry in
+                                                 (if addit > 10 then (mod addit 10)
+                                                       else
+                                                       0)
+                                                     ,
+                                                     addit / 10 ::
+                                                         num)) in let base = 0, []
+      in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0134.ml", line 23, characters 40-44:
+Try replacing
+    args
+with
+    args; [[...]]
+of type
+    (int * int) list list
+within context
+    let f a x = let (carry, num) = a in (match x with 
+                                         | [] ->
+                                           (0,
+                                                 (if carry > 0 then carry :: num
+                                                   else
+                                                   num))
+                                         | h :: t ->
+                                           (let (l1', l2') = h in
+                                                 let addit = (l1' + l2') + carry in
+                                                 (if addit > 10 then (mod addit 10)
+                                                       else
+                                                       0)
+                                                     ,
+                                                     addit / 10 ::
+                                                         num)) in let base = 0, []
+      in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  (args; [[...]])) in res
+==============================
+File "0134.ml", line 23, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> (int * int) list -> int * int list) ->
+    int * 'f list -> ('g * 'h) list -> 'i * 'j
+within context
+    let f a x = let (carry, num) = a in (match x with 
+                                         | [] ->
+                                           (0,
+                                                 (if carry > 0 then carry :: num
+                                                   else
+                                                   num))
+                                         | h :: t ->
+                                           (let (l1', l2') = h in
+                                                 let addit = (l1' + l2') + carry in
+                                                 (if addit > 10 then (mod addit 10)
+                                                       else
+                                                       0)
+                                                     ,
+                                                     addit / 10 ::
+                                                         num)) in let base = 0, []
+      in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0134.ml", line 22, characters 15-33:
+Try replacing
+    (List.combine l1 l2)
+with
+    (List.combine l1 l2); [[...]]
+of type
+    'k
+within context
+    let add (l1, l2) = let f a x = let (carry, num) = a in (match x with 
+                                                            | [] ->
+                                                              (0,
+                                                                    (if carry > 0
+                                                                      then
+                                                                      carry :: num
+                                                                      else
+                                                                      num))
+                                                            | h :: t ->
+                                                              (let (l1', l2') = h in
+                                                                    let addit =
+                                                                    (l1' + l2')
+                                                                      + carry
+                                                                    in
+                                                                    (if addit > 10
+                                                                          then
+                                                                          (mod
+                                                                            addit 10)
+                                                                          else
+                                                                          0)
+                                                                        ,
+                                                                        addit / 10
+                                                                            ::
+                                                                            num)) in let
+        base
+        =
+        0, []
+        in
+        let args = (List.combine l1 l2); [[...]] in
+        let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add (padZero l1 l2)))
+==============================
+File "0134.ml", line 13, characters 10-292:
+Try replacing
+    fun a x -> (let (carry, num) = a in (match x with 
+                                         | [] ->
+                                           (0,
+                                                 (if carry > 0 then carry :: num
+                                                   else
+                                                   num))
+                                         | h :: t ->
+                                           (let (l1', l2') = h in
+                                                 let addit = (l1' + l2') + carry in
+                                                 (if addit > 10 then (mod addit 10)
+                                                       else
+                                                       0)
+                                                     ,
+                                                     addit / 10 :: num)))
+with
+    fun a x -> (let (carry, num) = a in (match x with 
+                                         | [] ->
+                                           (0,
+                                                 (if carry > 0 then carry :: num
+                                                   else
+                                                   num))
+                                         | h :: t ->
+                                           (let (l1', l2') = h in
+                                                 let addit = (l1' + l2') + carry in
+                                                 (if addit > 10 then (mod addit 10)
+                                                       else
+                                                       0)
+                                                     ,
+                                                     addit / 10 :: num))); [[...]]
+of type
+    'l
+==============================

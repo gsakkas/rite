@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2399.ml", line 15, characters 14-15:
+This expression has type int but is here used with type 'a list
+Relevant code: n
+------------------------------------------------------------------
+File "2399.ml", line 7, characters 20-249:
+Try replacing
+    fun n -> (let digOfInt n = (match n > 0 with 
+                                | false -> []
+                                | true -> (match n > 9 with 
+                                           | false -> n :: (digitsOfInt (n / 10))
+                                           | true ->
+                                             (mod n 10) ::
+                                                   (digitsOfInt
+                                                     (n / 10)))) in (listReverse n))
+with
+    fun n -> (let digOfInt n = (match n > 0 with 
+                                | false -> []
+                                | true -> (match n > 9 with 
+                                           | false -> n :: (digitsOfInt (n / 10))
+                                           | true ->
+                                             (mod n 10) ::
+                                                   (digitsOfInt
+                                                     (n /
+                                                         10)))) in (listReverse
+              n)); [[...]]
+of type
+    int -> int list
+==============================

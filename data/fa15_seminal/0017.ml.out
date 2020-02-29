@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0017.ml", line 4, characters 23-31:
+This expression has type 'a list * 'b list but is here used with type unit
+Relevant code: (l1, l2)
+------------------------------------------------------------------
+File "0017.ml", line 4, characters 23-31:
+Try replacing
+    l1, l2
+with
+    l1, l2; [[...]]
+of type
+    unit
+within context
+    let padZero l1 l2 =
+    let numZeros = (List.length l1) - (List.length l2) in
+      (if numZeros = 0 then (l1, l2; [[...]]))
+    ;; 
+==============================

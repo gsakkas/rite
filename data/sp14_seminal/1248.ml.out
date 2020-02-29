@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "1248.ml", line 22, characters 13-35:
+This expression has type int * int but is here used with type int * int list
+Relevant code: ((z / 10), (z mod 10))
+------------------------------------------------------------------
+File "1248.ml", line 22, characters 13-35:
+Try replacing
+    z / 10, (mod z 10)
+with
+    z / 10, (mod z 10); [[...]]
+of type
+    int * int list
+within context
+    let f a x = let z = (fst x) + (snd x) in (match a with 
+                                              | (w, y) ->
+                                                ((w + z) / 10,
+                                                      (mod (w + z) 10) :: y)
+                                              | _ ->
+                                                (z / 10, (mod z 10);
+                                                    [[...]])) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "0013.ml", line 25, characters 56-57:
+This expression has type int list -> int list * int list -> int * int list
+but is here used with type int list -> int list * int list -> int list
+Relevant code: f
+------------------------------------------------------------------
+File "0013.ml", line 25, characters 41-55:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int list * int list -> int * int list) ->
+    int * 'a list -> 'b * 'c -> 'd * 'e
+within context
+    let f a x = (match x with 
+                 | (ah :: at, bh :: bt) ->
+                   (1,
+                         ah + bh ::
+                             a)) in let base = 0, [] in
+      let args = l1, l2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

@@ -1,0 +1,66 @@
+------------------------------------------------------------------
+File "0600.ml", line 23, characters 33-34:
+This expression has type int list -> 'a -> int * int list
+but is here used with type int list -> 'a -> int list
+Relevant code: f
+------------------------------------------------------------------
+File "0600.ml", line 23, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> 'c * int -> int * 'b list
+within context
+    let f a x =
+      let lr1 = (List.rev a) in
+        let lr2 = (List.rev l2) in
+        let h1 :: t1 = lr1 in
+        let h2 :: t2 = lr2 in
+        (if h1 + h2 > 9 then 1, [(h1 + h2) - 10] else 0, [h1 + h2])
+      in
+      let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0600.ml", line 23, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> 'd -> int * int list) ->
+    int * 'e list -> ('f * int) list -> 'g * 'h
+within context
+    let f a x =
+      let lr1 = (List.rev a) in
+        let lr2 = (List.rev l2) in
+        let h1 :: t1 = lr1 in
+        let h2 :: t2 = lr2 in
+        (if h1 + h2 > 9 then 1, [(h1 + h2) - 10] else 0, [h1 + h2])
+      in
+      let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0600.ml", line 15, characters 10-198:
+Try replacing
+    fun a
+      x ->
+        (let lr1 = (List.rev a) in
+            let lr2 = (List.rev l2) in
+            let h1 :: t1 = lr1 in
+            let h2 :: t2 = lr2 in
+            (if h1 + h2 > 9 then 1, [(h1 + h2) - 10] else 0, [h1 + h2]))
+with
+    fun a
+      x ->
+        (let lr1 = (List.rev a) in
+            let lr2 = (List.rev l2) in
+            let h1 :: t1 = lr1 in
+            let h2 :: t2 = lr2 in
+            (if h1 + h2 > 9 then 1, [(h1 + h2) - 10] else 0, [h1 + h2]));
+    [[...]]
+of type
+    'i
+==============================

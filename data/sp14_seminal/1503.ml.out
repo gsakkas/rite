@@ -1,0 +1,34 @@
+------------------------------------------------------------------
+File "1503.ml", line 3, characters 55-56:
+This expression has type 'a list but is here used with type int
+Relevant code: a
+------------------------------------------------------------------
+File "1503.ml", line 3, characters 54-62:
+Try replacing
+    [a + hd]
+with
+    [a + hd]; [[...]]
+of type
+    int
+within context
+    let comb a b = (match b with 
+                    | [] -> [a]
+                    | hd :: tl ->
+                      [a + hd]; [[...]] ::
+                            tl) in let rec mBDhelper i x = (match x with 
+                                                            | [] -> []
+                                                            | hd :: tl ->
+                                                              (if hd * i > 9 then
+                                                                  (hd * i) / 10 ::
+                                                                      (comb
+                                                                        (mod
+                                                                          (hd * i) 10)
+                                                                        (mBDhelper
+                                                                          i tl))
+                                                                  else
+                                                                  hd * i ::
+                                                                      (mBDhelper
+                                                                        i
+                                                                        tl))) in (mBDhelper
+          i l)
+==============================

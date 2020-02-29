@@ -1,0 +1,58 @@
+------------------------------------------------------------------
+File "3121.ml", line 27, characters 13-34:
+This expression has type (int * int) list but is here used with type int list
+Relevant code: (add (padZero l1 l2))
+------------------------------------------------------------------
+File "3121.ml", line 24, characters 19-27:
+Try replacing
+    [1, 1]
+with
+    [1 ; 1]
+of type
+    int list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (c, d) ->
+                                      a) in let base = 0, [1 ; 1] in
+        let args = (match l1 with 
+                    | h :: t ->
+                      [h, l2
+                            ]) in let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add (padZero l1 l2)))
+==============================
+File "3121.ml", line 27, characters 2-12:
+Try replacing
+    removeZero
+with
+    <
+of type
+    (int * int) list -> (int * int) list -> bool
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match x with 
+                                                       | (c, d) ->
+                                                         a) in let base = 0, [1, 1]
+        in
+        let args = (match l1 with 
+                    | h :: t ->
+                      [h, l2
+                            ]) in let (_, res) = (List.fold_left f base  args) in
+        res in (< (add (padZero l1 l2))) ;; 
+==============================
+File "3121.ml", line 27, characters 2-12:
+Try replacing
+    removeZero
+with
+    =
+of type
+    (int * int) list -> (int * int) list -> bool
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match x with 
+                                                       | (c, d) ->
+                                                         a) in let base = 0, [1, 1]
+        in
+        let args = (match l1 with 
+                    | h :: t ->
+                      [h, l2
+                            ]) in let (_, res) = (List.fold_left f base  args) in
+        res in (= (add (padZero l1 l2))) ;; 
+==============================

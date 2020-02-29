@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "1017.ml", line 3, characters 59-67:
+This expression has type 'a list -> 'a list but is here used with type
+  ('b -> 'b) list
+Relevant code: List.rev
+------------------------------------------------------------------
+File "1017.ml", line 3, characters 54-58:
+Try replacing
+    (List.fold_left f base  List.rev  fs)
+with
+    (List.fold_left f List.rev  fs)
+of type
+    'c list -> 'c list
+within context
+    let pipe fs = let f a x = x in let base p = p in (List.fold_left f List.rev  fs)
+    ;; 
+==============================
+File "1017.ml", line 3, characters 59-70:
+Try replacing
+    (List.fold_left f base  List.rev  fs)
+with
+    (List.fold_left f base  fs  List.rev)
+of type
+    'd list -> 'd list
+within context
+    let pipe fs =
+    let f a x = x in let base p = p in (List.fold_left f base  fs  List.rev)
+    ;; 
+==============================
+File "1017.ml", line 3, characters 37-51:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('e -> 'f -> 'f) ->
+    (('g list -> 'g list) -> 'g list -> 'g list) ->
+    ('g list -> 'g list) -> 'g list -> 'g list
+within context
+    let pipe fs = let f a x = x in let base p = p in (f f base  List.rev  fs) ;; 
+==============================
+File "1017.ml", line 3, characters 37-51:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('h -> 'h) -> ('i list -> 'i list) -> 'i list -> 'i list) ->
+    ('h -> 'h) -> ('i list -> 'i list) -> 'i list -> 'i list
+within context
+    let pipe fs = let f a x = x in let base p = p in (base f base  List.rev  fs) ;; 
+==============================

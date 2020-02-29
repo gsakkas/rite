@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1859.ml", line 21, characters 28-37:
+This expression is not a function, it cannot be applied
+Relevant code: (acc + 1)
+------------------------------------------------------------------
+File "1859.ml", line 21, characters 38-58:
+Try replacing
+    ((acc + 1) (sumList (digits n)))
+with
+    acc + 1
+of type
+    int
+within context
+    fun n ->
+      (let rec count acc n = (if n < 10 then acc else acc + 1) in (count 0 n))
+==============================

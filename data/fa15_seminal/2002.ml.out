@@ -1,0 +1,118 @@
+------------------------------------------------------------------
+File "2002.ml", line 34, characters 10-26:
+This expression has type float but is here used with type int
+Relevant code: (eval (m, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2002.ml", line 34, characters 67-68:
+File "2002.ml", line 35, characters 10-68:
+And modified the following location:
+File "2002.ml", line 34, characters 8-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /
+If you ignore other surrounding code, try replacing
+    ((eval (m, x, y)) * (eval (n, x, y))) * (eval (o, x, y))
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine n -> (sin (pi *. (eval (n, x, y))))
+                              | Cosine n -> (cos (pi *. (eval (n, x, y))))
+                              | Average (m, n) ->
+                                (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+                              | Times (m, n) ->
+                                ((eval (m, x, y)) *. (eval (n, x, y)))
+                              | Thresh (m, n, o, p) ->
+                                (if (eval (m, x, y)) < (eval (n, x, y)) then
+                                    (eval (o, x, y))
+                                    else
+                                    (eval (p, x, y)))
+                              | Power (m, n) ->
+                                (let d = (eval (n, x, y)) in
+                                      (if d > 1.0 then (eval (m, x, y)) else
+                                          (eval (m, x, y)) ** (eval (n, x, y))))
+                              | Op (m, n, o) ->
+                                (let d =
+                                      ([[...]] /; [[...]] [[...other program...]])
+                                      in
+                                      (if d > 1.0 then 1.0 else
+                                          (if d < -1.0 then -1.0 else d)))) ;; 
+==============================
+Triaged the following locations:
+File "2002.ml", line 34, characters 8-66:
+File "2002.ml", line 34, characters 67-68:
+And modified the following location:
+File "2002.ml", line 35, characters 10-68:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /
+If you ignore other surrounding code, try replacing
+    ((eval (m, x, y)) + (eval (n, x, y))) + (eval (o, x, y))
+with
+    [[...]]
+The actual replacement has type
+    'b
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine n -> (sin (pi *. (eval (n, x, y))))
+                              | Cosine n -> (cos (pi *. (eval (n, x, y))))
+                              | Average (m, n) ->
+                                (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+                              | Times (m, n) ->
+                                ((eval (m, x, y)) *. (eval (n, x, y)))
+                              | Thresh (m, n, o, p) ->
+                                (if (eval (m, x, y)) < (eval (n, x, y)) then
+                                    (eval (o, x, y))
+                                    else
+                                    (eval (p, x, y)))
+                              | Power (m, n) ->
+                                (let d = (eval (n, x, y)) in
+                                      (if d > 1.0 then (eval (m, x, y)) else
+                                          (eval (m, x, y)) ** (eval (n, x, y))))
+                              | Op (m, n, o) ->
+                                (let d =
+                                      ([[...other program...]] /; [[...]] [[...]])
+                                      in
+                                      (if d > 1.0 then 1.0 else
+                                          (if d < -1.0 then -1.0 else d)))) ;; 
+==============================
+Triaged the following locations:
+File "2002.ml", line 19, characters 14-42:
+File "2002.ml", line 20, characters 16-44:
+File "2002.ml", line 21, characters 21-66:
+File "2002.ml", line 22, characters 19-55:
+File "2002.ml", line 24, characters 6-96:
+File "2002.ml", line 28, characters 6-122:
+And modified the following location:
+File "2002.ml", line 36, characters 6-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if d > 1.0 then 1.0 else (if d < -1.0 then -1.0 else d))
+with
+    [[...]]
+The actual replacement has type
+    int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine n -> [[...other program...]]
+                              | Cosine n -> [[...other program...]]
+                              | Average (m, n) -> [[...other program...]]
+                              | Times (m, n) -> [[...other program...]]
+                              | Thresh (m, n, o, p) -> [[...other program...]]
+                              | Power (m, n) -> [[...other program...]]
+                              | Op (m, n, o) ->
+                                (let d =
+                                      (((eval (m, x, y)) * (eval (n, x, y)))
+                                            * (eval (o, x, y)))
+                                        /
+                                        (((eval (m, x, y)) + (eval (n, x, y)))
+                                            + (eval (o, x, y)))
+                                      in
+                                      [[...]])) ;; 
+==============================

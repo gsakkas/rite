@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0261.ml", line 11, characters 20-32:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: stringOfList
+------------------------------------------------------------------
+File "0261.ml", line 11, characters 20-32:
+Try replacing
+    stringOfList
+with
+    stringOfList; [[...]]
+of type
+    'i -> 'j -> (('k -> 'l) -> 'k list -> 'l list) -> 'i -> 'j -> 'm
+within context
+    let rec clone x n = ((stringOfList; [[...]]) x n  List.map  x  n) ;; 
+==============================

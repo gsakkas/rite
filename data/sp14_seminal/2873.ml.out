@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2873.ml", line 7, characters 40-41:
+This expression has type string list but is here used with type string
+Relevant code: t
+------------------------------------------------------------------
+File "2873.ml", line 2, characters 18-165:
+Try replacing
+    fun sep sl -> (match sl with 
+                   | [] -> ""
+                   | h :: t ->
+                     (let f a x = sep ^ h in
+                           let base = h in
+                           let l = (sepConcat t) in (List.fold_left f base  l)))
+with
+    fun sep sl -> (match sl with 
+                   | [] -> ""
+                   | h :: t ->
+                     (let f a x = sep ^ h in
+                           let base = h in
+                           let l = (sepConcat t) in
+                           (List.fold_left f base  l))); [[...]]
+of type
+    string list -> 'a list
+==============================

@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1190.ml", line 9, characters 23-32:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sepConcat
+------------------------------------------------------------------
+File "1190.ml", line 9, characters 23-32:
+Try replacing
+    sepConcat
+with
+    sepConcat; [[...]]
+of type
+    string -> (('i -> 'j) -> 'i list -> 'j list) -> 'k -> 'l -> 'm
+within context
+    let stringOfList f l = ((sepConcat; [[...]]) "; " List.map  f  l) ;; 
+==============================

@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "1116.ml", line 24, characters 70-74:
+This expression has type ('a * 'b) list but is here used with type
+  (int * int) list list
+Relevant code: args
+------------------------------------------------------------------
+File "1116.ml", line 24, characters 70-74:
+Try replacing
+    args
+with
+    base
+of type
+    (int * int) list list
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | h :: t -> (match a with 
+                                               | hd :: tl ->
+                                                 (((fst h) + (snd h)) + hd) / 10 ::
+                                                       (mod
+                                                         (((fst h) + (snd h)) + hd) 10)
+                                                       ::
+                                                       tl)) in let base = [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          (List.fold_left f base  base))
+==============================

@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "0713.ml", line 6, characters 36-69:
+This expression has type 'a list but is here used with type int
+Relevant code: [loop (input / 10); input mod 10]
+------------------------------------------------------------------
+Triaged the following locations:
+File "0713.ml", line 6, characters 25-30:
+And modified the following location:
+File "0713.ml", line 6, characters 37-54:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    input
+If you ignore other surrounding code, try replacing
+    (loop (input / 10))
+with
+    (loop (input / 10)); [[...]]
+The actual replacement has type
+    int
+within context
+    fun n ->
+      (if (mod n 2) = 0 && n > 0 then
+        (let rec loop input =
+            (if input < 10 then (input; [[...]]) else
+              [(loop (input / 10)); [[...]] ; (mod input 10)])
+            in
+            (loop n))
+        else
+        [])
+==============================

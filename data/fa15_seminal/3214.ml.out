@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3214.ml", line 5, characters 62-63:
+This expression has type 'a list but is here used with type int
+Relevant code: h
+------------------------------------------------------------------
+File "3214.ml", line 5, characters 62-63:
+Try replacing
+    h
+with
+    i
+of type
+    int
+within context
+    let h :: [] :: t = l in (match t with 
+                             | [] -> h
+                             | _ -> [(i * i) / 10])
+==============================

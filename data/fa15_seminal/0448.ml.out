@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "0448.ml", line 8, characters 22-30:
+This expression is not a function, it cannot be applied
+Relevant code: isFPoint
+------------------------------------------------------------------
+Triaged the following locations:
+File "0448.ml", line 9, characters 2-22:
+And modified the following location:
+File "0448.ml", line 8, characters 19-70:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if (isFPoint x) then x, true else (test x), false)
+with
+    [[...]]
+The actual replacement has type
+    'b
+within context
+    let fixpoint (f, b) =
+    let isFPoint = (f b) - b < 0 in
+      let rec test x = [[...]] in [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0448.ml", line 9, characters 2-22:
+And modified the following location:
+File "0448.ml", line 8, characters 2-96:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let rec test x = (if (isFPoint x) then x, true else (test x), false) in
+      (wwhile (isFPoint, b))
+with
+    [[...other program...]]
+The actual replacement has type
+    'e
+within context
+    let fixpoint (f, b) = let isFPoint = (f b) - b < 0 in [[...other program...]]
+    ;; 
+==============================

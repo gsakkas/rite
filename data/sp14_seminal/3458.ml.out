@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "3458.ml", line 2, characters 55-57:
+This expression is not a function, it cannot be applied
+Relevant code: 10
+------------------------------------------------------------------
+File "3458.ml", line 2, characters 58-59:
+Try replacing
+    (10 n)
+with
+    10
+of type
+    int
+within context
+    let rec digitsOfInt n = (if (n <= 0) then [] else [(mod n 10)]) ;; 
+==============================

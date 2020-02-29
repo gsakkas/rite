@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1903.ml", line 5, characters 28-76:
+This expression has type ((int -> int) * bool) * int
+but is here used with type ('a -> 'a * bool) * 'a
+Relevant code: ((f, (((f b) = (f (b - 1))) && ((f b) = b))), b)
+------------------------------------------------------------------
+File "1903.ml", line 5, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ((int -> int) * bool) * int -> ((int -> int) * bool) * int -> bool
+within context
+    let fixpoint (f, b) = (= ((f, (f b) = (f (b - 1)) && (f b) = b), b)) ;; 
+==============================

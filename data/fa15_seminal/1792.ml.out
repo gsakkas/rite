@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "1792.ml", line 38, characters 13-68:
+This expression has type expr * expr * expr but is here used with type
+  expr * expr * expr * expr
+Relevant code: ((build (rand, (depth - 1))), (buildX ()), (buildY ()))
+------------------------------------------------------------------
+File "1792.ml", line 37, characters 9-117:
+Try replacing
+    (buildThresh ((build (rand, depth - 1)), (buildX ()), (buildY ()))), (buildX ())
+with
+    [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then (let r = (rand (0, 2)) in (match r with 
+                                                  | 0 -> (buildY ())
+                                                  | _ ->
+                                                    (buildX
+                                                        ()))) else (let r =
+          (rand (0, 6))
+          in
+          (match r with 
+           | 0 -> (buildSine (build (rand, depth - 1)))
+           | 1 -> (buildCosine (build (rand, depth - 1)))
+           | 2 -> (buildAverage ((build (rand, depth - 1)), (buildY ())))
+           | 3 -> (buildTimes ((build (rand, depth - 1)), (buildX ())))
+           | 4 -> [[...]])))
+    ;; 
+==============================

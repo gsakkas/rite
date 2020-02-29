@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "1787.ml", line 4, characters 41-42:
+This expression has type ('a -> 'b) list but is here used with type 'c -> 'a
+Relevant code: t
+------------------------------------------------------------------
+File "1787.ml", line 3, characters 19-20:
+Try replacing
+    x
+with
+    a
+of type
+    'd -> 'd
+within context
+    fun a x g -> (a (a g))
+==============================
+File "1787.ml", line 4, characters 41-42:
+Try replacing
+    t
+with
+    h
+of type
+    'e -> 'e
+within context
+    fun fs -> (let f a x g = (a (x g)) in let base = (match fs with 
+                                                      | h :: t -> (f h h)
+                                                      | [] ->
+                                                        (fun x ->
+                                                              x)) in (List.fold_left
+              f base  fs))
+==============================

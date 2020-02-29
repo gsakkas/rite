@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "3423.ml", line 2, characters 47-49:
+This expression has type 'a list but is here used with type int
+Relevant code: []
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "3423.ml", line 2, characters 42-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    n
+with
+    n; [[...]]
+The actual replacement has type
+    'b list
+within context
+    let rec digitsOfInt n =
+    (mod n 10) :: (if (n; [[...]] <> []) then (digitsOfInt (n / 10)) else [[...]])
+    ;; 
+==============================
+Triaged the following locations:
+And modified the following location:
+File "3423.ml", line 2, characters 47-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    []; [[...]]
+The actual replacement has type
+    int
+within context
+    let rec digitsOfInt n =
+    (mod n 10) :: (if (n <> []; [[...]]) then (digitsOfInt (n / 10)) else [[...]])
+    ;; 
+==============================
+Triaged the following locations:
+And modified the following location:
+File "3423.ml", line 2, characters 44-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    <>
+with
+    <>; [[...]]
+The actual replacement has type
+    int -> 'c list -> bool
+within context
+    let rec digitsOfInt n =
+    (mod n 10) :: (if (n <>; [[...]] []) then (digitsOfInt (n / 10)) else [[...]])
+    ;; 
+==============================

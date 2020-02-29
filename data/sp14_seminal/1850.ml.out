@@ -1,0 +1,73 @@
+------------------------------------------------------------------
+File "1850.ml", line 8, characters 26-28:
+This expression has type int but is here used with type int list
+Relevant code: l1
+------------------------------------------------------------------
+Triaged the following locations:
+File "1850.ml", line 8, characters 31-57:
+And modified the following location:
+File "1850.ml", line 8, characters 26-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let l1 = (List.length l1) in
+            let l2 = (List.length l2) in
+            (clone 0 (l2 - l1)) @ (l1; [[...]]), [[...other program...]])
+==============================
+Triaged the following locations:
+File "1850.ml", line 8, characters 31-57:
+And modified the following location:
+File "1850.ml", line 8, characters 24-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int list -> int -> 'a
+within context
+    fun l1
+      l2 ->
+        (let l1 = (List.length l1) in
+            let l2 = (List.length l2) in
+            ((clone 0 (l2 - l1)) @; [[...]] l1), [[...other program...]])
+==============================
+Triaged the following locations:
+File "1850.ml", line 8, characters 3-29:
+And modified the following location:
+File "1850.ml", line 8, characters 52-53:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int list -> int -> 'b
+within context
+    fun l1
+      l2 ->
+        (let l1 = (List.length l1) in
+            let l2 = (List.length l2) in
+            [[...other program...]], ((clone 0 (l1 - l2)) @; [[...]] l2))
+==============================
+Triaged the following locations:
+File "1850.ml", line 8, characters 3-29:
+And modified the following location:
+File "1850.ml", line 8, characters 54-56:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l2
+with
+    l2; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let l1 = (List.length l1) in
+            let l2 = (List.length l2) in
+            [[...other program...]], (clone 0 (l1 - l2)) @ (l2; [[...]]))
+==============================

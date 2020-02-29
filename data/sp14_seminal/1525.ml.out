@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1525.ml", line 3, characters 32-33:
+This expression has type int but is here used with type float
+Relevant code: 3
+------------------------------------------------------------------
+File "1525.ml", line 3, characters 34-36:
+Try replacing
+    **
+with
+    f
+of type
+    int -> int -> int -> int -> int
+within context
+    let sqsum xs =
+    let f a x = + in let base = (3 f 2) in (List.fold_left f base  xs)
+    ;; 
+==============================

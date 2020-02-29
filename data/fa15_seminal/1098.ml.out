@@ -1,0 +1,108 @@
+------------------------------------------------------------------
+File "1098.ml", line 17, characters 11-12:
+This expression has type int * 'a but is here used with type (int * int) list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "1098.ml", line 18, characters 4-120:
+And modified the following location:
+File "1098.ml", line 17, characters 11-12:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    (int * int) list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let sum = ((fst x) + (snd x)) + (fst a) in
+                sum / 10, (mod sum 10) :: a; [[...]]
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1098.ml", line 18, characters 4-120:
+And modified the following location:
+File "1098.ml", line 16, characters 49-88:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sum / 10, (mod sum 10) :: a
+with
+    (sum / 10, (mod sum 10)), a
+The actual replacement has type
+    (int * int) * (int * 'b)
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let sum = ((fst x) + (snd x)) + (fst a) in (sum / 10, (mod sum 10)), a
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1098.ml", line 18, characters 4-120:
+And modified the following location:
+File "1098.ml", line 16, characters 44-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (fst a)
+with
+    (fst [[...]] a)
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let sum = ((fst x) + (snd x)) + (fst [[...]] a) in
+                sum / 10, (mod sum 10) :: a
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1098.ml", line 18, characters 4-120:
+And modified the following location:
+File "1098.ml", line 16, characters 39-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fst
+with
+    fst; [[...]]
+The actual replacement has type
+    (int * int) list -> int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let sum = ((fst x) + (snd x)) + ((fst; [[...]]) a) in
+                sum / 10, (mod sum 10) :: a
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1098.ml", line 18, characters 4-120:
+And modified the following location:
+File "1098.ml", line 15, characters 4-228:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x =
+      let sum = ((fst x) + (snd x)) + (fst a) in sum / 10, (mod sum 10) :: a
+      in
+      let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'c
+==============================

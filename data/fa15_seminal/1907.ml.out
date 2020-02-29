@@ -1,0 +1,49 @@
+------------------------------------------------------------------
+File "1907.ml", line 7, characters 28-41:
+This expression has type (('a -> int) -> 'a -> int * bool) * 'b
+but is here used with type (('a -> int) -> ('a -> int) * bool) * ('a -> int)
+Relevant code: (intboolf, b)
+------------------------------------------------------------------
+File "1907.ml", line 7, characters 29-40:
+Try replacing
+    intboolf, b
+with
+    b, intboolf
+of type
+    ((('c -> int) -> 'c -> int * bool) ->
+     (('c -> int) -> 'c -> int * bool) * bool) *
+    (('c -> int) -> 'c -> int * bool)
+within context
+    let fixpoint (f, b) = (wwhile (b, intboolf)) ;; 
+==============================
+File "1907.ml", line 7, characters 21-27:
+Try replacing
+    wwhile
+with
+    f
+of type
+    (('d -> int) -> 'd -> int * bool) * 'e -> 'f
+within context
+    let fixpoint (f, b) = (f (intboolf, b)) ;; 
+==============================
+File "1907.ml", line 7, characters 21-27:
+Try replacing
+    wwhile
+with
+    <
+of type
+    (('g -> int) -> 'g -> int * bool) * 'h ->
+    (('g -> int) -> 'g -> int * bool) * 'h -> bool
+within context
+    let fixpoint (f, b) = (< (intboolf, b)) ;; 
+==============================
+File "1907.ml", line 7, characters 29-37:
+Try replacing
+    intboolf
+with
+    f
+of type
+    ('i -> 'i * bool) * 'i
+within context
+    let fixpoint (f, b) = (wwhile (f, b)) ;; 
+==============================

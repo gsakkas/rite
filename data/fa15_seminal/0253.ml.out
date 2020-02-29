@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0253.ml", line 8, characters 4-62:
+This expression has type int * int list but is here used with type 'a list
+Relevant code: ((((mult (m, n)) + y) / 10), [((mult (m, n)) + y) mod 10])
+------------------------------------------------------------------
+File "0253.ml", line 8, characters 63-64:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int * int list -> 'b -> 'c
+within context
+    fun a
+      x ->
+        (let (m, n) = x in
+            let (y, z) = a in
+            (((mult (m, n)) + y) / 10, [(mod ((mult (m, n)) + y) 10)] @; [[...]] z))
+==============================

@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "1446.ml", line 18, characters 27-28:
+This expression has type expr but is here used with type float
+Relevant code: a
+------------------------------------------------------------------
+File "1446.ml", line 18, characters 27-28:
+Try replacing
+    a
+with
+    x
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. x))
+                              | Cosine a -> (cos (pi *. x))) ;; 
+==============================
+File "1446.ml", line 18, characters 27-28:
+Try replacing
+    a
+with
+    y
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. x))
+                              | Cosine a -> (cos (pi *. y))) ;; 
+==============================

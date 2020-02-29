@@ -1,0 +1,70 @@
+------------------------------------------------------------------
+File "1990.ml", line 3, characters 64-68:
+This expression has type int but is here used with type float
+Relevant code: base
+------------------------------------------------------------------
+File "1990.ml", line 3, characters 42-43:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    'a
+within context
+    let sqsum xs =
+    let f a x = (a +. (x *. x)) in
+      let base = 0; [[...]] in (List.fold_left f base  xs)
+    ;; 
+==============================
+File "1990.ml", line 3, characters 62-63:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int -> 'b -> int
+within context
+    let sqsum xs =
+    let f a x = (a +. (x *. x)) in
+      let base = 0 in (List.fold_left (f; [[...]]) base  xs)
+    ;; 
+==============================
+File "1990.ml", line 3, characters 64-68:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    float
+within context
+    let sqsum xs =
+    let f a x = (a +. (x *. x)) in
+      let base = 0 in (List.fold_left f (base; [[...]])  xs)
+    ;; 
+==============================
+File "1990.ml", line 3, characters 47-61:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (float -> float -> float) -> int -> 'c -> 'd
+within context
+    let sqsum xs =
+    let f a x = (a +. (x *. x)) in
+      let base = 0 in ((List.fold_left; [[...]]) f base  xs)
+    ;; 
+==============================
+File "1990.ml", line 3, characters 8-27:
+Try replacing
+    fun a x -> (a +. (x *. x))
+with
+    fun a x -> (a +. (x *. x)); [[...]]
+of type
+    'e
+within context
+    let sqsum xs =
+    let f = fun a x -> (a +. (x *. x)); [[...]] in
+      let base = 0 in (List.fold_left f base  xs)
+    ;; 
+==============================

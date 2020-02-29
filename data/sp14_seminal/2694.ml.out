@@ -1,0 +1,89 @@
+------------------------------------------------------------------
+File "2694.ml", line 29, characters 8-52:
+This expression has type float but is here used with type int
+Relevant code: (eval (a, (sin (pi *. x)), (sin (pi *. y))))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2694.ml", line 31, characters 9-10:
+And modified the following location:
+File "2694.ml", line 29, characters 53-54:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    float -> float -> 'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a ->
+                                (eval (a, (sin (pi *. x)), (sin (pi *. y))))
+                              | Cosine a ->
+                                (eval (a, (cos (pi *. x)), (cos (pi *. y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Tan a ->
+                                (eval (a, (tan (pi *. x)), (tan (pi *. y))))
+                              | Sine_Avg (a, b, c) ->
+                                ((((eval (a, (sin (pi *. x)), (sin (pi *. y))))
+                                              +; [[...]]
+                                              (eval
+                                                (b,
+                                                    (sin (pi *. x)),
+                                                    (sin (pi *. y)))))
+                                          +; [[...]]
+                                          (eval
+                                            (c, (sin (pi *. x)), (sin (pi *. y)))))
+                                      /. 3.0)) ;; 
+==============================
+Triaged the following locations:
+File "2694.ml", line 31, characters 9-10:
+And modified the following location:
+File "2694.ml", line 29, characters 53-54:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    +
+with
+    <
+The actual replacement has type
+    float -> float -> bool
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a ->
+                                (eval (a, (sin (pi *. x)), (sin (pi *. y))))
+                              | Cosine a ->
+                                (eval (a, (cos (pi *. x)), (cos (pi *. y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Tan a ->
+                                (eval (a, (tan (pi *. x)), (tan (pi *. y))))
+                              | Sine_Avg (a, b, c) ->
+                                (((eval (a, (sin (pi *. x)), (sin (pi *. y))))
+                                            <
+                                            (eval
+                                              (b, (sin (pi *. x)), (sin (pi *. y))))
+                                          +; [[...]]
+                                          (eval
+                                            (c, (sin (pi *. x)), (sin (pi *. y)))))
+                                      /. 3.0)) ;; 
+==============================

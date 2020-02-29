@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "2100.ml", line 39, characters 11-115:
+This expression has type expr * expr but is here used with type expr
+Relevant code: ((build (rand, (depth - 1))),
+             (if depth = 0 then buildY () else build (rand, (depth - 1))))
+------------------------------------------------------------------
+File "2100.ml", line 37, characters 14-23:
+Try replacing
+    (buildX ())
+with
+    (buildX ()); [[...]]
+of type
+    expr * expr
+within context
+    let rec build (rand, depth) = (match (rand (1, 7)) with 
+                                   | 1 -> (buildX ())
+                                   | 2 -> (buildY ())
+                                   | 3 ->
+                                     (buildSine
+                                         (if depth = 0 then (buildX ()) else
+                                           (build (rand, depth - 1))))
+                                   | 4 ->
+                                     (buildCosine
+                                         (if depth = 0 then (buildY ()) else
+                                           (build (rand, depth - 1))))
+                                   | 5 ->
+                                     (buildAverage
+                                         (if depth = 0 then ((buildX ()); [[...]])
+                                           else
+                                           (build (rand, depth - 1)),
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))
+                                   | 6 ->
+                                     (buildTimes
+                                         ((build (rand, depth)),
+                                             (build (rand, depth))))
+                                   | 7 ->
+                                     (buildThresh
+                                         ((build (rand, depth)),
+                                             (build (rand, depth)),
+                                             (build (rand, depth)),
+                                             (build (rand, depth))))) ;; 
+==============================

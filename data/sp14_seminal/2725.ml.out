@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "2725.ml", line 23, characters 29-30:
+This expression has type 'a list but is here used with type int
+Relevant code: h
+------------------------------------------------------------------
+File "2725.ml", line 23, characters 29-30:
+Try replacing
+    h
+with
+    h; [[...]]
+of type
+    int
+within context
+    (match x with 
+     | (z, y) -> (match a with 
+                  | h -> (let sum = ((h; [[...]]) + z) + y in (intlist sum))
+                  | h :: t -> (let sum = (h + z) + y in (intlist sum) @ t)))
+==============================
+File "2725.ml", line 23, characters 31-32:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int list -> int -> int
+within context
+    (match x with 
+     | (z, y) -> (match a with 
+                  | h -> (let sum = (h +; [[...]] z) + y in (intlist sum))
+                  | h :: t -> (let sum = (h + z) + y in (intlist sum) @ t)))
+==============================

@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "0852.ml", line 4, characters 31-67:
+This expression has type 'a list but is here used with type int
+Relevant code: (n mod 10) :: (digitsOfInt (n / 10))
+------------------------------------------------------------------
+File "0852.ml", line 4, characters 22-23:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    int list
+within context
+    let rec digitsOfInt n = let ns = [] in (match n with 
+                                            | 0 -> (0; [[...]])
+                                            | n ->
+                                              (mod n 10) ::
+                                                    (digitsOfInt (n / 10))) ;; 
+==============================
+File "0852.ml", line 4, characters 31-67:
+Try replacing
+    (mod n 10) :: (digitsOfInt (n / 10))
+with
+    [[...]]
+of type
+    int
+within context
+    let rec digitsOfInt n = let ns = [] in (match n with 
+                                            | 0 -> 0
+                                            | n -> [[...]]) ;; 
+==============================

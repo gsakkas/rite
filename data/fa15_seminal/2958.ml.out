@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2958.ml", line 32, characters 30-47:
+This expression has type int list but is here used with type int
+Relevant code: (mulByDigit x l2)
+------------------------------------------------------------------
+File "2958.ml", line 32, characters 28-29:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int list -> int list -> int list
+within context
+    fun x ->
+      (let (place, res) = a in
+          (if (place <= 0) then place + 1, (res +; [[...]] (mulByDigit x l2)) else
+              place + 1, (mulByDigit ((x * 10) * place) res)))
+==============================

@@ -1,0 +1,148 @@
+------------------------------------------------------------------
+File "1266.ml", line 11, characters 4-6:
+This pattern matches values of type 'a list
+but is here used to match values of type int -> int list
+Relevant code: []
+------------------------------------------------------------------
+Triaged the following locations:
+File "1266.ml", line 11, characters 10-11:
+File "1266.ml", line 12, characters 4-12:
+File "1266.ml", line 12, characters 16-17:
+File "1266.ml", line 13, characters 4-14:
+File "1266.ml", line 13, characters 18-55:
+And modified the following location:
+File "1266.ml", line 11, characters 4-6:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    int -> int list
+within context
+    let rec additivePersistence n = let x = digitsOfInt in (match x with 
+                                                            | _ ->
+                                                              [[...other program...]]
+                                                            |
+                                                              [[...other pattern...]]
+                                                              ->
+                                                              [[...other program...]]
+                                                            |
+                                                              [[...other pattern...]]
+                                                              ->
+                                                              [[...other program...]]) ;; 
+==============================
+File "1266.ml", line 9, characters 10-21:
+Try replacing
+    digitsOfInt
+with
+    digitsOfInt; [[...]]
+of type
+    'b
+within context
+    let rec additivePersistence n = let x = digitsOfInt; [[...]] in (match x with 
+                                                                     | [] -> 0
+                                                                     | head :: [] ->
+                                                                       0
+                                                                     | head :: tail
+                                                                       ->
+                                                                       1 +
+                                                                           (additivePersistence
+                                                                             (sumList
+                                                                               x))) ;; 
+==============================
+Triaged the following locations:
+File "1266.ml", line 11, characters 10-11:
+File "1266.ml", line 12, characters 16-17:
+File "1266.ml", line 13, characters 18-55:
+And modified the following location:
+File "1266.ml", line 10, characters 8-9:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    'c list
+within context
+    let rec additivePersistence n = let x = digitsOfInt in (match (x; [[...]]) with 
+                                                            | [] ->
+                                                              [[...other program...]]
+                                                            | head :: [] ->
+                                                              [[...other program...]]
+                                                            | head :: tail ->
+                                                              [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1266.ml", line 11, characters 10-11:
+File "1266.ml", line 12, characters 16-17:
+File "1266.ml", line 13, characters 18-55:
+And modified the following location:
+File "1266.ml", line 10, characters 8-9:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    n
+The actual replacement has type
+    'd list
+within context
+    let rec additivePersistence n = let x = digitsOfInt in (match n with 
+                                                            | [] ->
+                                                              [[...other program...]]
+                                                            | head :: [] ->
+                                                              [[...other program...]]
+                                                            | head :: tail ->
+                                                              [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1266.ml", line 11, characters 4-6:
+File "1266.ml", line 11, characters 10-11:
+File "1266.ml", line 12, characters 4-12:
+File "1266.ml", line 12, characters 16-17:
+File "1266.ml", line 13, characters 18-55:
+And modified the following location:
+File "1266.ml", line 13, characters 4-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    head :: tail
+with
+    _
+The actual replacement has type
+    int -> int list
+within context
+    let rec additivePersistence n = let x = digitsOfInt in (match x with 
+                                                            |
+                                                              [[...other pattern...]]
+                                                              ->
+                                                              [[...other program...]]
+                                                            |
+                                                              [[...other pattern...]]
+                                                              ->
+                                                              [[...other program...]]
+                                                            | _ ->
+                                                              [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1266.ml", line 11, characters 4-6:
+File "1266.ml", line 11, characters 10-11:
+File "1266.ml", line 12, characters 16-17:
+File "1266.ml", line 13, characters 4-14:
+File "1266.ml", line 13, characters 18-55:
+And modified the following location:
+File "1266.ml", line 12, characters 4-12:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    head :: []
+with
+    _
+The actual replacement has type
+    int -> int list
+within context
+    let rec additivePersistence n = let x = digitsOfInt in (match x with 
+                                                            |
+                                                              [[...other pattern...]]
+                                                              ->
+                                                              [[...other program...]]
+                                                            | _ ->
+                                                              [[...other program...]]
+                                                            |
+                                                              [[...other pattern...]]
+                                                              ->
+                                                              [[...other program...]]) ;; 
+==============================

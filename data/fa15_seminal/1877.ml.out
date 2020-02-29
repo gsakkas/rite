@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1877.ml", line 2, characters 59-66:
+This expression has type int list -> 'a but is here used with type int
+Relevant code: sumList
+------------------------------------------------------------------
+File "1877.ml", line 2, characters 59-66:
+Try replacing
+    sumList
+with
+    x
+of type
+    int
+within context
+    let rec sumList xs = (match xs with 
+                          | [] -> 0
+                          | x :: y -> x + x) ;; 
+==============================

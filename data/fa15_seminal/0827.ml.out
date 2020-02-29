@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0827.ml", line 4, characters 54-62:
+This expression has type 'a list but is here used with type int
+Relevant code: 55 :: 66
+------------------------------------------------------------------
+File "0827.ml", line 4, characters 54-62:
+Try replacing
+    55 :: 66
+with
+    [[...]]
+of type
+    int
+within context
+    let rec additivePersistence n = (if (lt10 n) then n else [[...]]) ;; 
+==============================

@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "0319.ml", line 16, characters 9-33:
+This expression has type int but is here used with type bool
+Relevant code: ((x1 + x2) + carry) / 10
+------------------------------------------------------------------
+File "0319.ml", line 16, characters 29-30:
+Try replacing
+    /
+with
+    <
+of type
+    int -> int -> bool
+within context
+    fun x ->
+      (let (carry, accList) = a in
+          let (x1, x2) = x in
+          (if (x1 + x2) + carry < 10 then 1, (mod ((x1 + x2) + carry) 10) :: accList
+              else
+              0, x1 + x2 :: accList))
+==============================
+File "0319.ml", line 16, characters 29-30:
+Try replacing
+    /
+with
+    >
+of type
+    int -> int -> bool
+within context
+    fun x ->
+      (let (carry, accList) = a in
+          let (x1, x2) = x in
+          (if (x1 + x2) + carry > 10 then 1, (mod ((x1 + x2) + carry) 10) :: accList
+              else
+              0, x1 + x2 :: accList))
+==============================
+File "0319.ml", line 16, characters 29-30:
+Try replacing
+    /
+with
+    =
+of type
+    int -> int -> bool
+within context
+    fun x ->
+      (let (carry, accList) = a in
+          let (x1, x2) = x in
+          (if (x1 + x2) + carry = 10 then 1, (mod ((x1 + x2) + carry) 10) :: accList
+              else
+              0, x1 + x2 :: accList))
+==============================

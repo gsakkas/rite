@@ -1,0 +1,7 @@
+------------------------------------------------------------------
+File "1490.ml", line 6, characters 44-50:
+This expression has type ('a -> bool) * 'a but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: (f, b)
+------------------------------------------------------------------
+<pre>Couldn't find repairs.</pre>

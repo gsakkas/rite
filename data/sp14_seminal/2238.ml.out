@@ -1,0 +1,410 @@
+------------------------------------------------------------------
+File "2238.ml", line 21, characters 27-43:
+This expression has type int but is here used with type float
+Relevant code: (eval (t, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 16, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    u
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, u)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, y)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 16, characters 16-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    w
+with
+    w
+The actual replacement has type
+    expr * 'a * 'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, y)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    /
+The actual replacement has type
+    expr * (int -> int -> int) * (int -> int -> int)
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, /, y)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 17-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    z, x, y
+with
+    x, z, y
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (x, z, y)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 11-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * 'b * 'b -> 'b
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, y)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 20-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    z, x, y
+with
+    z, y, x
+The actual replacement has type
+    expr * 'c * 'c
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, y, x)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    t
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, t)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    *
+The actual replacement has type
+    expr * (int -> int -> int) * (int -> int -> int)
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, *)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * 'd * 'd
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, y)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    <
+The actual replacement has type
+    expr * ('e -> 'e -> bool) * ('e -> 'e -> bool)
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, <)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    /
+The actual replacement has type
+    expr * (int -> int -> int) * (int -> int -> int)
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, /)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    e
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, e)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    w
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, w)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    u
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, u)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "2238.ml", line 19, characters 19-54:
+File "2238.ml", line 20, characters 21-62:
+File "2238.ml", line 21, characters 16-44:
+File "2238.ml", line 22, characters 14-42:
+And modified the following location:
+File "2238.ml", line 18, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * 'f * 'f
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, x)))
+                              | Times (t, u) -> [[...other program...]]
+                              | Average (t, u) -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Sine t -> [[...other program...]]
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================

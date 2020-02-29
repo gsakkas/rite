@@ -1,0 +1,56 @@
+------------------------------------------------------------------
+File "1498.ml", line 7, characters 62-63:
+This expression has type 'a list list but is here used with type 'a
+Relevant code: h
+------------------------------------------------------------------
+File "1498.ml", line 7, characters 32-38:
+Try replacing
+    (List.mem seen h)
+with
+    (List.mem h seen)
+of type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if (List.mem h seen) then seen else
+                                             seen @ [h])
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================
+File "1498.ml", line 7, characters 32-36:
+Try replacing
+    seen
+with
+    @
+of type
+    'b list -> 'b list -> 'b list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem @ h) then seen else seen @ [h])
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "1498.ml", line 7, characters 62-63:
+Try replacing
+    h
+with
+    @
+of type
+    'c list -> 'c list -> 'c list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem seen h) then seen else seen @ [@]) in
+             let rest' = t in (helper (seen', rest'))))
+==============================

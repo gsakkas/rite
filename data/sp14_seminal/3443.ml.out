@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3443.ml", line 13, characters 7-65:
+This expression has type 'a list but is here used with type unit
+Relevant code: 1 :: (count additivePersistence (sumList (digitsOfInt n)))
+------------------------------------------------------------------
+File "3443.ml", line 13, characters 7-65:
+Try replacing
+    1 :: (count additivePersistence (sumList (digitsOfInt n)))
+with
+    [[...]]
+of type
+    unit
+within context
+    let rec additivePersistence n =
+    let count = [] in (if (sumList (digitsOfInt n)) > 9 then [[...]])
+    ;; 
+==============================

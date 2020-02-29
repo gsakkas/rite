@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1478.ml", line 8, characters 49-56:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: (x, hd)
+------------------------------------------------------------------
+File "1478.ml", line 8, characters 49-56:
+Try replacing
+    x, hd
+with
+    x, hd; [[...]]
+of type
+    ('d * 'e) list
+within context
+    fun x y -> (match y with 
+                | hd :: tl ->
+                  (if tl = [] then [x, hd] else (x, hd; [[...]]) @ (argmaker x tl)))
+==============================
+File "1478.ml", line 8, characters 57-58:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    'f * 'g -> ('f * 'g) list -> ('f * 'g) list
+within context
+    fun x y -> (match y with 
+                | hd :: tl ->
+                  (if tl = [] then [x, hd] else (x, hd @; [[...]] (argmaker x tl))))
+==============================

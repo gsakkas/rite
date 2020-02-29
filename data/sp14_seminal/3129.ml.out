@@ -1,0 +1,71 @@
+------------------------------------------------------------------
+File "3129.ml", line 26, characters 33-34:
+This expression has type 'a -> 'b * 'c list -> 'b * 'a
+but is here used with type 'a -> 'b * 'c list -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "3129.ml", line 26, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'd list -> 'e * 'f -> int * 'd list
+within context
+    let f a x = (match x with 
+                 | (c, d :: t) ->
+                   (c, a)) in let base = 0, [] in let args = (match l1 with 
+                                                              | h :: t ->
+                                                                [h, l2
+                                                                      ]) in let
+      (_, res)
+      =
+      (List.fold_left (f; [[...]]) base  args)
+      in
+      res
+==============================
+File "3129.ml", line 26, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('g -> 'h * 'i list -> 'h * 'g) -> int * 'j list -> ('k * 'l) list -> 'm * 'n
+within context
+    let f a x = (match x with 
+                 | (c, d :: t) ->
+                   (c, a)) in let base = 0, [] in let args = (match l1 with 
+                                                              | h :: t ->
+                                                                [h, l2
+                                                                      ]) in let
+      (_, res)
+      =
+      ((List.fold_left; [[...]]) f base  args)
+      in
+      res
+==============================
+File "3129.ml", line 23, characters 10-49:
+Try replacing
+    fun a x -> (match x with 
+                | (c, d :: t) -> (c, a))
+with
+    fun a x -> (match x with 
+                | (c, d :: t) -> (c, a)); [[...]]
+of type
+    'o
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f = fun a x -> (match x with 
+                                                         | (c, d :: t) ->
+                                                           (c,
+                                                                 a)); [[...]] in let
+              base
+              =
+              0, []
+              in
+              let args = (match l1 with 
+                          | h :: t ->
+                            [h, l2
+                                  ]) in let (_, res) = (List.fold_left f base  args)
+              in
+              res in (removeZero (add (padZero l1 l2))))
+==============================

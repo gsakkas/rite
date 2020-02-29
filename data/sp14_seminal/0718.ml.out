@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "0718.ml", line 39, characters 34-38:
+This expression has type int * int -> int but is here used with type
+  (int * int -> int) * int
+Relevant code: rand
+------------------------------------------------------------------
+File "0718.ml", line 39, characters 26-44:
+Try replacing
+    (build rand), nd
+with
+    [[...]]
+of type
+    expr
+within context
+    let res = (rand (0, 4)) in (match depth with 
+                                | 0 ->
+                                  (if (mod res 2) = 0 then (buildX ()) else
+                                      (buildY ()))
+                                | _ -> (let nd = depth - 1 in (match res with 
+                                                               | 0 ->
+                                                                 (buildAverage
+                                                                     ((build
+                                                                           (rand,
+                                                                               nd))
+                                                                         ,
+                                                                         (build
+                                                                           (rand,
+                                                                               nd))))
+                                                               | 1 ->
+                                                                 (buildThresh
+                                                                     ((build
+                                                                           (rand,
+                                                                               nd))
+                                                                         ,
+                                                                         (build
+                                                                           (rand,
+                                                                               nd))
+                                                                         ,
+                                                                         (build
+                                                                           (rand,
+                                                                               nd))
+                                                                         ,
+                                                                         (build
+                                                                           (rand,
+                                                                               nd))))
+                                                               | 2 ->
+                                                                 (buildTimes
+                                                                     ((build
+                                                                           (rand,
+                                                                               nd))
+                                                                         ,
+                                                                         (build
+                                                                           (rand,
+                                                                               nd))))
+                                                               | 3 ->
+                                                                 (buildSine
+                                                                     (build
+                                                                       (rand, nd)))
+                                                               | 4 ->
+                                                                 (buildCosine
+                                                                     [[...]]))))
+==============================

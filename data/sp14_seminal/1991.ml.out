@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1991.ml", line 21, characters 53-54:
+This expression has type int but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "1991.ml", line 22, characters 4-143:
+And modified the following location:
+File "1991.ml", line 21, characters 10-72:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if a + b > 9 then 1 :: (a + b) - 10 :: a else a + b :: a)
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (a, b) ->
+                                                    [[...]]) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1991.ml", line 22, characters 4-143:
+And modified the following location:
+File "1991.ml", line 18, characters 4-271:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match x with 
+                 | (a, b) ->
+                   (if a + b > 9 then 1 :: (a + b) - 10 :: a else
+                       a + b ::
+                           a)) in let base = [] in
+      let args = (match (List.rev (List.combine l1 l2)) with 
+                  | h :: t ->
+                    h) in let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'b
+==============================

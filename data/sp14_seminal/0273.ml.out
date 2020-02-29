@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "0273.ml", line 3, characters 2-63:
+This expression has type ('a * int) list but is here used with type 'a
+Relevant code: if n <= 0 then [] else [((digitsOfInt (n / 10)), (n mod 10))]
+------------------------------------------------------------------
+File "0273.ml", line 3, characters 26-62:
+Try replacing
+    (digitsOfInt (n / 10)), (mod n 10)
+with
+    (mod n 10)
+of type
+    int
+within context
+    let rec digitsOfInt n = (if (n <= 0) then [] else [(mod n 10)]) ;; 
+==============================
+File "0273.ml", line 3, characters 28-39:
+Try replacing
+    digitsOfInt
+with
+    mod
+of type
+    int -> int -> int
+within context
+    fun n -> (if (n <= 0) then [] else [(mod (n / 10)), (mod n 10)])
+==============================
+File "0273.ml", line 3, characters 28-39:
+Try replacing
+    digitsOfInt
+with
+    <=
+of type
+    int -> int -> bool
+within context
+    fun n -> (if (n <= 0) then [] else [(<= (n / 10)), (mod n 10)])
+==============================
+File "0273.ml", line 3, characters 28-39:
+Try replacing
+    digitsOfInt
+with
+    /
+of type
+    int -> int -> int
+within context
+    fun n -> (if (n <= 0) then [] else [(/ (n / 10)), (mod n 10)])
+==============================

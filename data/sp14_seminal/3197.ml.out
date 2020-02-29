@@ -1,0 +1,66 @@
+------------------------------------------------------------------
+File "3197.ml", line 7, characters 42-45:
+This expression is not a function, it cannot be applied
+Relevant code: sep
+------------------------------------------------------------------
+Triaged the following locations:
+File "3197.ml", line 7, characters 31-40:
+And modified the following location:
+File "3197.ml", line 7, characters 42-45:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sepConcat
+If you ignore other surrounding code, try replacing
+    sep
+with
+    sep; [[...]]
+The actual replacement has type
+    string list -> 'b
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h ^ sep in
+             let base = "" in
+             let l = ((sepConcat; [[...]]) ((sep; [[...]]) t)) in
+             (List.fold_left f base  l)))
+==============================
+Triaged the following locations:
+File "3197.ml", line 7, characters 31-40:
+And modified the following location:
+File "3197.ml", line 7, characters 42-45:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sepConcat
+If you ignore other surrounding code, try replacing
+    sep
+with
+    f
+The actual replacement has type
+    string list -> 'a -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h ^ sep in
+             let base = "" in
+             let l = ((sepConcat; [[...]]) (f t)) in (List.fold_left f base  l)))
+==============================
+Triaged the following locations:
+File "3197.ml", line 7, characters 31-40:
+And modified the following location:
+File "3197.ml", line 7, characters 46-47:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sepConcat
+If you ignore other surrounding code, try replacing
+    (sep t)
+with
+    sep
+The actual replacement has type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h ^ sep in
+             let base = "" in
+             let l = ((sepConcat; [[...]]) sep) in (List.fold_left f base  l)))
+==============================

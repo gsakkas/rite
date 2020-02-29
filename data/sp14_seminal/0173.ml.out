@@ -1,0 +1,73 @@
+------------------------------------------------------------------
+File "0173.ml", line 3, characters 25-26:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+Triaged the following locations:
+File "0173.ml", line 3, characters 16-18:
+And modified the following location:
+File "0173.ml", line 3, characters 20-24:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +.
+If you ignore other surrounding code, try replacing
+    x ** 2
+with
+    ( ** ) (x 2)
+The actual replacement has type
+    float -> float
+within context
+    fun xs ->
+      (let f a x = (a +.; [[...]] ( ** ) (x 2)) in
+          let base = 0 in (List.fold_left f base  xs))
+==============================
+Triaged the following locations:
+File "0173.ml", line 3, characters 16-18:
+And modified the following location:
+File "0173.ml", line 3, characters 22-24:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +.
+If you ignore other surrounding code, try replacing
+    **
+with
+    **; [[...]]
+The actual replacement has type
+    'a -> int -> 'b
+within context
+    fun xs ->
+      (let f a x = (a +.; [[...]] (x **; [[...]] 2)) in
+          let base = 0 in (List.fold_left f base  xs))
+==============================
+Triaged the following locations:
+File "0173.ml", line 3, characters 16-18:
+And modified the following location:
+File "0173.ml", line 3, characters 22-24:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +.
+If you ignore other surrounding code, try replacing
+    **
+with
+    List.fold_left
+The actual replacement has type
+    (int -> 'c -> int) -> int -> 'c list -> int
+within context
+    fun xs ->
+      (let f a x = (a +.; [[...]] (x List.fold_left 2)) in
+          let base = 0 in (List.fold_left f base  xs))
+==============================
+Triaged the following locations:
+File "0173.ml", line 3, characters 16-18:
+And modified the following location:
+File "0173.ml", line 3, characters 25-26:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +.
+If you ignore other surrounding code, try replacing
+    2
+with
+    2; [[...]]
+The actual replacement has type
+    float
+within context
+    fun xs ->
+      (let f a x = (a +.; [[...]] x ** (2; [[...]])) in
+          let base = 0 in (List.fold_left f base  xs))
+==============================

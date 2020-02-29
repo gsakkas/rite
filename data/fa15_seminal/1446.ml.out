@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "1446.ml", line 23, characters 40-52:
+This expression has type float * float * float * float
+but is here used with type expr * expr * expr * expr
+Relevant code: (x, y, x, y)
+------------------------------------------------------------------
+File "1446.ml", line 23, characters 28-39:
+Try replacing
+    buildThresh
+with
+    buildThresh; [[...]]
+of type
+    float * float * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh; [[...]]) (x, y, x, y))) ;; 
+==============================

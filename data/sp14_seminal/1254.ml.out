@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "1254.ml", line 37, characters 47-49:
+This expression has type int but is here used with type float
+Relevant code: 10
+------------------------------------------------------------------
+File "1254.ml", line 37, characters 50-52:
+Try replacing
+    **
+with
+    +
+of type
+    int -> int -> int
+within context
+    w, (bigAdd y (mulByDigit (x * (10 + (List.length y))) l1))
+==============================
+File "1254.ml", line 37, characters 50-52:
+Try replacing
+    **
+with
+    *
+of type
+    int -> int -> int
+within context
+    w, (bigAdd y (mulByDigit (x * (10 * (List.length y))) l1))
+==============================
+File "1254.ml", line 37, characters 50-52:
+Try replacing
+    **
+with
+    /
+of type
+    int -> int -> int
+within context
+    w, (bigAdd y (mulByDigit (x * (10 / (List.length y))) l1))
+==============================
+File "1254.ml", line 37, characters 50-52:
+Try replacing
+    **
+with
+    -
+of type
+    int -> int -> int
+within context
+    w, (bigAdd y (mulByDigit (x * (10 - (List.length y))) l1))
+==============================

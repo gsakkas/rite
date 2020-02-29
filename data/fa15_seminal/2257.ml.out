@@ -1,0 +1,78 @@
+------------------------------------------------------------------
+File "2257.ml", line 37, characters 48-58:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: mulByDigit
+------------------------------------------------------------------
+Triaged the following locations:
+File "2257.ml", line 37, characters 40-46:
+And modified the following location:
+File "2257.ml", line 37, characters 48-58:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    mulByDigit; [[...]]
+The actual replacement has type
+    int -> 'd -> 'e -> 'f
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = o * x in
+                      10 * o,
+                          ((bigAdd; [[...]]) ((mulByDigit; [[...]]) prod l1  l))))
+==============================
+Triaged the following locations:
+File "2257.ml", line 37, characters 40-46:
+And modified the following location:
+File "2257.ml", line 37, characters 59-63:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit prod l1  l)
+with
+    (mulByDigit l1 l)
+The actual replacement has type
+    int list
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = o * x in 10 * o, ((bigAdd; [[...]]) (mulByDigit l1 l))))
+==============================
+Triaged the following locations:
+File "2257.ml", line 37, characters 40-46:
+And modified the following location:
+File "2257.ml", line 37, characters 64-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit prod l1  l)
+with
+    (mulByDigit prod l)
+The actual replacement has type
+    int list
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = o * x in
+                      10 * o, ((bigAdd; [[...]]) (mulByDigit prod l))))
+==============================
+Triaged the following locations:
+File "2257.ml", line 37, characters 40-46:
+And modified the following location:
+File "2257.ml", line 37, characters 67-68:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit prod l1  l)
+with
+    (mulByDigit prod l1)
+The actual replacement has type
+    int list
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = o * x in
+                      10 * o, ((bigAdd; [[...]]) (mulByDigit prod l1))))
+==============================

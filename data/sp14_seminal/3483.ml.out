@@ -1,0 +1,179 @@
+
+------------------------------------------------------------------
+File "3483.ml", line 39, characters 36-37:
+This expression has type int but is here used with type float
+Relevant code: 0
+------------------------------------------------------------------
+File "3483.ml", line 39, characters 36-37:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr0 -> (sin (pi *. (eval (expr0, x, y))))
+                              | Cosine expr0 -> (cos (pi *. (eval (expr0, x, y))))
+                              | Average (expr0, expr1) ->
+                                (((eval (expr0, x, y)) +. (eval (expr1, x, y)))
+                                      /. 2.)
+                              | Times (expr0, expr1) ->
+                                ((eval (expr0, x, y)) *. (eval (expr1, x, y)))
+                              | Thresh (expr0, expr1, expr2, expr3) ->
+                                (match (eval (expr0, x, y)) < (eval (expr1, x, y))
+                                 with
+                                 
+                                 | true -> (eval (expr2, x, y))
+                                 | false -> (eval (expr3, x, y)))
+                              | Maximum (expr0, expr1, expr2) ->
+                                (match (eval (expr0, x, y)) < (eval (expr1, x, y))
+                                 with
+                                 
+                                 | true ->
+                                   (match
+                                    (eval (expr1, x, y)) < (eval (expr2, x, y))
+                                    with
+                                    
+                                    | true -> (eval (expr2, x, y))
+                                    | false -> (eval (expr1, x, y)))
+                                 | false ->
+                                   (match
+                                    (eval (expr0, x, y)) < (eval (expr2, x, y))
+                                    with
+                                    
+                                    | true -> (eval (expr2, x, y))
+                                    | false -> (eval (expr0, x, y))))
+                              | Absolute expr0 ->
+                                (match (eval (expr0, x, y)) < (0; [[...]]) with 
+                                 | true -> 0.0 -. (eval (expr0, x, y))
+                                 | false -> (eval (expr0, x, y)))) ;; 
+==============================
+File "3483.ml", line 39, characters 13-33:
+Try replacing
+    (eval (expr0, x, y))
+with
+    (eval (expr0, x, y)); [[...]]
+of type
+    int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr0 -> (sin (pi *. (eval (expr0, x, y))))
+                              | Cosine expr0 -> (cos (pi *. (eval (expr0, x, y))))
+                              | Average (expr0, expr1) ->
+                                (((eval (expr0, x, y)) +. (eval (expr1, x, y)))
+                                      /. 2.)
+                              | Times (expr0, expr1) ->
+                                ((eval (expr0, x, y)) *. (eval (expr1, x, y)))
+                              | Thresh (expr0, expr1, expr2, expr3) ->
+                                (match (eval (expr0, x, y)) < (eval (expr1, x, y))
+                                 with
+                                 
+                                 | true -> (eval (expr2, x, y))
+                                 | false -> (eval (expr3, x, y)))
+                              | Maximum (expr0, expr1, expr2) ->
+                                (match (eval (expr0, x, y)) < (eval (expr1, x, y))
+                                 with
+                                 
+                                 | true ->
+                                   (match
+                                    (eval (expr1, x, y)) < (eval (expr2, x, y))
+                                    with
+                                    
+                                    | true -> (eval (expr2, x, y))
+                                    | false -> (eval (expr1, x, y)))
+                                 | false ->
+                                   (match
+                                    (eval (expr0, x, y)) < (eval (expr2, x, y))
+                                    with
+                                    
+                                    | true -> (eval (expr2, x, y))
+                                    | false -> (eval (expr0, x, y))))
+                              | Absolute expr0 ->
+                                (match ((eval (expr0, x, y)); [[...]]) < 0 with 
+                                 | true -> 0.0 -. (eval (expr0, x, y))
+                                 | false -> (eval (expr0, x, y)))) ;; 
+==============================
+File "3483.ml", line 39, characters 34-35:
+Try replacing
+    <
+with
+    <; [[...]]
+of type
+    float -> int -> bool
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr0 -> (sin (pi *. (eval (expr0, x, y))))
+                              | Cosine expr0 -> (cos (pi *. (eval (expr0, x, y))))
+                              | Average (expr0, expr1) ->
+                                (((eval (expr0, x, y)) +. (eval (expr1, x, y)))
+                                      /. 2.)
+                              | Times (expr0, expr1) ->
+                                ((eval (expr0, x, y)) *. (eval (expr1, x, y)))
+                              | Thresh (expr0, expr1, expr2, expr3) ->
+                                (match (eval (expr0, x, y)) < (eval (expr1, x, y))
+                                 with
+                                 
+                                 | true -> (eval (expr2, x, y))
+                                 | false -> (eval (expr3, x, y)))
+                              | Maximum (expr0, expr1, expr2) ->
+                                (match (eval (expr0, x, y)) < (eval (expr1, x, y))
+                                 with
+                                 
+                                 | true ->
+                                   (match
+                                    (eval (expr1, x, y)) < (eval (expr2, x, y))
+                                    with
+                                    
+                                    | true -> (eval (expr2, x, y))
+                                    | false -> (eval (expr1, x, y)))
+                                 | false ->
+                                   (match
+                                    (eval (expr0, x, y)) < (eval (expr2, x, y))
+                                    with
+                                    
+                                    | true -> (eval (expr2, x, y))
+                                    | false -> (eval (expr0, x, y))))
+                              | Absolute expr0 ->
+                                (match ((eval (expr0, x, y)) <; [[...]] 0) with 
+                                 | true -> 0.0 -. (eval (expr0, x, y))
+                                 | false -> (eval (expr0, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3483.ml", line 19, characters 18-50:
+File "3483.ml", line 20, characters 20-52:
+File "3483.ml", line 22, characters 6-58:
+File "3483.ml", line 23, characters 27-71:
+File "3483.ml", line 25, characters 6-137:
+File "3483.ml", line 29, characters 6-405:
+And modified the following location:
+File "3483.ml", line 40, characters 22-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    -.
+with
+    -.; [[...]]
+The actual replacement has type
+    float -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr0 -> [[...other program...]]
+                              | Cosine expr0 -> [[...other program...]]
+                              | Average (expr0, expr1) -> [[...other program...]]
+                              | Times (expr0, expr1) -> [[...other program...]]
+                              | Thresh (expr0, expr1, expr2, expr3) ->
+                                [[...other program...]]
+                              | Maximum (expr0, expr1, expr2) ->
+                                [[...other program...]]
+                              | Absolute expr0 ->
+                                (match (eval (expr0, x, y)) < 0 with 
+                                 | true -> (0.0 -.; [[...]] (eval (expr0, x, y)))
+                                 | false -> (eval (expr0, x, y)))) ;; 
+==============================

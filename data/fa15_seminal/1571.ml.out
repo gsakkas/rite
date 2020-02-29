@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1571.ml", line 3, characters 61-63:
+This expression has type 'a but is here used with type 'a list
+Relevant code: hd
+------------------------------------------------------------------
+File "1571.ml", line 3, characters 39-63:
+Try replacing
+    (listReverse tail) :: hd
+with
+    [[...]]
+of type
+    'b list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> l
+                             | hd :: tail -> [[...]]) ;; 
+==============================

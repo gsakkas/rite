@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "2649.ml", line 31, characters 34-69:
+This expression has type int list but is here used with type int
+Relevant code: bigAdd total (mulByDigit (i - 1) l)
+------------------------------------------------------------------
+File "2649.ml", line 30, characters 7-8:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    int list
+within context
+    let rec mulByDigit i l =
+    (if i < 2 then (0; [[...]]) else
+      (let total = (bigAdd l l) in (bigAdd total (mulByDigit (i - 1) l))))
+    ;; 
+==============================
+File "2649.ml", line 31, characters 34-40:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    int list -> int -> int
+within context
+    fun i
+      l ->
+        (if i < 2 then 0 else
+          (let total = (bigAdd l l) in
+              ((bigAdd; [[...]]) total (mulByDigit (i - 1) l))))
+==============================

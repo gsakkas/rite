@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2449.ml", line 25, characters 44-56:
+This expression has type int but is here used with type int list
+Relevant code: (sum mod 10)
+------------------------------------------------------------------
+File "2449.ml", line 25, characters 30-56:
+Try replacing
+    sum / 10 :: (mod sum 10)
+with
+    [[...]]
+of type
+    int
+within context
+    let (a1, a2) = a in let test = (match a1 with 
+                                    | [] -> 0
+                                    | h :: t ->
+                                      h) in let sum = (l1x + l2x) + test in
+      let terms = (match a2 with 
+                   | [] -> [[...]]
+                   | h :: t -> (mod sum 10)) in sum / 10 :: a1, terms :: a2
+==============================

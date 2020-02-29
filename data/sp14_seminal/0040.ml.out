@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0040.ml", line 43, characters 61-63:
+This expression has type int list list but is here used with type
+  int list list list
+Relevant code: rt
+------------------------------------------------------------------
+File "0040.ml", line 43, characters 31-57:
+Try replacing
+    (mulByDigit h1 rh) :: rt
+with
+    [[...]]
+of type
+    'a
+within context
+    fun a x -> (match a with 
+                | (h1 :: t1, rh :: rt) -> (t1, [[...]] :: rt))
+==============================

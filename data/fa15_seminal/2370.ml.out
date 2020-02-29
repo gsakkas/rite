@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2370.ml", line 10, characters 46-68:
+This expression has type char list but is here used with type bool
+Relevant code: matchHeads (explode w)
+------------------------------------------------------------------
+File "2370.ml", line 10, characters 31-35:
+Try replacing
+    true
+with
+    true; [[...]]
+of type
+    char list
+within context
+    let palindrome w = (match (explode w) with 
+                        | [] -> (true; [[...]])
+                        | h :: t -> (matchHeads (explode w))) ;; 
+==============================
+File "2370.ml", line 10, characters 46-68:
+Try replacing
+    (matchHeads (explode w))
+with
+    (matchHeads (explode w)); [[...]]
+of type
+    bool
+within context
+    let palindrome w = (match (explode w) with 
+                        | [] -> true
+                        | h :: t -> ((matchHeads (explode w)); [[...]])) ;; 
+==============================

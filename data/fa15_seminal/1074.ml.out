@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1074.ml", line 5, characters 18-19:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: f
+------------------------------------------------------------------
+File "1074.ml", line 5, characters 20-23:
+Try replacing
+    (f x f  a)
+with
+    (f (x, f, a))
+of type
+    int * int -> int
+within context
+    let f a x a x = (f (x, f, a)) in let base x = x in (List.fold_left f base  fs)
+==============================

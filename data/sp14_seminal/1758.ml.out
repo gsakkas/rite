@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1758.ml", line 24, characters 35-39:
+This expression has type 'a list but is here used with type int * int
+Relevant code: base
+------------------------------------------------------------------
+File "1758.ml", line 24, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('b -> int * int -> int * int) -> 'c list -> ('d * 'e) list -> 'f * 'g
+within context
+    let f a x = let (i, j) = x in (if i + j > 9 then 1, (i + j) - 10 else 0, i + j)
+      in
+      let base = [] in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

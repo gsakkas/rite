@@ -1,0 +1,51 @@
+------------------------------------------------------------------
+File "1848.ml", line 19, characters 35-39:
+This expression has type int * int but is here used with type int * int list
+Relevant code: base
+------------------------------------------------------------------
+File "1848.ml", line 19, characters 35-39:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    int * int list
+within context
+    let f (c, ds) (x1, x2) = ((c + x1) + x2) / 10, (mod ((c + x1) + x2) 10) :: ds in
+      let base = 0, 1 in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f (base; [[...]])  args) in res
+==============================
+File "1848.ml", line 17, characters 15-21:
+Try replacing
+    0, 1
+with
+    0, 1; [[...]]
+of type
+    'a
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f (c, ds) (x1, x2) =
+            ((c + x1) + x2) / 10, (mod ((c + x1) + x2) 10) :: ds
+            in
+            let base = 0, 1; [[...]] in
+            let args = (List.combine l1 l2) in
+            let (_, res) = (List.fold_left f base  args) in res
+          in
+          (removeZero (add (padZero l1 l2))))
+==============================
+File "1848.ml", line 19, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> int * int -> int * int list) ->
+    int * int -> ('b * 'c) list -> 'd * 'e
+within context
+    let f (c, ds) (x1, x2) = ((c + x1) + x2) / 10, (mod ((c + x1) + x2) 10) :: ds in
+      let base = 0, 1 in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

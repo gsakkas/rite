@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "0341.ml", line 30, characters 17-47:
+This expression has type expr but is here used with type float
+Relevant code: Sine ((eval (e, x, y)) *. 0.5)
+------------------------------------------------------------------
+File "0341.ml", line 30, characters 17-47:
+Try replacing
+    (Sine ((eval (e, x, y)) *. 0.5))
+with
+    ((eval (e, x, y)) *. 0.5)
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | MyExpr1 (e1, e2, e3) ->
+                                (((cos (pi *. (eval (e1, x, y))))
+                                          *. (sin (pi *. (eval (e2, x, y)))))
+                                      *. (eval (e3, x, y)))
+                              | MyExpr2 e -> ((eval (e, x, y)) *. 0.5)) ;; 
+==============================

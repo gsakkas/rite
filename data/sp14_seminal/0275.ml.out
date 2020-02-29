@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0275.ml", line 3, characters 32-68:
+This expression has type int list * 'a but is here used with type 'b list
+Relevant code: ([n mod 10], (digitsOfInt (n / 10)))
+------------------------------------------------------------------
+File "0275.ml", line 3, characters 32-68:
+Try replacing
+    [(mod n 10)], (digitsOfInt (n / 10))
+with
+    [(mod n 10)], (digitsOfInt (n / 10)); [[...]]
+of type
+    'c list
+within context
+    let rec digitsOfInt n = (match n with 
+                             | 0 -> []
+                             | _ ->
+                               ([(mod n 10)], (digitsOfInt (n / 10)); [[...]])) ;; 
+==============================

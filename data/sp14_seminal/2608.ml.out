@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "2608.ml", line 25, characters 15-72:
+This expression has type int * int list but is here used with type
+  'a list * int list
+Relevant code: ((((fir + sec) / 10) + b1), (((fir + sec) mod 10) :: b2))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2608.ml", line 24, characters 15-40:
+And modified the following location:
+File "2608.ml", line 25, characters 36-37:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    [], fir + sec :: b2
+If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    int -> 'b -> 'c
+within context
+    fun a x -> (let (b1, b2) = a in (match x with 
+                                     | (fir, sec) ->
+                                       (if fir + sec < 10 then
+                                           ([], fir + sec :: b2; [[...]])
+                                           else
+                                           ((fir + sec) / 10 +; [[...]] b1),
+                                             (mod (fir + sec) 10) :: b2)))
+==============================

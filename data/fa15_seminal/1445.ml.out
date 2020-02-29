@@ -1,0 +1,500 @@
+------------------------------------------------------------------
+File "1445.ml", line 24, characters 32-38:
+This expression has type float * float but is here used with type expr * expr
+Relevant code: (x, y)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 31-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    e1
+with
+    e2
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e2, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 25-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    (eval (e1, x, y))
+with
+    (eval ((e1, x, y)))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval ((e1, x, y))) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 31-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    e1
+with
+    y
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (y, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 31-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    e1
+with
+    x
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (x, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 35-36:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 31-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    e1
+with
+    e1
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 31-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    e1
+with
+    e
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 35-36:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, y, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 35-36:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    x
+with
+    e1
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, e1, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 35-36:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    x
+with
+    e
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, e, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 38-39:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, x)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 38-39:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    y
+with
+    e1
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, e1)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 38-39:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 38-39:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    y
+with
+    e
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, e)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "1445.ml", line 19, characters 13-14:
+File "1445.ml", line 20, characters 13-14:
+File "1445.ml", line 24, characters 21-38:
+File "1445.ml", line 25, characters 28-52:
+And modified the following location:
+File "1445.ml", line 23, characters 59-60:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    y
+with
+    e1
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, e1))) /. 2.0)
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================

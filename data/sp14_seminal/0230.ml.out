@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "0230.ml", line 3, characters 62-66:
+This expression has type 'a * bool but is here used with type 'a
+Relevant code: f b'
+------------------------------------------------------------------
+File "0230.ml", line 3, characters 62-66:
+Try replacing
+    (if c' then b' else (f b'))
+with
+    (if c' then b')
+of type
+    unit
+within context
+    let rec wwhile (f, b) = let y = (f b) in (match y with 
+                                              | (b', c') -> (if c' then b')) ;; 
+==============================
+File "0230.ml", line 3, characters 54-56:
+Try replacing
+    b'
+with
+    y
+of type
+    'b * bool
+within context
+    let rec wwhile (f, b) = let y = (f b) in (match y with 
+                                              | (b', c') ->
+                                                (if c' then y else (f b'))) ;; 
+==============================
+File "0230.ml", line 3, characters 62-63:
+Try replacing
+    f
+with
+    b
+of type
+    'c -> 'c
+within context
+    fun (f, b) -> (let y = (f b) in (match y with 
+                                     | (b', c') -> (if c' then b' else (b b'))))
+==============================

@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1799.ml", line 16, characters 64-67:
+This expression has type int -> int but is here used with type int
+Relevant code: abs
+------------------------------------------------------------------
+File "1799.ml", line 16, characters 64-67:
+Try replacing
+    abs
+with
+    abs; [[...]]
+of type
+    int
+within context
+    let rec additivePersistence n =
+    let (l, r) = (additivePersAndRoot (abs; [[...]]) n) in l
+    ;; 
+==============================
+File "1799.ml", line 16, characters 44-63:
+Try replacing
+    additivePersAndRoot
+with
+    additivePersAndRoot; [[...]]
+of type
+    (int -> int) -> 'a -> 'b * 'c
+within context
+    let rec additivePersistence n =
+    let (l, r) = ((additivePersAndRoot; [[...]]) abs n) in l
+    ;; 
+==============================

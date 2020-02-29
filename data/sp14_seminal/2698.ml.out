@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "2698.ml", line 30, characters 47-48:
+This expression is not a function, it cannot be applied
+Relevant code: a
+------------------------------------------------------------------
+File "2698.ml", line 30, characters 49-55:
+Try replacing
+    (a (b, c))
+with
+    a
+of type
+    expr
+within context
+    fun e -> (match e with 
+              | VarX -> "x"
+              | VarY -> "y"
+              | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+              | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+              | Average (a, b) ->
+                "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+              | Times (a, b) -> (exprToString a) ^ ("*" ^ (exprToString b))
+              | Thresh (a, b, c, d) ->
+                "(" ^
+                    ((exprToString a) ^
+                        ("<" ^
+                            ((exprToString b) ^
+                                ("?" ^
+                                    ((exprToString c) ^
+                                        (":" ^ ((exprToString d) ^ ")")))))))
+              | _ -> "_"
+              | Tan a -> "tan(pi*" ^ ((exprToString a) ^ ")")
+              | Arc (a, b, c) -> "sin(pi*" ^ ((exprToString a) ^ ")"))
+==============================

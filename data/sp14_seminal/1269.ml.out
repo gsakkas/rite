@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1269.ml", line 6, characters 42-52:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: append_new
+------------------------------------------------------------------
+File "1269.ml", line 6, characters 53-64:
+Try replacing
+    (append_new listReverse tail  [head])
+with
+    (append_new tail [head])
+of type
+    'n list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | head :: tail -> (append_new tail [head])) ;; 
+==============================

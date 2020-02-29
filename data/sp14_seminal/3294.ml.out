@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "3294.ml", line 23, characters 18-33:
+This expression has type int list * int list but is here used with type
+  'a list list * 'b list list
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "3294.ml", line 15, characters 12-13:
+Try replacing
+    x
+with
+    a
+of type
+    'c list * 'd list
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (v1, v2) -> (match a with 
+                                                 | (list1, list2) ->
+                                                   ((List.append list1 v1),
+                                                         (List.append
+                                                           list2
+                                                           v2)))) in let base =
+          [], []
+          in
+          let args = (List.combine l1 l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

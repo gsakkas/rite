@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1140.ml", line 48, characters 28-46:
+This expression has type int but is here used with type float
+Relevant code: ((sum + r) mod 10)
+------------------------------------------------------------------
+File "1140.ml", line 48, characters 28-46:
+Try replacing
+    (mod (sum + r) 10)
+with
+    (mod (sum + r) 10); [[...]]
+of type
+    float
+within context
+    (match a with 
+     | (r, v) ->
+       (let sum = (intListToInt (mulByDigit (intListToInt l1) [s])) in
+             (if sum + r > 9 then
+                 (int_of_float ((mod (sum + r) 10); [[...]])),
+                   (mod (sum + r) 10) :: v
+                 else
+                 0, (mod (sum + r) 10) :: v)))
+==============================
+File "1140.ml", line 48, characters 15-27:
+Try replacing
+    int_of_float
+with
+    int_of_float; [[...]]
+of type
+    int -> int
+within context
+    (match a with 
+     | (r, v) ->
+       (let sum = (intListToInt (mulByDigit (intListToInt l1) [s])) in
+             (if sum + r > 9 then
+                 ((int_of_float; [[...]]) (mod (sum + r) 10)),
+                   (mod (sum + r) 10) :: v
+                 else
+                 0, (mod (sum + r) 10) :: v)))
+==============================

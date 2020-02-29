@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1867.ml", line 14, characters 67-71:
+This expression has type bool but is here used with type unit
+Relevant code: true
+------------------------------------------------------------------
+File "1867.ml", line 14, characters 67-71:
+Try replacing
+    true
+with
+    true; [[...]]
+of type
+    unit
+within context
+    let palindrome w =
+    (if (explode w) = (listReverse (explode w)) then (true; [[...]]))
+    ;; 
+==============================

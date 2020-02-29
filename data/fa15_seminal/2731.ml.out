@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "2731.ml", line 22, characters 35-39:
+This expression has type 'a list * 'b list but is here used with type
+  int list
+Relevant code: base
+------------------------------------------------------------------
+File "2731.ml", line 22, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'c list * 'd list -> 'e -> 'c list * 'd list
+within context
+    let f a x = (match a with 
+                 | [] -> []
+                 | h :: t ->
+                   (if h + x > 10 then [h + (mod x 10)] @ a else
+                       [h + x
+                           ])) in let base = [], [] in
+      let args = (failwith "to be implemented") in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2731.ml", line 22, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int -> int list) -> 'f list * 'g list -> 'h -> 'i * 'j
+within context
+    let f a x = (match a with 
+                 | [] -> []
+                 | h :: t ->
+                   (if h + x > 10 then [h + (mod x 10)] @ a else
+                       [h + x
+                           ])) in let base = [], [] in
+      let args = (failwith "to be implemented") in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2731.ml", line 16, characters 10-122:
+Try replacing
+    fun a x -> (match a with 
+                | [] -> []
+                | h :: t -> (if h + x > 10 then [h + (mod x 10)] @ a else [h + x]))
+with
+    fun a x -> (match a with 
+                | [] -> []
+                | h :: t ->
+                  (if h + x > 10 then [h + (mod x 10)] @ a else [h + x])); [[...]]
+of type
+    'k
+==============================

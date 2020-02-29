@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "2113.ml", line 15, characters 52-66:
+This expression has type expr * expr * expr but is here used with type
+  expr * float * float
+Relevant code: (VarY, a1, a2)
+------------------------------------------------------------------
+File "2113.ml", line 15, characters 52-66:
+Try replacing
+    VarY, a1, a2
+with
+    VarY, a1, a2; [[...]]
+of type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x +. 0.0)
+                              | VarY -> (y +. 0.0)
+                              | Average (a1, a2) ->
+                                ((eval (VarX, x, y)) +.
+                                      (eval (VarY, a1, a2; [[...]])))) ;; 
+==============================
+File "2113.ml", line 15, characters 47-51:
+Try replacing
+    eval
+with
+    eval; [[...]]
+of type
+    expr * expr * expr ->
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x +. 0.0)
+                              | VarY -> (y +. 0.0)
+                              | Average (a1, a2) ->
+                                ((eval (VarX, x, y)) +.
+                                      ((eval; [[...]]) (VarY, a1, a2)))) ;; 
+==============================

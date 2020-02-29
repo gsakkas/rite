@@ -1,0 +1,81 @@
+------------------------------------------------------------------
+File "0380.ml", line 17, characters 31-32:
+This expression has type expr but is here used with type expr * 'a * 'a
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "0380.ml", line 18, characters 16-40:
+File "0380.ml", line 19, characters 21-56:
+And modified the following location:
+File "0380.ml", line 17, characters 26-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr -> float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | varX -> x
+                              | varY -> y
+                              | Sine t -> (sin (pi *. ((eval; [[...]]) t x  y)))
+                              | Cosine t -> [[...other program...]]
+                              | Average (t, s) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0380.ml", line 18, characters 16-40:
+File "0380.ml", line 19, characters 21-56:
+And modified the following location:
+File "0380.ml", line 17, characters 31-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval t x  y)
+with
+    (eval (t, x, y))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | varX -> x
+                              | varY -> y
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | Cosine t -> [[...other program...]]
+                              | Average (t, s) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0380.ml", line 17, characters 14-38:
+File "0380.ml", line 19, characters 21-56:
+And modified the following location:
+File "0380.ml", line 18, characters 33-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval t x  y)
+with
+    (eval (t, x, y))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | varX -> x
+                              | varY -> y
+                              | Sine t -> [[...other program...]]
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Average (t, s) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0380.ml", line 17, characters 14-38:
+File "0380.ml", line 19, characters 21-56:
+And modified the following location:
+File "0380.ml", line 18, characters 28-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr -> float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | varX -> x
+                              | varY -> y
+                              | Sine t -> [[...other program...]]
+                              | Cosine t -> (cos (pi *. ((eval; [[...]]) t x  y)))
+                              | Average (t, s) -> [[...other program...]]) ;; 
+==============================

@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "3309.ml", line 2, characters 33-75:
+This expression has type int list but is here used with type int
+Relevant code: if i < n then [(clone x n) - 1; x] else []
+------------------------------------------------------------------
+File "3309.ml", line 2, characters 49-54:
+Try replacing
+    clone
+with
+    -
+of type
+    int -> int -> int
+within context
+    let i = 0 in (if i < n then [(- x n) - 1 ; x] else [])
+==============================

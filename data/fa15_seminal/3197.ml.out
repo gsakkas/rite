@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "3197.ml", line 26, characters 52-53:
+This expression has type 'a -> 'a but is here used with type int
+Relevant code: c
+------------------------------------------------------------------
+Triaged the following locations:
+File "3197.ml", line 27, characters 4-126:
+And modified the following location:
+File "3197.ml", line 26, characters 44-76:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a1 @ [c + 1], a2 @ [c + 1]
+with
+    [[...]]
+The actual replacement has type
+    'b
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (x1, x2) = x in let (a1, a2) = a in let v = x1 + x2 in [[...]]
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "3197.ml", line 27, characters 4-126:
+And modified the following location:
+File "3197.ml", line 24, characters 4-247:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x =
+      let (x1, x2) = x in
+        let (a1, a2) = a in let v = x1 + x2 in a1 @ [c + 1], a2 @ [c + 1]
+      in
+      let base = [0], [5] in
+      let args = (List.combine l1 l2) in
+      let (duh, res) = (List.fold_left f base  args) in duh, res
+with
+    [[...other program...]]
+The actual replacement has type
+    'c
+==============================

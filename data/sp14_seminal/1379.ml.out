@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "1379.ml", line 2, characters 20-52:
+This expression has type ('a -> 'b) list but is here used with type 'b
+Relevant code: if x <= 0 then [] else [clone x]
+------------------------------------------------------------------
+File "1379.ml", line 2, characters 44-49:
+Try replacing
+    clone
+with
+    n
+of type
+    int -> 'c
+within context
+    fun x n -> (if (x <= 0) then [] else [(n x)])
+==============================
+File "1379.ml", line 2, characters 44-49:
+Try replacing
+    clone
+with
+    <=
+of type
+    int -> int -> bool
+within context
+    fun x n -> (if (x <= 0) then [] else [(<= x)])
+==============================

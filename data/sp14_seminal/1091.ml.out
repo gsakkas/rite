@@ -1,0 +1,66 @@
+------------------------------------------------------------------
+File "1091.ml", line 3, characters 60-64:
+This expression has type int but is here used with type bool
+Relevant code: base
+------------------------------------------------------------------
+File "1091.ml", line 3, characters 38-39:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    'a
+within context
+    let pipe fs =
+    let f a x = a = (x a) in let base = 0; [[...]] in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1091.ml", line 3, characters 58-59:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int -> 'b -> int
+within context
+    let pipe fs =
+    let f a x = a = (x a) in let base = 0 in (List.fold_left (f; [[...]]) base  fs)
+    ;; 
+==============================
+File "1091.ml", line 3, characters 60-64:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    bool
+within context
+    let pipe fs =
+    let f a x = a = (x a) in let base = 0 in (List.fold_left f (base; [[...]])  fs)
+    ;; 
+==============================
+File "1091.ml", line 3, characters 43-57:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('c -> ('c -> 'c) -> bool) -> int -> 'd -> 'e
+within context
+    let pipe fs =
+    let f a x = a = (x a) in let base = 0 in ((List.fold_left; [[...]]) f base  fs)
+    ;; 
+==============================
+File "1091.ml", line 3, characters 8-23:
+Try replacing
+    fun a x -> a = (x a)
+with
+    fun a x -> a = (x a); [[...]]
+of type
+    'f
+within context
+    let pipe fs =
+    let f = fun a x -> a = (x a); [[...]] in
+      let base = 0 in (List.fold_left f base  fs)
+    ;; 
+==============================

@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "3069.ml", line 8, characters 4-96:
+This expression should not be a function, the expected type is
+int list
+Relevant code: (fun help  ->
+       fun n  -> match n with | 0 -> [] | _ -> cat (help (n / 10)) (n mod 10))
+------------------------------------------------------------------
+File "3069.ml", line 6, characters 7-10:
+Try replacing
+    [0]
+with
+    [0]; [[...]]
+of type
+    (int -> int list) -> int -> int list
+within context
+    let rec digitsOfInt n =
+    (if n = 0 then ([0]; [[...]]) else (fun help n -> (match n with 
+                                                       | 0 -> []
+                                                       | _ ->
+                                                         (cat
+                                                             (help (n / 10)) (mod n 10)))))
+    ;; 
+==============================
+File "3069.ml", line 8, characters 4-96:
+Try replacing
+    fun help n -> (match n with 
+                   | 0 -> []
+                   | _ -> (cat (help (n / 10)) (mod n 10)))
+with
+    fun help n -> (match n with 
+                   | 0 -> []
+                   | _ -> (cat (help (n / 10)) (mod n 10))); [[...]]
+of type
+    int list
+==============================

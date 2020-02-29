@@ -1,0 +1,94 @@
+------------------------------------------------------------------
+File "0452.ml", line 8, characters 58-72:
+This expression has type int * bool but is here used with type int
+Relevant code: ((f x), false)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0452.ml", line 7, characters 31-32:
+And modified the following location:
+File "0452.ml", line 7, characters 28-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    <
+If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    int
+within context
+    let fixpoint (f, b) =
+    let isFPoint x = ((f x) - (x; [[...]]) <; [[...]] 0) in
+      let rec test x = (if (isFPoint x) then x, true else (test ((f x), false))) in
+      (wwhile (isFPoint, b))
+    ;; 
+==============================
+Triaged the following locations:
+File "0452.ml", line 7, characters 31-32:
+And modified the following location:
+File "0452.ml", line 7, characters 26-27:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    <
+If you ignore other surrounding code, try replacing
+    -
+with
+    -; [[...]]
+The actual replacement has type
+    'a -> 'a * bool -> 'b
+within context
+    let fixpoint (f, b) =
+    let isFPoint x = (((f x) -; [[...]] x) <; [[...]] 0) in
+      let rec test x = (if (isFPoint x) then x, true else (test ((f x), false))) in
+      (wwhile (isFPoint, b))
+    ;; 
+==============================
+Triaged the following locations:
+File "0452.ml", line 9, characters 2-22:
+And modified the following location:
+File "0452.ml", line 8, characters 53-57:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    test
+with
+    b
+The actual replacement has type
+    int * bool -> int * bool
+within context
+    let fixpoint (f, b) =
+    let isFPoint x = (f x) - x < 0 in
+      let rec test x = (if (isFPoint x) then x, true else (b ((f x), false))) in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0452.ml", line 9, characters 2-22:
+And modified the following location:
+File "0452.ml", line 8, characters 15-72:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun x -> (if (isFPoint x) then x, true else (test ((f x), false)))
+with
+    fun x -> (if (isFPoint x) then x, true else (test ((f x), false))); [[...]]
+The actual replacement has type
+    int * bool -> int * bool
+within context
+    let fixpoint (f, b) =
+    let isFPoint x = (f x) - x < 0 in
+      let rec test =
+      fun x -> (if (isFPoint x) then x, true else (test ((f x), false))); [[...]]
+      in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0452.ml", line 9, characters 2-22:
+And modified the following location:
+File "0452.ml", line 8, characters 2-98:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let rec test x = (if (isFPoint x) then x, true else (test ((f x), false))) in
+      (wwhile (isFPoint, b))
+with
+    [[...other program...]]
+The actual replacement has type
+    'c
+within context
+    let fixpoint (f, b) = let isFPoint x = (f x) - x < 0 in [[...other program...]]
+    ;; 
+==============================

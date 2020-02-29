@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+File "2491.ml", line 31, characters 70-71:
+This expression has type int but is here used with type float
+Relevant code: 6
+------------------------------------------------------------------
+File "2491.ml", line 31, characters 70-71:
+Try replacing
+    6
+with
+    6; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | TimesTimes (e1, e2, e3) ->
+                                (((eval (e1, x, y)) *. (eval (e2, x, y)))
+                                      *. (eval (e3, x, y)))
+                              | Cube e1 ->
+                                (((eval (e1, x, y)) *. (eval (e1, x, y)))
+                                      *. (eval (e1, x, y)))
+                              | MultDivBy6 (e1, e2) ->
+                                (((eval (e1, x, y)) *. (eval (e2, x, y)))
+                                      /. 6; [[...]])) ;; 
+==============================
+File "2491.ml", line 31, characters 67-69:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | TimesTimes (e1, e2, e3) ->
+                                (((eval (e1, x, y)) *. (eval (e2, x, y)))
+                                      *. (eval (e3, x, y)))
+                              | Cube e1 ->
+                                (((eval (e1, x, y)) *. (eval (e1, x, y)))
+                                      *. (eval (e1, x, y)))
+                              | MultDivBy6 (e1, e2) ->
+                                (((eval (e1, x, y)) *. (eval (e2, x, y)))
+                                      /.; [[...]] 6)) ;; 
+==============================

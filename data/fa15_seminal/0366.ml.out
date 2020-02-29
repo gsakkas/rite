@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "0366.ml", line 36, characters 16-47:
+This expression has type expr * int * int but is here used with type
+  expr * float * float
+Relevant code: ((build (rand, (d - 1))), 1, 2)
+------------------------------------------------------------------
+File "0366.ml", line 36, characters 11-15:
+Try replacing
+    eval
+with
+    eval; [[...]]
+of type
+    (unit -> expr) * int * int ->
+    unit -> expr
+within context
+    fun (rand, depth) -> (let r = (rand (0, depth)) in (match depth with 
+                                                        | 0 ->
+                                                          (if (mod r 2) = 0 then
+                                                              buildX
+                                                              else
+                                                              buildY)
+                                                        | d ->
+                                                          (if r = 0 then
+                                                              ((eval; [[...]])
+                                                                ((build
+                                                                      (rand, d - 1))
+                                                                    ,
+                                                                    1, 2))
+                                                              else
+                                                              (build
+                                                                (rand, d - 1)))))
+==============================

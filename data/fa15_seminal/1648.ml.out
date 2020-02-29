@@ -1,0 +1,147 @@
+------------------------------------------------------------------
+File "1648.ml", line 14, characters 33-40:
+This expression has type int but is here used with type 'a list
+Relevant code: (y + z)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1648.ml", line 15, characters 4-109:
+And modified the following location:
+File "1648.ml", line 14, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int -> 'b -> 'c
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (y, z) = x in (y + z @; [[...]] a) in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1648.ml", line 15, characters 4-109:
+And modified the following location:
+File "1648.ml", line 14, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (y, z) = x in (y + z) + a in [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1648.ml", line 15, characters 4-109:
+And modified the following location:
+File "1648.ml", line 14, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    -
+The actual replacement has type
+    int -> int -> int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (y, z) = x in (y + z) - a in [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1648.ml", line 15, characters 4-109:
+And modified the following location:
+File "1648.ml", line 14, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    <
+The actual replacement has type
+    int -> int -> bool
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (y, z) = x in y + z < a in [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1648.ml", line 15, characters 4-109:
+And modified the following location:
+File "1648.ml", line 14, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    =
+The actual replacement has type
+    int -> int -> bool
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (y, z) = x in y + z = a in [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1648.ml", line 15, characters 4-109:
+And modified the following location:
+File "1648.ml", line 14, characters 36-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    @
+The actual replacement has type
+    'd list -> 'd list -> 'd list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (y, z) = x in (y @ z) @ a in [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1648.ml", line 15, characters 4-109:
+And modified the following location:
+File "1648.ml", line 14, characters 33-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y + z
+with
+    y + z; [[...]]
+The actual replacement has type
+    'e list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (y, z) = x in (y + z; [[...]]) @ a in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1648.ml", line 15, characters 4-109:
+And modified the following location:
+File "1648.ml", line 14, characters 4-157:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = let (y, z) = x in y + z @ a in
+      let base = [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'f
+==============================

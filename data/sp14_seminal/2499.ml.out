@@ -1,0 +1,46 @@
+------------------------------------------------------------------
+File "2499.ml", line 7, characters 28-59:
+This expression has type ('a -> 'a) * 'b but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: ((let k x = (f x) = x in f), b)
+------------------------------------------------------------------
+File "2499.ml", line 7, characters 41-42:
+Try replacing
+    (f x) = x
+with
+    (f (x = x))
+of type
+    bool * bool
+within context
+    fun (f, b) -> (wwhile ((let k x = (f (x = x)) in f), b))
+==============================
+File "2499.ml", line 7, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('c -> 'c) * 'd -> ('c -> 'c) * 'd -> bool
+within context
+    let fixpoint (f, b) = (= ((let k x = (f x) = x in f), b)) ;; 
+==============================
+File "2499.ml", line 7, characters 43-44:
+Try replacing
+    x
+with
+    =
+of type
+    'e -> 'e -> bool
+within context
+    (let k x = (f =) = x in f), b
+==============================
+File "2499.ml", line 7, characters 43-44:
+Try replacing
+    x
+with
+    b
+of type
+    'f
+within context
+    (let k x = (f b) = x in f), b
+==============================

@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "1881.ml", line 44, characters 20-36:
+This expression has type float but is here used with type
+  expr * float * float
+Relevant code: ((-1.0) *. res3)
+------------------------------------------------------------------
+File "1881.ml", line 44, characters 20-36:
+Try replacing
+    (-1.0 *. res3)
+with
+    (-1.0 *. res3); [[...]]
+of type
+    expr * float * float
+within context
+    let res3 = (eval (e3, x, y)) in
+      (if res1 > res2 then (((res1 +. res2) +. res3) /. 3.0) else
+          (if res2 > res3 then (((res1 *. res2) +. res3) /. 2.0) else
+            (if res1 > res3 then
+              ((((atan res1) +. (atan res2)) -. (atan res3) *. 2.0) /. (3.0 *. pi))
+              else
+              (eval ((-1.0 *. res3); [[...]])))))
+==============================
+File "1881.ml", line 44, characters 15-19:
+Try replacing
+    eval
+with
+    eval; [[...]]
+of type
+    float -> float
+within context
+    let res3 = (eval (e3, x, y)) in
+      (if res1 > res2 then (((res1 +. res2) +. res3) /. 3.0) else
+          (if res2 > res3 then (((res1 *. res2) +. res3) /. 2.0) else
+            (if res1 > res3 then
+              ((((atan res1) +. (atan res2)) -. (atan res3) *. 2.0) /. (3.0 *. pi))
+              else
+              ((eval; [[...]]) (-1.0 *. res3)))))
+==============================

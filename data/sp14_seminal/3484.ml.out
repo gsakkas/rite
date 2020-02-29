@@ -1,0 +1,145 @@
+------------------------------------------------------------------
+File "3484.ml", line 17, characters 18-22:
+This variable is bound several times in this matching
+Relevant code: expr
+------------------------------------------------------------------
+Triaged the following locations:
+File "3484.ml", line 13, characters 13-16:
+File "3484.ml", line 14, characters 13-16:
+File "3484.ml", line 15, characters 17-53:
+File "3484.ml", line 16, characters 19-55:
+File "3484.ml", line 18, characters 6-74:
+File "3484.ml", line 19, characters 4-21:
+File "3484.ml", line 20, characters 6-71:
+File "3484.ml", line 21, characters 4-32:
+File "3484.ml", line 22, characters 6-75:
+And modified the following location:
+File "3484.ml", line 17, characters 18-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    expr
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine expr -> [[...other program...]]
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr, _) -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3484.ml", line 13, characters 13-16:
+File "3484.ml", line 14, characters 13-16:
+File "3484.ml", line 15, characters 17-53:
+File "3484.ml", line 16, characters 19-55:
+File "3484.ml", line 18, characters 6-74:
+File "3484.ml", line 19, characters 4-21:
+File "3484.ml", line 20, characters 6-71:
+File "3484.ml", line 21, characters 4-32:
+File "3484.ml", line 22, characters 6-75:
+And modified the following location:
+File "3484.ml", line 17, characters 13-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    expr
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine expr -> [[...other program...]]
+                              | Cosine expr -> [[...other program...]]
+                              | Average (_, expr) -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3484.ml", line 13, characters 13-16:
+File "3484.ml", line 14, characters 13-16:
+File "3484.ml", line 15, characters 17-53:
+File "3484.ml", line 16, characters 19-55:
+File "3484.ml", line 17, characters 4-23:
+File "3484.ml", line 18, characters 6-74:
+File "3484.ml", line 20, characters 6-71:
+File "3484.ml", line 21, characters 4-32:
+File "3484.ml", line 22, characters 6-75:
+And modified the following location:
+File "3484.ml", line 19, characters 16-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    expr
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine expr -> [[...other program...]]
+                              | Cosine expr -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              | Times (expr, _) -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3484.ml", line 13, characters 13-16:
+File "3484.ml", line 14, characters 13-16:
+File "3484.ml", line 15, characters 17-53:
+File "3484.ml", line 16, characters 19-55:
+File "3484.ml", line 17, characters 4-23:
+File "3484.ml", line 18, characters 6-74:
+File "3484.ml", line 20, characters 6-71:
+File "3484.ml", line 21, characters 4-32:
+File "3484.ml", line 22, characters 6-75:
+And modified the following location:
+File "3484.ml", line 19, characters 11-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    expr
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine expr -> [[...other program...]]
+                              | Cosine expr -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              | Times (_, expr) -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3484.ml", line 13, characters 13-16:
+File "3484.ml", line 14, characters 13-16:
+File "3484.ml", line 15, characters 17-53:
+File "3484.ml", line 16, characters 19-55:
+File "3484.ml", line 17, characters 4-23:
+File "3484.ml", line 18, characters 6-74:
+File "3484.ml", line 19, characters 4-21:
+File "3484.ml", line 20, characters 6-71:
+File "3484.ml", line 22, characters 6-75:
+And modified the following location:
+File "3484.ml", line 21, characters 11-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    expr, expr, expr, expr
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine expr -> [[...other program...]]
+                              | Cosine expr -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              | Thresh _ -> [[...other program...]]) ;; 
+==============================

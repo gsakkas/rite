@@ -1,0 +1,46 @@
+------------------------------------------------------------------
+File "2333.ml", line 3, characters 49-50:
+This expression has type 'a list but is here used with type 'a
+Relevant code: x
+------------------------------------------------------------------
+File "2333.ml", line 3, characters 49-50:
+Try replacing
+    x
+with
+    accum
+of type
+    'b list
+within context
+    fun n ->
+      (let accum = [] in (if n < 1 then [] else (clone accum :: accum (n - 1))))
+==============================
+File "2333.ml", line 3, characters 49-50:
+Try replacing
+    x
+with
+    <
+of type
+    'c -> 'c -> bool
+within context
+    fun n -> (let accum = [] in (if n < 1 then [] else (clone < :: accum (n - 1))))
+==============================
+File "2333.ml", line 3, characters 49-50:
+Try replacing
+    x
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun n -> (let accum = [] in (if n < 1 then [] else (clone - :: accum (n - 1))))
+==============================
+File "2333.ml", line 3, characters 49-50:
+Try replacing
+    x
+with
+    n
+of type
+    int
+within context
+    fun n -> (let accum = [] in (if n < 1 then [] else (clone n :: accum (n - 1))))
+==============================

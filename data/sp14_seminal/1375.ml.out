@@ -1,0 +1,120 @@
+------------------------------------------------------------------
+File "1375.ml", line 22, characters 16-27:
+This pattern matches values of type 'a * 'b
+but is here used to match values of type unit
+Relevant code: (add1,add2)
+------------------------------------------------------------------
+File "1375.ml", line 16, characters 9-10:
+Try replacing
+    x
+with
+    x; [[...]]
+of type
+    unit
+within context
+    let f a x = (if (x; [[...]]) = () then a else (match a with 
+                                                   | (carry, rest) -> (match x with 
+                                                                       |
+                                                                         (add1,
+                                                                             add2)
+                                                                         ->
+                                                                         (((add1
+                                                                                         +
+                                                                                         add2)
+                                                                                     +
+                                                                                     carry)
+                                                                                 /
+                                                                                 10
+                                                                               ,
+                                                                               (mod
+                                                                                     ((add1
+                                                                                             +
+                                                                                             add2)
+                                                                                         +
+                                                                                         carry)
+                                                                                     10)
+                                                                                   ::
+                                                                                   rest)))) in let
+      base
+      =
+      0, []
+      in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "1375.ml", line 16, characters 13-15:
+Try replacing
+    ()
+with
+    (); [[...]]
+of type
+    int * int
+within context
+    let f a x = (if x = ((); [[...]]) then a else (match a with 
+                                                   | (carry, rest) -> (match x with 
+                                                                       |
+                                                                         (add1,
+                                                                             add2)
+                                                                         ->
+                                                                         (((add1
+                                                                                         +
+                                                                                         add2)
+                                                                                     +
+                                                                                     carry)
+                                                                                 /
+                                                                                 10
+                                                                               ,
+                                                                               (mod
+                                                                                     ((add1
+                                                                                             +
+                                                                                             add2)
+                                                                                         +
+                                                                                         carry)
+                                                                                     10)
+                                                                                   ::
+                                                                                   rest)))) in let
+      base
+      =
+      0, []
+      in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "1375.ml", line 16, characters 11-12:
+Try replacing
+    =
+with
+    =; [[...]]
+of type
+    int * int -> unit -> bool
+within context
+    let f a x = (if (x =; [[...]] ()) then a else (match a with 
+                                                   | (carry, rest) -> (match x with 
+                                                                       |
+                                                                         (add1,
+                                                                             add2)
+                                                                         ->
+                                                                         (((add1
+                                                                                         +
+                                                                                         add2)
+                                                                                     +
+                                                                                     carry)
+                                                                                 /
+                                                                                 10
+                                                                               ,
+                                                                               (mod
+                                                                                     ((add1
+                                                                                             +
+                                                                                             add2)
+                                                                                         +
+                                                                                         carry)
+                                                                                     10)
+                                                                                   ::
+                                                                                   rest)))) in let
+      base
+      =
+      0, []
+      in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

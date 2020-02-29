@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1046.ml", line 5, characters 49-56:
+This expression has type 'a but is here used with type
+  ('b -> ('b * 'c) list -> 'a) * 'b * ('b * 'c) list
+Relevant code: (d k t)
+------------------------------------------------------------------
+File "1046.ml", line 5, characters 43-56:
+Try replacing
+    (if (fst h) = k then (snd h) else (assoc (d k t)))
+with
+    (if (fst h) = k then (snd h))
+of type
+    unit
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: t -> (if (fst h) = k then (snd h))) ;; 
+==============================

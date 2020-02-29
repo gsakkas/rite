@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2023.ml", line 40, characters 42-68:
+This expression has type int list but is here used with type 'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "2023.ml", line 40, characters 42-68:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f base  args); [[...]]
+of type
+    'c * 'd
+within context
+    fun l2 -> (let f a x = (match a with 
+                            | [] -> (mulByDigit x l2)
+                            | _ ->
+                              (bigAdd
+                                  a
+                                  (mulByDigit
+                                    x
+                                    l2))) in let base = [] in
+          let args = (List.rev l1) in
+          let (_, res) = (List.fold_left f base  args); [[...]] in res)
+==============================

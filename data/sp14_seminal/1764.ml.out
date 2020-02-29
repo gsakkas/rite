@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "1764.ml", line 25, characters 35-39:
+This expression has type int * 'a list but is here used with type int * int
+Relevant code: base
+------------------------------------------------------------------
+File "1764.ml", line 25, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> 'c * 'd -> int * 'b list
+within context
+    let f a x =
+      let (i, j) = x in
+        let (s, t) = a in (((i + j) + s) + t) / 10, (mod (((i + j) + s) + t) 10)
+      in
+      let base = 0, [] in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "1764.ml", line 25, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int -> int * int -> int * int) ->
+    int * 'e list -> ('f * 'g) list -> 'h * 'i
+within context
+    let f a x =
+      let (i, j) = x in
+        let (s, t) = a in (((i + j) + s) + t) / 10, (mod (((i + j) + s) + t) 10)
+      in
+      let base = 0, [] in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "1764.ml", line 19, characters 10-126:
+Try replacing
+    fun a
+      x ->
+        (let (i, j) = x in
+            let (s, t) = a in
+            (((i + j) + s) + t) / 10, (mod (((i + j) + s) + t) 10))
+with
+    fun a
+      x ->
+        (let (i, j) = x in
+            let (s, t) = a in
+            (((i + j) + s) + t) / 10, (mod (((i + j) + s) + t) 10));
+    [[...]]
+of type
+    'j
+==============================

@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0839.ml", line 5, characters 51-60:
+This expression has type int -> int but is here used with type int
+Relevant code: sumDigits
+------------------------------------------------------------------
+File "0839.ml", line 5, characters 39-60:
+Try replacing
+    (digitalRoot sumDigits n)
+with
+    (digitalRoot (sumDigits n))
+of type
+    int
+within context
+    let rec digitalRoot n = (if n > 10 then (digitalRoot (sumDigits n)) else n) ;; 
+==============================

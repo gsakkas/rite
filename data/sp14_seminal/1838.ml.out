@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "1838.ml", line 4, characters 34-44:
+This expression has type int but is here used with type 'a list
+Relevant code: (n mod 10)
+------------------------------------------------------------------
+File "1838.ml", line 4, characters 34-44:
+Try replacing
+    (mod n 10)
+with
+    (mod n 10); [[...]]
+of type
+    'b list
+within context
+    fun n -> (let rec helper x = (match x with 
+                                  | 0 -> []
+                                  | n ->
+                                    ((mod n 10); [[...]])
+                                        @ (helper (n / 10))) in (helper n))
+==============================
+File "1838.ml", line 4, characters 45-46:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> 'c list -> 'c list
+within context
+    fun n -> (let rec helper x = (match x with 
+                                  | 0 -> []
+                                  | n ->
+                                    ((mod n 10) @; [[...]]
+                                          (helper (n / 10)))) in (helper n))
+==============================

@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1928.ml", line 5, characters 2-77:
+This expression has type int list but is here used with type int
+Relevant code: match n with | _ when n <= 0 -> [] | _ when n > 0 -> [digitsOfInt r; digit]
+------------------------------------------------------------------
+File "1928.ml", line 2, characters 20-144:
+Try replacing
+    fun n -> (let digit = (mod n 10) in (match n with 
+                                         | _ -> when (n <= 0) -> []
+                                         | _ ->
+                                           when n > 0 -> [(digitsOfInt r) ; digit]))
+with
+    fun n -> (let digit = (mod n 10) in (match n with 
+                                         | _ -> when (n <= 0) -> []
+                                         | _ ->
+                                           when n > 0 ->
+                                               [(digitsOfInt r) ; digit])); [[...]]
+of type
+    int -> int
+==============================

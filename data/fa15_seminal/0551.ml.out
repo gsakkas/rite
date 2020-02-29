@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0551.ml", line 3, characters 65-69:
+This expression has type 'a -> 'a but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+File "0551.ml", line 3, characters 65-69:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left f fs)
+of type
+    (int -> int) list -> int
+within context
+    let pipe fs =
+    let f a x = a + (x fs) in let base fs = fs in (List.fold_left f fs)
+    ;; 
+==============================

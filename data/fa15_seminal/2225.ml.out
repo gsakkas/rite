@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "2225.ml", line 20, characters 15-23:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+File "2225.ml", line 20, characters 15-36:
+Try replacing
+    (List.rev List.combine l1  l2)
+with
+    (List.rev (List.combine l1 l2))
+of type
+    ('f * 'g) list
+within context
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = (failwith "to be implemented") in
+        let args = (List.rev (List.combine l1 l2)) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+File "2225.ml", line 20, characters 15-23:
+Try replacing
+    List.rev
+with
+    base
+of type
+    ('h list -> 'i list -> ('h * 'i) list) -> 'j -> 'k -> 'l
+within context
+    fun (l1, l2) ->
+      (let f a x = (failwith "to be implemented") in
+          let base = (failwith "to be implemented") in
+          let args = (base List.combine l1  l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

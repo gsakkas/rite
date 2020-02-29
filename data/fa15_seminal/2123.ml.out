@@ -1,0 +1,86 @@
+------------------------------------------------------------------
+File "2123.ml", line 24, characters 40-44:
+This expression has type (int list * int list) list
+but is here used with type (int * int) list
+Relevant code: args
+------------------------------------------------------------------
+Triaged the following locations:
+File "2123.ml", line 23, characters 29-48:
+And modified the following location:
+File "2123.ml", line 23, characters 51-56:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    clone
+with
+    *
+The actual replacement has type
+    int -> int -> int
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (o, r) = a in ((x1 + x2) + o) / 10, (mod ((x1 + x2) + o) 10) :: r
+      in
+      let base = 0, [] in
+      let args = (List.rev (List.combine [[...other program...]] (* 0 1) :: l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "2123.ml", line 23, characters 29-48:
+And modified the following location:
+File "2123.ml", line 23, characters 50-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 1)
+with
+    (clone 0 1); [[...]]
+The actual replacement has type
+    int
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (o, r) = a in ((x1 + x2) + o) / 10, (mod ((x1 + x2) + o) 10) :: r
+      in
+      let base = 0, [] in
+      let args =
+      (List.rev (List.combine [[...other program...]] (clone 0 1); [[...]] :: l2))
+      in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "2123.ml", line 23, characters 49-68:
+And modified the following location:
+File "2123.ml", line 23, characters 31-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    clone
+with
+    *
+The actual replacement has type
+    int -> int -> int
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (o, r) = a in ((x1 + x2) + o) / 10, (mod ((x1 + x2) + o) 10) :: r
+      in
+      let base = 0, [] in
+      let args = (List.rev (List.combine (* 0 1) :: l1 [[...other program...]])) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "2123.ml", line 23, characters 49-68:
+And modified the following location:
+File "2123.ml", line 23, characters 30-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 1)
+with
+    (clone 0 1); [[...]]
+The actual replacement has type
+    int
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (o, r) = a in ((x1 + x2) + o) / 10, (mod ((x1 + x2) + o) 10) :: r
+      in
+      let base = 0, [] in
+      let args =
+      (List.rev (List.combine (clone 0 1); [[...]] :: l1 [[...other program...]]))
+      in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

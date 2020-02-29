@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "2341.ml", line 10, characters 5-6:
+This expression has type int but is here used with type bool
+Relevant code: 1
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "2341.ml", line 10, characters 5-6:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    bool
+within context
+    let padZero l1 l2 =
+    let (a, b) = (List.length l1), (List.length l2) in
+      (if (1; [[...]]) then (List.append (clone 0 1) l1) else [[...]])
+    ;; 
+==============================

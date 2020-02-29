@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "2853.ml", line 9, characters 34-50:
+This expression has type string but is here used with type 'a list
+Relevant code: (sepConcat "" l)
+------------------------------------------------------------------
+File "2853.ml", line 9, characters 23-33:
+Try replacing
+    (List.map f (sepConcat "" l))
+with
+    (List.map (f (sepConcat "" l)))
+of type
+    'b list -> 'c list
+within context
+    let stringOfList f l = (List.map (f (sepConcat "" l))) ;; 
+==============================
+File "2853.ml", line 9, characters 23-31:
+Try replacing
+    List.map
+with
+    ^
+of type
+    string -> string -> string
+within context
+    let stringOfList f l = (^ f (sepConcat "" l)) ;; 
+==============================
+File "2853.ml", line 9, characters 35-44:
+Try replacing
+    sepConcat
+with
+    f
+of type
+    string -> 'd -> string list
+within context
+    let stringOfList f l = (List.map f (f "" l)) ;; 
+==============================

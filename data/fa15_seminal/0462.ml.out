@@ -1,0 +1,78 @@
+------------------------------------------------------------------
+File "0462.ml", line 10, characters 71-72:
+This expression has type int -> int but is here used with type int
+Relevant code: x
+------------------------------------------------------------------
+File "0462.ml", line 10, characters 68-70:
+Try replacing
+    go
+with
+    go; [[...]]
+of type
+    (int -> int) -> 'a
+within context
+    fun x ->
+      (let isFPoint s = (f s) - s < 0 in
+          let iterate (t, y) = (t y) in
+          let rec go r = (if (isFPoint r) then r else (go (iterate (x, r)))) in
+          ((go; [[...]]) x))
+==============================
+Triaged the following locations:
+File "0462.ml", line 10, characters 38-39:
+And modified the following location:
+File "0462.ml", line 10, characters 49-56:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    r
+If you ignore other surrounding code, try replacing
+    iterate
+with
+    iterate; [[...]]
+The actual replacement has type
+    int * int -> int
+within context
+    let isFPoint s = (f s) - s < 0 in
+      let iterate (t, y) = (t y) in
+      let rec go r =
+      (if (isFPoint r) then (r; [[...]]) else (go ((iterate; [[...]]) (x, r))))
+      in
+      (go x)
+==============================
+Triaged the following locations:
+File "0462.ml", line 10, characters 38-39:
+And modified the following location:
+File "0462.ml", line 10, characters 58-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    r
+If you ignore other surrounding code, try replacing
+    x
+with
+    f
+The actual replacement has type
+    (int -> int) * int
+within context
+    let isFPoint s = (f s) - s < 0 in
+      let iterate (t, y) = (t y) in
+      let rec go r = (if (isFPoint r) then (r; [[...]]) else (go (iterate (f, r))))
+      in
+      (go x)
+==============================
+Triaged the following locations:
+File "0462.ml", line 10, characters 38-39:
+And modified the following location:
+File "0462.ml", line 10, characters 63-63:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    r
+If you ignore other surrounding code, try replacing
+    (iterate (x, r))
+with
+    (iterate [[...]] (x, r))
+The actual replacement has type
+    int
+within context
+    let isFPoint s = (f s) - s < 0 in
+      let iterate (t, y) = (t y) in
+      let rec go r =
+      (if (isFPoint r) then (r; [[...]]) else (go (iterate [[...]] (x, r))))
+      in
+      (go x)
+==============================

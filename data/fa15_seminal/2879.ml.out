@@ -1,0 +1,80 @@
+------------------------------------------------------------------
+File "2879.ml", line 3, characters 20-21:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+Triaged the following locations:
+File "2879.ml", line 3, characters 14-22:
+And modified the following location:
+File "2879.ml", line 3, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    **
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    fun xs ->
+      (let f a x = [[...other program...]] + (x + 2) in
+          let base = 0 in (List.fold_left f base  xs))
+==============================
+Triaged the following locations:
+File "2879.ml", line 3, characters 14-22:
+And modified the following location:
+File "2879.ml", line 3, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    **
+with
+    **; [[...]]
+The actual replacement has type
+    'a -> int -> int
+within context
+    fun xs ->
+      (let f a x = [[...other program...]] + (x **; [[...]] 2) in
+          let base = 0 in (List.fold_left f base  xs))
+==============================
+Triaged the following locations:
+File "2879.ml", line 3, characters 25-33:
+And modified the following location:
+File "2879.ml", line 3, characters 17-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    **
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    fun xs ->
+      (let f a x = (a + 2) + [[...other program...]] in
+          let base = 0 in (List.fold_left f base  xs))
+==============================
+Triaged the following locations:
+File "2879.ml", line 3, characters 25-33:
+And modified the following location:
+File "2879.ml", line 3, characters 17-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    **
+with
+    x
+The actual replacement has type
+    'b -> int -> int
+within context
+    fun xs ->
+      (let f a x = (a x 2) + [[...other program...]] in
+          let base = 0 in (List.fold_left f base  xs))
+==============================
+Triaged the following locations:
+File "2879.ml", line 3, characters 25-33:
+And modified the following location:
+File "2879.ml", line 3, characters 17-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    **
+with
+    **; [[...]]
+The actual replacement has type
+    'c -> int -> int
+within context
+    fun xs ->
+      (let f a x = (a **; [[...]] 2) + [[...other program...]] in
+          let base = 0 in (List.fold_left f base  xs))
+==============================

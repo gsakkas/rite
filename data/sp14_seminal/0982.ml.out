@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "0982.ml", line 31, characters 2-10:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+File "0982.ml", line 31, characters 11-21:
+Try replacing
+    (List.rev removeZero (add (padZero l1 l2)))
+with
+    (List.rev (add (padZero l1 l2)))
+of type
+    int list
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x =
+        let (carry, listy) = a in
+          let (num1, num2) = x in
+          let initsum = (num1 + num2) + carry in
+          (if initsum > 9 then 1, listy @ [(mod initsum 10)] else
+              0, listy @ [initsum])
+        in
+        let base = 0, [] in
+        let args = (List.rev (List.combine l1 l2)) @ [0, 0] in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (List.rev (add (padZero l1 l2)))
+    ;; 
+==============================
+File "0982.ml", line 31, characters 2-21:
+Try replacing
+    (List.rev removeZero (add (padZero l1 l2)))
+with
+    (List.rev (removeZero (add (padZero l1 l2))))
+of type
+    int list
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x =
+        let (carry, listy) = a in
+          let (num1, num2) = x in
+          let initsum = (num1 + num2) + carry in
+          (if initsum > 9 then 1, listy @ [(mod initsum 10)] else
+              0, listy @ [initsum])
+        in
+        let base = 0, [] in
+        let args = (List.rev (List.combine l1 l2)) @ [0, 0] in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (List.rev (removeZero (add (padZero l1 l2))))
+    ;; 
+==============================

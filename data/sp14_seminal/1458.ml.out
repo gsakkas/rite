@@ -1,0 +1,82 @@
+------------------------------------------------------------------
+File "1458.ml", line 4, characters 25-26:
+This expression is not a function, it cannot be applied
+Relevant code: f
+------------------------------------------------------------------
+File "1458.ml", line 4, characters 27-28:
+Try replacing
+    (f b)
+with
+    f
+of type
+    'd * bool
+within context
+    let rec wwhile (f, b) = (match f with 
+                             | (x, y) ->
+                               (let (x, y) = f in
+                                     (if y = true then (wwhile (f, x)) else x))) ;; 
+==============================
+File "1458.ml", line 4, characters 4-9:
+Try replacing
+    x, y
+with
+    _
+of type
+    ('q -> 'q * bool) * 'q -> 'q
+within context
+    let rec wwhile (f, b) = (match f with 
+                             | _ ->
+                               (let (x, y) = (f b) in
+                                     (if y = true then (wwhile (f, x)) else x))) ;; 
+==============================
+File "1458.ml", line 4, characters 13-69:
+Try replacing
+    let (x, y) = (f b) in (if y = true then (wwhile (f, x)) else x)
+with
+    (if y = true then (wwhile (f, x)) else x)
+of type
+    'p
+within context
+    let rec wwhile (f, b) = (match f with 
+                             | (x, y) ->
+                               (if y = true then (wwhile (f, x)) else x)) ;; 
+==============================
+File "1458.ml", line 3, characters 8-9:
+Try replacing
+    f
+with
+    b
+of type
+    'v * 'w
+within context
+    let rec wwhile (f, b) = (match b with 
+                             | (x, y) ->
+                               (let (x, y) = (f b) in
+                                     (if y = true then (wwhile (f, x)) else x))) ;; 
+==============================
+File "1458.ml", line 4, characters 25-26:
+Try replacing
+    f
+with
+    x
+of type
+    'f -> 'f * bool
+within context
+    let rec wwhile (f, b) = (match f with 
+                             | (x, y) ->
+                               (let (x, y) = (x b) in
+                                     (if y = true then (wwhile (f, x)) else x))) ;; 
+==============================
+File "1458.ml", line 4, characters 25-26:
+Try replacing
+    f
+with
+    y
+of type
+    'e -> 'e * bool
+within context
+    let rec wwhile (f, b) = (match f with 
+                             | (x, y) ->
+                               (let (x, y) = (y b) in
+                                     (if y = true then (wwhile (f, x)) else x))) ;; 
+==============================

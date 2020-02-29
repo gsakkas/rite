@@ -1,0 +1,83 @@
+------------------------------------------------------------------
+File "2774.ml", line 22, characters 31-35:
+This expression is not a function, it cannot be applied
+Relevant code: rand
+------------------------------------------------------------------
+Triaged the following locations:
+File "2774.ml", line 23, characters 12-60:
+And modified the following location:
+File "2774.ml", line 22, characters 36-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (rand (0, 6))
+with
+    rand
+The actual replacement has type
+    int * int
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then (buildX ()) else (match rand with 
+                                         | 0 ->
+                                           (buildSine (build (rand, depth - 1)))
+                                         | 1 -> [[...other program...]]))
+    ;; 
+==============================
+Triaged the following locations:
+File "2774.ml", line 22, characters 12-58:
+And modified the following location:
+File "2774.ml", line 23, characters 33-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand
+with
+    rand; [[...]]
+The actual replacement has type
+    int * int -> int
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then (buildX ()) else (match rand with 
+                                         | 0 -> [[...other program...]]
+                                         | 1 ->
+                                           (buildCosine
+                                               (build
+                                                 (((rand; [[...]]) (0, 6)),
+                                                     depth - 1)))))
+    ;; 
+==============================
+Triaged the following locations:
+File "2774.ml", line 23, characters 12-60:
+And modified the following location:
+File "2774.ml", line 22, characters 31-35:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand
+with
+    rand; [[...]]
+The actual replacement has type
+    int * int -> int
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then (buildX ()) else (match rand with 
+                                         | 0 ->
+                                           (buildSine
+                                               (build
+                                                 (((rand; [[...]]) (0, 6)),
+                                                     depth - 1)))
+                                         | 1 -> [[...other program...]]))
+    ;; 
+==============================
+Triaged the following locations:
+File "2774.ml", line 22, characters 12-58:
+And modified the following location:
+File "2774.ml", line 23, characters 38-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (rand (0, 6))
+with
+    rand
+The actual replacement has type
+    int * int
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then (buildX ()) else (match rand with 
+                                         | 0 -> [[...other program...]]
+                                         | 1 ->
+                                           (buildCosine (build (rand, depth - 1)))))
+    ;; 
+==============================

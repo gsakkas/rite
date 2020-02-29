@@ -1,0 +1,75 @@
+------------------------------------------------------------------
+File "3404.ml", line 48, characters 18-44:
+This expression has type int list but is here used with type 'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "3404.ml", line 48, characters 18-44:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f base  args); [[...]]
+of type
+    'c * 'd
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (d, (b, c)) ->
+                                    (let sum = b + c in
+                                          (if sum < 10 then (match a with 
+                                                             | [] -> sum :: a
+                                                             | x' :: xs' ->
+                                                               (if x' = -1 then
+                                                                   (if sum = 9 then
+                                                                     -1 :: 0 :: xs'
+                                                                     else
+                                                                     sum + 1 :: xs')
+                                                                   else
+                                                                   sum ::
+                                                                       a)) else (match
+                                                                                 a
+                                                                                 with
+                                                                                 
+                                                                                 |
+                                                                                   []
+                                                                                   ->
+                                                                                   -1
+                                                                                         ::
+                                                                                         (mod
+                                                                                           sum
+                                                                                           10)
+                                                                                         ::
+                                                                                         a
+                                                                                 |
+                                                                                   x'
+                                                                                     ::
+                                                                                     xs'
+                                                                                   ->
+                                                                                   (if
+                                                                                       x'
+                                                                                         =
+                                                                                         -1
+                                                                                       then
+                                                                                       -1
+                                                                                           ::
+                                                                                           (mod
+                                                                                             sum
+                                                                                             10)
+                                                                                           ::
+                                                                                           a
+                                                                                       else
+                                                                                       -1
+                                                                                           ::
+                                                                                           (mod
+                                                                                             sum
+                                                                                             10)
+                                                                                           ::
+                                                                                           a))))) in let
+          base
+          =
+          []
+          in
+          let args =
+          (List.combine
+            (clone (List.length l1) (List.length l1)) (List.combine (List.rev l1) (List.rev l2)))
+          in
+          let (_, res) = (List.fold_left f base  args); [[...]] in res)
+==============================

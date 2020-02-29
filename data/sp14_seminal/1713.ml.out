@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1713.ml", line 11, characters 25-48:
+This expression has type int but is here used with type 'a list
+Relevant code: sumList (digitsOfInt n)
+------------------------------------------------------------------
+File "1713.ml", line 11, characters 17-19:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int
+within context
+    let rec additivePersistence n =
+    (if (n <= 0) then ([]; [[...]]) else (sumList (digitsOfInt n)))
+    ;; 
+==============================
+File "1713.ml", line 11, characters 25-48:
+Try replacing
+    (sumList (digitsOfInt n))
+with
+    (sumList (digitsOfInt n)); [[...]]
+of type
+    'b list
+within context
+    let rec additivePersistence n =
+    (if (n <= 0) then [] else ((sumList (digitsOfInt n)); [[...]]))
+    ;; 
+==============================

@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "2308.ml", line 19, characters 56-59:
+This expression has type string but is here used with type int
+Relevant code: ")"
+------------------------------------------------------------------
+Triaged the following locations:
+File "2308.ml", line 20, characters 19-52:
+And modified the following location:
+File "2308.ml", line 19, characters 55-70:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ")" / (2 ")")
+with
+    [[...]]
+The actual replacement has type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+                              | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+                              | Average (x, y) ->
+                                "((" ^
+                                    ((exprToString e) ^
+                                        ("+" ^ ((exprToString e) ^ [[...]])))
+                              | Times (x, y) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2308.ml", line 18, characters 6-86:
+And modified the following location:
+File "2308.ml", line 20, characters 19-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString; [[...]]
+The actual replacement has type
+    expr ->
+    string ->
+    (expr -> string) -> expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+                              | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+                              | Average (x, y) -> [[...other program...]]
+                              | Times (x, y) ->
+                                ((exprToString; [[...]])
+                                    e "*"  exprToString  e)) ;; 
+==============================

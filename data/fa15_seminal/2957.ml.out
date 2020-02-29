@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2957.ml", line 29, characters 51-52:
+This expression has type int * 'a but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+File "2957.ml", line 29, characters 38-48:
+Try replacing
+    mulByDigit
+with
+    l2
+of type
+    'b -> int * 'c list -> 'c list
+within context
+    fun a x -> (let (0, res) = a in 0, (l2 x a))
+==============================

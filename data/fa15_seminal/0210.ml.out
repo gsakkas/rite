@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "0210.ml", line 31, characters 7-10:
+This expression is not a function, it cannot be applied
+Relevant code: "("
+------------------------------------------------------------------
+File "0210.ml", line 31, characters 11-22:
+Try replacing
+    (( "(" ) "1/sin(pi*")
+with
+    "("
+of type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+                              | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ (")" ^ "/2)"))))
+                              | Times (e1, e2) ->
+                                (exprToString e1) ^ ("*" ^ (exprToString e2))
+                              | Thresh (e1, e2, e3, e4) ->
+                                "(" ^
+                                    ((exprToString e1) ^
+                                        ("<" ^
+                                            ((exprToString e2) ^
+                                                ("?" ^
+                                                    ((exprToString e3) ^
+                                                        (":" ^
+                                                            ((exprToString e4)
+                                                                ^ ")")))))))
+                              | NewOp1 (e1, e2, e3) ->
+                                "(" ^
+                                    ((exprToString e1) ^
+                                        (")" ^
+                                            ("cos(pi*" ^
+                                                ((exprToString e1) ^
+                                                    (")" ^
+                                                        ("sin(pi*" ^
+                                                            ((exprToString e1)
+                                                                ^ (")" ^ ")"))))))))
+                              | NewOp2 e1 ->
+                                "1/sin(pi*" ^ ((exprToString e1) ^ ")")) ;; 
+==============================

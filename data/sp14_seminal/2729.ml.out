@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2729.ml", line 47, characters 72-73:
+This expression has type int list * 'a but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+File "2729.ml", line 47, characters 41-47:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    int list -> int list * 'b -> 'c
+within context
+    fun a x -> (match a with 
+                | (b, c) ->
+                  (b @ [0], ((bigAdd; [[...]]) ((mulByDigit x l2) @ b) a)))
+==============================

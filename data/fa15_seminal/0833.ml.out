@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0833.ml", line 6, characters 47-52:
+This expression has type int but is here used with type unit
+Relevant code: count
+------------------------------------------------------------------
+File "0833.ml", line 6, characters 47-52:
+Try replacing
+    count
+with
+    count; [[...]]
+of type
+    unit
+within context
+    let rec additivePersistence n = (if (lt10 n) then (count; [[...]])) ;; 
+==============================

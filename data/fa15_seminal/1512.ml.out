@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "1512.ml", line 34, characters 65-76:
+This expression has type int list -> 'a but is here used with type 'b list
+Relevant code: helper i []
+------------------------------------------------------------------
+File "1512.ml", line 34, characters 76-76:
+Try replacing
+    (helper i [])
+with
+    (helper i []  [[...]])
+of type
+    'c list
+within context
+    let rec mulByDigit i l =
+    (if i = 0 || l = [] then [] else
+      (let rec helper i acc l = (helper (i - 1) (bigAdd acc l)  l) in
+          (helper i []  [[...]])))
+    ;; 
+==============================
+File "1512.ml", line 34, characters 76-76:
+Try replacing
+    (helper i [])
+with
+    (helper i [[...]]  [])
+of type
+    'd list
+within context
+    let rec mulByDigit i l =
+    (if i = 0 || l = [] then [] else
+      (let rec helper i acc l = (helper (i - 1) (bigAdd acc l)  l) in
+          (helper i [[...]]  [])))
+    ;; 
+==============================
+File "1512.ml", line 32, characters 7-9:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int list -> 'e
+within context
+    let rec mulByDigit i l =
+    (if i = 0 || l = [] then ([]; [[...]]) else
+      (let rec helper i acc l = (helper (i - 1) (bigAdd acc l)  l) in
+          (helper i [])))
+    ;; 
+==============================

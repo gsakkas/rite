@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0059.ml", line 4, characters 66-68:
+This expression has type 'a * 'b but is here used with type ('b -> 'b) list
+Relevant code: fs
+------------------------------------------------------------------
+File "0059.ml", line 4, characters 61-65:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left f fs)
+of type
+    ('c * 'd -> 'c * 'd) list -> 'c * 'd
+within context
+    let pipe fs = let f a x = (x a) in let base = (match fs with 
+                                                   | (fn, n) ->
+                                                     n) in (List.fold_left f fs) ;; 
+==============================

@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "3162.ml", line 28, characters 39-40:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "3162.ml", line 28, characters 24-58:
+Try replacing
+    (List.combine 0) :: (l1 0) :: l2
+with
+    [[...]]
+of type
+    'b list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (o, p) = a in
+            let (d1, d2) = x in ((d1 + d2) + o) / 10, (mod ((d1 + d2) + o) 10) :: p
+          in
+          let base = 0, [] in
+          let args = (List.rev [[...]]) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "3452.ml", line 13, characters 2-3:
+This expression has type int but is here used with type 'a list
+Relevant code: 1
+------------------------------------------------------------------
+File "3452.ml", line 13, characters 2-3:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    'b list
+within context
+    let rec additivePersistence n =
+    (1; [[...]]) @ x;
+    (if (sumList (digitsOfInt n)) > 9 then
+      (additivePersistence (sumList (digitsOfInt n)))
+      else
+      (sumList x))
+    ;; 
+==============================
+File "3452.ml", line 13, characters 4-5:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> 'c list -> 'd
+within context
+    let rec additivePersistence n =
+    (1 @; [[...]] x);
+    (if (sumList (digitsOfInt n)) > 9 then
+      (additivePersistence (sumList (digitsOfInt n)))
+      else
+      (sumList x))
+    ;; 
+==============================

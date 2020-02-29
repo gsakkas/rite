@@ -1,0 +1,144 @@
+------------------------------------------------------------------
+File "0311.ml", line 8, characters 63-67:
+This expression has type 'a list but is here used with type string
+Relevant code: base
+------------------------------------------------------------------
+File "0311.ml", line 8, characters 63-69:
+Try replacing
+    (List.fold_left f base  l)
+with
+    (List.fold_left f l  base)
+of type
+    string
+within context
+    fun sl -> (match sl with 
+               | [] -> ""
+               | h :: t ->
+                 (let f a x = x ^ a in
+                       let base = sl in
+                       let l = (failwith "to be implemented") in
+                       (List.fold_left f l  base)))
+==============================
+File "0311.ml", line 8, characters 46-60:
+Try replacing
+    List.fold_left
+with
+    sep
+of type
+    (string -> string -> string) -> 'b list -> 'c -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = x ^ a in
+             let base = sl in
+             let l = (failwith "to be implemented") in (sep f base  l)))
+==============================
+File "0311.ml", line 8, characters 46-60:
+Try replacing
+    List.fold_left
+with
+    l
+of type
+    (string -> string -> string) -> 'd list -> 'e -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = x ^ a in
+             let base = sl in
+             let l = (failwith "to be implemented") in (l f base  l)))
+==============================
+File "0311.ml", line 8, characters 63-67:
+Try replacing
+    base
+with
+    h
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = x ^ a in
+             let base = sl in
+             let l = (failwith "to be implemented") in (List.fold_left f h  l)))
+==============================
+File "0311.ml", line 8, characters 63-67:
+Try replacing
+    base
+with
+    sep
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = x ^ a in
+             let base = sl in
+             let l = (failwith "to be implemented") in (List.fold_left f sep  l)))
+==============================
+File "0311.ml", line 8, characters 63-67:
+Try replacing
+    base
+with
+    l
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = x ^ a in
+             let base = sl in
+             let l = (failwith "to be implemented") in (List.fold_left f l  l)))
+==============================
+File "0311.ml", line 7, characters 17-19:
+Try replacing
+    sl
+with
+    h
+of type
+    string
+within context
+    fun sep sl -> (match sl with 
+                   | [] -> ""
+                   | h :: t ->
+                     (let f a x = x ^ a in
+                           let base = h in
+                           let l = (failwith "to be implemented") in
+                           (List.fold_left f base  l)))
+==============================
+File "0311.ml", line 7, characters 17-19:
+Try replacing
+    sl
+with
+    sep
+of type
+    string
+within context
+    fun sep sl -> (match sl with 
+                   | [] -> ""
+                   | h :: t ->
+                     (let f a x = x ^ a in
+                           let base = sep in
+                           let l = (failwith "to be implemented") in
+                           (List.fold_left f base  l)))
+==============================
+File "0311.ml", line 3, characters 8-10:
+Try replacing
+    sl
+with
+    sep
+of type
+    'f list
+within context
+    let rec sepConcat sep sl = (match sep with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = x ^ a in
+                                        let base = sl in
+                                        let l = (failwith "to be implemented") in
+                                        (List.fold_left f base  l))) ;; 
+==============================

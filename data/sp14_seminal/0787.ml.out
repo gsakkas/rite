@@ -1,0 +1,71 @@
+------------------------------------------------------------------
+File "0787.ml", line 28, characters 41-57:
+This expression has type string but is here used with type int
+Relevant code: (exprToString e)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0787.ml", line 28, characters 63-64:
+And modified the following location:
+File "0787.ml", line 28, characters 58-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    *
+with
+    y
+The actual replacement has type
+    string -> 'a -> 'b
+within context
+    let rec eval (e, x, y) = (float_of_string (((exprToString e) y x) *; [[...]] y))
+    ;; 
+==============================
+Triaged the following locations:
+File "0787.ml", line 28, characters 63-64:
+And modified the following location:
+File "0787.ml", line 28, characters 58-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    string -> 'c -> 'd
+within context
+    let rec eval (e, x, y) =
+    (float_of_string (((exprToString e) *; [[...]] x) *; [[...]] y))
+    ;; 
+==============================
+Triaged the following locations:
+File "0787.ml", line 28, characters 63-64:
+And modified the following location:
+File "0787.ml", line 28, characters 58-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    *
+with
+    ^
+The actual replacement has type
+    string -> string -> string
+within context
+    let rec eval (e, x, y) = (float_of_string ((exprToString e) ^ x *; [[...]] y))
+    ;; 
+==============================
+Triaged the following locations:
+File "0787.ml", line 28, characters 63-64:
+And modified the following location:
+File "0787.ml", line 28, characters 41-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    (exprToString e)
+with
+    (exprToString e); [[...]]
+The actual replacement has type
+    int
+within context
+    let rec eval (e, x, y) =
+    (float_of_string (((exprToString e); [[...]]) * x *; [[...]] y))
+    ;; 
+==============================

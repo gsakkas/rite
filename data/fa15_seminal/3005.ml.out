@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "3005.ml", line 16, characters 13-15:
+This expression has type 'a list but is here used with type 'b * 'c
+Relevant code: []
+------------------------------------------------------------------
+File "3005.ml", line 16, characters 9-10:
+Try replacing
+    x
+with
+    x; [[...]]
+of type
+    'd list
+within context
+    fun x ->
+      (let (j, k) = x in
+          let (l, m) = a in
+          (if (x; [[...]]) = [] then 0, l :: m else
+              (if (j + k) + l > 9 then 1, ((j + k) + l) - 10 :: m else
+                0, (j + k) + l :: m)))
+==============================
+File "3005.ml", line 16, characters 13-15:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int * int
+within context
+    fun x ->
+      (let (j, k) = x in
+          let (l, m) = a in
+          (if x = ([]; [[...]]) then 0, l :: m else
+              (if (j + k) + l > 9 then 1, ((j + k) + l) - 10 :: m else
+                0, (j + k) + l :: m)))
+==============================
+File "3005.ml", line 16, characters 11-12:
+Try replacing
+    =
+with
+    =; [[...]]
+of type
+    int * int -> 'e list -> bool
+within context
+    fun x ->
+      (let (j, k) = x in
+          let (l, m) = a in
+          (if (x =; [[...]] []) then 0, l :: m else
+              (if (j + k) + l > 9 then 1, ((j + k) + l) - 10 :: m else
+                0, (j + k) + l :: m)))
+==============================

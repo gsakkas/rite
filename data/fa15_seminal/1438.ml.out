@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "1438.ml", line 25, characters 19-21:
+This expression has type float but is here used with type int
+Relevant code: pi
+------------------------------------------------------------------
+Triaged the following locations:
+File "1438.ml", line 25, characters 14-17:
+And modified the following location:
+File "1438.ml", line 25, characters 18-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sin
+If you ignore other surrounding code, try replacing
+    pi * (eval e)
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> ((sin; [[...]]) [[...]])
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) -> (buildAverage (x, y))
+                              | Times (e1, e2) -> (buildTimes (x, y))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (buildThresh (x, y, x, y))) ;; 
+==============================

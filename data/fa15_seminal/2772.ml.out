@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "2772.ml", line 10, characters 68-69:
+This expression has type 'a -> int list -> string list
+but is here used with type int
+Relevant code: x
+------------------------------------------------------------------
+File "2772.ml", line 10, characters 70-71:
+Try replacing
+    *
+with
+    x
+of type
+    ('b -> int list -> string list) -> int list -> string list
+within context
+    (if i = 0 || i > 9 then [] else (match (List.rev l) with 
+                                     | [] -> []
+                                     | h :: t -> (mulByDigit i t) @ [(x x y)]))
+==============================
+File "2772.ml", line 10, characters 70-71:
+Try replacing
+    *
+with
+    h
+of type
+    ('c -> int list -> string list) -> int list -> 'd
+within context
+    (if i = 0 || i > 9 then [] else (match (List.rev l) with 
+                                     | [] -> []
+                                     | h :: t -> (mulByDigit i t) @ [(x h y)]))
+==============================

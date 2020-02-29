@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "0373.ml", line 27, characters 32-35:
+This expression has type int list list but is here used with type int list
+Relevant code: acc
+------------------------------------------------------------------
+File "0373.ml", line 21, characters 33-39:
+Try replacing
+    [1 ; 0]
+with
+    [1 ; 0]; [[...]]
+of type
+    int
+within context
+    let (rem, acc) = a in
+      (if
+          (List.length acc) = (List.length l1) - 1
+            || (List.length acc) = (List.length l2) - 1
+          then
+          (if rem = 1 then 0, [1 ; 0]; [[...]] :: acc else 0, acc)
+          else
+          (let (el1, el2) = x in
+              let new_sum = (rem + el1) + el2 in
+              let new_rem = (if new_sum > 9 then 1 else 0) in
+              let norm_sum = (if new_sum > 9 then new_sum - 10 else new_sum) in
+              new_rem, norm_sum :: acc))
+==============================

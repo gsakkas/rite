@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "1442.ml", line 24, characters 16-19:
+This expression has type float -> float but is here used with type int
+Relevant code: cos
+------------------------------------------------------------------
+Triaged the following locations:
+File "1442.ml", line 21, characters 13-14:
+File "1442.ml", line 22, characters 13-14:
+File "1442.ml", line 25, characters 23-42:
+File "1442.ml", line 26, characters 21-38:
+File "1442.ml", line 27, characters 28-52:
+And modified the following location:
+File "1442.ml", line 24, characters 20-21:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildThresh (x, y, x, y))
+
+    (buildTimes (x, y))
+
+    (buildAverage (x, y))
+
+    y
+
+    x
+If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    (float -> float) -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x; [[...]])
+                              | VarY -> (y; [[...]])
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e ->
+                                (cos *; [[...]] (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) -> ((buildAverage (x, y)); [[...]])
+                              | Times (e1, e2) -> ((buildTimes (x, y)); [[...]])
+                              | Thresh (e1, e2, e3, e4) ->
+                                ((buildThresh (x, y, x, y)); [[...]])) ;; 
+==============================

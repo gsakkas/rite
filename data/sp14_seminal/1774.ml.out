@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "1774.ml", line 23, characters 46-47:
+This expression has type int but is here used with type 'a list list
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "1774.ml", line 23, characters 49-69:
+And modified the following location:
+File "1774.ml", line 23, characters 28-48:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.rev l1) :: 0
+with
+    [[...]]
+The actual replacement has type
+    'b list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (i, j) = x in
+            let (s, t) = a in ((i + j) + s) / 10, (mod ((i + j) + s) 10) :: t
+          in
+          let base = 0, [] in
+          let args = (List.combine [[...]] [[...other program...]]) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "1774.ml", line 23, characters 28-48:
+And modified the following location:
+File "1774.ml", line 23, characters 49-69:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.rev l2) :: 0
+with
+    [[...]]
+The actual replacement has type
+    'c list
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (i, j) = x in
+            let (s, t) = a in ((i + j) + s) / 10, (mod ((i + j) + s) 10) :: t
+          in
+          let base = 0, [] in
+          let args = (List.combine [[...other program...]] [[...]]) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

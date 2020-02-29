@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1513.ml", line 12, characters 67-69:
+This expression has type 'a list but is here used with type int
+Relevant code: l1
+------------------------------------------------------------------
+File "1513.ml", line 12, characters 66-70:
+Try replacing
+    [l1]
+with
+    [l1]; [[...]]
+of type
+    int list
+within context
+    fun l1 l2 -> (match (List.length l1) > (List.length l2) with 
+                  | true ->
+                    (l1, (clone 0 ((List.length l1) - (List.length l2))) @ l2)
+                  | false ->
+                    ((clone 0 ((List.length l2) - (List.length l1)))
+                            @ ([l1]; [[...]])
+                          ,
+                          l2))
+==============================
+File "1513.ml", line 12, characters 64-65:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int list -> 'b list list -> 'b list
+within context
+    fun l1 l2 -> (match (List.length l1) > (List.length l2) with 
+                  | true ->
+                    (l1, (clone 0 ((List.length l1) - (List.length l2))) @ l2)
+                  | false ->
+                    (((clone 0 ((List.length l2) - (List.length l1)))
+                              @; [[...]] [l1])
+                          ,
+                          l2))
+==============================

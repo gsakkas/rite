@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "1273.ml", line 12, characters 30-37:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sumList
+------------------------------------------------------------------
+Triaged the following locations:
+File "1273.ml", line 12, characters 9-28:
+And modified the following location:
+File "1273.ml", line 12, characters 29-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    additivePersistence
+If you ignore other surrounding code, try replacing
+    (sumList (digitsOfInt n) (count + 1))
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    let rec additivePersistence n count = (match n with 
+                                           | [] -> count
+                                           | _ ->
+                                             ((additivePersistence; [[...]])
+                                                 [[...]])) ;; 
+==============================

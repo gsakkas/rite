@@ -1,0 +1,51 @@
+------------------------------------------------------------------
+File "1331.ml", line 3, characters 65-66:
+This expression has type int -> (int -> int) -> 'a -> 'b -> int
+but is here used with type int -> (int -> int) -> int
+Relevant code: f
+------------------------------------------------------------------
+File "1331.ml", line 3, characters 8-14:
+Try replacing
+    fun a x x' y -> (x a) + a
+with
+    fun x' a x y -> (x a) + a
+of type
+    'c -> int -> (int -> int) -> 'd -> int
+within context
+    let pipe fs =
+    let f x' a x y = (x a) + a in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1331.ml", line 3, characters 19-26:
+Try replacing
+    (x a) + a
+with
+    ( + ) ((x a) a)
+of type
+    int -> int
+within context
+    let f a x x' y = ( + ) ((x a) a) in
+      let base x = x in (List.fold_left f base  fs)
+==============================
+File "1331.ml", line 3, characters 8-16:
+Try replacing
+    fun a x x' y -> (x a) + a
+with
+    fun y x x' a -> (x a) + a
+of type
+    'e -> (int -> int) -> 'f -> int -> int
+within context
+    let pipe fs =
+    let f y x x' a = (x a) + a in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1331.ml", line 3, characters 27-28:
+Try replacing
+    a
+with
+    y
+of type
+    int
+within context
+    fun a x x' y -> (x a) + y
+==============================

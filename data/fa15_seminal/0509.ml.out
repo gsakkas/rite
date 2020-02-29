@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "0509.ml", line 3, characters 47-48:
+This expression has type int but is here used with type 'a -> 'b
+Relevant code: 0
+------------------------------------------------------------------
+File "0509.ml", line 3, characters 8-18:
+Try replacing
+    fun a x result n -> (x (a n))
+with
+    fun result a x n -> (x (a n))
+of type
+    'c -> ('d -> 'e) -> ('e -> 'f) -> 'd -> 'f
+within context
+    let pipe fs =
+    let f result a x n = (x (a n)) in
+      let base = (f 0) in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "0509.ml", line 3, characters 26-27:
+Try replacing
+    a
+with
+    x
+of type
+    'g -> 'g
+within context
+    fun x result n -> (x (x n))
+==============================
+File "0509.ml", line 3, characters 26-27:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('h -> 'i -> 'h) -> 'h -> 'i list -> 'h
+within context
+    fun x result n -> (x (List.fold_left n))
+==============================

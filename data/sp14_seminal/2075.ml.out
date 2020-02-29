@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2075.ml", line 25, characters 26-38:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+File "2075.ml", line 24, characters 2-325:
+Try replacing
+    (match e with 
+     | Thresh (a, b, c, d) -> ((exprToString Thresh a), b, c, d)
+     | Times (a, b) -> (exprToString buildTimes (a, b))
+     | Average (a, b) -> (exprToString buildAverage (a, b))
+     | Cosine a -> (exprToString buildCosine a)
+     | Sine a -> (exprToString buildSine a)
+     | VarY -> (exprToString buildY)
+     | VarX -> (exprToString buildX))
+with
+    [[...]]
+of type
+    'c
+==============================

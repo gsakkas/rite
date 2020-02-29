@@ -1,0 +1,90 @@
+------------------------------------------------------------------
+File "3220.ml", line 10, characters 12-68:
+This expression has type int list but is here used with type int
+Relevant code: [(h * i) / 10] @ [mulByDigit i ([h2 + (h mod 10)] @ t2)]
+------------------------------------------------------------------
+Triaged the following locations:
+File "3220.ml", line 10, characters 29-68:
+And modified the following location:
+File "3220.ml", line 10, characters 16-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    int list -> 'a -> int
+within context
+    (if l = [] then [] else (let h :: t = l in let h2 :: t2 = t in (match t with 
+                                                                    | [] -> h
+                                                                    | _ ->
+                                                                      [
+                                                                              (h
+                                                                                    *;
+                                                                                    [[...]]
+                                                                                    i)
+                                                                                / 10
+                                                                              ]
+                                                                          @
+                                                                          [[...other program...]])))
+==============================
+Triaged the following locations:
+File "3220.ml", line 10, characters 29-68:
+And modified the following location:
+File "3220.ml", line 10, characters 14-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    h; [[...]]
+The actual replacement has type
+    int
+within context
+    (if l = [] then [] else (let h :: t = l in let h2 :: t2 = t in (match t with 
+                                                                    | [] -> h
+                                                                    | _ ->
+                                                                      [
+                                                                              ((h;
+                                                                                      [[...]])
+                                                                                    *
+                                                                                    i)
+                                                                                / 10
+                                                                              ]
+                                                                          @
+                                                                          [[...other program...]])))
+==============================
+Triaged the following locations:
+File "3220.ml", line 10, characters 29-68:
+And modified the following location:
+File "3220.ml", line 10, characters 14-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h
+with
+    i
+The actual replacement has type
+    int
+within context
+    (if l = [] then [] else (let h :: t = l in let h2 :: t2 = t in (match t with 
+                                                                    | [] -> h
+                                                                    | _ ->
+                                                                      [(i * i) / 10]
+                                                                          @
+                                                                          [[...other program...]])))
+==============================
+Triaged the following locations:
+File "3220.ml", line 10, characters 12-26:
+And modified the following location:
+File "3220.ml", line 10, characters 30-67:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mulByDigit i ([h2 + (mod h 10)] @ t2))
+with
+    [[...]]
+The actual replacement has type
+    'b
+within context
+    (if l = [] then [] else (let h :: t = l in let h2 :: t2 = t in (match t with 
+                                                                    | [] -> h
+                                                                    | _ ->
+                                                                      [[...other program...]]
+                                                                          @
+                                                                          [[[...]]
+                                                                              ])))
+==============================

@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2760.ml", line 12, characters 24-25:
+This expression has type int list but is here used with type int
+Relevant code: y
+------------------------------------------------------------------
+File "2760.ml", line 12, characters 12-21:
+Try replacing
+    remainder
+with
+    remainder; [[...]]
+of type
+    int -> int list -> int list
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t ->
+                (if (List.length t) = 0 then [h * i] @ (mulByDigit i t) else
+                    ((remainder; [[...]]) h y) @ (mulByDigit i t)))
+==============================

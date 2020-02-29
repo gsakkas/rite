@@ -1,0 +1,169 @@
+------------------------------------------------------------------
+File "0168.ml", line 27, characters 4-141:
+This expression has type int list but is here used with type int
+Relevant code: if i = 1
+    then l
+    else
+      if (i mod 2) = 0
+      then mulByDigit (i / 2) (bigAdd l l)
+      else bigAdd l (mulByDigit (i - 1) l)
+------------------------------------------------------------------
+File "0168.ml", line 25, characters 7-8:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    int list
+within context
+    let rec mulByDigit i l =
+    (if i = 0 then (0; [[...]]) else
+      (if i = 1 then l else
+        (if (mod i 2) = 0 then (mulByDigit (i / 2) (bigAdd l l)) else
+          (bigAdd l (mulByDigit (i - 1) l)))))
+    ;; 
+==============================
+Triaged the following locations:
+File "0168.ml", line 31, characters 11-42:
+And modified the following location:
+File "0168.ml", line 32, characters 11-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    /
+The actual replacement has type
+    int -> int -> int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else
+            (if (mod i 2) = 0 then [[...other program...]] else
+              (/ l (mulByDigit (i - 1) l)))))
+==============================
+Triaged the following locations:
+File "0168.ml", line 31, characters 11-42:
+And modified the following location:
+File "0168.ml", line 32, characters 11-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else
+            (if (mod i 2) = 0 then [[...other program...]] else
+              (+ l (mulByDigit (i - 1) l)))))
+==============================
+Triaged the following locations:
+File "0168.ml", line 31, characters 11-42:
+And modified the following location:
+File "0168.ml", line 32, characters 11-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    -
+The actual replacement has type
+    int -> int -> int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else
+            (if (mod i 2) = 0 then [[...other program...]] else
+              (- l (mulByDigit (i - 1) l)))))
+==============================
+Triaged the following locations:
+File "0168.ml", line 31, characters 11-42:
+And modified the following location:
+File "0168.ml", line 32, characters 11-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+The actual replacement has type
+    int -> int -> int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else
+            (if (mod i 2) = 0 then [[...other program...]] else
+              ((bigAdd; [[...]]) l (mulByDigit (i - 1) l)))))
+==============================
+Triaged the following locations:
+File "0168.ml", line 32, characters 11-42:
+And modified the following location:
+File "0168.ml", line 31, characters 31-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else
+            (if (mod i 2) = 0 then (mulByDigit (i / 2) (+ l l)) else
+              [[...other program...]])))
+==============================
+Triaged the following locations:
+File "0168.ml", line 32, characters 11-42:
+And modified the following location:
+File "0168.ml", line 31, characters 31-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+The actual replacement has type
+    int -> int -> int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else
+            (if (mod i 2) = 0 then (mulByDigit (i / 2) ((bigAdd; [[...]]) l l)) else
+              [[...other program...]])))
+==============================
+Triaged the following locations:
+File "0168.ml", line 32, characters 11-42:
+And modified the following location:
+File "0168.ml", line 31, characters 31-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    /
+The actual replacement has type
+    int -> int -> int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else
+            (if (mod i 2) = 0 then (mulByDigit (i / 2) (/ l l)) else
+              [[...other program...]])))
+==============================
+Triaged the following locations:
+File "0168.ml", line 32, characters 11-42:
+And modified the following location:
+File "0168.ml", line 31, characters 31-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    -
+The actual replacement has type
+    int -> int -> int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else
+            (if (mod i 2) = 0 then (mulByDigit (i / 2) (- l l)) else
+              [[...other program...]])))
+==============================

@@ -1,0 +1,70 @@
+------------------------------------------------------------------
+File "3407.ml", line 44, characters 52-53:
+This expression has type 'a * int list but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+File "3407.ml", line 44, characters 22-53:
+Try replacing
+    -1 :: (mod sum 10) + 1 :: a
+with
+    [[...]]
+of type
+    'b * int list
+within context
+    (match x with 
+     | (b, c) -> (let sum = b + c in (if sum < 10 then (match a with 
+                                                        | (len, []) -> (len, [sum])
+                                                        | (len, x' :: xs') ->
+                                                          (if x' = -1 then
+                                                              (if sum = 9 then
+                                                                len, -1 :: 0 :: xs'
+                                                                else
+                                                                len, sum + 1 :: xs')
+                                                              else
+                                                              len,
+                                                                sum ::
+                                                                    x' ::
+                                                                    xs')) else (match
+                                                                                a
+                                                                                with
+                                                                                
+                                                                                |
+                                                                                  (len
+                                                                                      ,
+                                                                                      [])
+                                                                                  ->
+                                                                                  (len
+                                                                                        ,
+                                                                                        [
+                                                                                            -1
+                                                                                            ;
+                                                                                            (mod
+                                                                                              sum
+                                                                                              10)
+                                                                                            ])
+                                                                                |
+                                                                                  (len
+                                                                                      ,
+                                                                                      x'
+                                                                                        ::
+                                                                                        xs')
+                                                                                  ->
+                                                                                  (if
+                                                                                      x'
+                                                                                        =
+                                                                                        -1
+                                                                                      then
+                                                                                      [[...]]
+                                                                                      else
+                                                                                      len
+                                                                                        ,
+                                                                                        -1
+                                                                                            ::
+                                                                                            (mod
+                                                                                              sum
+                                                                                              10)
+                                                                                            ::
+                                                                                            x'
+                                                                                            ::
+                                                                                            xs')))))
+==============================

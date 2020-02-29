@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0171.ml", line 4, characters 51-55:
+This expression has type ('a -> 'b) list but is here used with type 'a
+Relevant code: curr
+------------------------------------------------------------------
+File "0171.ml", line 4, characters 51-55:
+Try replacing
+    curr
+with
+    acc
+of type
+    'c
+within context
+    fun acc curr -> (match curr with 
+                     | [] -> acc
+                     | h :: tl -> (iter (h acc) tl))
+==============================

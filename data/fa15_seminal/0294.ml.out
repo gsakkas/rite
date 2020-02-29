@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0294.ml", line 11, characters 30-44:
+This expression has type int list but is here used with type int
+Relevant code: (clone 0 diff)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0294.ml", line 11, characters 55-63:
+And modified the following location:
+File "0294.ml", line 11, characters 45-46:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    l1, l2
+If you ignore other surrounding code, try replacing
+    -
+with
+    -; [[...]]
+The actual replacement has type
+    int list -> int -> int list
+within context
+    fun l1
+      l2 ->
+        (let diff = (List.length l1) - (List.length l2) in
+            (if diff < 0 then l1 @ (clone 0 (-1 * diff - 1)) else
+                (if diff > 0 then l2 @ ((clone 0 diff) -; [[...]] 1) else
+                  (l1, l2; [[...]]))))
+==============================

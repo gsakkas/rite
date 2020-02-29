@@ -1,0 +1,34 @@
+------------------------------------------------------------------
+File "2858.ml", line 8, characters 44-66:
+This expression has type int * int list but is here used with type
+  int list * int
+Relevant code: (x, (clone 0 (x - y)))
+------------------------------------------------------------------
+File "2858.ml", line 8, characters 17-37:
+Try replacing
+    (clone 0 (y - x)), y
+with
+    y, (clone 0 (y - x))
+of type
+    int * int list
+within context
+    fun l1
+      l2 ->
+        (let x = (List.length l1) in
+            let y = (List.length l2) in
+            (if x < y then y, (clone 0 (y - x)) else x, (clone 0 (x - y))))
+==============================
+File "2858.ml", line 8, characters 45-65:
+Try replacing
+    x, (clone 0 (x - y))
+with
+    (clone 0 (x - y)), x
+of type
+    int list * int
+within context
+    fun l1
+      l2 ->
+        (let x = (List.length l1) in
+            let y = (List.length l2) in
+            (if x < y then (clone 0 (y - x)), y else (clone 0 (x - y)), x))
+==============================

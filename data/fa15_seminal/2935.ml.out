@@ -1,0 +1,56 @@
+------------------------------------------------------------------
+File "2935.ml", line 16, characters 41-46:
+This pattern matches values of type 'a * 'b
+but is here used to match values of type 'c list
+Relevant code: (r,s)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2935.ml", line 17, characters 4-120:
+And modified the following location:
+File "2935.ml", line 16, characters 41-53:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (match x with 
+     | [] -> a
+     | (r, s) -> [r])
+with
+    (match x with 
+     | [] -> a
+     | _ -> [[...]])
+The actual replacement has type
+    'd
+==============================
+Triaged the following locations:
+File "2935.ml", line 17, characters 4-120:
+And modified the following location:
+File "2935.ml", line 16, characters 31-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    'e * 'f -> 'e list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | _ -> a
+                                                  | (r, s) ->
+                                                    [r
+                                                          ]) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2935.ml", line 17, characters 4-120:
+And modified the following location:
+File "2935.ml", line 16, characters 4-177:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match x with 
+                 | [] -> a
+                 | (r, s) ->
+                   [r
+                         ]) in let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'g
+==============================

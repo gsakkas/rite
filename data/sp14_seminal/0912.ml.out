@@ -1,0 +1,96 @@
+------------------------------------------------------------------
+File "0912.ml", line 16, characters 24-46:
+This expression has type 'a list -> ('b * 'a) list but is here used with type
+  'c list
+Relevant code: (List.combine (l1 l2))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0912.ml", line 16, characters 25-37:
+And modified the following location:
+File "0912.ml", line 16, characters 39-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.combine
+If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    'd -> 'e
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = [], [] in
+      let args = (List.rev ((List.combine; [[...]]) ((l1; [[...]]) l2))) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "0912.ml", line 16, characters 25-37:
+And modified the following location:
+File "0912.ml", line 16, characters 39-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.combine
+If you ignore other surrounding code, try replacing
+    l1
+with
+    =
+The actual replacement has type
+    'f -> 'f -> bool
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = [], [] in
+      let args = (List.rev ((List.combine; [[...]]) (= l2))) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "0912.ml", line 16, characters 25-37:
+And modified the following location:
+File "0912.ml", line 16, characters 39-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.combine
+If you ignore other surrounding code, try replacing
+    l1
+with
+    @
+The actual replacement has type
+    'g list -> 'g list -> 'g list
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = [], [] in
+      let args = (List.rev ((List.combine; [[...]]) (@ l2))) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "0912.ml", line 16, characters 25-37:
+And modified the following location:
+File "0912.ml", line 16, characters 39-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.combine
+If you ignore other surrounding code, try replacing
+    l1
+with
+    f
+The actual replacement has type
+    'h -> 'i -> 'j
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = [], [] in
+      let args = (List.rev ((List.combine; [[...]]) (f l2))) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "0912.ml", line 16, characters 25-37:
+And modified the following location:
+File "0912.ml", line 16, characters 42-44:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.combine
+If you ignore other surrounding code, try replacing
+    (l1 l2)
+with
+    l1
+The actual replacement has type
+    'k
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = [], [] in
+      let args = (List.rev ((List.combine; [[...]]) l1)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

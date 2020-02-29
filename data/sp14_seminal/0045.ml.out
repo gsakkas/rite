@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "0045.ml", line 14, characters 32-58:
+This expression has type (int list -> int list) * int list
+but is here used with type 'a list * int list
+Relevant code: ((List.append zeroes), l2)
+------------------------------------------------------------------
+File "0045.ml", line 6, characters 28-30:
+Try replacing
+    l1
+with
+    l2
+of type
+    int list
+within context
+    let padZero l1 l2 =
+    let length1 = (List.length l2) in
+      let length2 = (List.length l2) in (match (length1 >= length2) with 
+                                         | true ->
+                                           (let n = length1 - length2 in
+                                                 let zeroes = (clone 0 n) in
+                                                 l1, (List.append zeroes l2))
+                                         | false ->
+                                           (let n = length2 - length1 in
+                                                 let zeroes = (clone 0 n) in
+                                                 (List.append zeroes), l2))
+    ;; 
+==============================

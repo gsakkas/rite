@@ -1,0 +1,21 @@
+
+------------------------------------------------------------------
+File "0541.ml", line 40, characters 45-52:
+This expression has type float but is here used with type int
+Relevant code: (log l)
+------------------------------------------------------------------
+File "0541.ml", line 40, characters 53-54:
+Try replacing
+    /
+with
+    /; [[...]]
+of type
+    float -> float -> 'a
+within context
+    let b = (abs_float (eval (b', x, y))) in
+      let my_log l' = let l = (max' 0.1 l') in ((log l) /; [[...]] (log 10.0)) in
+      (if (eval (c, x, y)) < 0.0 then
+          (my_log (a *. 100.0)) ** (sin ((pi *. b) *. 100.0)) -. 1.0
+          else
+          (-1.0 *. (my_log (b *. 100.0)) ** (pi *. (sin (a *. 100.0))) -. 1.0))
+==============================

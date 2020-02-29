@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1415.ml", line 8, characters 63-64:
+This expression has type int list but is here used with type int
+Relevant code: t
+------------------------------------------------------------------
+File "1415.ml", line 8, characters 63-64:
+Try replacing
+    t
+with
+    h
+of type
+    int
+within context
+    fun n -> (match n with 
+              | x :: [] -> x
+              | h :: t -> h + (digitalRoot (digits h)))
+==============================

@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "3238.ml", line 38, characters 8-26:
+This expression has type float but is here used with type int
+Relevant code: (eval (ex1, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "3238.ml", line 40, characters 8-9:
+And modified the following location:
+File "3238.ml", line 38, characters 6-105:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /
+If you ignore other surrounding code, try replacing
+    ((eval (ex1, x, y)) * (sin (pi * (eval (ex2, x, y)))))
+      * (cos (pi * (eval (ex3, x, y))))
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine ex -> (sin (pi *. (eval (ex, x, y))))
+                              | Cosine ex -> (cos (pi *. (eval (ex, x, y))))
+                              | Average (ex1, ex2) ->
+                                (((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.)
+                              | Times (ex1, ex2) ->
+                                ((eval (ex1, x, y)) *. (eval (ex2, x, y)))
+                              | Thresh (ex1, ex2, ex3, ex4) ->
+                                (if (eval (ex1, x, y)) < (eval (ex2, x, y)) then
+                                    (eval (ex3, x, y))
+                                    else
+                                    (eval (ex4, x, y)))
+                              | FiboPlus (ex1, ex2, ex3, ex4, ex5) ->
+                                (((((eval (ex1, x, y)) *.
+                                                  ((eval (ex1, x, y))
+                                                      +. (eval (ex2, x, y))))
+                                              *.
+                                              (((eval (ex1, x, y))
+                                                      +. (eval (ex2, x, y)))
+                                                  +. (eval (ex3, x, y))))
+                                          *.
+                                          ((((eval (ex1, x, y))
+                                                      +. (eval (ex2, x, y)))
+                                                  +. (eval (ex3, x, y)))
+                                              +. (eval (ex4, x, y))))
+                                      *.
+                                      (((((eval (ex1, x, y)) +. (eval (ex2, x, y)))
+                                                  +. (eval (ex3, x, y)))
+                                              +. (eval (ex4, x, y)))
+                                          +. (eval (ex5, x, y))))
+                              | TheThing (ex1, ex2, ex3) ->
+                                ([[...]] /; [[...]] 2)) ;; 
+==============================

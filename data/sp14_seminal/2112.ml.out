@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "2112.ml", line 15, characters 51-65:
+This expression has type expr * expr * expr but is here used with type
+  expr * float * float
+Relevant code: (VarY, a1, a2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2112.ml", line 15, characters 43-44:
+And modified the following location:
+File "2112.ml", line 15, characters 46-50:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr * expr * expr ->
+    'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x +. 0.0)
+                              | VarY -> (y +. 0.0)
+                              | Average (a1, a2) ->
+                                ((eval (VarX, x, y)) +; [[...]]
+                                      ((eval; [[...]]) (VarY, a1, a2)))) ;; 
+==============================
+Triaged the following locations:
+File "2112.ml", line 15, characters 43-44:
+And modified the following location:
+File "2112.ml", line 15, characters 51-65:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    VarY, a1, a2
+with
+    VarY, a1, a2; [[...]]
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (x +. 0.0)
+                              | VarY -> (y +. 0.0)
+                              | Average (a1, a2) ->
+                                ((eval (VarX, x, y)) +; [[...]]
+                                      (eval (VarY, a1, a2; [[...]])))) ;; 
+==============================

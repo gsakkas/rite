@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "2876.ml", line 14, characters 58-60:
+This expression has type float but is here used with type int
+Relevant code: pi
+------------------------------------------------------------------
+Triaged the following locations:
+File "2876.ml", line 14, characters 61-62:
+And modified the following location:
+File "2876.ml", line 14, characters 64-68:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr -> 'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e ->
+                                (sin (pi *; [[...]] ((eval; [[...]]) e)))) ;; 
+==============================
+Triaged the following locations:
+File "2876.ml", line 14, characters 61-62:
+And modified the following location:
+File "2876.ml", line 14, characters 69-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    e
+with
+    e; [[...]]
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e ->
+                                (sin (pi *; [[...]] (eval (e; [[...]]))))) ;; 
+==============================

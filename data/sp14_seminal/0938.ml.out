@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0938.ml", line 31, characters 54-55:
+This expression has type int but is here used with type int list
+Relevant code: x
+------------------------------------------------------------------
+File "0938.ml", line 31, characters 27-31:
+Try replacing
+    (mulByDigit x l1)
+with
+    (mulByDigit l1 x)
+of type
+    int list
+within context
+    fun l2 ->
+      (let f a x = let value = (mulByDigit l1 x) in 0, (bigAdd value x) :: (snd a)
+          in
+          let base = 0, [] in
+          let args = (List.rev l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

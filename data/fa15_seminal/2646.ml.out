@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "2646.ml", line 8, characters 52-74:
+This expression has type int but is here used with type int list
+Relevant code: (k + (mulByDigit i t))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2646.ml", line 8, characters 20-40:
+And modified the following location:
+File "2646.ml", line 8, characters 55-56:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    int -> int list -> int list
+within context
+    fun l -> (match l with 
+              | [] -> []
+              | h :: t ->
+                (let x = (mod (h * i) 10) in
+                      let k = (h * i) / 10 in
+                      (if k = 0 then [[...other program...]] else
+                          [x] @ (k +; [[...]] (mulByDigit i t)))))
+==============================
+Triaged the following locations:
+File "2646.ml", line 8, characters 46-74:
+And modified the following location:
+File "2646.ml", line 8, characters 22-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    int -> 'a list -> 'a list
+within context
+    fun l -> (match l with 
+              | [] -> []
+              | h :: t ->
+                (let x = (mod (h * i) 10) in
+                      let k = (h * i) / 10 in
+                      (if k = 0 then (k +; [[...]] (mulByDigit i t)) else
+                          [[...other program...]])))
+==============================

@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1539.ml", line 4, characters 54-56:
+This expression has type int list but is here used with type int
+Relevant code: tl
+------------------------------------------------------------------
+File "1539.ml", line 4, characters 54-56:
+Try replacing
+    tl
+with
+    hd
+of type
+    int
+within context
+    let f a x = a * a in let base = (match xs with 
+                                     | hd :: tl ->
+                                       (f hd hd)
+                                           +
+                                           (f hd tl)) in (List.fold_left f base  xs)
+==============================

@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "2539.ml", line 19, characters 25-39:
+This expression has type int but is here used with type 'a list
+Relevant code: ((j + k) - 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2539.ml", line 20, characters 15-34:
+And modified the following location:
+File "2539.ml", line 19, characters 19-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a :: (j + k) - 10
+with
+    [[...]]
+The actual replacement has type
+    int * 'b
+within context
+    let f a x = (match x with 
+                 | (j, k) ->
+                   (if j + k > 10 then 1, [[...]] else
+                       [[...other program...]])) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "2539.ml", line 19, characters 15-41:
+And modified the following location:
+File "2539.ml", line 20, characters 19-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a :: j + k
+with
+    [[...]]
+The actual replacement has type
+    int * 'c
+within context
+    let f a x = (match x with 
+                 | (j, k) ->
+                   (if j + k > 10 then [[...other program...]] else
+                       0,
+                         [[...]])) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

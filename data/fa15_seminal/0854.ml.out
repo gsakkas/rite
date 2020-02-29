@@ -1,0 +1,74 @@
+------------------------------------------------------------------
+File "0854.ml", line 31, characters 18-36:
+This expression has type (int list -> int list * int list) * 'a
+but is here used with type int list * int list
+Relevant code: ((padZero l1), l2)
+------------------------------------------------------------------
+File "0854.ml", line 31, characters 14-17:
+Try replacing
+    add
+with
+    add; [[...]]
+of type
+    (int list -> int list * int list) * 'b -> int list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (fst, sec) = x in
+                let (fst', sec') =
+                (if fst + sec > 9 then (fst + sec) - 10, 1 else fst + sec, 0)
+                in
+                let (carry, digits) = a in
+                let (carry', digits') =
+                (if sec' = 1 then 1, [fst', sec'] @ digits else
+                  0, [fst', sec'] @ digits)
+                in
+                carry', digits'
+              in
+              let base = 0, [] in
+              let args = (List.rev (List.combine l1 l2)) @ [0, 0] in
+              let (_, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero ((add; [[...]]) ((padZero l1), l2))))
+==============================
+File "0854.ml", line 17, characters 10-505:
+Try replacing
+    fun (l1, l2) ->
+      (let f a x =
+          let (fst, sec) = x in
+            let (fst', sec') =
+            (if fst + sec > 9 then (fst + sec) - 10, 1 else fst + sec, 0)
+            in
+            let (carry, digits) = a in
+            let (carry', digits') =
+            (if sec' = 1 then 1, [fst', sec'] @ digits else
+              0, [fst', sec'] @ digits)
+            in
+            carry', digits'
+          in
+          let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) @ [0, 0] in
+          let (_, res) = (List.fold_left f base  args) in res)
+with
+    fun (l1, l2) ->
+      (let f a x =
+          let (fst, sec) = x in
+            let (fst', sec') =
+            (if fst + sec > 9 then (fst + sec) - 10, 1 else fst + sec, 0)
+            in
+            let (carry, digits) = a in
+            let (carry', digits') =
+            (if sec' = 1 then 1, [fst', sec'] @ digits else
+              0, [fst', sec'] @ digits)
+            in
+            carry', digits'
+          in
+          let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) @ [0, 0] in
+          let (_, res) = (List.fold_left f base  args) in res);
+    [[...]]
+of type
+    'c
+==============================

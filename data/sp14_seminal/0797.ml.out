@@ -1,0 +1,165 @@
+------------------------------------------------------------------
+File "0797.ml", line 37, characters 14-24:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: buildTimes
+------------------------------------------------------------------
+Triaged the following locations:
+File "0797.ml", line 38, characters 14-45:
+File "0797.ml", line 40, characters 14-39:
+And modified the following location:
+File "0797.ml", line 37, characters 14-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    expr -> expr -> expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 -> VarX
+                                   | _ ->
+                                     (let next = (build (rand, depth - 1)) in
+                                           (match (rand (1, 7)) with 
+                                            | 1 -> (buildSine next)
+                                            | 2 -> (buildCosine next)
+                                            | 3 -> (buildAverage (next, next))
+                                            | 4 -> ((buildTimes; [[...]]) next next)
+                                            | 5 -> [[...other program...]]
+                                            | 6 -> (buildSqrt next)
+                                            | 7 -> [[...other program...]]))) ;; 
+==============================
+Triaged the following locations:
+File "0797.ml", line 38, characters 14-45:
+File "0797.ml", line 40, characters 14-39:
+And modified the following location:
+File "0797.ml", line 37, characters 25-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildTimes next next)
+with
+    (buildTimes (next, next))
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 -> VarX
+                                   | _ ->
+                                     (let next = (build (rand, depth - 1)) in
+                                           (match (rand (1, 7)) with 
+                                            | 1 -> (buildSine next)
+                                            | 2 -> (buildCosine next)
+                                            | 3 -> (buildAverage (next, next))
+                                            | 4 -> (buildTimes (next, next))
+                                            | 5 -> [[...other program...]]
+                                            | 6 -> (buildSqrt next)
+                                            | 7 -> [[...other program...]]))) ;; 
+==============================
+Triaged the following locations:
+File "0797.ml", line 37, characters 14-34:
+File "0797.ml", line 38, characters 14-45:
+And modified the following location:
+File "0797.ml", line 40, characters 14-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildGauss
+with
+    buildGauss; [[...]]
+The actual replacement has type
+    expr ->
+    expr -> expr -> expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 -> VarX
+                                   | _ ->
+                                     (let next = (build (rand, depth - 1)) in
+                                           (match (rand (1, 7)) with 
+                                            | 1 -> (buildSine next)
+                                            | 2 -> (buildCosine next)
+                                            | 3 -> (buildAverage (next, next))
+                                            | 4 -> [[...other program...]]
+                                            | 5 -> [[...other program...]]
+                                            | 6 -> (buildSqrt next)
+                                            | 7 ->
+                                              ((buildGauss; [[...]])
+                                                  next next  next)))) ;; 
+==============================
+Triaged the following locations:
+File "0797.ml", line 37, characters 14-34:
+File "0797.ml", line 38, characters 14-45:
+And modified the following location:
+File "0797.ml", line 40, characters 25-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildGauss next next  next)
+with
+    (buildGauss (next, next, next))
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 -> VarX
+                                   | _ ->
+                                     (let next = (build (rand, depth - 1)) in
+                                           (match (rand (1, 7)) with 
+                                            | 1 -> (buildSine next)
+                                            | 2 -> (buildCosine next)
+                                            | 3 -> (buildAverage (next, next))
+                                            | 4 -> [[...other program...]]
+                                            | 5 -> [[...other program...]]
+                                            | 6 -> (buildSqrt next)
+                                            | 7 ->
+                                              (buildGauss (next, next, next))))) ;; 
+==============================
+Triaged the following locations:
+File "0797.ml", line 37, characters 14-34:
+File "0797.ml", line 40, characters 14-39:
+And modified the following location:
+File "0797.ml", line 38, characters 14-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildThresh
+with
+    buildThresh; [[...]]
+The actual replacement has type
+    expr ->
+    expr ->
+    expr -> expr -> expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 -> VarX
+                                   | _ ->
+                                     (let next = (build (rand, depth - 1)) in
+                                           (match (rand (1, 7)) with 
+                                            | 1 -> (buildSine next)
+                                            | 2 -> (buildCosine next)
+                                            | 3 -> (buildAverage (next, next))
+                                            | 4 -> [[...other program...]]
+                                            | 5 ->
+                                              ((buildThresh; [[...]])
+                                                  next next  next  next)
+                                            | 6 -> (buildSqrt next)
+                                            | 7 -> [[...other program...]]))) ;; 
+==============================
+Triaged the following locations:
+File "0797.ml", line 37, characters 14-34:
+File "0797.ml", line 40, characters 14-39:
+And modified the following location:
+File "0797.ml", line 38, characters 26-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildThresh next next  next  next)
+with
+    (buildThresh (next, next, next, next))
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 -> VarX
+                                   | _ ->
+                                     (let next = (build (rand, depth - 1)) in
+                                           (match (rand (1, 7)) with 
+                                            | 1 -> (buildSine next)
+                                            | 2 -> (buildCosine next)
+                                            | 3 -> (buildAverage (next, next))
+                                            | 4 -> [[...other program...]]
+                                            | 5 ->
+                                              (buildThresh (next, next, next, next))
+                                            | 6 -> (buildSqrt next)
+                                            | 7 -> [[...other program...]]))) ;; 
+==============================

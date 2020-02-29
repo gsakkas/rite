@@ -1,0 +1,56 @@
+------------------------------------------------------------------
+File "0401.ml", line 6, characters 47-54:
+This expression has type ('a -> bool) * 'b but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: (fx, b)
+------------------------------------------------------------------
+File "0401.ml", line 6, characters 48-53:
+Try replacing
+    fx, b
+with
+    b, fx
+of type
+    (('c -> bool) -> ('c -> bool) * bool) * ('c -> bool)
+within context
+    let fixpoint (f, b) = let fx a = true in (wwhile (b, fx)) ;; 
+==============================
+File "0401.ml", line 6, characters 40-46:
+Try replacing
+    wwhile
+with
+    fx
+of type
+    ('d -> bool) * 'e -> bool
+within context
+    let fixpoint (f, b) = let fx a = true in (fx (fx, b)) ;; 
+==============================
+File "0401.ml", line 6, characters 40-46:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('f -> bool) * 'g -> ('f -> bool) * 'g -> bool
+within context
+    let fixpoint (f, b) = let fx a = true in (= (fx, b)) ;; 
+==============================
+File "0401.ml", line 6, characters 40-46:
+Try replacing
+    wwhile
+with
+    f
+of type
+    ('h -> bool) * 'i -> 'j
+within context
+    let fixpoint (f, b) = let fx a = true in (f (fx, b)) ;; 
+==============================
+File "0401.ml", line 6, characters 48-50:
+Try replacing
+    fx
+with
+    f
+of type
+    ('k -> 'k * bool) * 'k
+within context
+    let fixpoint (f, b) = let fx a = true in (wwhile (f, b)) ;; 
+==============================

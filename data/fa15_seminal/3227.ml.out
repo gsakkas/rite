@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "3227.ml", line 6, characters 65-67:
+This expression has type int but is here used with type int list
+Relevant code: x'
+------------------------------------------------------------------
+File "3227.ml", line 6, characters 52-62:
+Try replacing
+    mulByDigit
+with
+    /
+of type
+    int -> int -> int
+within context
+    (match l with 
+     | [] -> []
+     | x :: x' :: x'' ->
+       [(x * i) / 10] @ ([(mod (x * i) 10) + x'] @ (/ i x') :: x''))
+==============================
+File "3227.ml", line 6, characters 52-62:
+Try replacing
+    mulByDigit
+with
+    mod
+of type
+    int -> int -> int
+within context
+    (match l with 
+     | [] -> []
+     | x :: x' :: x'' ->
+       [(x * i) / 10] @ ([(mod (x * i) 10) + x'] @ (mod i x') :: x''))
+==============================
+File "3227.ml", line 6, characters 52-62:
+Try replacing
+    mulByDigit
+with
+    *
+of type
+    int -> int -> int
+within context
+    (match l with 
+     | [] -> []
+     | x :: x' :: x'' ->
+       [(x * i) / 10] @ ([(mod (x * i) 10) + x'] @ (* i x') :: x''))
+==============================
+File "3227.ml", line 6, characters 52-62:
+Try replacing
+    mulByDigit
+with
+    +
+of type
+    int -> int -> int
+within context
+    (match l with 
+     | [] -> []
+     | x :: x' :: x'' ->
+       [(x * i) / 10] @ ([(mod (x * i) 10) + x'] @ (+ i x') :: x''))
+==============================

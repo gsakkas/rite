@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0408.ml", line 8, characters 14-18:
+This expression has type bool but is here used with type int
+Relevant code: true
+------------------------------------------------------------------
+File "0408.ml", line 8, characters 11-13:
+Try replacing
+    fs
+with
+    f
+of type
+    bool -> 'a -> 'a * bool
+within context
+    fun (f, b) ->
+      (let fs bs = (if bs = 0 then 0 else (if bs > 1 then bs - 1 else bs + 1)) in
+          (wwhile ((f true), b)))
+==============================

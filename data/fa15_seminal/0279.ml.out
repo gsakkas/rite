@@ -1,0 +1,72 @@
+------------------------------------------------------------------
+File "0279.ml", line 10, characters 8-13:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: clone
+------------------------------------------------------------------
+Triaged the following locations:
+File "0279.ml", line 11, characters 7-43:
+And modified the following location:
+File "0279.ml", line 10, characters 16-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 abs  diff)
+with
+    (clone 0 diff)
+The actual replacement has type
+    int list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (clone 0 diff) @ l1 else [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0279.ml", line 11, characters 7-43:
+And modified the following location:
+File "0279.ml", line 10, characters 14-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 abs  diff)
+with
+    (clone abs diff)
+The actual replacement has type
+    (int -> int) list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (clone abs diff) @ l1 else [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0279.ml", line 11, characters 7-43:
+And modified the following location:
+File "0279.ml", line 10, characters 8-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    clone
+with
+    clone; [[...]]
+The actual replacement has type
+    int -> (int -> int) -> int -> 'e list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then ((clone; [[...]]) 0 abs  diff) @ l1 else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0279.ml", line 10, characters 7-30:
+And modified the following location:
+File "0279.ml", line 11, characters 24-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 diff) @ l2
+with
+    (clone 0 diff) @ l2; [[...]]
+The actual replacement has type
+    unit
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then [[...other program...]] else
+          (if diff > 0 then ((clone 0 diff) @ l2; [[...]])))
+    ;; 
+==============================

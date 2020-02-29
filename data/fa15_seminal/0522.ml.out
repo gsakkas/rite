@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "0522.ml", line 3, characters 56-67:
+This expression has type unit but is here used with type int
+Relevant code: print_int y
+------------------------------------------------------------------
+File "0522.ml", line 3, characters 56-65:
+Try replacing
+    print_int
+with
+    k
+of type
+    'a -> int
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> -1
+                               | h :: l' -> (let (x, y) = h in (k y))) ;; 
+==============================
+File "0522.ml", line 3, characters 56-65:
+Try replacing
+    print_int
+with
+    d
+of type
+    'b -> int
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> -1
+                               | h :: l' -> (let (x, y) = h in (d y))) ;; 
+==============================
+File "0522.ml", line 3, characters 56-65:
+Try replacing
+    print_int
+with
+    x
+of type
+    'c -> int
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> -1
+                               | h :: l' -> (let (x, y) = h in (x y))) ;; 
+==============================

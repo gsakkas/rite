@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "1890.ml", line 6, characters 28-38:
+This expression has type ('a * bool) * 'b but is here used with type
+  ('c -> 'c * bool) * 'c
+Relevant code: ((g f), b)
+------------------------------------------------------------------
+File "1890.ml", line 6, characters 29-37:
+Try replacing
+    (g f), b
+with
+    b, (g f)
+of type
+    ('d * bool -> ('d * bool) * bool) * ('d * bool)
+within context
+    let fixpoint (f, b) = (wwhile (b, (g f))) ;; 
+==============================
+File "1890.ml", line 6, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('e * bool) * 'f -> ('e * bool) * 'f -> bool
+within context
+    let fixpoint (f, b) = (= ((g f), b)) ;; 
+==============================
+File "1890.ml", line 6, characters 30-31:
+Try replacing
+    g
+with
+    wwhile
+of type
+    (('g -> 'g * bool) -> ('g -> 'g * bool) * bool) * ('g -> 'g * bool) ->
+    'g -> 'g * bool
+within context
+    let fixpoint (f, b) = (wwhile ((wwhile f), b)) ;; 
+==============================

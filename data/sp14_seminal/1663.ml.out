@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "1663.ml", line 2, characters 62-66:
+This pattern matches values of type 'a list
+but is here used to match values of type int
+Relevant code: f::b
+------------------------------------------------------------------
+File "1663.ml", line 2, characters 53-54:
+Try replacing
+    n
+with
+    n; [[...]]
+of type
+    'b list list
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else (match (n; [[...]]) with 
+                                                    | f :: b -> f)) ;; 
+==============================
+File "1663.ml", line 2, characters 31-32:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    'c list list
+within context
+    let rec digitsOfInt n = (if n < (0; [[...]]) then [] else (match n with 
+                                                               | f :: b -> f)) ;; 
+==============================
+File "1663.ml", line 2, characters 27-28:
+Try replacing
+    n
+with
+    n; [[...]]
+of type
+    int
+within context
+    let rec digitsOfInt n = (if (n; [[...]]) < 0 then [] else (match n with 
+                                                               | f :: b -> f)) ;; 
+==============================
+File "1663.ml", line 2, characters 29-30:
+Try replacing
+    <
+with
+    <; [[...]]
+of type
+    'd list list -> int -> bool
+within context
+    let rec digitsOfInt n = (if (n <; [[...]] 0) then [] else (match n with 
+                                                               | f :: b -> f)) ;; 
+==============================
+Triaged the following locations:
+File "1663.ml", line 2, characters 70-71:
+And modified the following location:
+File "1663.ml", line 2, characters 62-66:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    f :: b
+with
+    _
+The actual replacement has type
+    'e list
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else (match n with 
+                                                    | _ ->
+                                                      [[...other program...]])) ;; 
+==============================

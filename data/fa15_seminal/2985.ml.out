@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2985.ml", line 3, characters 49-64:
+This expression has type 'a list but is here used with type string
+Relevant code: List.append a b
+------------------------------------------------------------------
+File "2985.ml", line 3, characters 49-60:
+Try replacing
+    List.append
+with
+    f
+of type
+    string -> 'b list -> string
+within context
+    let fx a b = (match b with 
+                  | [] -> ""
+                  | h :: t ->
+                    (f a b)) in let base = "" in (List.fold_left fx base  l)
+==============================

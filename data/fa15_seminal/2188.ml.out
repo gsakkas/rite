@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2188.ml", line 7, characters 60-72:
+This expression has type bool but is here used with type int
+Relevant code: (not result)
+------------------------------------------------------------------
+File "2188.ml", line 7, characters 58-59:
+Try replacing
+    *
+with
+    wwhile
+of type
+    ((bool -> 'a * bool) -> (bool -> 'a * bool) * bool) * (bool -> 'a * bool) ->
+    bool -> 'a * bool
+within context
+    (let helper func = let (value, result) = (f b) in (value wwhile (not result)) in
+          helper)
+      ,
+      b
+==============================

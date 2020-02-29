@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1836.ml", line 14, characters 50-57:
+This expression has type int list -> int but is here used with type int
+Relevant code: sumList
+------------------------------------------------------------------
+File "1836.ml", line 14, characters 17-66:
+Try replacing
+    fun x -> (if x < 10 then x else (helper sumList digits  x))
+with
+    fun x -> (if x < 10 then x else (helper sumList digits  x)); [[...]]
+of type
+    (int list -> int) -> (int -> int list) -> int -> int
+within context
+    let rec digitalRoot n =
+    let rec helper =
+      fun x -> (if x < 10 then x else (helper sumList digits  x)); [[...]]
+      in
+      (helper n)
+    ;; 
+==============================

@@ -1,0 +1,68 @@
+------------------------------------------------------------------
+File "1488.ml", line 62, characters 33-37:
+This expression has type int * 'a list but is here used with type int list
+Relevant code: base
+------------------------------------------------------------------
+File "1488.ml", line 62, characters 31-32:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> 'c * 'd -> int * 'b list
+within context
+    let f a x = (match x with 
+                 | (l2digit, templ1) ->
+                   (let multres = (mulByDigit l2digit templ1) in
+                         (bigAdd
+                             (a @ [0])
+                             multres))) in let base = 0, [] in
+      let args = let rec argmaker x y = (match y with 
+                                         | [] -> []
+                                         | hd :: tl ->
+                                           (if tl = [] then [hd, x] else
+                                               hd, x ::
+                                                   (argmaker
+                                                     x
+                                                     tl))) in (argmaker
+            l1 l2) in let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "1488.ml", line 62, characters 16-30:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int * int list -> int list) ->
+    int * 'e list -> ('f * 'g) list -> 'h * 'i
+within context
+    let f a x = (match x with 
+                 | (l2digit, templ1) ->
+                   (let multres = (mulByDigit l2digit templ1) in
+                         (bigAdd
+                             (a @ [0])
+                             multres))) in let base = 0, [] in
+      let args = let rec argmaker x y = (match y with 
+                                         | [] -> []
+                                         | hd :: tl ->
+                                           (if tl = [] then [hd, x] else
+                                               hd, x ::
+                                                   (argmaker
+                                                     x
+                                                     tl))) in (argmaker
+            l1 l2) in let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "1488.ml", line 51, characters 8-132:
+Try replacing
+    fun a x -> (match x with 
+                | (l2digit, templ1) ->
+                  (let multres = (mulByDigit l2digit templ1) in
+                        (bigAdd (a @ [0]) multres)))
+with
+    fun a x -> (match x with 
+                | (l2digit, templ1) ->
+                  (let multres = (mulByDigit l2digit templ1) in
+                        (bigAdd (a @ [0]) multres))); [[...]]
+of type
+    'j
+==============================

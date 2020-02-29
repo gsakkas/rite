@@ -1,0 +1,79 @@
+------------------------------------------------------------------
+File "0143.ml", line 21, characters 18-33:
+This expression has type int list * int list but is here used with type
+  int * int
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "0143.ml", line 21, characters 18-33:
+Try replacing
+    (padZero l1 l2)
+with
+    (padZero l1 l2); [[...]]
+of type
+    int * int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (carry, num) = a in
+                let (l1', l2') = x in
+                let addit = (l1' + l2') + carry in
+                (if (addit >= 10) then 1 else 0), num @ [(mod addit 10)]
+              in
+              let base = 0, [] in
+              let args = (List.combine [0 ; l1] [0 ; l2]) in
+              let (car, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero (add ((padZero l1 l2); [[...]]))))
+==============================
+File "0143.ml", line 21, characters 14-17:
+Try replacing
+    add
+with
+    add; [[...]]
+of type
+    int list * int list -> int list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (carry, num) = a in
+                let (l1', l2') = x in
+                let addit = (l1' + l2') + carry in
+                (if (addit >= 10) then 1 else 0), num @ [(mod addit 10)]
+              in
+              let base = 0, [] in
+              let args = (List.combine [0 ; l1] [0 ; l2]) in
+              let (car, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero ((add; [[...]]) (padZero l1 l2))))
+==============================
+File "0143.ml", line 12, characters 10-325:
+Try replacing
+    fun (l1, l2) ->
+      (let f a x =
+          let (carry, num) = a in
+            let (l1', l2') = x in
+            let addit = (l1' + l2') + carry in
+            (if (addit >= 10) then 1 else 0), num @ [(mod addit 10)]
+          in
+          let base = 0, [] in
+          let args = (List.combine [0 ; l1] [0 ; l2]) in
+          let (car, res) = (List.fold_left f base  args) in res)
+with
+    fun (l1, l2) ->
+      (let f a x =
+          let (carry, num) = a in
+            let (l1', l2') = x in
+            let addit = (l1' + l2') + carry in
+            (if (addit >= 10) then 1 else 0), num @ [(mod addit 10)]
+          in
+          let base = 0, [] in
+          let args = (List.combine [0 ; l1] [0 ; l2]) in
+          let (car, res) = (List.fold_left f base  args) in res);
+    [[...]]
+of type
+    'a
+==============================

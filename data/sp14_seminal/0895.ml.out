@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "0895.ml", line 16, characters 50-51:
+This expression has type 'a -> 'b -> 'a * 'a but is here used with type
+  'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "0895.ml", line 14, characters 10-13:
+Try replacing
+    fun a x -> (a, a)
+with
+    fun x a -> (a, a)
+of type
+    'c -> 'd -> 'd * 'd
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f x a = a, a in
+              let base = [], [] in
+              let args = [] in let (_, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================

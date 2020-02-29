@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "2959.ml", line 32, characters 45-46:
+This expression has type int * int but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "2959.ml", line 32, characters 28-29:
+And modified the following location:
+File "2959.ml", line 32, characters 31-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    mulByDigit; [[...]]
+The actual replacement has type
+    'a -> int * int list -> 'b
+within context
+    fun x ->
+      (let (place, res) = a in
+          (if (place <= 0) then
+              place + 1, (res +; [[...]] ((mulByDigit; [[...]]) l2 a))
+              else
+              place + 1, (mulByDigit ((x * 10) * place) res)))
+==============================
+Triaged the following locations:
+File "2959.ml", line 32, characters 28-29:
+And modified the following location:
+File "2959.ml", line 32, characters 31-44:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    (mulByDigit l2 a)
+with
+    (mulByDigit (l2 a))
+The actual replacement has type
+    int list -> int list
+within context
+    fun x ->
+      (let (place, res) = a in
+          (if (place <= 0) then place + 1, (res +; [[...]] (mulByDigit (l2 a))) else
+              place + 1, (mulByDigit ((x * 10) * place) res)))
+==============================
+Triaged the following locations:
+File "2959.ml", line 32, characters 28-29:
+And modified the following location:
+File "2959.ml", line 32, characters 45-46:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun x ->
+      (let (place, res) = a in
+          (if (place <= 0) then
+              place + 1, (res +; [[...]] (mulByDigit l2 (a; [[...]])))
+              else
+              place + 1, (mulByDigit ((x * 10) * place) res)))
+==============================

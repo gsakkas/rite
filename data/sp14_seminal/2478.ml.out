@@ -1,0 +1,420 @@
+------------------------------------------------------------------
+File "2478.ml", line 30, characters 26-37:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: buildhelper
+------------------------------------------------------------------
+Triaged the following locations:
+File "2478.ml", line 52, characters 8-241:
+File "2478.ml", line 58, characters 8-241:
+And modified the following location:
+File "2478.ml", line 30, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildhelper 0 (depth - 1)  (depth - 1)  expr)
+with
+    (buildhelper (depth - 1) (depth - 1)  expr)
+The actual replacement has type
+    expr
+within context
+    let rec buildhelper num depth expr = (match num with 
+                                          | 0 ->
+                                            (if (rand (0, 1)) = 0 then (buildX ())
+                                                else
+                                                (buildY ()))
+                                          | 1 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildSine
+                                                  (buildhelper
+                                                    (depth - 1) (depth - 1)  expr))
+                                                else
+                                                (buildCosine
+                                                  (buildhelper
+                                                    (depth - 1) (depth - 1)  expr)))
+                                          | 2 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 3 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 4 -> [[...other program...]]
+                                          | _ ->
+                                            [[...other program...]]) in (buildhelper
+          (rand (1, 4)) depth  "")
+==============================
+Triaged the following locations:
+File "2478.ml", line 52, characters 8-241:
+File "2478.ml", line 58, characters 8-241:
+And modified the following location:
+File "2478.ml", line 30, characters 52-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildhelper 0 (depth - 1)  (depth - 1)  expr)
+with
+    (buildhelper 0 (depth - 1)  expr)
+The actual replacement has type
+    expr
+within context
+    let rec buildhelper num depth expr = (match num with 
+                                          | 0 ->
+                                            (if (rand (0, 1)) = 0 then (buildX ())
+                                                else
+                                                (buildY ()))
+                                          | 1 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildSine
+                                                  (buildhelper
+                                                    (depth - 1) (depth - 1)  expr))
+                                                else
+                                                (buildCosine
+                                                  (buildhelper
+                                                    0 (depth - 1)  expr)))
+                                          | 2 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 3 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 4 -> [[...other program...]]
+                                          | _ ->
+                                            [[...other program...]]) in (buildhelper
+          (rand (1, 4)) depth  "")
+==============================
+Triaged the following locations:
+File "2478.ml", line 52, characters 8-241:
+File "2478.ml", line 58, characters 8-241:
+And modified the following location:
+File "2478.ml", line 30, characters 40-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildhelper 0 (depth - 1)  (depth - 1)  expr)
+with
+    (buildhelper 0 (depth - 1)  expr)
+The actual replacement has type
+    expr
+within context
+    let rec buildhelper num depth expr = (match num with 
+                                          | 0 ->
+                                            (if (rand (0, 1)) = 0 then (buildX ())
+                                                else
+                                                (buildY ()))
+                                          | 1 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildSine
+                                                  (buildhelper
+                                                    (depth - 1) (depth - 1)  expr))
+                                                else
+                                                (buildCosine
+                                                  (buildhelper
+                                                    0 (depth - 1)  expr)))
+                                          | 2 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 3 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 4 -> [[...other program...]]
+                                          | _ ->
+                                            [[...other program...]]) in (buildhelper
+          (rand (1, 4)) depth  "")
+==============================
+Triaged the following locations:
+File "2478.ml", line 52, characters 8-241:
+File "2478.ml", line 58, characters 8-241:
+And modified the following location:
+File "2478.ml", line 30, characters 26-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildhelper
+with
+    buildhelper; [[...]]
+The actual replacement has type
+    int -> int -> int -> 'a -> expr
+within context
+    let rec buildhelper num depth expr = (match num with 
+                                          | 0 ->
+                                            (if (rand (0, 1)) = 0 then (buildX ())
+                                                else
+                                                (buildY ()))
+                                          | 1 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildSine
+                                                  (buildhelper
+                                                    (depth - 1) (depth - 1)  expr))
+                                                else
+                                                (buildCosine
+                                                  ((buildhelper; [[...]])
+                                                    0 (depth - 1) (depth - 1) expr)))
+                                          | 2 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 3 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 4 -> [[...other program...]]
+                                          | _ ->
+                                            [[...other program...]]) in (buildhelper
+          (rand (1, 4)) depth  "")
+==============================
+Triaged the following locations:
+File "2478.ml", line 28, characters 8-164:
+File "2478.ml", line 52, characters 8-241:
+And modified the following location:
+File "2478.ml", line 58, characters 8-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    expr * expr * expr *
+    expr -> expr
+within context
+    let rec buildhelper num depth expr = (match num with 
+                                          | 0 ->
+                                            (if (rand (0, 1)) = 0 then (buildX ())
+                                                else
+                                                (buildY ()))
+                                          | 1 -> [[...other program...]]
+                                          | 2 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 3 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 4 -> [[...other program...]]
+                                          | _ ->
+                                            ((buildTimes; [[...]])
+                                                ((buildhelper
+                                                      (depth - 1) (depth - 1)  expr)
+                                                    ,
+                                                    (buildhelper
+                                                      (depth - 1) (depth - 1)  expr)
+                                                    ,
+                                                    (buildhelper
+                                                      (depth - 1) (depth - 1)  expr)
+                                                    ,
+                                                    (buildhelper
+                                                      (depth - 1) (depth - 1)
+                                                      expr)))) in (buildhelper
+          (rand (1, 4)) depth  "")
+==============================
+Triaged the following locations:
+File "2478.ml", line 28, characters 8-164:
+File "2478.ml", line 58, characters 8-241:
+And modified the following location:
+File "2478.ml", line 53, characters 10-222:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr)
+with
+    (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr);
+    [[...]]
+The actual replacement has type
+    expr * expr
+==============================
+Triaged the following locations:
+File "2478.ml", line 28, characters 8-164:
+File "2478.ml", line 58, characters 8-241:
+And modified the following location:
+File "2478.ml", line 52, characters 8-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    expr * expr * expr *
+    expr -> expr
+within context
+    let rec buildhelper num depth expr = (match num with 
+                                          | 0 ->
+                                            (if (rand (0, 1)) = 0 then (buildX ())
+                                                else
+                                                (buildY ()))
+                                          | 1 -> [[...other program...]]
+                                          | 2 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 3 ->
+                                            (if (rand (0, 1)) = 0 then
+                                                (buildAverage
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr)))
+                                                else
+                                                (buildTimes
+                                                  ((buildhelper
+                                                        (depth - 1) (depth - 1) expr)
+                                                      ,
+                                                      (buildhelper
+                                                        (depth - 1) (depth - 1) expr))))
+                                          | 4 ->
+                                            ((buildTimes; [[...]])
+                                                ((buildhelper
+                                                      (depth - 1) (depth - 1)  expr)
+                                                    ,
+                                                    (buildhelper
+                                                      (depth - 1) (depth - 1)  expr)
+                                                    ,
+                                                    (buildhelper
+                                                      (depth - 1) (depth - 1)  expr)
+                                                    ,
+                                                    (buildhelper
+                                                      (depth - 1) (depth - 1) expr)))
+                                          | _ ->
+                                            [[...other program...]]) in (buildhelper
+          (rand (1, 4)) depth  "")
+==============================
+Triaged the following locations:
+File "2478.ml", line 28, characters 8-164:
+File "2478.ml", line 52, characters 8-241:
+And modified the following location:
+File "2478.ml", line 59, characters 10-222:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr)
+with
+    (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr),
+      (buildhelper (depth - 1) (depth - 1)  expr);
+    [[...]]
+The actual replacement has type
+    expr * expr
+==============================

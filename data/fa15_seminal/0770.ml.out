@@ -1,0 +1,79 @@
+------------------------------------------------------------------
+File "0770.ml", line 18, characters 21-44:
+This expression has type int but is here used with type 'a list
+Relevant code: (((a1 + x1) + x2) - 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0770.ml", line 18, characters 11-46:
+And modified the following location:
+File "0770.ml", line 19, characters 19-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    'b -> int -> 'c
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            (if ((a1 + x1) + x2 >= 10) then [[...other program...]] else
+                0, (a2 @; [[...]] (a1 + x1) + x2)))
+==============================
+Triaged the following locations:
+File "0770.ml", line 19, characters 11-39:
+And modified the following location:
+File "0770.ml", line 18, characters 21-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ((a1 + x1) + x2) - 10
+with
+    ((a1 + x1) + x2) - 10; [[...]]
+The actual replacement has type
+    'd list
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            (if ((a1 + x1) + x2 >= 10) then 1, a2 @ (((a1 + x1) + x2) - 10; [[...]])
+                else
+                [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0770.ml", line 19, characters 11-39:
+And modified the following location:
+File "0770.ml", line 18, characters 19-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    'e -> int -> 'f
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            (if ((a1 + x1) + x2 >= 10) then 1, (a2 @; [[...]] ((a1 + x1) + x2) - 10)
+                else
+                [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0770.ml", line 18, characters 11-46:
+And modified the following location:
+File "0770.ml", line 19, characters 21-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (a1 + x1) + x2
+with
+    (a1 + x1) + x2; [[...]]
+The actual replacement has type
+    'g list
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            (if ((a1 + x1) + x2 >= 10) then [[...other program...]] else
+                0, a2 @ ((a1 + x1) + x2; [[...]])))
+==============================

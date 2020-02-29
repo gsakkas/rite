@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1973.ml", line 14, characters 56-63:
+This expression has type int list -> int but is here used with type int
+Relevant code: sumList
+------------------------------------------------------------------
+File "1973.ml", line 13, characters 28-105:
+Try replacing
+    fun n -> (match n with 
+              | 0 -> 1
+              | _ -> 1 + (additivePersistence sumList digits  n))
+with
+    fun n -> (match n with 
+              | 0 -> 1
+              | _ -> 1 + (additivePersistence sumList digits  n)); [[...]]
+of type
+    (int list -> int) -> (int -> int list) -> int -> int
+==============================

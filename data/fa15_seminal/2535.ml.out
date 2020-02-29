@@ -1,0 +1,72 @@
+------------------------------------------------------------------
+File "2535.ml", line 20, characters 10-68:
+This expression has type int * int but is here used with type 'a list
+Relevant code: if (j + k) > 10 then (1, ((j + k) - 10)) else (0, (j + k))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2535.ml", line 21, characters 4-135:
+And modified the following location:
+File "2535.ml", line 19, characters 10-95:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let (j, k) = h in (if j + k > 10 then 1, (j + k) - 10 else 0, j + k)
+with
+    let (j, k) = h in (if j + k > 10 then 1, (j + k) - 10 else 0, j + k); [[...]]
+The actual replacement has type
+    'b list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | [] -> []
+                                                  | h :: t ->
+                                                    (let (j, k) = h in
+                                                          (if j + k > 10 then
+                                                              1, (j + k) - 10
+                                                              else
+                                                              0, j + k);
+                                                        [[...]])) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2535.ml", line 21, characters 4-135:
+And modified the following location:
+File "2535.ml", line 17, characters 14-16:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    []; [[...]]
+The actual replacement has type
+    int * int
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | [] -> ([]; [[...]])
+                                                  | h :: t ->
+                                                    (let (j, k) = h in
+                                                          (if j + k > 10 then
+                                                              1, (j + k) - 10
+                                                              else
+                                                              0,
+                                                                j
+                                                                  +
+                                                                  k))) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2535.ml", line 21, characters 4-135:
+And modified the following location:
+File "2535.ml", line 15, characters 4-302:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match a with 
+                 | [] -> []
+                 | h :: t ->
+                   (let (j, k) = h in
+                         (if j + k > 10 then 1, (j + k) - 10 else
+                             0,
+                               j
+                                 +
+                                 k))) in let base = 0, 0 in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'c
+==============================

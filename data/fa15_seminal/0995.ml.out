@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0995.ml", line 8, characters 30-36:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: helper
+------------------------------------------------------------------
+File "0995.ml", line 8, characters 30-36:
+Try replacing
+    helper
+with
+    wwhile
+of type
+    (('e -> 'e -> 'e * bool) -> ('e -> 'e -> 'e * bool) * bool) *
+    ('e -> 'e -> 'e * bool) -> 'e -> 'e -> 'e * bool
+within context
+    let fixpoint (f, b) = (wwhile ((wwhile f b), b)) ;; 
+==============================

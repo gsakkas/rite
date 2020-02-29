@@ -1,0 +1,1823 @@
+------------------------------------------------------------------
+File "0671.ml", line 42, characters 23-40:
+This expression has type expr but is here used with type expr * expr
+Relevant code: (build (rand, d))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0671.ml", line 43, characters 12-40:
+File "0671.ml", line 44, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 42, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildSine
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 12 ->
+                                                           [[...other program...]]
+                                                         | 13 ->
+                                                           [[...other program...]]
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 43, characters 12-40:
+File "0671.ml", line 44, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 42, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           ((buildTimes; [[...]])
+                                                               (build (rand, d)))
+                                                         | 12 ->
+                                                           [[...other program...]]
+                                                         | 13 ->
+                                                           [[...other program...]]
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 43, characters 12-40:
+File "0671.ml", line 44, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 42, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildCosine
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 12 ->
+                                                           [[...other program...]]
+                                                         | 13 ->
+                                                           [[...other program...]]
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 43, characters 12-40:
+File "0671.ml", line 44, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 42, characters 23-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, d))
+with
+    (build (rand, d)); [[...]]
+The actual replacement has type
+    expr * expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           (buildTimes
+                                                               ((build (rand, d));
+                                                                 [[...]]))
+                                                         | 12 ->
+                                                           [[...other program...]]
+                                                         | 13 ->
+                                                           [[...other program...]]
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 42, characters 12-40:
+File "0671.ml", line 44, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 43, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildCosine
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           [[...other program...]]
+                                                         | 12 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 13 ->
+                                                           [[...other program...]]
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 42, characters 12-40:
+File "0671.ml", line 43, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 44, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildSine
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           [[...other program...]]
+                                                         | 12 ->
+                                                           [[...other program...]]
+                                                         | 13 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 42, characters 12-40:
+File "0671.ml", line 43, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 44, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           [[...other program...]]
+                                                         | 12 ->
+                                                           [[...other program...]]
+                                                         | 13 ->
+                                                           ((buildTimes; [[...]])
+                                                               (build (rand, d)))
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 42, characters 12-40:
+File "0671.ml", line 43, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 44, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildCosine
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           [[...other program...]]
+                                                         | 12 ->
+                                                           [[...other program...]]
+                                                         | 13 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 42, characters 12-40:
+File "0671.ml", line 43, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 44, characters 23-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, d))
+with
+    (build (rand, d)); [[...]]
+The actual replacement has type
+    expr * expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           [[...other program...]]
+                                                         | 12 ->
+                                                           [[...other program...]]
+                                                         | 13 ->
+                                                           (buildTimes
+                                                               ((build (rand, d));
+                                                                 [[...]]))
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 42, characters 12-40:
+File "0671.ml", line 44, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 43, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           [[...other program...]]
+                                                         | 12 ->
+                                                           ((buildTimes; [[...]])
+                                                               (build (rand, d)))
+                                                         | 13 ->
+                                                           [[...other program...]]
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 42, characters 12-40:
+File "0671.ml", line 44, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 43, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildSine
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           [[...other program...]]
+                                                         | 12 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 13 ->
+                                                           [[...other program...]]
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 42, characters 12-40:
+File "0671.ml", line 44, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+File "0671.ml", line 46, characters 12-40:
+And modified the following location:
+File "0671.ml", line 43, characters 23-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build (rand, d))
+with
+    (build (rand, d)); [[...]]
+The actual replacement has type
+    expr * expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           [[...other program...]]
+                                                         | 12 ->
+                                                           (buildTimes
+                                                               ((build (rand, d));
+                                                                 [[...]]))
+                                                         | 13 ->
+                                                           [[...other program...]]
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           [[...other program...]]
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 42, characters 12-40:
+File "0671.ml", line 43, characters 12-40:
+File "0671.ml", line 44, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+And modified the following location:
+File "0671.ml", line 46, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildSine
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           [[...other program...]]
+                                                         | 12 ->
+                                                           [[...other program...]]
+                                                         | 13 ->
+                                                           [[...other program...]]
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 42, characters 12-40:
+File "0671.ml", line 43, characters 12-40:
+File "0671.ml", line 44, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+And modified the following location:
+File "0671.ml", line 46, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           [[...other program...]]
+                                                         | 12 ->
+                                                           [[...other program...]]
+                                                         | 13 ->
+                                                           [[...other program...]]
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           ((buildTimes; [[...]])
+                                                               (build (rand, d)))
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================
+Triaged the following locations:
+File "0671.ml", line 42, characters 12-40:
+File "0671.ml", line 43, characters 12-40:
+File "0671.ml", line 44, characters 12-40:
+File "0671.ml", line 45, characters 12-40:
+And modified the following location:
+File "0671.ml", line 46, characters 12-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildCosine
+The actual replacement has type
+    expr -> expr
+within context
+    fun (rand, depth) ->
+      (if depth > 0 then
+        (let r = (rand (0, 26)) in let d = depth - 1 in (match r with 
+                                                         | 0 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 1 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 2 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 3 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 4 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 5 ->
+                                                           (buildSine
+                                                               (build (rand, d)))
+                                                         | 6 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 7 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 8 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 9 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 10 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 11 ->
+                                                           [[...other program...]]
+                                                         | 12 ->
+                                                           [[...other program...]]
+                                                         | 13 ->
+                                                           [[...other program...]]
+                                                         | 14 ->
+                                                           [[...other program...]]
+                                                         | 15 ->
+                                                           (buildCosine
+                                                               (build (rand, d)))
+                                                         | 16 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 17 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 18 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 19 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 20 ->
+                                                           (buildAverage
+                                                               ((build (rand, d)),
+                                                                   (build
+                                                                     (rand, d))))
+                                                         | 21 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 22 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 23 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 24 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))
+                                                         | 25 ->
+                                                           (buildThresh
+                                                               ((build (rand, d)),
+                                                                   (buildX ()),
+                                                                   (buildY ()),
+                                                                   (buildX ())))))
+        else
+        (let r = (rand (0, 1)) in (match r with 
+                                   | 0 -> (buildX ())
+                                   | _ -> (buildY ()))))
+==============================

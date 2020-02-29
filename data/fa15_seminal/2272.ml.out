@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "2272.ml", line 31, characters 50-51:
+This expression is not a function, it cannot be applied
+Relevant code: 1
+------------------------------------------------------------------
+Triaged the following locations:
+File "2272.ml", line 31, characters 33-43:
+And modified the following location:
+File "2272.ml", line 31, characters 50-51:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    int list -> int
+within context
+    let rec mulByDigit i l =
+    (if (i >= 0) then (bigAdd l l) else
+      ((mulByDigit; [[...]]) (i - ((1; [[...]]) l))))
+    ;; 
+==============================
+Triaged the following locations:
+File "2272.ml", line 31, characters 33-43:
+And modified the following location:
+File "2272.ml", line 31, characters 52-53:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    (1 l)
+with
+    1
+The actual replacement has type
+    int
+within context
+    let rec mulByDigit i l =
+    (if (i >= 0) then (bigAdd l l) else ((mulByDigit; [[...]]) (i - 1)))
+    ;; 
+==============================

@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "2491.ml", line 21, characters 23-25:
+This expression has type expr but is here used with type float
+Relevant code: p1
+------------------------------------------------------------------
+File "2491.ml", line 21, characters 26-28:
+Try replacing
+    *.
+with
+    *.; [[...]]
+of type
+    expr -> expr -> float
+within context
+    fun e x y -> (match e with 
+                  | VarX -> x
+                  | VarY -> y
+                  | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                  | Cosine p1 -> (cos (pi *. (evalhelper p1 x  y)))
+                  | Average (p1, p2) ->
+                    (((evalhelper p1 x  y) +. (evalhelper p2 x  y)) /. 2.0)
+                  | Times (p1, p2) -> (p1 *.; [[...]] p2)
+                  | Thresh (p1, p2, p3, p4) ->
+                    (if (evalhelper p1 x  y) < (evalhelper p2 x  y) then
+                        (evalhelper p3 x  y)
+                        else
+                        (evalhelper p4 x  y)))
+==============================

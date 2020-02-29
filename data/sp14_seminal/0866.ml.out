@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0866.ml", line 2, characters 53-69:
+This expression has type int but is here used with type 'a list
+Relevant code: (List.hd xs) + 2
+------------------------------------------------------------------
+File "0866.ml", line 2, characters 66-67:
+Try replacing
+    +
+with
+    List.hd
+of type
+    (int -> 'b list) list -> int -> 'b list
+within context
+    let rec sumList xs = (match xs with 
+                          | [] -> []
+                          | _ -> ((List.hd xs) List.hd 2)) ;; 
+==============================

@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "3221.ml", line 5, characters 30-66:
+This expression has type int but is here used with type int list
+Relevant code: ((x * i) mod 10) + (mulByDigit i x')
+------------------------------------------------------------------
+File "3221.ml", line 5, characters 47-48:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int -> int list list -> int list
+within context
+    fun l -> (match l with 
+              | [] -> []
+              | x :: x' ->
+                [[(x * i) / 10] ; ((mod (x * i) 10) +; [[...]] (mulByDigit i x'))])
+==============================

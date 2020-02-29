@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "0136.ml", line 20, characters 33-34:
+This expression has type
+  ((int -> unit) -> int -> int) * int list -> int * int -> int * int list
+but is here used with type
+  ((int -> unit) -> int -> int) * int list ->
+  int * int -> ((int -> unit) -> int -> int) * int list
+Relevant code: f
+------------------------------------------------------------------
+File "0136.ml", line 20, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'a list -> 'b * 'c -> int * 'a list
+within context
+    let f a x =
+      let (carry, num) = a in
+        let (l1', l2') = x in
+        let addit = (l1' + l2') + (carry print_int l1') in
+        addit / 10, (mod addit 10) :: num
+      in
+      let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0136.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (((int -> unit) -> int -> int) * int list -> int * int -> int * int list) ->
+    int * 'd list -> ('e * 'f) list -> 'g * 'h
+within context
+    let f a x =
+      let (carry, num) = a in
+        let (l1', l2') = x in
+        let addit = (l1' + l2') + (carry print_int l1') in
+        addit / 10, (mod addit 10) :: num
+      in
+      let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0136.ml", line 13, characters 10-174:
+Try replacing
+    fun a
+      x ->
+        (let (carry, num) = a in
+            let (l1', l2') = x in
+            let addit = (l1' + l2') + (carry print_int l1') in
+            addit / 10, (mod addit 10) :: num)
+with
+    fun a
+      x ->
+        (let (carry, num) = a in
+            let (l1', l2') = x in
+            let addit = (l1' + l2') + (carry print_int l1') in
+            addit / 10, (mod addit 10) :: num);
+    [[...]]
+of type
+    'i
+==============================

@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "2401.ml", line 23, characters 67-68:
+This expression has type string but is here used with type 'a list list
+Relevant code: w
+------------------------------------------------------------------
+File "2401.ml", line 23, characters 67-68:
+Try replacing
+    w
+with
+    w; [[...]]
+of type
+    'b list list
+within context
+    let palindrome w = (match (explode w) with 
+                        | [] -> true
+                        | h :: t -> (matchHeads (listList (w; [[...]])))) ;; 
+==============================
+File "2401.ml", line 23, characters 16-17:
+Try replacing
+    w
+with
+    w; [[...]]
+of type
+    string
+within context
+    let palindrome w = (match (explode (w; [[...]])) with 
+                        | [] -> true
+                        | h :: t -> (matchHeads (listList w))) ;; 
+==============================
+File "2401.ml", line 23, characters 8-15:
+Try replacing
+    explode
+with
+    explode; [[...]]
+of type
+    'c list list -> 'd list
+within context
+    let palindrome w = (match ((explode; [[...]]) w) with 
+                        | [] -> true
+                        | h :: t -> (matchHeads (listList w))) ;; 
+==============================
+File "2401.ml", line 23, characters 58-66:
+Try replacing
+    listList
+with
+    listList; [[...]]
+of type
+    string -> 'e list list
+within context
+    let palindrome w = (match (explode w) with 
+                        | [] -> true
+                        | h :: t -> (matchHeads ((listList; [[...]]) w))) ;; 
+==============================

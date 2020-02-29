@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "1272.ml", line 10, characters 36-43:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sumList
+------------------------------------------------------------------
+Triaged the following locations:
+File "1272.ml", line 10, characters 36-43:
+And modified the following location:
+File "1272.ml", line 10, characters 45-56:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sumList
+If you ignore other surrounding code, try replacing
+    digitsOfInt
+with
+    digitsOfInt; [[...]]
+The actual replacement has type
+    'd list -> 'e
+within context
+    let rec additivePersistence n count = (match n with 
+                                           | [] -> count
+                                           | _ ->
+                                             ((sumList; [[...]])
+                                                 ((digitsOfInt; [[...]]) n) (count + 1))) ;; 
+==============================
+Triaged the following locations:
+File "1272.ml", line 10, characters 36-43:
+And modified the following location:
+File "1272.ml", line 10, characters 57-58:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sumList
+If you ignore other surrounding code, try replacing
+    n
+with
+    n; [[...]]
+The actual replacement has type
+    int
+within context
+    let rec additivePersistence n count = (match n with 
+                                           | [] -> count
+                                           | _ ->
+                                             ((sumList; [[...]])
+                                                 (digitsOfInt (n; [[...]])) (count + 1))) ;; 
+==============================

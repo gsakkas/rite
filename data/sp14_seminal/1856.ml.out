@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1856.ml", line 3, characters 60-61:
+This expression has type 'a -> 'b -> ('b -> 'a -> 'c) -> 'c
+but is here used with type 'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "1856.ml", line 3, characters 45-59:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('d -> 'd) -> 'e -> ('e -> ('d -> 'd) -> 'f) -> 'f) ->
+    ('d -> 'd) -> 'e -> ('e -> ('d -> 'd) -> 'f) -> 'f
+within context
+    let pipe fs = let f a x g = ((g x) a) in let base g = g in (base f base  fs) ;; 
+==============================
+File "1856.ml", line 3, characters 45-59:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('g -> 'h -> ('h -> 'g -> 'i) -> 'i) ->
+    ('j -> 'j) ->
+    (('j -> 'j) -> ('g -> 'h -> ('h -> 'g -> 'i) -> 'i) -> 'k) -> 'k
+within context
+    let pipe fs = let f a x g = ((g x) a) in let base g = g in (f f base  fs) ;; 
+==============================

@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "3132.ml", line 23, characters 52-53:
+This expression has type 'a list but is here used with type int
+Relevant code: t
+------------------------------------------------------------------
+File "3132.ml", line 23, characters 50-51:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    'b -> 'c list -> 'd
+within context
+    fun a x -> (match x with 
+                | (c, d :: t) -> (c, (c +; [[...]] t)))
+==============================

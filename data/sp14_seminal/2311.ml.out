@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2311.ml", line 19, characters 42-43:
+This expression has type 'a list * 'b but is here used with type 'c list list
+Relevant code: a
+------------------------------------------------------------------
+File "2311.ml", line 19, characters 36-43:
+Try replacing
+    [] :: a
+with
+    [[...]]
+of type
+    'd
+within context
+    fun (l1, l2) ->
+      (let f a x = let (h :: t, _) = a in [[...]] in
+          let base = (List.rev l1), [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================

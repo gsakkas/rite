@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "0058.ml", line 3, characters 44-45:
+This expression is not a function, it cannot be applied
+Relevant code: x
+------------------------------------------------------------------
+File "0058.ml", line 3, characters 29-31:
+Try replacing
+    []
+with
+    _
+of type
+    ('i -> 'i) -> 'i
+within context
+    fun fs -> (let f a x = (match x with 
+                            | _ -> a
+                            | _ ->
+                              (x a)) in let base = 0 in (List.fold_left f base  fs))
+==============================
+File "0058.ml", line 3, characters 20-21:
+Try replacing
+    x
+with
+    fs
+of type
+    (int -> int) list
+within context
+    fun fs -> (let f a x = (match fs with 
+                            | [] -> a
+                            | _ ->
+                              (x a)) in let base = 0 in (List.fold_left f base  fs))
+==============================

@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "0889.ml", line 13, characters 20-23:
+This expression is not a function, it cannot be applied
+Relevant code: ";"
+------------------------------------------------------------------
+Triaged the following locations:
+File "0889.ml", line 13, characters 9-18:
+And modified the following location:
+File "0889.ml", line 13, characters 24-41:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sepConcat
+If you ignore other surrounding code, try replacing
+    (( ";" ) (List.map (f, l)))
+with
+    ";"
+The actual replacement has type
+    string
+within context
+    let stringOfList f l = (match l with 
+                            | [] -> "[]"
+                            | x :: [] -> "[" ^ (x ^ "]")
+                            | l -> ((sepConcat; [[...]]) ";")) ;; 
+==============================

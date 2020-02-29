@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "3040.ml", line 3, characters 43-57:
+This expression is not a function, it cannot be applied
+Relevant code: (List.map g l)
+------------------------------------------------------------------
+File "3040.ml", line 3, characters 43-57:
+Try replacing
+    (List.map g l)
+with
+    (List.map g l); [[...]]
+of type
+    string -> string
+within context
+    fun f
+      l -> (let g a x = a ^ ("; " ^ (f x)) in "[" ^ (((List.map g l); [[...]]) "]"))
+==============================

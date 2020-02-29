@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0039.ml", line 19, characters 57-58:
+This expression has type int * 'a but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+File "0039.ml", line 19, characters 57-58:
+Try replacing
+    a
+with
+    a; [[...]]
+of type
+    int list
+within context
+    fun a
+      x ->
+        (let (cin, res) = a in
+            (mod ((cin + d1) + d2) 10), (cin + d1) + d2 :: a; [[...]])
+==============================

@@ -1,0 +1,67 @@
+------------------------------------------------------------------
+File "1174.ml", line 3, characters 37-38:
+This expression has type 'a list but is here used with type int
+Relevant code: x
+------------------------------------------------------------------
+File "1174.ml", line 3, characters 41-70:
+Try replacing
+    (match xs with 
+     | [] -> 0
+     | x :: [] -> x
+     | x :: y :: [] -> x + (sumList y))
+with
+    (match xs with 
+     | [] -> 0
+     | x :: [] -> x
+     | _ -> [[...]])
+of type
+    int
+==============================
+Triaged the following locations:
+File "1174.ml", line 3, characters 37-38:
+And modified the following location:
+File "1174.ml", line 3, characters 60-67:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sumList
+with
+    sumList; [[...]]
+The actual replacement has type
+    int list -> int
+within context
+    let rec sumList xs = (match xs with 
+                          | [] -> 0
+                          | x :: [] -> [[...other program...]]
+                          | x :: y :: [] -> x + ((sumList; [[...]]) y)) ;; 
+==============================
+Triaged the following locations:
+File "1174.ml", line 3, characters 37-38:
+And modified the following location:
+File "1174.ml", line 3, characters 68-69:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    xs
+The actual replacement has type
+    int list list
+within context
+    let rec sumList xs = (match xs with 
+                          | [] -> 0
+                          | x :: [] -> [[...other program...]]
+                          | x :: y :: [] -> x + (sumList xs)) ;; 
+==============================
+Triaged the following locations:
+File "1174.ml", line 3, characters 37-38:
+And modified the following location:
+File "1174.ml", line 3, characters 68-69:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y; [[...]]
+The actual replacement has type
+    int list list
+within context
+    let rec sumList xs = (match xs with 
+                          | [] -> 0
+                          | x :: [] -> [[...other program...]]
+                          | x :: y :: [] -> x + (sumList (y; [[...]]))) ;; 
+==============================

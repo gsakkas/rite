@@ -1,0 +1,100 @@
+------------------------------------------------------------------
+File "1512.ml", line 11, characters 19-73:
+This expression has type int list but is here used with type 'a list list
+Relevant code: ((clone 0 ((List.length l1) - (List.length l2))) @ l2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1512.ml", line 11, characters 13-73:
+And modified the following location:
+File "1512.ml", line 12, characters 15-62:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 ((List.length l2) - (List.length l1)))
+with
+    (clone 0 ((List.length l2) - (List.length l1))); [[...]]
+The actual replacement has type
+    'b list list
+within context
+    let padZero l1 l2 = (match (List.length l1) > (List.length l2) with 
+                         | true -> [[...other program...]]
+                         | false ->
+                           ((clone 0 ((List.length l2) - (List.length l1)));
+                                     [[...]])
+                                   @ [l1]
+                                 ::
+                                 l2) ;; 
+==============================
+Triaged the following locations:
+File "1512.ml", line 11, characters 13-73:
+And modified the following location:
+File "1512.ml", line 12, characters 63-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int list -> 'c list list -> 'd
+within context
+    let padZero l1 l2 = (match (List.length l1) > (List.length l2) with 
+                         | true -> [[...other program...]]
+                         | false ->
+                           ((clone 0 ((List.length l2) - (List.length l1)))
+                                     @; [[...]] [l1])
+                                 ::
+                                 l2) ;; 
+==============================
+Triaged the following locations:
+File "1512.ml", line 11, characters 13-73:
+And modified the following location:
+File "1512.ml", line 12, characters 65-69:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    [l1]
+with
+    [l1]; [[...]]
+The actual replacement has type
+    int list
+within context
+    let padZero l1 l2 = (match (List.length l1) > (List.length l2) with 
+                         | true -> [[...other program...]]
+                         | false ->
+                           (clone 0 ((List.length l2) - (List.length l1)))
+                                   @ ([l1]; [[...]])
+                                 ::
+                                 l2) ;; 
+==============================
+Triaged the following locations:
+File "1512.ml", line 12, characters 14-76:
+And modified the following location:
+File "1512.ml", line 11, characters 19-73:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 ((List.length l1) - (List.length l2))) @ l2
+with
+    (clone 0 ((List.length l1) - (List.length l2))) @ l2; [[...]]
+The actual replacement has type
+    'e list list
+within context
+    let padZero l1 l2 = (match (List.length l1) > (List.length l2) with 
+                         | true ->
+                           l1 ::
+                                 (clone 0 ((List.length l1) - (List.length l2)))
+                                   @ l2;
+                                 [[...]]
+                         | false -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1512.ml", line 12, characters 14-76:
+And modified the following location:
+File "1512.ml", line 11, characters 13-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    int
+within context
+    let padZero l1 l2 = (match (List.length l1) > (List.length l2) with 
+                         | true ->
+                           l1; [[...]] ::
+                                 (clone 0 ((List.length l1) - (List.length l2)))
+                                   @ l2
+                         | false -> [[...other program...]]) ;; 
+==============================

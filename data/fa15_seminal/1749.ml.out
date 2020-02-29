@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "1749.ml", line 5, characters 39-49:
+This expression has type int but is here used with type int list
+Relevant code: (n mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1749.ml", line 5, characters 37-38:
+And modified the following location:
+File "1749.ml", line 5, characters 31-32:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    /
+with
+    /; [[...]]
+The actual replacement has type
+    'a list -> int -> 'b
+within context
+    let rec digitsOfInt n = (match (n <= 0) with 
+                             | true -> []
+                             | false ->
+                               ([((digitsOfInt n) /; [[...]] 10)]
+                                     @; [[...]] (mod n 10))) ;; 
+==============================
+Triaged the following locations:
+File "1749.ml", line 5, characters 37-38:
+And modified the following location:
+File "1749.ml", line 5, characters 16-27:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    (digitsOfInt n) / 10
+with
+    (digitsOfInt (n / 10))
+The actual replacement has type
+    'c list
+within context
+    let rec digitsOfInt n = (match (n <= 0) with 
+                             | true -> []
+                             | false ->
+                               ([(digitsOfInt (n / 10))] @; [[...]] (mod n 10))) ;; 
+==============================

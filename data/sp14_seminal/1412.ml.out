@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1412.ml", line 3, characters 2-82:
+This expression has type int list but is here used with type
+  'a list -> int list
+Relevant code: if n < 0
+  then []
+  else (match n / 10 with | 0 -> [0] | _ -> digitsOfInt n [])
+------------------------------------------------------------------
+File "1412.ml", line 2, characters 20-106:
+Try replacing
+    fun n -> (if n < 0 then [] else (match n / 10 with 
+                                     | 0 -> [0]
+                                     | _ -> (digitsOfInt n [])))
+with
+    fun n _ -> (if n < 0 then [] else (match n / 10 with 
+                                       | 0 -> [0]
+                                       | _ -> (digitsOfInt n [])))
+of type
+    int -> 'b list -> int list
+==============================

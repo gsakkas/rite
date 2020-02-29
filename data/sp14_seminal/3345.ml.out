@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "3345.ml", line 7, characters 39-49:
+This expression has type int but is here used with type 'a list
+Relevant code: (v mod 10)
+------------------------------------------------------------------
+File "3345.ml", line 7, characters 31-68:
+Try replacing
+    (helper (mod v 10)) :: (acc (v / 10))
+with
+    [[...]]
+of type
+    'b
+within context
+    (match l with 
+     | [] -> []
+     | h :: t ->
+       (let rec helper acc v = (if v = 0 then acc else [[...]]) in (helper [] h)))
+==============================

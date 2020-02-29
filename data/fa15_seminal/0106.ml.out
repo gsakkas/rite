@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0106.ml", line 4, characters 52-53:
+This expression has type int but is here used with type float
+Relevant code: n
+------------------------------------------------------------------
+File "0106.ml", line 4, characters 54-56:
+Try replacing
+    /.
+with
+    <=
+of type
+    int -> int -> bool
+within context
+    fun n ->
+      (let return = [] in
+          (if (n <= 0) then return else (mod n 10) :: return); (n <= 10) :: return)
+==============================
+File "0106.ml", line 4, characters 54-56:
+Try replacing
+    /.
+with
+    mod
+of type
+    int -> int -> int
+within context
+    fun n ->
+      (let return = [] in
+          (if (n <= 0) then return else (mod n 10) :: return); n mod 10 :: return)
+==============================

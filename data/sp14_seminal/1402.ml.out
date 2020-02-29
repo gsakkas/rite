@@ -1,0 +1,112 @@
+------------------------------------------------------------------
+File "1402.ml", line 9, characters 33-36:
+This expression has type string but is here used with type 'a -> 'b
+Relevant code: "["
+------------------------------------------------------------------
+Triaged the following locations:
+File "1402.ml", line 9, characters 23-37:
+And modified the following location:
+File "1402.ml", line 9, characters 42-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sepConcat
+with
+    f
+The actual replacement has type
+    'c -> string
+within context
+    let stringOfList f l = [[...other program...]] ^ ((f l) ^ "]") ;; 
+==============================
+Triaged the following locations:
+File "1402.ml", line 9, characters 23-37:
+And modified the following location:
+File "1402.ml", line 9, characters 53-53:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (sepConcat l)
+with
+    (sepConcat [[...]] l)
+The actual replacement has type
+    string
+within context
+    let stringOfList f l = [[...other program...]] ^ ((sepConcat [[...]] l) ^ "]")
+    ;; 
+==============================
+Triaged the following locations:
+File "1402.ml", line 9, characters 23-37:
+And modified the following location:
+File "1402.ml", line 9, characters 54-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (sepConcat l)
+with
+    (sepConcat l [[...]])
+The actual replacement has type
+    string
+within context
+    let stringOfList f l = [[...other program...]] ^ ((sepConcat l [[...]]) ^ "]")
+    ;; 
+==============================
+Triaged the following locations:
+File "1402.ml", line 9, characters 23-37:
+And modified the following location:
+File "1402.ml", line 9, characters 55-56:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ^
+with
+    f
+The actual replacement has type
+    (string list -> string) -> string -> string
+within context
+    let stringOfList f l = [[...other program...]] ^ ((sepConcat l) f "]") ;; 
+==============================
+Triaged the following locations:
+File "1402.ml", line 9, characters 23-37:
+And modified the following location:
+File "1402.ml", line 9, characters 55-56:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ^
+with
+    ^; [[...]]
+The actual replacement has type
+    (string list -> string) -> string -> string
+within context
+    let stringOfList f l = [[...other program...]] ^ ((sepConcat l) ^; [[...]] "]")
+    ;; 
+==============================
+Triaged the following locations:
+File "1402.ml", line 9, characters 40-61:
+And modified the following location:
+File "1402.ml", line 9, characters 24-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.map
+with
+    l
+The actual replacement has type
+    string -> string
+within context
+    let stringOfList f l = (l "[") ^ [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "1402.ml", line 9, characters 40-61:
+And modified the following location:
+File "1402.ml", line 9, characters 24-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.map
+with
+    List.map; [[...]]
+The actual replacement has type
+    string -> string
+within context
+    let stringOfList f l = ((List.map; [[...]]) "[") ^ [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "1402.ml", line 9, characters 40-61:
+And modified the following location:
+File "1402.ml", line 9, characters 24-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.map
+with
+    f
+The actual replacement has type
+    string -> string
+within context
+    let stringOfList f l = (f "[") ^ [[...other program...]] ;; 
+==============================

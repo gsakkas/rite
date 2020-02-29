@@ -1,0 +1,46 @@
+------------------------------------------------------------------
+File "1788.ml", line 5, characters 24-26:
+This expression has type ('a -> 'a) list but is here used with type
+  (('b -> 'a) -> 'b -> 'a) list
+Relevant code: fs
+------------------------------------------------------------------
+File "1788.ml", line 5, characters 19-23:
+Try replacing
+    base
+with
+    f
+of type
+    ('c -> 'd) -> ('e -> 'c) -> 'e -> 'd
+within context
+    let pipe fs = let f a x g = (a (x g)) in let base = (match fs with 
+                                                         | h :: t -> (f h)
+                                                         | [] ->
+                                                           (fun x ->
+                                                                 x)) in (List.fold_left
+          f f  fs) ;; 
+==============================
+File "1788.ml", line 3, characters 16-17:
+Try replacing
+    a
+with
+    x
+of type
+    'f -> 'f
+within context
+    let f a x g = (x (x g)) in let base = (match fs with 
+                                           | h :: t -> (f h)
+                                           | [] ->
+                                             (fun x ->
+                                                   x)) in (List.fold_left
+          f base  fs)
+==============================
+File "1788.ml", line 3, characters 19-20:
+Try replacing
+    x
+with
+    a
+of type
+    'g -> 'g
+within context
+    fun a x g -> (a (a g))
+==============================

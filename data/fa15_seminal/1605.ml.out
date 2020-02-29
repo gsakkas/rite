@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "1605.ml", line 3, characters 40-44:
+This pattern matches values of type 'a list
+but is here used to match values of type int
+Relevant code: h::t
+------------------------------------------------------------------
+Triaged the following locations:
+File "1605.ml", line 3, characters 48-66:
+And modified the following location:
+File "1605.ml", line 3, characters 40-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    'b list
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else (match n with 
+                                                    | _ ->
+                                                      [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1605.ml", line 3, characters 48-66:
+And modified the following location:
+File "1605.ml", line 3, characters 31-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    n
+with
+    n; [[...]]
+The actual replacement has type
+    'c list
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else (match (n; [[...]]) with 
+                                                    | h :: t ->
+                                                      [[...other program...]])) ;; 
+==============================

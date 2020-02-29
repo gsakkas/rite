@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2109.ml", line 15, characters 28-42:
+This expression has type expr * expr * expr but is here used with type
+  expr * float * float
+Relevant code: (VarX, a1, a2)
+------------------------------------------------------------------
+File "2109.ml", line 11, characters 13-124:
+Try replacing
+    fun (e, x, y) -> (match e with 
+                      | VarX -> (x +. 0.0)
+                      | VarY -> (y +. 0.0)
+                      | Average (a1, a2) -> (eval (VarX, a1, a2)))
+with
+    fun (e, x, y) -> (match e with 
+                      | VarX -> (x +. 0.0)
+                      | VarY -> (y +. 0.0)
+                      | Average (a1, a2) -> (eval (VarX, a1, a2))); [[...]]
+of type
+    expr * expr * expr ->
+    float
+==============================

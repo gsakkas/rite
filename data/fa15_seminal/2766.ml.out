@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "2766.ml", line 13, characters 22-30:
+This expression has type int but is here used with type 'a list
+Relevant code: (h' * i)
+------------------------------------------------------------------
+File "2766.ml", line 13, characters 22-30:
+Try replacing
+    h' * i
+with
+    h' * i; [[...]]
+of type
+    int list
+within context
+    fun l -> (if (i <= 0) then [] else (match (List.rev l) with 
+                                        | [] -> []
+                                        | h :: t -> (match t with 
+                                                     | [] -> [(remainder i h)]
+                                                     | h' :: t' ->
+                                                       (h' * i; [[...]])
+                                                           @ (mulByDigit i t'))))
+==============================
+File "2766.ml", line 13, characters 31-32:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> int list -> int list
+within context
+    fun l -> (if (i <= 0) then [] else (match (List.rev l) with 
+                                        | [] -> []
+                                        | h :: t -> (match t with 
+                                                     | [] -> [(remainder i h)]
+                                                     | h' :: t' ->
+                                                       (h' * i @; [[...]]
+                                                             (mulByDigit i t')))))
+==============================

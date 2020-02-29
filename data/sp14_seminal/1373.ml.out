@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1373.ml", line 20, characters 13-24:
+This pattern matches values of type 'a * 'b
+but is here used to match values of type unit
+Relevant code: (add1,add2)
+------------------------------------------------------------------
+File "1373.ml", line 19, characters 13-32:
+Try replacing
+    (match x with 
+     | () -> carry :: rest
+     | (add1, add2) ->
+       (((add1 + add2) + carry) / 10, (mod ((add1 + add2) + carry) 10) :: rest))
+with
+    (match x with 
+     | _ -> [[...]]
+     | (add1, add2) ->
+       (((add1 + add2) + carry) / 10, (mod ((add1 + add2) + carry) 10) :: rest))
+of type
+    int * int list
+==============================

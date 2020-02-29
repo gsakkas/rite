@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1267.ml", line 9, characters 23-62:
+This expression has type string but is here used with type bool
+Relevant code: ("[" ^ (sepConcat "; " (List.map f l)))
+------------------------------------------------------------------
+File "1267.ml", line 9, characters 63-64:
+Try replacing
+    &
+with
+    ^
+of type
+    string -> string -> string
+within context
+    let stringOfList f l = ("[" ^ (sepConcat "; " (List.map f l))) ^ "]" ;; 
+==============================

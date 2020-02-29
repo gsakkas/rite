@@ -1,0 +1,6 @@
+------------------------------------------------------------------
+File "1730.ml", line 21, characters 13-14:
+This expression has type expr but is here used with type string
+Relevant code: a
+------------------------------------------------------------------
+<pre>Couldn't find repairs.</pre>

@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2020.ml", line 7, characters 9-23:
+This expression has type bool * bool but is here used with type int * bool
+Relevant code: ((f b), (f b))
+------------------------------------------------------------------
+File "2020.ml", line 6, characters 15-66:
+Try replacing
+    let b' = b' + 1 in let c' = (f b') in (helper (b', c'))
+with
+    let c' = (f b') in (helper (b', c'))
+of type
+    bool
+within context
+    let rec wwhile (f, b) = let rec helper (b', c') = (match c' with 
+                                                       | false -> b'
+                                                       | true ->
+                                                         (let c' = (f b') in
+                                                               (helper
+                                                                   (b',
+                                                                       c')))) in (helper
+          ((f b), (f b))) ;; 
+==============================

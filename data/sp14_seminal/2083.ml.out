@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "2083.ml", line 29, characters 29-37:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+Triaged the following locations:
+File "2083.ml", line 29, characters 15-27:
+And modified the following location:
+File "2083.ml", line 29, characters 29-37:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.combine
+If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    'f -> ('g list -> 'g list) -> 'h -> 'i
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (d1, d2) -> (match a with 
+                                                 | (carry, result) ->
+                                                   (if (d1 + d2) + carry > 9 then
+                                                       1,
+                                                         ((d1 + d2) + 1) - 10 ::
+                                                             result
+                                                       else
+                                                       0,
+                                                         d1 + d2 ::
+                                                             result))) in let base =
+          0, []
+          in
+          let args = ((List.combine; [[...]]) ((List.rev; [[...]]) l1 List.rev  l2))
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

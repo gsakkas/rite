@@ -1,0 +1,72 @@
+------------------------------------------------------------------
+File "2304.ml", line 16, characters 16-25:
+This expression is not a function, it cannot be applied
+Relevant code: "cos(pi*"
+------------------------------------------------------------------
+Triaged the following locations:
+File "2304.ml", line 13, characters 13-16:
+File "2304.ml", line 14, characters 13-16:
+File "2304.ml", line 15, characters 14-46:
+File "2304.ml", line 16, characters 16-44:
+File "2304.ml", line 18, characters 6-70:
+And modified the following location:
+File "2304.ml", line 19, characters 19-31:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    "sin(pi*" ^ (exprToString e ")")
+
+    "y"
+
+    "x"
+If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString; [[...]]
+The actual replacement has type
+    expr ->
+    string ->
+    (expr -> string -> string) ->
+    expr -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> ("x"; [[...]])
+                              | VarY -> ("y"; [[...]])
+                              | Sine e ->
+                                ("sin(pi*" ^ (exprToString e ")"); [[...]])
+                              | Cosine e -> [[...other program...]]
+                              | Average (x, y) -> [[...other program...]]
+                              | Times (x, y) ->
+                                ((exprToString; [[...]])
+                                    e "*"  exprToString  e)) ;; 
+==============================
+Triaged the following locations:
+File "2304.ml", line 13, characters 13-16:
+File "2304.ml", line 14, characters 13-16:
+File "2304.ml", line 15, characters 14-46:
+File "2304.ml", line 18, characters 6-70:
+File "2304.ml", line 19, characters 19-52:
+And modified the following location:
+File "2304.ml", line 16, characters 16-25:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    "sin(pi*" ^ (exprToString e ")")
+
+    "y"
+
+    "x"
+If you ignore other surrounding code, try replacing
+    "cos(pi*"
+with
+    "cos(pi*"; [[...]]
+The actual replacement has type
+    (expr -> string -> string) ->
+    expr -> string -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> ("x"; [[...]])
+                              | VarY -> ("y"; [[...]])
+                              | Sine e ->
+                                ("sin(pi*" ^ (exprToString e ")"); [[...]])
+                              | Cosine e ->
+                                (( "cos(pi*"; [[...]] ) exprToString e ")")
+                              | Average (x, y) -> [[...other program...]]
+                              | Times (x, y) -> [[...other program...]]) ;; 
+==============================

@@ -1,0 +1,321 @@
+------------------------------------------------------------------
+File "2489.ml", line 20, characters 26-45:
+This expression has type float but is here used with type int
+Relevant code: (evalhelper p1 x y)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2489.ml", line 20, characters 69-70:
+And modified the following location:
+File "2489.ml", line 20, characters 46-47:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /
+If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    float -> float -> 'a
+within context
+    fun e x y -> (match e with 
+                  | VarX -> x
+                  | VarY -> y
+                  | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                  | Cosine p1 -> (cos (pi *. (evalhelper p1 x  y)))
+                  | Average (p1, p2) ->
+                    (((evalhelper p1 x  y) *; [[...]] (evalhelper p2 x  y))
+                          /; [[...]] 2))
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 27-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    evalhelper
+with
+    evalhelper
+The actual replacement has type
+    expr -> int -> int -> int
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 x  y) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 38-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    p1
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper e x  y) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 38-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    p1
+with
+    p1
+The actual replacement has type
+    expr
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 x  y) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 38-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    p1
+with
+    p2
+The actual replacement has type
+    expr
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p2 x  y) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 38-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (evalhelper p1 x  y)
+with
+    (evalhelper p1 x  y)
+The actual replacement has type
+    int
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 x  y) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    int
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 x  y) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    int
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 y  y) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 41-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (evalhelper p1 x  y)
+with
+    (evalhelper p1 y  x)
+The actual replacement has type
+    int
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 y  x) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 43-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    int
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 x  y) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 43-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    int
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 x  x) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 46-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 x  y) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 46-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    /
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 x  y) / (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 49-59:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    evalhelper
+with
+    evalhelper
+The actual replacement has type
+    expr -> int -> int -> int
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 x  y) * (evalhelper p2 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================
+Triaged the following locations:
+File "2489.ml", line 18, characters 17-48:
+File "2489.ml", line 19, characters 19-50:
+And modified the following location:
+File "2489.ml", line 20, characters 60-62:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    p2
+with
+    p1
+The actual replacement has type
+    expr
+within context
+    let rec evalhelper e x y = (match e with 
+                                | VarX -> x
+                                | VarY -> y
+                                | Sine p1 -> [[...other program...]]
+                                | Cosine p1 -> [[...other program...]]
+                                | Average (p1, p2) ->
+                                  ((evalhelper p1 x  y) * (evalhelper p1 x  y))
+                                      / 2) in (evalhelper e x  y)
+==============================

@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "1790.ml", line 4, characters 61-62:
+This expression has type 'a list but is here used with type 'b -> 'c
+Relevant code: t
+------------------------------------------------------------------
+File "1790.ml", line 3, characters 8-23:
+Try replacing
+    fun a x g -> (a (x g))
+with
+    fun _ a x g -> (a (x g))
+of type
+    'd -> ('e -> 'f) -> ('g -> 'e) -> 'g -> 'f
+within context
+    let pipe fs = let f _ a x g = (a (x g)) in let base = (match fs with 
+                                                           | [] -> (fun x -> x)
+                                                           | h :: t ->
+                                                             (f
+                                                                 t
+                                                                 h)) in (List.fold_left
+          f base  fs) ;; 
+==============================
+File "1790.ml", line 3, characters 16-17:
+Try replacing
+    a
+with
+    x
+of type
+    'h -> 'h
+within context
+    let f a x g = (x (x g)) in let base = (match fs with 
+                                           | [] -> (fun x -> x)
+                                           | h :: t ->
+                                             (f t h)) in (List.fold_left f base  fs)
+==============================
+File "1790.ml", line 4, characters 61-62:
+Try replacing
+    t
+with
+    h
+of type
+    'i -> 'i
+within context
+    fun fs -> (let f a x g = (a (x g)) in let base = (match fs with 
+                                                      | [] -> (fun x -> x)
+                                                      | h :: t ->
+                                                        (f
+                                                            h
+                                                            h)) in (List.fold_left
+              f base  fs))
+==============================

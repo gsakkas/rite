@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "0564.ml", line 18, characters 36-39:
+This expression is not a function, it cannot be applied
+Relevant code: "+"
+------------------------------------------------------------------
+File "0564.ml", line 18, characters 36-39:
+Try replacing
+    "+"
+with
+    "+"; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+     | Cosine e2 -> "cos(pi*" ^ ((exprToString e2) ^ ")")
+     | Average (e3, e4) ->
+       "((" ^ ((exprToString e3) ^ ((exprToString "+"; [[...]] e4) ^ ")/2)")))
+==============================

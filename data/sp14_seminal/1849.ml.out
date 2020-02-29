@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1849.ml", line 17, characters 23-25:
+This expression has type 'a list but is here used with type int
+Relevant code: x1
+------------------------------------------------------------------
+File "1849.ml", line 16, characters 41-43:
+Try replacing
+    x1
+with
+    l1
+of type
+    int list
+within context
+    fun (c, ds)
+      (x1, x2) ->
+        (if (List.length ds) = (List.length l1) then
+          0, ((c + x1) + x2) / 10 :: (mod ((c + x1) + x2) 10) :: ds
+          else
+          ((c + x1) + x2) / 10, (mod ((c + x1) + x2) 10) :: ds)
+==============================

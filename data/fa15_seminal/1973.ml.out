@@ -1,0 +1,159 @@
+------------------------------------------------------------------
+File "1973.ml", line 9, characters 65-67:
+This expression has type int list but is here used with type int list list
+Relevant code: l2
+------------------------------------------------------------------
+File "1973.ml", line 6, characters 10-11:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int list -> int list list -> int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      (l1 @; [[...]] [(clone 0 ((List.length l1) - (List.length l2))) @ l2])
+      else
+      (if (List.length l1) < (List.length l2) then
+        (clone 0 ((List.length l2) - (List.length l1))) @ (l1 @ l2)
+        else
+        []))
+    ;; 
+==============================
+Triaged the following locations:
+File "1973.ml", line 9, characters 57-58:
+And modified the following location:
+File "1973.ml", line 9, characters 60-62:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    l1
+with
+    l2
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (if (List.length l1) > (List.length l2) then
+          l1 @ [(clone 0 ((List.length l1) - (List.length l2))) @ l2]
+          else
+          (if (List.length l1) < (List.length l2) then
+            ((clone 0 ((List.length l2) - (List.length l1))) @; [[...]] l2 @ l2)
+            else
+            []))
+==============================
+Triaged the following locations:
+File "1973.ml", line 9, characters 57-58:
+And modified the following location:
+File "1973.ml", line 9, characters 60-62:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (if (List.length l1) > (List.length l2) then
+          l1 @ [(clone 0 ((List.length l1) - (List.length l2))) @ l2]
+          else
+          (if (List.length l1) < (List.length l2) then
+            ((clone 0 ((List.length l2) - (List.length l1)))
+                @; [[...]] (l1; [[...]]) @ l2)
+            else
+            []))
+==============================
+Triaged the following locations:
+File "1973.ml", line 9, characters 57-58:
+And modified the following location:
+File "1973.ml", line 9, characters 63-64:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int list list -> int list -> 'a
+within context
+    fun l1
+      l2 ->
+        (if (List.length l1) > (List.length l2) then
+          l1 @ [(clone 0 ((List.length l1) - (List.length l2))) @ l2]
+          else
+          (if (List.length l1) < (List.length l2) then
+            ((clone 0 ((List.length l2) - (List.length l1)))
+                @; [[...]] (l1 @; [[...]] l2))
+            else
+            []))
+==============================
+Triaged the following locations:
+File "1973.ml", line 9, characters 57-58:
+And modified the following location:
+File "1973.ml", line 9, characters 65-67:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    l2
+with
+    l2; [[...]]
+The actual replacement has type
+    int list list
+within context
+    fun l1
+      l2 ->
+        (if (List.length l1) > (List.length l2) then
+          l1 @ [(clone 0 ((List.length l1) - (List.length l2))) @ l2]
+          else
+          (if (List.length l1) < (List.length l2) then
+            ((clone 0 ((List.length l2) - (List.length l1)))
+                @; [[...]] l1 @ (l2; [[...]]))
+            else
+            []))
+==============================
+Triaged the following locations:
+File "1973.ml", line 9, characters 57-58:
+And modified the following location:
+File "1973.ml", line 9, characters 65-67:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    l2
+with
+    l1
+The actual replacement has type
+    int list list
+within context
+    fun l1
+      l2 ->
+        (if (List.length l1) > (List.length l2) then
+          l1 @ [(clone 0 ((List.length l1) - (List.length l2))) @ l2]
+          else
+          (if (List.length l1) < (List.length l2) then
+            ((clone 0 ((List.length l2) - (List.length l1))) @; [[...]] l1 @ l1)
+            else
+            []))
+==============================
+File "1973.ml", line 6, characters 12-66:
+Try replacing
+    [(clone 0 ((List.length l1) - (List.length l2))) @ l2]
+with
+    [(clone 0 ((List.length l1) - (List.length l2))) @ l2]; [[...]]
+of type
+    int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      l1 @ ([(clone 0 ((List.length l1) - (List.length l2))) @ l2]; [[...]])
+      else
+      (if (List.length l1) < (List.length l2) then
+        (clone 0 ((List.length l2) - (List.length l1))) @ (l1 @ l2)
+        else
+        []))
+    ;; 
+==============================

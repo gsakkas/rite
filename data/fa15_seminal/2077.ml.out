@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "2077.ml", line 3, characters 70-71:
+This expression has type int but is here used with type int list
+Relevant code: n
+------------------------------------------------------------------
+File "2077.ml", line 3, characters 59-60:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> int list -> int
+within context
+    let rec digitsOfInt n =
+    let x = (mod n 10) in
+      (if n > 9 then ((digitsOfInt (n / 10)) @; [[...]] [x]) else n)
+    ;; 
+==============================
+File "2077.ml", line 3, characters 70-71:
+Try replacing
+    n
+with
+    n; [[...]]
+of type
+    int list
+within context
+    let rec digitsOfInt n =
+    let x = (mod n 10) in
+      (if n > 9 then (digitsOfInt (n / 10)) @ [x] else (n; [[...]]))
+    ;; 
+==============================

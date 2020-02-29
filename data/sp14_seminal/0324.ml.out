@@ -1,0 +1,494 @@
+------------------------------------------------------------------
+File "0324.ml", line 28, characters 8-25:
+This expression has type float but is here used with type int
+Relevant code: (eval (e3, x, y))
+------------------------------------------------------------------
+File "0324.ml", line 28, characters 6-7:
+Try replacing
+    ~-
+with
+    ~-; [[...]]
+of type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (eval (e3, x, y))
+                              | Thresh (e1, e2, e3, e4) -> (eval (e4, x, y))
+                              | Tan e1 -> (tan (pi *. (eval (e1, x, y))))
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~-; [[...]] ) (eval (e3, x, y)))
+                              | NegPos (e1, e2, e3) -> (eval (e3, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 22-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e3, x, y)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 15-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e3
+with
+    e3
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e3, x, y)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 9-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (e3, x, y))
+with
+    (eval ((e3, x, y)))
+The actual replacement has type
+    int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval ((e3, x, y))))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 15-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e3
+with
+    e1
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e1, x, y)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 15-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e3
+with
+    e2
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e2, x, y)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 15-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e3
+with
+    e
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e, x, y)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 19-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e3, x, y)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 19-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e3, y, y)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 22-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e3, x, x)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 19-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e3, x, y
+with
+    e3, y, x
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e3, y, x)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 15-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e3, x, y
+with
+    e3, x, y
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e3, x, y)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 28, characters 9-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * int * int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e3, x, y)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 27, characters 34-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e3
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e3, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e3, x, y)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0324.ml", line 19, characters 15-44:
+File "0324.ml", line 20, characters 17-46:
+File "0324.ml", line 21, characters 23-70:
+File "0324.ml", line 22, characters 21-59:
+File "0324.ml", line 23, characters 25-92:
+File "0324.ml", line 25, characters 28-43:
+File "0324.ml", line 26, characters 14-43:
+File "0324.ml", line 29, characters 25-40:
+And modified the following location:
+File "0324.ml", line 27, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    <
+with
+    <
+The actual replacement has type
+    int -> int -> bool
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | Tan e1 -> [[...other program...]]
+                              | NegPos (e1, e2, e3) ->
+                                when (eval (e1, x, y)) < (eval (e2, x, y)) ->
+                                    (( ~- ) (eval (e3, x, y)))
+                              | NegPos (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================

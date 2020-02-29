@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "2097.ml", line 38, characters 53-65:
+This expression has type int * int list but is here used with type int
+Relevant code: ((i - 1), l)
+------------------------------------------------------------------
+File "2097.ml", line 38, characters 28-67:
+Try replacing
+    (bigAdd l), (mulByDigit (i - 1, l))
+with
+    [[...]]
+of type
+    int
+within context
+    let rec mulByDigit i l = (if i = 0 then 0 else (if i = 1 then l else [[...]]))
+    ;; 
+==============================

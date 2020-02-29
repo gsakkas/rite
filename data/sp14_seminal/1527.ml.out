@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "1527.ml", line 2, characters 67-71:
+This expression has type int but is here used with type int -> int -> int
+Relevant code: base
+------------------------------------------------------------------
+File "1527.ml", line 2, characters 50-66:
+Try replacing
+    (List.fold_left f base  xs)
+with
+    (List.fold_left (f base xs))
+of type
+    int -> int list -> int
+within context
+    let sqsum xs = let f a x = + in let base = 0 in (List.fold_left (f base xs)) ;; 
+==============================
+File "1527.ml", line 2, characters 50-64:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('a -> 'b -> int -> int -> int) -> int -> int -> int -> int
+within context
+    let sqsum xs = let f a x = + in let base = 0 in (f f base  xs) ;; 
+==============================
+File "1527.ml", line 2, characters 67-71:
+Try replacing
+    base
+with
+    +
+of type
+    int -> int -> int
+within context
+    let sqsum xs = let f a x = + in let base = 0 in (List.fold_left f +  xs) ;; 
+==============================
+File "1527.ml", line 2, characters 27-30:
+Try replacing
+    +
+with
+    a
+of type
+    'c
+within context
+    let sqsum xs = let f a x = a in let base = 0 in (List.fold_left f base  xs) ;; 
+==============================
+File "1527.ml", line 2, characters 27-30:
+Try replacing
+    +
+with
+    x
+of type
+    'd
+within context
+    let sqsum xs = let f a x = x in let base = 0 in (List.fold_left f base  xs) ;; 
+==============================
+File "1527.ml", line 2, characters 65-66:
+Try replacing
+    f
+with
+    +
+of type
+    int -> int -> int
+within context
+    let sqsum xs = let f a x = + in let base = 0 in (List.fold_left + base  xs) ;; 
+==============================

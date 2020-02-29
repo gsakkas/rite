@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2952.ml", line 31, characters 59-63:
+This expression has type int * 'a list but is here used with type int list
+Relevant code: base
+------------------------------------------------------------------
+File "2952.ml", line 29, characters 14-24:
+Try replacing
+    mulByDigit
+with
+    l2
+of type
+    'b -> int * 'c list -> int * 'c list
+within context
+    fun l2 ->
+      (let f a x = (l2 x a) in
+          let base = 0, [] in
+          let args = (List.rev l1) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

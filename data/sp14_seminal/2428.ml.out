@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2428.ml", line 3, characters 46-64:
+This expression has type ('a * 'b) list but is here used with type unit
+Relevant code: List.combine l1 l2
+------------------------------------------------------------------
+File "2428.ml", line 3, characters 46-64:
+Try replacing
+    (List.combine l1 l2)
+with
+    (List.combine l1 l2); [[...]]
+of type
+    unit
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) = (List.length l2) then ((List.combine l1 l2); [[...]]))
+    ;; 
+==============================

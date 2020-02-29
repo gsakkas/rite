@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "1563.ml", line 14, characters 32-39:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sumList
+------------------------------------------------------------------
+File "1563.ml", line 14, characters 40-51:
+Try replacing
+    (sumList digitsOfInt n)
+with
+    (sumList n)
+of type
+    int
+within context
+    let rec additivePersistence n = (sumList n) ;; 
+==============================
+File "1563.ml", line 14, characters 32-51:
+Try replacing
+    (sumList digitsOfInt n)
+with
+    (sumList (digitsOfInt n))
+of type
+    int
+within context
+    let rec additivePersistence n = (sumList (digitsOfInt n)) ;; 
+==============================
+File "1563.ml", line 14, characters 32-39:
+Try replacing
+    sumList
+with
+    <
+of type
+    (int -> int list) -> (int -> int list) -> bool
+within context
+    let rec additivePersistence n = (< digitsOfInt n) ;; 
+==============================

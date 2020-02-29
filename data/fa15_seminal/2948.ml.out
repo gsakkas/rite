@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "2948.ml", line 19, characters 40-44:
+This expression has type ('a * 'b) list but is here used with type
+  'c list list
+Relevant code: args
+------------------------------------------------------------------
+File "2948.ml", line 19, characters 39-39:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f [[...]]  base  args)
+of type
+    'd * 'e
+within context
+    fun (l1, l2) ->
+      (let f a x = x in
+          let base = [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f [[...]]  base  args) in res)
+==============================
+File "2948.ml", line 19, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('f -> 'g -> 'g) -> 'h list -> ('i * 'j) list -> 'k * 'l
+within context
+    let f a x = x in
+      let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

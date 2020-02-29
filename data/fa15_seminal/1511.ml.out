@@ -1,0 +1,79 @@
+------------------------------------------------------------------
+File "1511.ml", line 10, characters 25-30:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: clone
+------------------------------------------------------------------
+Triaged the following locations:
+File "1511.ml", line 10, characters 12-23:
+And modified the following location:
+File "1511.ml", line 10, characters 25-30:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    clone
+with
+    clone; [[...]]
+The actual replacement has type
+    int -> int -> 'b list -> 'c
+within context
+    fun l1 l2 -> (match ((List.length l1) <= (List.length l2)) with 
+                  | true ->
+                    ((List.append
+                            (clone 0 ((List.length l2) - (List.length l1))) l1)
+                          ,
+                          l2)
+                  | false ->
+                    (l1,
+                          ((List.append; [[...]])
+                            ((clone; [[...]])
+                              0 ((List.length l1) - (List.length l2))  l2))))
+==============================
+Triaged the following locations:
+File "1511.ml", line 10, characters 12-23:
+And modified the following location:
+File "1511.ml", line 10, characters 31-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    (clone 0 ((List.length l1) - (List.length l2))  l2)
+with
+    (clone (0, (List.length l1) - (List.length l2), l2))
+The actual replacement has type
+    int -> (int * int * 'a list) list
+within context
+    fun l1 l2 -> (match ((List.length l1) <= (List.length l2)) with 
+                  | true ->
+                    ((List.append
+                            (clone 0 ((List.length l2) - (List.length l1))) l1)
+                          ,
+                          l2)
+                  | false ->
+                    (l1,
+                          ((List.append; [[...]])
+                            (clone (0, (List.length l1) - (List.length l2), l2)))))
+==============================
+Triaged the following locations:
+File "1511.ml", line 10, characters 12-23:
+And modified the following location:
+File "1511.ml", line 10, characters 71-73:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    (clone 0 ((List.length l1) - (List.length l2))  l2)
+with
+    (clone 0 ((List.length l1) - (List.length l2)))
+The actual replacement has type
+    int list
+within context
+    fun l1 l2 -> (match ((List.length l1) <= (List.length l2)) with 
+                  | true ->
+                    ((List.append
+                            (clone 0 ((List.length l2) - (List.length l1))) l1)
+                          ,
+                          l2)
+                  | false ->
+                    (l1,
+                          ((List.append; [[...]])
+                            (clone 0 ((List.length l1) - (List.length l2))))))
+==============================

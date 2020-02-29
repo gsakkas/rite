@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "2200.ml", line 3, characters 2-148:
+This expression has type string but is here used with type string list
+Relevant code: match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = a ^ (sep ^ x) in
+      let base = h in let l = sepConcat sep t in List.fold_left f base l
+------------------------------------------------------------------
+File "2200.ml", line 7, characters 66-72:
+Try replacing
+    (List.fold_left f base  l)
+with
+    (List.fold_left f l  base)
+of type
+    string
+within context
+    fun sl -> (match sl with 
+               | [] -> ""
+               | h :: t ->
+                 (let f a x = a ^ (sep ^ x) in
+                       let base = h in
+                       let l = (sepConcat sep t) in (List.fold_left f l  base)))
+==============================
+File "2200.ml", line 7, characters 71-72:
+Try replacing
+    l
+with
+    sl
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sep ^ x) in
+             let base = h in
+             let l = (sepConcat sep t) in (List.fold_left f base  sl)))
+==============================
+File "2200.ml", line 7, characters 71-72:
+Try replacing
+    l
+with
+    t
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sep ^ x) in
+             let base = h in
+             let l = (sepConcat sep t) in (List.fold_left f base  t)))
+==============================

@@ -1,0 +1,163 @@
+------------------------------------------------------------------
+File "0643.ml", line 33, characters 52-69:
+This expression is not a function, it cannot be applied
+Relevant code: (mulByDigit h l')
+------------------------------------------------------------------
+Triaged the following locations:
+File "0643.ml", line 34, characters 2-109:
+And modified the following location:
+File "0643.ml", line 33, characters 53-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    mulByDigit; [[...]]
+The actual replacement has type
+    'h ->
+    'h list * (int list -> int list) ->
+    'h list * (int list -> int list) -> int list
+within context
+    let bigMul l1 l2 =
+    let f a x = let (i, l) = x in let (i', l') = a in (match i' with 
+                                                       | [] -> l'
+                                                       | h :: t ->
+                                                         (t,
+                                                               (bigAdd
+                                                                 (((mulByDigit;
+                                                                       [[...]])
+                                                                     h l')
+                                                                   l')))) in [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0643.ml", line 34, characters 2-109:
+And modified the following location:
+File "0643.ml", line 33, characters 53-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    i
+The actual replacement has type
+    'i ->
+    'i list * (int list -> int list) ->
+    'i list * (int list -> int list) -> int list
+within context
+    let bigMul l1 l2 =
+    let f a x = let (i, l) = x in let (i', l') = a in (match i' with 
+                                                       | [] -> l'
+                                                       | h :: t ->
+                                                         (t,
+                                                               (bigAdd
+                                                                 ((i h l')
+                                                                   l')))) in [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0643.ml", line 34, characters 2-109:
+And modified the following location:
+File "0643.ml", line 33, characters 53-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    l
+The actual replacement has type
+    'j ->
+    'j list * (int list -> int list) ->
+    'j list * (int list -> int list) -> int list
+within context
+    let bigMul l1 l2 =
+    let f a x = let (i, l) = x in let (i', l') = a in (match i' with 
+                                                       | [] -> l'
+                                                       | h :: t ->
+                                                         (t,
+                                                               (bigAdd
+                                                                 ((l h l')
+                                                                   l')))) in [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0643.ml", line 34, characters 2-109:
+And modified the following location:
+File "0643.ml", line 33, characters 53-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    l1
+The actual replacement has type
+    'k ->
+    'k list * (int list -> int list) ->
+    'k list * (int list -> int list) -> int list
+within context
+    let bigMul l1 l2 =
+    let f a x = let (i, l) = x in let (i', l') = a in (match i' with 
+                                                       | [] -> l'
+                                                       | h :: t ->
+                                                         (t,
+                                                               (bigAdd
+                                                                 ((l1 h l')
+                                                                   l')))) in [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0643.ml", line 34, characters 2-109:
+And modified the following location:
+File "0643.ml", line 33, characters 53-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    l2
+The actual replacement has type
+    'l ->
+    'l list * (int list -> int list) ->
+    'l list * (int list -> int list) -> int list
+within context
+    let bigMul l1 l2 =
+    let f a x = let (i, l) = x in let (i', l') = a in (match i' with 
+                                                       | [] -> l'
+                                                       | h :: t ->
+                                                         (t,
+                                                               (bigAdd
+                                                                 ((l2 h l')
+                                                                   l')))) in [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0643.ml", line 34, characters 2-109:
+And modified the following location:
+File "0643.ml", line 33, characters 39-75:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    t, (bigAdd ((mulByDigit h l') l'))
+with
+    t
+The actual replacement has type
+    'o list
+within context
+    let bigMul l1 l2 =
+    let f a x = let (i, l) = x in let (i', l') = a in (match i' with 
+                                                       | [] -> l'
+                                                       | h :: t ->
+                                                         (t)) in [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "0643.ml", line 34, characters 2-109:
+And modified the following location:
+File "0643.ml", line 30, characters 2-246:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = let (i, l) = x in let (i', l') = a in (match i' with 
+                                                       | [] -> l'
+                                                       | h :: t ->
+                                                         (t,
+                                                               (bigAdd
+                                                                 ((mulByDigit h l')
+                                                                   l')))) in let
+      base
+      =
+      1, l1
+      in
+      let args = (List.rev l2), l1 in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'u
+==============================

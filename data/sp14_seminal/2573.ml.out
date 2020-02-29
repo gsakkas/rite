@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2573.ml", line 5, characters 2-97:
+This expression has type 'a list but is here used with type 'a
+Relevant code: match l with
+  | [] -> []
+  | x::[] -> [x]
+  | head::tail -> head :: (listReverse tail) :: tail
+------------------------------------------------------------------
+File "2573.ml", line 5, characters 2-97:
+Try replacing
+    (match l with 
+     | [] -> []
+     | x :: [] -> [x]
+     | head :: tail -> head :: (listReverse tail) :: tail)
+with
+    (match l with 
+     | [] -> []
+     | x :: [] -> [x]
+     | head :: tail -> head :: (listReverse tail) :: tail); [[...]]
+of type
+    'b
+==============================

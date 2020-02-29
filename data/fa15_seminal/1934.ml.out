@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "1934.ml", line 20, characters 40-44:
+This expression has type 'a list -> 'b -> 'a list but is here used with type
+  'c list
+Relevant code: args
+------------------------------------------------------------------
+File "1934.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('d -> 'e -> 'f) -> 'g -> ('h list -> 'i -> 'h list) -> 'j * 'k
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemented") in let args l1 l2 = (match l1 with 
+                                                                     | [] -> []
+                                                                     | h1 :: t1 ->
+                                                                       t1) in let
+      (_, res)
+      =
+      (f f base  args)
+      in
+      res
+==============================
+File "1934.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    ('l -> 'm -> 'n) -> 'o -> ('p list -> 'q -> 'p list) -> 'r * 's
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemented") in let args l1 l2 = (match l1 with 
+                                                                     | [] -> []
+                                                                     | h1 :: t1 ->
+                                                                       t1) in let
+      (_, res)
+      =
+      (base f base  args)
+      in
+      res
+==============================
+File "1934.ml", line 20, characters 40-44:
+Try replacing
+    args
+with
+    base
+of type
+    't list
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemented") in let args l1 l2 = (match l1 with 
+                                                                     | [] -> []
+                                                                     | h1 :: t1 ->
+                                                                       t1) in let
+      (_, res)
+      =
+      (List.fold_left f base  base)
+      in
+      res
+==============================

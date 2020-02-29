@@ -1,0 +1,468 @@
+------------------------------------------------------------------
+File "0754.ml", line 35, characters 50-68:
+This expression is not a function, it cannot be applied
+Relevant code: (exprToString ds4)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 15-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString
+The actual replacement has type
+    expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n1) ^
+                                        ("+" ^ ((exprToString n2) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 15-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString n1)
+with
+    (exprToString (n1))
+The actual replacement has type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString (n1)) ^
+                                        ("+" ^ ((exprToString n2) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 32-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ^
+with
+    ^
+The actual replacement has type
+    string -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n1) ^
+                                        ("+" ^ ((exprToString n2) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    n1
+with
+    n2
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n2) ^
+                                        ("+" ^ ((exprToString n2) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    n1
+with
+    n1
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n1) ^
+                                        ("+" ^ ((exprToString n2) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    n1
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString e) ^
+                                        ("+" ^ ((exprToString n2) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 60-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ^
+with
+    ^
+The actual replacement has type
+    string -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n1) ^
+                                        ("+" ^ ((exprToString n2) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 43-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString n2)
+with
+    (exprToString (n2))
+The actual replacement has type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n1) ^
+                                        ("+" ^ ((exprToString (n2)) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 56-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    n2
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n1) ^
+                                        ("+" ^ ((exprToString e) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 56-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    n2
+with
+    n2
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n1) ^
+                                        ("+" ^ ((exprToString n2) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 56-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    n2
+with
+    n1
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n1) ^
+                                        ("+" ^ ((exprToString n1) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 43-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString
+The actual replacement has type
+    expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n1) ^
+                                        ("+" ^ ((exprToString n2) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 39-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ^
+with
+    ^
+The actual replacement has type
+    string -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n1) ^
+                                        ("+" ^ ((exprToString n2) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 21, characters 21-66:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 20, characters 11-12:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ^
+with
+    ^
+The actual replacement has type
+    string -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) ->
+                                "((" ^
+                                    ((exprToString n1) ^
+                                        ("+" ^ ((exprToString n2) ^ ")/2)")))
+                              | Times (t1, t2) -> [[...other program...]]
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0754.ml", line 20, characters 6-71:
+File "0754.ml", line 23, characters 6-201:
+File "0754.ml", line 30, characters 6-205:
+File "0754.ml", line 37, characters 6-117:
+And modified the following location:
+File "0754.ml", line 21, characters 46-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ^
+with
+    ^
+The actual replacement has type
+    string -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine sin -> "sin(pi*" ^ ((exprToString sin) ^ ")")
+                              | Cosine cos -> "cos(pi*" ^ ((exprToString cos) ^ ")")
+                              | Average (n1, n2) -> [[...other program...]]
+                              | Times (t1, t2) ->
+                                (exprToString t1) ^ ("*" ^ (exprToString t2))
+                              | Thresh (th1, th2, th3, th4) ->
+                                [[...other program...]]
+                              | DivAdd (ds1, ds2, ds3, ds4) ->
+                                [[...other program...]]
+                              | TriMult (tm1, tm2, tm3) ->
+                                [[...other program...]]) ;; 
+==============================

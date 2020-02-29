@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1124.ml", line 11, characters 69-70:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+File "1124.ml", line 11, characters 69-70:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Average (x', y') -> ((x +. y) /. 2; [[...]])) ;; 
+==============================
+File "1124.ml", line 11, characters 66-68:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    float -> int -> 'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Average (x', y') -> ((x +. y) /.; [[...]] 2)) ;; 
+==============================

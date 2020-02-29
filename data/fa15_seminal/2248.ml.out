@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "2248.ml", line 36, characters 48-49:
+This expression has type int * int list -> 'a -> int list
+but is here used with type int * int list -> 'a -> int * int list
+Relevant code: f
+------------------------------------------------------------------
+File "2248.ml", line 36, characters 48-49:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> 'c -> int * 'b list
+within context
+    let f a x = (match a with 
+                 | (o, l) ->
+                   (bigAdd
+                       (mulByDigit o l1)
+                       l)) in let base = 1, [] in
+      let args = l2 in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2248.ml", line 36, characters 33-47:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> 'd -> int list) -> int * 'e list -> 'f -> 'g * 'h
+within context
+    let f a x = (match a with 
+                 | (o, l) ->
+                   (bigAdd
+                       (mulByDigit o l1)
+                       l)) in let base = 1, [] in
+      let args = l2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2248.ml", line 34, characters 8-64:
+Try replacing
+    fun a x -> (match a with 
+                | (o, l) -> (bigAdd (mulByDigit o l1) l))
+with
+    fun a x -> (match a with 
+                | (o, l) -> (bigAdd (mulByDigit o l1) l)); [[...]]
+of type
+    'i
+within context
+    let bigMul l1 l2 = let f = fun a x -> (match a with 
+                                           | (o, l) ->
+                                             (bigAdd
+                                                 (mulByDigit o l1)
+                                                 l)); [[...]] in let base = 1, [] in
+      let args = l2 in let (_, res) = (List.fold_left f base  args) in res ;; 
+==============================

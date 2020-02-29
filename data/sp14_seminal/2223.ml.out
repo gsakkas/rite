@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "2223.ml", line 32, characters 50-51:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+File "2223.ml", line 32, characters 50-51:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine x1 -> (sin (pi *. (eval (x1, x, y))))
+                      | Cosine x1 -> (cos (pi *. (eval (x1, x, y))))
+                      | Average (x1, x2) ->
+                        (((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.)
+                      | Times (x1, x2) -> ((eval (x1, x, y)) *. (eval (x2, x, y)))
+                      | Thresh (x1, x2, x3, x4) ->
+                        (if (eval (x1, x, y)) < (eval (x2, x, y)) then
+                            (eval (x3, x, y))
+                            else
+                            (eval (x4, x, y)))
+                      | CosE (x1, x2, x3) ->
+                        ((cos ((pi *. (eval (x1, x, y))) +. (eval (x2, x, y))))
+                              *. e_num ** ((( ~-. ) pi) *. (eval (x3, x, y)) ** 2.))
+                      | ArcSin (x1, x2) ->
+                        ((asin ((eval (x1, x, y)) ** (2; [[...]]))) /. 1.6))
+==============================
+File "2223.ml", line 32, characters 47-49:
+Try replacing
+    **
+with
+    **; [[...]]
+of type
+    float -> int -> float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine x1 -> (sin (pi *. (eval (x1, x, y))))
+                      | Cosine x1 -> (cos (pi *. (eval (x1, x, y))))
+                      | Average (x1, x2) ->
+                        (((eval (x1, x, y)) +. (eval (x2, x, y))) /. 2.)
+                      | Times (x1, x2) -> ((eval (x1, x, y)) *. (eval (x2, x, y)))
+                      | Thresh (x1, x2, x3, x4) ->
+                        (if (eval (x1, x, y)) < (eval (x2, x, y)) then
+                            (eval (x3, x, y))
+                            else
+                            (eval (x4, x, y)))
+                      | CosE (x1, x2, x3) ->
+                        ((cos ((pi *. (eval (x1, x, y))) +. (eval (x2, x, y))))
+                              *. e_num ** ((( ~-. ) pi) *. (eval (x3, x, y)) ** 2.))
+                      | ArcSin (x1, x2) ->
+                        ((asin ((eval (x1, x, y)) **; [[...]] 2)) /. 1.6))
+==============================

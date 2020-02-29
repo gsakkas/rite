@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "0832.ml", line 16, characters 7-67:
+This expression has type int list but is here used with type int
+Relevant code: (match n with | n -> let x_ = digitsOfInt n in [sumList x_])
+------------------------------------------------------------------
+File "0832.ml", line 15, characters 7-8:
+Try replacing
+    n
+with
+    n; [[...]]
+of type
+    int list
+within context
+    let rec additivePersistence n =
+    (if (lt10 n) then (n; [[...]]) else (match n with 
+                                         | n ->
+                                           (let x_ = (digitsOfInt n) in
+                                                 [(sumList x_)])))
+    ;; 
+==============================
+File "0832.ml", line 16, characters 7-67:
+Try replacing
+    (match n with 
+     | n -> (let x_ = (digitsOfInt n) in [(sumList x_)]))
+with
+    (match n with 
+     | n -> (let x_ = (digitsOfInt n) in [(sumList x_)])); [[...]]
+of type
+    int
+within context
+    let rec additivePersistence n = (if (lt10 n) then n else ((match n with 
+                                                               | n ->
+                                                                 (let x_ =
+                                                                       (digitsOfInt
+                                                                         n)
+                                                                       in
+                                                                       [(sumList x_)
+                                                                             ])); [[...]])) ;; 
+==============================

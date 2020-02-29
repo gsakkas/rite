@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "3271.ml", line 16, characters 44-70:
+This expression has type int but is here used with type 'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "3271.ml", line 15, characters 15-16:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    'c
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x = a in
+            let base = 0; [[...]] in
+            let args = (List.rev l2) in
+            let (_, res) = (List.fold_left f base  args) in res
+          in
+          (removeZero (add (padZero l1 l2))))
+==============================
+File "3271.ml", line 16, characters 44-70:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f base  args); [[...]]
+of type
+    'd * 'e
+within context
+    fun (l1, l2) ->
+      (let f a x = a in
+          let base = 0 in
+          let args = (List.rev l2) in
+          let (_, res) = (List.fold_left f base  args); [[...]] in res)
+==============================

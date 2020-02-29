@@ -1,0 +1,94 @@
+------------------------------------------------------------------
+File "0754.ml", line 14, characters 42-56:
+This expression has type int * int but is here used with type 'a list
+Relevant code: (0, (x1 + x2))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0754.ml", line 15, characters 4-109:
+And modified the following location:
+File "0754.ml", line 14, characters 57-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int * int -> 'b -> 'c
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (x1, x2) ->
+                                                    (0, x1 + x2
+                                                          @; [[...]]
+                                                          a)) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0754.ml", line 15, characters 4-109:
+And modified the following location:
+File "0754.ml", line 14, characters 57-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    <
+The actual replacement has type
+    int * int -> int * int -> bool
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (x1, x2) ->
+                                                    (0, x1 + x2)
+                                                        <
+                                                        a) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0754.ml", line 15, characters 4-109:
+And modified the following location:
+File "0754.ml", line 14, characters 57-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    =
+The actual replacement has type
+    int * int -> int * int -> bool
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (x1, x2) ->
+                                                    (0, x1 + x2)
+                                                        =
+                                                        a) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0754.ml", line 15, characters 4-109:
+And modified the following location:
+File "0754.ml", line 14, characters 42-56:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0, x1 + x2
+with
+    0, x1 + x2; [[...]]
+The actual replacement has type
+    'd list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (x1, x2) ->
+                                                    (0, x1 + x2; [[...]])
+                                                        @
+                                                        a) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0754.ml", line 15, characters 4-109:
+And modified the following location:
+File "0754.ml", line 14, characters 4-173:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match x with 
+                 | (x1, x2) ->
+                   (0, x1 + x2)
+                       @
+                       a) in let base = [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'e
+==============================

@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1477.ml", line 8, characters 47-73:
+This expression has type 'a list but is here used with type 'b * 'c
+Relevant code: (x, hd) :: (argmaker x tl)
+------------------------------------------------------------------
+File "1477.ml", line 8, characters 34-41:
+Try replacing
+    x, hd
+with
+    x, hd; [[...]]
+of type
+    ('d * 'e) list
+within context
+    let rec argmaker x y = (match y with 
+                            | hd :: tl ->
+                              (if tl = [] then (x, hd; [[...]]) else
+                                  x, hd :: (argmaker x tl))) in (argmaker l1 l2)
+==============================

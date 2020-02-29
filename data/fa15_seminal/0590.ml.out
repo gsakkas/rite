@@ -1,0 +1,158 @@
+------------------------------------------------------------------
+File "0590.ml", line 31, characters 10-22:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+Triaged the following locations:
+File "0590.ml", line 31, characters 9-30:
+And modified the following location:
+File "0590.ml", line 32, characters 13-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString; [[...]]
+The actual replacement has type
+    expr -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+                              | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) ->
+                                (exprToString e1) ^ ("*" ^ (exprToString e2))
+                              | Thresh (e1, e2, e3, e4) ->
+                                "(" ^
+                                    ((exprToString e1) ^
+                                        ("<" ^
+                                            ((exprToString e2) ^
+                                                ("?" ^
+                                                    ((exprToString e3) ^
+                                                        (":" ^
+                                                            ((exprToString e4)
+                                                                ^ ")")))))))
+                              | Volume (e1, e2, e3) ->
+                                "(" ^
+                                    ([[...other program...]] ^
+                                        (((exprToString; [[...]]) e2 "*")
+                                            ^ ((exprToString e3) ^ ")")))
+                              | Tan e1 -> "tan(pi*" ^ ((exprToString e1) ^ ")")) ;; 
+==============================
+Triaged the following locations:
+File "0590.ml", line 31, characters 9-30:
+And modified the following location:
+File "0590.ml", line 32, characters 29-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString e2 "*")
+with
+    (exprToString e2)
+The actual replacement has type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+                              | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) ->
+                                (exprToString e1) ^ ("*" ^ (exprToString e2))
+                              | Thresh (e1, e2, e3, e4) ->
+                                "(" ^
+                                    ((exprToString e1) ^
+                                        ("<" ^
+                                            ((exprToString e2) ^
+                                                ("?" ^
+                                                    ((exprToString e3) ^
+                                                        (":" ^
+                                                            ((exprToString e4)
+                                                                ^ ")")))))))
+                              | Volume (e1, e2, e3) ->
+                                "(" ^
+                                    ([[...other program...]] ^
+                                        ((exprToString e2) ^
+                                            ((exprToString e3) ^ ")")))
+                              | Tan e1 -> "tan(pi*" ^ ((exprToString e1) ^ ")")) ;; 
+==============================
+Triaged the following locations:
+File "0590.ml", line 32, characters 11-62:
+And modified the following location:
+File "0590.ml", line 31, characters 26-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString e1 "*")
+with
+    (exprToString e1)
+The actual replacement has type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+                              | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) ->
+                                (exprToString e1) ^ ("*" ^ (exprToString e2))
+                              | Thresh (e1, e2, e3, e4) ->
+                                "(" ^
+                                    ((exprToString e1) ^
+                                        ("<" ^
+                                            ((exprToString e2) ^
+                                                ("?" ^
+                                                    ((exprToString e3) ^
+                                                        (":" ^
+                                                            ((exprToString e4)
+                                                                ^ ")")))))))
+                              | Volume (e1, e2, e3) ->
+                                "(" ^ ((exprToString e1) ^ [[...other program...]])
+                              | Tan e1 -> "tan(pi*" ^ ((exprToString e1) ^ ")")) ;; 
+==============================
+Triaged the following locations:
+File "0590.ml", line 32, characters 11-62:
+And modified the following location:
+File "0590.ml", line 31, characters 10-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString; [[...]]
+The actual replacement has type
+    expr -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+                              | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) ->
+                                (exprToString e1) ^ ("*" ^ (exprToString e2))
+                              | Thresh (e1, e2, e3, e4) ->
+                                "(" ^
+                                    ((exprToString e1) ^
+                                        ("<" ^
+                                            ((exprToString e2) ^
+                                                ("?" ^
+                                                    ((exprToString e3) ^
+                                                        (":" ^
+                                                            ((exprToString e4)
+                                                                ^ ")")))))))
+                              | Volume (e1, e2, e3) ->
+                                "(" ^
+                                    (((exprToString; [[...]]) e1 "*")
+                                        ^ [[...other program...]])
+                              | Tan e1 -> "tan(pi*" ^ ((exprToString e1) ^ ")")) ;; 
+==============================

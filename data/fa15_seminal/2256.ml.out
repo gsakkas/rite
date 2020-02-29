@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2256.ml", line 37, characters 47-74:
+This expression has type (int list -> int list) * 'a
+but is here used with type int list
+Relevant code: ((mulByDigit prod), (l1 l))
+------------------------------------------------------------------
+File "2256.ml", line 37, characters 40-46:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    (int list -> int list) * 'b -> 'c
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = o * x in
+                      10 * o, ((bigAdd; [[...]]) ((mulByDigit prod), (l1 l)))))
+==============================

@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "1695.ml", line 30, characters 9-10:
+This pattern matches values of type int
+but is here used to match values of type unit -> int
+Relevant code: 0
+------------------------------------------------------------------
+File "1695.ml", line 27, characters 19-21:
+Try replacing
+    (rand ())
+with
+    rand
+of type
+    int
+within context
+    fun (rand, depth) -> (match depth with 
+                          | 0 ->
+                            (if (mod rand 2) = 0 then (buildX ()) else (buildY ()))
+                          | _ -> (match rand with 
+                                  | 0 -> (buildSine (build (rand, depth - 1)))
+                                  | 1 -> (buildCosine (build (rand, depth - 1)))
+                                  | 2 ->
+                                    (buildAverage
+                                        ((build (rand, depth - 1)),
+                                            (build (rand, depth - 1))))
+                                  | 3 ->
+                                    (buildTimes
+                                        ((build (rand, depth - 1)),
+                                            (build (rand, depth - 1))))
+                                  | _ ->
+                                    (buildThresh
+                                        ((build (rand, depth - 1)),
+                                            (build (rand, depth - 1)),
+                                            (build (rand, depth - 1)),
+                                            (build (rand, depth - 1))))))
+==============================

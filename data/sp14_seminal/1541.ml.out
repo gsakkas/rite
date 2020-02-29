@@ -1,0 +1,56 @@
+------------------------------------------------------------------
+File "1541.ml", line 4, characters 45-47:
+This expression has type int list but is here used with type int list list
+Relevant code: xs
+------------------------------------------------------------------
+File "1541.ml", line 3, characters 20-21:
+Try replacing
+    x
+with
+    xs
+of type
+    int list
+within context
+    fun xs -> (let f a x = (match xs with 
+                            | [] -> a
+                            | hd :: tl ->
+                              a +
+                                  hd
+                                    *
+                                    hd) in let base = (f 0 xs) in
+          (List.fold_left f base  xs))
+==============================
+File "1541.ml", line 4, characters 38-39:
+Try replacing
+    f
+with
+    +
+of type
+    int -> int -> int
+within context
+    let sqsum xs = let f a x = (match x with 
+                                | [] -> a
+                                | hd :: tl ->
+                                  a +
+                                      hd
+                                        *
+                                        hd) in let base = (f 0 xs) in
+      (List.fold_left + base  xs) ;; 
+==============================
+File "1541.ml", line 4, characters 38-39:
+Try replacing
+    f
+with
+    *
+of type
+    int -> int -> int
+within context
+    let sqsum xs = let f a x = (match x with 
+                                | [] -> a
+                                | hd :: tl ->
+                                  a +
+                                      hd
+                                        *
+                                        hd) in let base = (f 0 xs) in
+      (List.fold_left * base  xs) ;; 
+==============================

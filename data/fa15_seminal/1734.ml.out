@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1734.ml", line 5, characters 61-67:
+This expression has type ('a -> 'b) * 'a but is here used with type 'b
+Relevant code: (f, b)
+------------------------------------------------------------------
+File "1734.ml", line 5, characters 61-67:
+Try replacing
+    f, b
+with
+    f, b; [[...]]
+of type
+    'c -> 'c * bool
+within context
+    let fixpoint (f, b) = (wwhile ((match (f b) with 
+                                    | b -> b
+                                    | _ -> (f, b; [[...]])), b)) ;; 
+==============================

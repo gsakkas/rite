@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1173.ml", line 30, characters 53-67:
+This expression has type string but is here used with type expr
+Relevant code: exprToString a
+------------------------------------------------------------------
+File "1173.ml", line 30, characters 53-65:
+Try replacing
+    exprToString
+with
+    x
+of type
+    'a -> expr
+within context
+    let rec eval (e, x, y) = (match e, x, y with 
+                              | x -> (buildX ())
+                              | (a, b, c) -> (x a)) ;; 
+==============================

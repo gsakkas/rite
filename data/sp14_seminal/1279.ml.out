@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1279.ml", line 16, characters 47-48:
+This expression has type int but is here used with type 'a -> int
+Relevant code: 1
+------------------------------------------------------------------
+File "1279.ml", line 16, characters 15-27:
+Try replacing
+    lengthOfList
+with
+    sumList
+of type
+    int list -> int
+within context
+    (match n with 
+     | 0 -> 0
+     | _ ->
+       (if (not ((sumList (digitsOfInt n)) = 1)) then
+           (additivePersistence (sumList (digitsOfInt n)))
+           else
+           4))
+==============================

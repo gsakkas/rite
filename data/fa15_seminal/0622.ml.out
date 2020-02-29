@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "0622.ml", line 24, characters 33-34:
+This expression has type (int * 'a) list -> (int * int) list -> int
+but is here used with type
+  (int * 'a) list -> (int * int) list -> (int * 'a) list
+Relevant code: f
+------------------------------------------------------------------
+File "0622.ml", line 24, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ((int * 'b) list -> (int * int) list -> int) ->
+    'c list -> ('d * 'e) list -> 'f * 'g
+within context
+    let f a x = let (a1, a2) :: ta = a in (match x with 
+                                           | [] -> 0
+                                           | (x1, x2) :: t ->
+                                             (let value = (a1 + x1) + x2 in
+                                                   (if value > 9 then value - 10
+                                                       else
+                                                       value))) in let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0110.ml", line 9, characters 45-46:
+This expression has type string but is here used with type 'a -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "0110.ml", line 9, characters 23-34:
+Try replacing
+    (sepConcat f (List.map f l))
+with
+    (sepConcat (f (List.map f l)))
+of type
+    string list -> string
+within context
+    let stringOfList f l = (sepConcat (f (List.map f l))) ;; 
+==============================

@@ -1,0 +1,7 @@
+------------------------------------------------------------------
+File "1895.ml", line 8, characters 6-11:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: clone
+------------------------------------------------------------------
+<pre>Couldn't find repairs.</pre>

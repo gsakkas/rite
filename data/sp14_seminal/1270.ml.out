@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1270.ml", line 11, characters 41-42:
+This expression has type string but is here used with type 'a list
+Relevant code: w
+------------------------------------------------------------------
+File "1270.ml", line 11, characters 29-40:
+Try replacing
+    (explode (listReverse w))
+with
+    (listReverse (explode w))
+of type
+    char list
+within context
+    let palindrome w =
+    (if (explode w) = (listReverse (explode w)) then true else false)
+    ;; 
+==============================

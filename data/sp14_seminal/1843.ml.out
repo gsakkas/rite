@@ -1,0 +1,113 @@
+------------------------------------------------------------------
+File "1843.ml", line 6, characters 34-40:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: append
+------------------------------------------------------------------
+Triaged the following locations:
+File "1843.ml", line 4, characters 27-30:
+File "1843.ml", line 4, characters 43-64:
+And modified the following location:
+File "1843.ml", line 4, characters 10-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    xs1
+with
+    xs1; [[...]]
+The actual replacement has type
+    'g list
+within context
+    fun n -> (let rec append xs1 xs2 = (match (xs1; [[...]]) with 
+                                        | [] -> [[...other program...]]
+                                        | hd :: tl ->
+                                          [[...other program...]]) in let rec helper
+          x
+          =
+          (match x with 
+           | 0 -> []
+           | n -> (append helper (n / 10)  [(mod n 10)]))
+          in
+          (helper n))
+==============================
+File "1843.ml", line 6, characters 34-40:
+Try replacing
+    append
+with
+    append; [[...]]
+of type
+    (int -> 'n list) -> int -> int list -> 'n list
+within context
+    let rec append xs1 xs2 = (match xs1 with 
+                              | [] -> xs2
+                              | hd :: tl ->
+                                (append
+                                    tl
+                                    hd :: xs2)) in let rec helper x = (match x with 
+                                                                       | 0 -> []
+                                                                       | n ->
+                                                                         ((append;
+                                                                               [[...]])
+                                                                             helper
+                                                                             (n /
+                                                                                 10)
+                                                                             [
+                                                                                 (mod
+                                                                                   n
+                                                                                   10)
+                                                                                 ])) in (helper
+          n)
+==============================
+Triaged the following locations:
+File "1843.ml", line 4, characters 27-30:
+File "1843.ml", line 4, characters 33-39:
+File "1843.ml", line 4, characters 43-64:
+And modified the following location:
+File "1843.ml", line 4, characters 21-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    'e
+within context
+    fun n -> (let rec append xs1 xs2 = (match xs1 with 
+                                        | _ -> [[...other program...]]
+                                        |
+                                          [[...other pattern...]]
+                                          ->
+                                          [[...other program...]]) in let rec helper
+          x
+          =
+          (match x with 
+           | 0 -> []
+           | n -> (append helper (n / 10)  [(mod n 10)]))
+          in
+          (helper n))
+==============================
+Triaged the following locations:
+File "1843.ml", line 4, characters 21-23:
+File "1843.ml", line 4, characters 27-30:
+File "1843.ml", line 4, characters 43-64:
+And modified the following location:
+File "1843.ml", line 4, characters 33-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    hd :: tl
+with
+    _
+The actual replacement has type
+    'd
+within context
+    fun n -> (let rec append xs1 xs2 = (match xs1 with 
+                                        |
+                                          [[...other pattern...]]
+                                          ->
+                                          [[...other program...]]
+                                        | _ ->
+                                          [[...other program...]]) in let rec helper
+          x
+          =
+          (match x with 
+           | 0 -> []
+           | n -> (append helper (n / 10)  [(mod n 10)]))
+          in
+          (helper n))
+==============================

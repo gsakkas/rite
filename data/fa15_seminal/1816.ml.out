@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1816.ml", line 8, characters 8-140:
+This expression has type unit but is here used with type 'a list
+Relevant code: if List.mem h r
+        then
+          let seen' = h :: seen in
+          let seen' = seen in let rest' = t in helper (seen', rest')
+------------------------------------------------------------------
+File "1816.ml", line 8, characters 8-140:
+Try replacing
+    (if (List.mem h r) then
+      (let seen' = h :: seen in
+          let seen' = seen in let rest' = t in (helper (seen', rest'))))
+with
+    [[...]]
+of type
+    'b
+==============================

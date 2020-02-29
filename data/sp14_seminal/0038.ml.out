@@ -1,0 +1,127 @@
+------------------------------------------------------------------
+File "0038.ml", line 26, characters 12-20:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+Triaged the following locations:
+File "0038.ml", line 26, characters 10-98:
+And modified the following location:
+File "0038.ml", line 29, characters 12-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    ('j list -> 'j list) -> int list -> 'k
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (h1 :: t1, []) -> [[...other program...]]
+                                  | (h1 :: t1, rh :: rt) ->
+                                    (((List.rev; [[...]])
+                                            List.tl (List.rev h1 :: t1))
+                                          ,
+                                          ((h1 + x) + rh) / 10 ::
+                                              (mod ((h1 + x) + rh) 10) ::
+                                              rt)) in let base = l1, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "0038.ml", line 26, characters 10-98:
+And modified the following location:
+File "0038.ml", line 29, characters 12-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.rev List.tl (List.rev h1 :: t1))
+with
+    (List.rev (List.tl (List.rev h1 :: t1)))
+The actual replacement has type
+    int list * int list
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (h1 :: t1, []) -> [[...other program...]]
+                                  | (h1 :: t1, rh :: rt) ->
+                                    ((List.rev (List.tl (List.rev h1 :: t1))),
+                                          ((h1 + x) + rh) / 10 ::
+                                              (mod ((h1 + x) + rh) 10) ::
+                                              rt)) in let base = l1, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "0038.ml", line 26, characters 10-98:
+And modified the following location:
+File "0038.ml", line 29, characters 21-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.rev List.tl (List.rev h1 :: t1))
+with
+    (List.rev (List.rev h1 :: t1))
+The actual replacement has type
+    int list * int list
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (h1 :: t1, []) -> [[...other program...]]
+                                  | (h1 :: t1, rh :: rt) ->
+                                    ((List.rev (List.rev h1 :: t1)),
+                                          ((h1 + x) + rh) / 10 ::
+                                              (mod ((h1 + x) + rh) 10) ::
+                                              rt)) in let base = l1, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "0038.ml", line 29, characters 10-124:
+And modified the following location:
+File "0038.ml", line 26, characters 21-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.rev List.tl (List.rev h1 :: t1))
+with
+    (List.rev (List.rev h1 :: t1))
+The actual replacement has type
+    int list * int list
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (h1 :: t1, []) ->
+                                    ((List.rev (List.rev h1 :: t1)),
+                                          [(h1 + x) / 10 ; (mod (h1 + x) 10)])
+                                  | (h1 :: t1, rh :: rt) ->
+                                    [[...other program...]]) in let base = l1, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "0038.ml", line 29, characters 10-124:
+And modified the following location:
+File "0038.ml", line 26, characters 12-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.rev List.tl (List.rev h1 :: t1))
+with
+    (List.rev (List.tl (List.rev h1 :: t1)))
+The actual replacement has type
+    int list * int list
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (h1 :: t1, []) ->
+                                    ((List.rev (List.tl (List.rev h1 :: t1))),
+                                          [(h1 + x) / 10 ; (mod (h1 + x) 10)])
+                                  | (h1 :: t1, rh :: rt) ->
+                                    [[...other program...]]) in let base = l1, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "0038.ml", line 29, characters 10-124:
+And modified the following location:
+File "0038.ml", line 26, characters 12-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    ('d list -> 'd list) -> int list -> 'e
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (h1 :: t1, []) ->
+                                    (((List.rev; [[...]])
+                                            List.tl (List.rev h1 :: t1))
+                                          ,
+                                          [(h1 + x) / 10 ; (mod (h1 + x) 10)])
+                                  | (h1 :: t1, rh :: rt) ->
+                                    [[...other program...]]) in let base = l1, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================

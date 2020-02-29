@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "3320.ml", line 6, characters 21-22:
+This expression has type 'a but is here used with type 'a list
+Relevant code: m
+------------------------------------------------------------------
+File "3320.ml", line 6, characters 8-18:
+Try replacing
+    mulByDigit
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: m :: t ->
+                (+ i m) :: t @ [(h * i) / 10 + (mod (m * i) 10) ; (mod (h * i) 10)])
+==============================
+File "3320.ml", line 6, characters 8-18:
+Try replacing
+    mulByDigit
+with
+    /
+of type
+    int -> int -> int
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: m :: t ->
+                (/ i m) :: t @ [(h * i) / 10 + (mod (m * i) 10) ; (mod (h * i) 10)])
+==============================
+File "3320.ml", line 6, characters 8-18:
+Try replacing
+    mulByDigit
+with
+    *
+of type
+    int -> int -> int
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: m :: t ->
+                (* i m) :: t @ [(h * i) / 10 + (mod (m * i) 10) ; (mod (h * i) 10)])
+==============================

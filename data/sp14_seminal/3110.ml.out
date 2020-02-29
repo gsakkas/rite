@@ -1,0 +1,48 @@
+------------------------------------------------------------------
+File "3110.ml", line 26, characters 40-44:
+This expression has type int * ('a * 'b) list but is here used with type
+  (int * 'c list) list
+Relevant code: args
+------------------------------------------------------------------
+File "3110.ml", line 26, characters 40-44:
+Try replacing
+    args
+with
+    args; [[...]]
+of type
+    (int * 'd list) list
+within context
+    let f a x = x in
+      let base = 0, [] in
+      let args = 0, (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  (args; [[...]])) in res
+==============================
+File "3110.ml", line 26, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('e -> 'f -> 'f) -> int * 'g list -> int * ('h * 'i) list -> 'j * 'k
+within context
+    let f a x = x in
+      let base = 0, [] in
+      let args = 0, (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "3110.ml", line 25, characters 15-40:
+Try replacing
+    0, (List.combine l1 l2)
+with
+    0, (List.combine l1 l2); [[...]]
+of type
+    'l
+within context
+    let add (l1, l2) =
+      let f a x = x in
+        let base = 0, [] in
+        let args = 0, (List.combine l1 l2); [[...]] in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "1691.ml", line 26, characters 27-28:
+This expression has type expr but is here used with type expr * 'a * 'b
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "1691.ml", line 26, characters 20-42:
+And modified the following location:
+File "1691.ml", line 26, characters 47-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Sine v -> (sin (pi *. (eval (v, x, y))))
+                              | Cosine v -> (cos (pi *. (eval (v, x, y))))
+                              | Average (v, w) ->
+                                (((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0)
+                              | Times (v, w) ->
+                                ((eval (v, x, y)) *. (eval (w, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Plus (v, w) ->
+                                ((eval (v, x, y)) +. (eval (w, x, y)))
+                              | Cube (a, b, c) ->
+                                ([[...other program...]] *. ((eval; [[...]]) c))
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+Triaged the following locations:
+File "1691.ml", line 26, characters 20-42:
+And modified the following location:
+File "1691.ml", line 26, characters 52-53:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    c
+with
+    c; [[...]]
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Sine v -> (sin (pi *. (eval (v, x, y))))
+                              | Cosine v -> (cos (pi *. (eval (v, x, y))))
+                              | Average (v, w) ->
+                                (((eval (v, x, y)) +. (eval (w, x, y))) /. 2.0)
+                              | Times (v, w) ->
+                                ((eval (v, x, y)) *. (eval (w, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Plus (v, w) ->
+                                ((eval (v, x, y)) +. (eval (w, x, y)))
+                              | Cube (a, b, c) ->
+                                ([[...other program...]] *. (eval (c; [[...]])))
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================

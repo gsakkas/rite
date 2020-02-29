@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "2863.ml", line 16, characters 39-40:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "2863.ml", line 16, characters 28-48:
+And modified the following location:
+File "2863.ml", line 16, characters 51-59:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    int -> int
+within context
+    fun (l1, l2) ->
+      (let f (a1, a2) (x1, x2) =
+          ((x1 + x2) + a1) / 10, (mod ((x1 + x2) + a1) 10) :: a2
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine [[...other program...]] ((List.rev; [[...]]) 0) :: l2)
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "2863.ml", line 16, characters 49-69:
+And modified the following location:
+File "2863.ml", line 16, characters 30-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    int -> int
+within context
+    fun (l1, l2) ->
+      (let f (a1, a2) (x1, x2) =
+          ((x1 + x2) + a1) / 10, (mod ((x1 + x2) + a1) 10) :: a2
+          in
+          let base = 0, [] in
+          let args =
+          (List.combine ((List.rev; [[...]]) 0) :: l1 [[...other program...]])
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

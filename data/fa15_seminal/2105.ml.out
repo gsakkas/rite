@@ -1,0 +1,60 @@
+------------------------------------------------------------------
+File "2105.ml", line 6, characters 61-62:
+This expression is not a function, it cannot be applied
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "2105.ml", line 8, characters 4-130:
+And modified the following location:
+File "2105.ml", line 6, characters 63-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (0 n)
+with
+    0
+The actual replacement has type
+    int
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then
+      (let n = (List.length l2) - (List.length l1) in (clone 0))
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2105.ml", line 8, characters 4-130:
+And modified the following location:
+File "2105.ml", line 6, characters 61-62:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    int -> 'b
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then
+      (let n = (List.length l2) - (List.length l1) in (clone ((0; [[...]]) n)))
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2105.ml", line 6, characters 7-65:
+And modified the following location:
+File "2105.ml", line 9, characters 57-68:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone (0 n))
+with
+    [[...]]
+The actual replacement has type
+    'i list * 'j list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then [[...other program...]] else
+      (if (List.length l2) < (List.length l1) then
+        (let n = (List.length l1) - (List.length l2) in [[...]])
+        else
+        l1, l2))
+    ;; 
+==============================

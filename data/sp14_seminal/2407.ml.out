@@ -1,0 +1,58 @@
+------------------------------------------------------------------
+File "2407.ml", line 18, characters 28-29:
+This expression has type 'a * 'b but is here used with type int
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "2407.ml", line 19, characters 10-109:
+And modified the following location:
+File "2407.ml", line 18, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    'c * 'd -> 'e -> int
+within context
+    fun a x -> (let carry = (match a with 
+                             | (x, y) -> x) in (match x with 
+                                                | (d1, d2) ->
+                                                  (let new_carry =
+                                                        ((a +; [[...]] d1) + d2)
+                                                          / 10
+                                                        in
+                                                        [[...other program...]])))
+==============================
+Triaged the following locations:
+File "2407.ml", line 19, characters 10-109:
+And modified the following location:
+File "2407.ml", line 18, characters 28-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int
+within context
+    fun a x -> (let carry = (match a with 
+                             | (x, y) -> x) in (match x with 
+                                                | (d1, d2) ->
+                                                  (let new_carry =
+                                                        (((a; [[...]]) + d1) + d2)
+                                                          / 10
+                                                        in
+                                                        [[...other program...]])))
+==============================
+Triaged the following locations:
+File "2407.ml", line 19, characters 10-109:
+And modified the following location:
+File "2407.ml", line 18, characters 10-159:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let new_carry = ((a + d1) + d2) / 10 in
+      let digit = (mod ((a + d1) + d2) 10) in (match a with 
+                                               | (x, y) -> (new_carry, digit :: y))
+with
+    [[...other program...]]
+The actual replacement has type
+    'f
+==============================

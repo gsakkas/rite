@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0505.ml", line 49, characters 25-76:
+This expression has type int list -> int list -> int list
+but is here used with type
+  (int list -> int list -> int list) ->
+  (int list -> int list -> int list) -> int list -> int list -> int list
+Relevant code: if i <> 0 then mulByDigit (i - 1) bigAdd l l else l
+------------------------------------------------------------------
+File "0505.ml", line 49, characters 21-76:
+Try replacing
+    fun l -> (if (i <> 0) then (mulByDigit (i - 1) bigAdd  l  l) else l)
+with
+    fun l -> (if (i <> 0) then (mulByDigit (i - 1) bigAdd  l  l) else l); [[...]]
+of type
+    (int list -> int list -> int list) -> 'a -> 'a -> 'a
+within context
+    let rec mulByDigit i =
+    fun l -> (if (i <> 0) then (mulByDigit (i - 1) bigAdd  l  l) else l); [[...]]
+    ;; 
+==============================

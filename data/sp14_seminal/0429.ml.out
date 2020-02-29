@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "0429.ml", line 39, characters 54-73:
+This expression has type (int * int -> int) * int but is here used with type
+  expr
+Relevant code: (rand, (depth - 1))
+------------------------------------------------------------------
+File "0429.ml", line 39, characters 44-53:
+Try replacing
+    buildSine
+with
+    build
+of type
+    (int * int -> int) * int -> expr
+within context
+    (if (mod num 2) = 0 then
+      (buildSine
+        (buildTimes
+          ((build (rand, depth - 1)), (buildCosine (build (rand, depth - 1))))))
+      else
+      (buildSine
+        (buildTimes ((build (rand, depth - 1)), (build (rand, depth - 1))))))
+==============================

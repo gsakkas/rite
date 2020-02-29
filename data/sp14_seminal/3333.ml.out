@@ -1,0 +1,74 @@
+------------------------------------------------------------------
+File "3333.ml", line 13, characters 18-19:
+This expression has type int but is here used with type int list
+Relevant code: h
+------------------------------------------------------------------
+File "3333.ml", line 13, characters 19-19:
+Try replacing
+    (helper h)
+with
+    (helper [[...]] h)
+of type
+    int list
+within context
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t ->
+                  (match
+                   (mulByDigit i (List.rev (List.map (fun x -> x * 10) t)))
+                     @ [h * i]
+                   with
+                   
+                   | [] -> []
+                   | h :: t ->
+                     (let rec helper acc v =
+                           (if v = 0 then acc else
+                             (helper (mod v 10) :: acc (v / 10)))
+                           in
+                           (helper [[...]] h))))
+==============================
+File "3333.ml", line 13, characters 11-17:
+Try replacing
+    helper
+with
+    helper; [[...]]
+of type
+    int -> int list
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t ->
+                (match
+                 (mulByDigit i (List.rev (List.map (fun x -> x * 10) t))) @ [h * i]
+                 with
+                 
+                 | [] -> []
+                 | h :: t ->
+                   (let rec helper acc v =
+                         (if v = 0 then acc else
+                           (helper (mod v 10) :: acc (v / 10)))
+                         in
+                         ((helper; [[...]]) h))))
+==============================
+Triaged the following locations:
+File "3333.ml", line 12, characters 13-71:
+And modified the following location:
+File "3333.ml", line 11, characters 30-105:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun v -> (if v = 0 then acc else (helper (mod v 10) :: acc (v / 10)))
+with
+    fun v -> [[...other program...]]; [[...]]
+The actual replacement has type
+    'a
+within context
+    (match (List.rev l) with 
+     | [] -> []
+     | h :: t ->
+       (match (mulByDigit i (List.rev (List.map (fun x -> x * 10) t))) @ [h * i]
+        with
+        
+        | [] -> []
+        | h :: t ->
+          (let rec helper acc = fun v -> [[...other program...]]; [[...]] in
+                (helper h))))
+==============================

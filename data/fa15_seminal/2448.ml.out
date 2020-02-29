@@ -1,0 +1,72 @@
+------------------------------------------------------------------
+File "2448.ml", line 25, characters 23-25:
+This pattern matches values of type 'a list
+but is here used to match values of type int
+Relevant code: []
+------------------------------------------------------------------
+Triaged the following locations:
+File "2448.ml", line 25, characters 29-55:
+File "2448.ml", line 25, characters 66-76:
+And modified the following location:
+File "2448.ml", line 25, characters 14-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    2
+with
+    2; [[...]]
+The actual replacement has type
+    'b list
+within context
+    let (a1, a2) = a in let test = (match a1 with 
+                                    | [] -> 0
+                                    | h :: t ->
+                                      h) in let sum = (l1x + l2x) + test in
+      let terms = (match (2; [[...]]) with 
+                   | [] -> [[...other program...]]
+                   | h :: t ->
+                     [[...other program...]]) in sum / 10 :: a1, terms :: a2
+==============================
+Triaged the following locations:
+File "2448.ml", line 25, characters 29-55:
+File "2448.ml", line 25, characters 58-62:
+File "2448.ml", line 25, characters 66-76:
+And modified the following location:
+File "2448.ml", line 25, characters 23-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    int
+within context
+    let (a1, a2) = a in let test = (match a1 with 
+                                    | [] -> 0
+                                    | h :: t ->
+                                      h) in let sum = (l1x + l2x) + test in
+      let terms = (match 2 with 
+                   | _ -> [[...other program...]]
+                   |
+                     [[...other pattern...]]
+                     ->
+                     [[...other program...]]) in sum / 10 :: a1, terms :: a2
+==============================
+Triaged the following locations:
+File "2448.ml", line 25, characters 23-25:
+File "2448.ml", line 25, characters 29-55:
+File "2448.ml", line 25, characters 66-76:
+And modified the following location:
+File "2448.ml", line 25, characters 58-62:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    int
+within context
+    let (a1, a2) = a in let test = (match a1 with 
+                                    | [] -> 0
+                                    | h :: t ->
+                                      h) in let sum = (l1x + l2x) + test in
+      let terms = (match 2 with 
+                   |[[...other pattern...]]->[[...other program...]]
+                   | _ -> [[...other program...]]) in sum / 10 :: a1, terms :: a2
+==============================

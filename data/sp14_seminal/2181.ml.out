@@ -1,0 +1,150 @@
+------------------------------------------------------------------
+File "2181.ml", line 28, characters 7-23:
+This expression has type float but is here used with type int
+Relevant code: (eval (a, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2181.ml", line 28, characters 44-45:
+And modified the following location:
+File "2181.ml", line 28, characters 24-25:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    float -> float -> 'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Poly (a, b, c) ->
+                                (((eval (a, x, y)) *; [[...]] (eval (a, x, y)))
+                                      +; [[...]]
+                                      ((eval (b, x, y)) *. (eval (c, x, y))))) ;; 
+==============================
+Triaged the following locations:
+File "2181.ml", line 28, characters 44-45:
+And modified the following location:
+File "2181.ml", line 28, characters 24-25:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    *
+with
+    <
+The actual replacement has type
+    float -> float -> bool
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Poly (a, b, c) ->
+                                ((eval (a, x, y)) < (eval (a, x, y)) +; [[...]]
+                                      ((eval (b, x, y)) *. (eval (c, x, y))))) ;; 
+==============================
+Triaged the following locations:
+File "2181.ml", line 19, characters 14-42:
+File "2181.ml", line 20, characters 16-44:
+File "2181.ml", line 21, characters 21-66:
+File "2181.ml", line 22, characters 19-55:
+File "2181.ml", line 24, characters 6-96:
+And modified the following location:
+File "2181.ml", line 29, characters 26-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Poly (a, b, c) ->
+                                (eval (a, x, y)) * (eval (a, x, y))
+                                    + (eval (b, x, y)) * (eval (c, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "2181.ml", line 19, characters 14-42:
+File "2181.ml", line 20, characters 16-44:
+File "2181.ml", line 21, characters 21-66:
+File "2181.ml", line 22, characters 19-55:
+File "2181.ml", line 24, characters 6-96:
+And modified the following location:
+File "2181.ml", line 29, characters 26-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Poly (a, b, c) ->
+                                (eval (a, x, y)) * (eval (a, x, y)) +
+                                    ((eval (b, x, y))
+                                        *.; [[...]] (eval (c, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2181.ml", line 19, characters 14-42:
+File "2181.ml", line 20, characters 16-44:
+File "2181.ml", line 21, characters 21-66:
+File "2181.ml", line 22, characters 19-55:
+File "2181.ml", line 24, characters 6-96:
+And modified the following location:
+File "2181.ml", line 29, characters 26-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Poly (a, b, c) ->
+                                (eval (a, x, y)) * (eval (a, x, y)) +
+                                    ((eval (b, x, y)) + (eval (c, x, y)))) ;; 
+==============================

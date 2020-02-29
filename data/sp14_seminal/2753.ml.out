@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2753.ml", line 6, characters 34-36:
+This expression has type unit but is here used with type 'a list
+Relevant code: ()
+------------------------------------------------------------------
+File "2753.ml", line 6, characters 34-36:
+Try replacing
+    ()
+with
+    []
+of type
+    'b list
+within context
+    fun a x -> (if (List.length []) = 0 then a ^ x else a ^ (x ^ sep))
+==============================

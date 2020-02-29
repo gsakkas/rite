@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0377.ml", line 2, characters 56-65:
+This expression has type int -> 'a but is here used with type int
+Relevant code: (clone n)
+------------------------------------------------------------------
+File "0377.ml", line 2, characters 66-67:
+Try replacing
+    -
+with
+    -; [[...]]
+of type
+    (int -> int list) -> int -> int list
+within context
+    fun x n -> (match n with 
+                | 0 -> []
+                | _ -> x :: ((clone n) -; [[...]] 1))
+==============================

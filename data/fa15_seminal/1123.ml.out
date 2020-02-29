@@ -1,0 +1,79 @@
+------------------------------------------------------------------
+File "1123.ml", line 29, characters 33-34:
+This expression has type int list -> int * int -> int * int list
+but is here used with type int list -> int * int -> int list
+Relevant code: f
+------------------------------------------------------------------
+File "1123.ml", line 29, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'a list -> 'b * 'c -> int * 'a list
+within context
+    let f a x = (match a with 
+                 | h :: t ->
+                   (if ((fst x) + (snd x)) + h > 9 then
+                       1, (mod (((fst x) + (snd x)) + h) 10) :: t
+                       else
+                       0, (mod (((fst x) + (snd x)) + h) 10) :: t)
+                 | _ ->
+                   (if (fst x) + (snd x) > 9 then 1, [(mod ((fst x) + (snd x)) 10)]
+                       else
+                       0,
+                         [(mod ((fst x) + (snd x)) 10)
+                             ])) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "1123.ml", line 29, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int * int -> int * int list) ->
+    int * 'd list -> ('e * 'f) list -> 'g * 'h
+within context
+    let f a x = (match a with 
+                 | h :: t ->
+                   (if ((fst x) + (snd x)) + h > 9 then
+                       1, (mod (((fst x) + (snd x)) + h) 10) :: t
+                       else
+                       0, (mod (((fst x) + (snd x)) + h) 10) :: t)
+                 | _ ->
+                   (if (fst x) + (snd x) > 9 then 1, [(mod ((fst x) + (snd x)) 10)]
+                       else
+                       0,
+                         [(mod ((fst x) + (snd x)) 10)
+                             ])) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "1123.ml", line 17, characters 10-365:
+Try replacing
+    fun a x -> (match a with 
+                | h :: t ->
+                  (if ((fst x) + (snd x)) + h > 9 then
+                      1, (mod (((fst x) + (snd x)) + h) 10) :: t
+                      else
+                      0, (mod (((fst x) + (snd x)) + h) 10) :: t)
+                | _ ->
+                  (if (fst x) + (snd x) > 9 then 1, [(mod ((fst x) + (snd x)) 10)]
+                      else
+                      0, [(mod ((fst x) + (snd x)) 10)]))
+with
+    fun a x -> (match a with 
+                | h :: t ->
+                  (if ((fst x) + (snd x)) + h > 9 then
+                      1, (mod (((fst x) + (snd x)) + h) 10) :: t
+                      else
+                      0, (mod (((fst x) + (snd x)) + h) 10) :: t)
+                | _ ->
+                  (if (fst x) + (snd x) > 9 then 1, [(mod ((fst x) + (snd x)) 10)]
+                      else
+                      0, [(mod ((fst x) + (snd x)) 10)])); [[...]]
+of type
+    'i
+==============================

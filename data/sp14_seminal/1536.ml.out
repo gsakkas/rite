@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "1536.ml", line 3, characters 65-67:
+This expression has type 'a list but is here used with type 'a
+Relevant code: tl
+------------------------------------------------------------------
+File "1536.ml", line 3, characters 65-67:
+Try replacing
+    tl
+with
+    x
+of type
+    'b
+within context
+    let rec f a x = (match xs with 
+                     | [] -> a
+                     | hd :: tl ->
+                       (f
+                           (f a hd) x)) in let base = 0 in (List.fold_left f base  xs)
+==============================
+File "1536.ml", line 3, characters 65-67:
+Try replacing
+    tl
+with
+    hd
+of type
+    'c
+within context
+    let rec f a x = (match xs with 
+                     | [] -> a
+                     | hd :: tl ->
+                       (f
+                           (f a hd) hd)) in let base = 0 in (List.fold_left f base  xs)
+==============================
+File "1536.ml", line 3, characters 65-67:
+Try replacing
+    tl
+with
+    a
+of type
+    int
+within context
+    let rec f a x = (match xs with 
+                     | [] -> a
+                     | hd :: tl ->
+                       (f
+                           (f a hd) a)) in let base = 0 in (List.fold_left f base  xs)
+==============================

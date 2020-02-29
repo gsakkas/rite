@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "3321.ml", line 7, characters 11-12:
+This expression has type 'a list but is here used with type int
+Relevant code: h
+------------------------------------------------------------------
+File "3321.ml", line 4, characters 4-6:
+Try replacing
+    []
+with
+    _
+of type
+    int list -> int list
+within context
+    fun i l -> (match (List.rev l) with 
+                | _ :: [] -> []
+                | h :: m :: t ->
+                  (mulByDigit i m :: t) @
+                      [(h * i) / 10 + (mod (m * i) 10) ; (mod (h * i) 10)])
+==============================

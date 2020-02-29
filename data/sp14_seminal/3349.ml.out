@@ -1,0 +1,78 @@
+
+------------------------------------------------------------------
+File "3349.ml", line 39, characters 9-26:
+This expression has type int list but is here used with type int
+Relevant code: helper [] (h * i)
+------------------------------------------------------------------
+File "3349.ml", line 38, characters 72-73:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int list -> int list list -> int list list
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t ->
+                (let rec helper acc v =
+                      (if v = 0 then acc else (helper (mod v 10) :: acc (v / 10)))
+                      in
+                      let rec adder x = (match x with 
+                                         | [] -> []
+                                         | h :: t ->
+                                           (bigAdd
+                                               h
+                                               (adder
+                                                 t))) in ((adder
+                              (mulByDigit
+                                i (List.rev (List.map (fun x -> x * 10) t))))
+                            @; [[...]] [(helper [] (h * i))])))
+==============================
+File "3349.ml", line 37, characters 58-64:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    'a -> 'b list -> 'b list
+within context
+    let rec helper acc v =
+      (if v = 0 then acc else (helper (mod v 10) :: acc (v / 10)))
+      in
+      let rec adder x = (match x with 
+                         | [] -> []
+                         | h :: t ->
+                           ((bigAdd; [[...]])
+                               h
+                               (adder
+                                 t))) in (adder
+            (mulByDigit i (List.rev (List.map (fun x -> x * 10) t))))
+          @ [(helper [] (h * i))]
+==============================
+File "3349.ml", line 38, characters 6-71:
+Try replacing
+    (adder (mulByDigit i (List.rev (List.map (fun x -> x * 10) t))))
+with
+    (adder (mulByDigit i (List.rev (List.map (fun x -> x * 10) t)))); [[...]]
+of type
+    int list list
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t ->
+                (let rec helper acc v =
+                      (if v = 0 then acc else (helper (mod v 10) :: acc (v / 10)))
+                      in
+                      let rec adder x = (match x with 
+                                         | [] -> []
+                                         | h :: t ->
+                                           (bigAdd
+                                               h
+                                               (adder
+                                                 t))) in ((adder
+                              (mulByDigit
+                                i (List.rev (List.map (fun x -> x * 10) t))));
+                            [[...]])
+                          @ [(helper [] (h * i))]))
+==============================

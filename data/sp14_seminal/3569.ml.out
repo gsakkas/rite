@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "3569.ml", line 24, characters 18-28:
+This expression has type 'a -> 'b -> 'c but is here used with type int
+Relevant code: (helper i)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3569.ml", line 24, characters 29-30:
+And modified the following location:
+File "3569.ml", line 24, characters 32-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    int list -> int list -> 'd
+within context
+    fun i
+      acc
+        l ->
+          (if i > 0 then ((helper i) -; [[...]] ((1; [[...]]) (bigAdd acc l) l))
+            else
+            acc)
+==============================

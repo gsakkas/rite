@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2429.ml", line 2, characters 64-66:
+This expression is not a function, it cannot be applied
+Relevant code: l1
+------------------------------------------------------------------
+File "2429.ml", line 2, characters 36-38:
+Try replacing
+    l1
+with
+    l2
+of type
+    'h list
+within context
+    fun l1 l2 -> (if (List.length l2) = (List.length l2) then (l1 l2))
+==============================

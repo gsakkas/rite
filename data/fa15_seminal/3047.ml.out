@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "3047.ml", line 28, characters 50-51:
+This expression has type int -> int -> int list but is here used with type
+  int -> int -> int
+Relevant code: f
+------------------------------------------------------------------
+File "3047.ml", line 28, characters 50-51:
+Try replacing
+    f
+with
+    /
+of type
+    int -> int -> int
+within context
+    fun l2 ->
+      (let f a x = (bigAdd [a ; 0] (mulByDigit x l1)) in
+          let base = 0 in let args = l2 in (List.fold_left / 0  args))
+==============================
+File "3047.ml", line 28, characters 50-51:
+Try replacing
+    f
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun l2 ->
+      (let f a x = (bigAdd [a ; 0] (mulByDigit x l1)) in
+          let base = 0 in let args = l2 in (List.fold_left + 0  args))
+==============================
+File "3047.ml", line 28, characters 50-51:
+Try replacing
+    f
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun l2 ->
+      (let f a x = (bigAdd [a ; 0] (mulByDigit x l1)) in
+          let base = 0 in let args = l2 in (List.fold_left - 0  args))
+==============================

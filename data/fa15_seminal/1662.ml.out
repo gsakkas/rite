@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "1662.ml", line 16, characters 11-49:
+This expression has type int * int but is here used with type int
+Relevant code: (1, (let (y,z) = x in (y + z) mod 10))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1662.ml", line 18, characters 4-113:
+And modified the following location:
+File "1662.ml", line 15, characters 6-136:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if (let (y, z) = x in y + z > 9) then
+      (1, (let (y, z) = x in (mod (y + z) 10))) + a
+      else
+      (0, (let (y, z) = x in y + z)) + a)
+with
+    [[...]]
+The actual replacement has type
+    'a
+==============================
+Triaged the following locations:
+File "1662.ml", line 18, characters 4-113:
+And modified the following location:
+File "1662.ml", line 14, characters 4-269:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x =
+      (if (let (y, z) = x in y + z > 9) then
+        (1, (let (y, z) = x in (mod (y + z) 10))) + a
+        else
+        (0, (let (y, z) = x in y + z)) + a)
+      in
+      let base = 0, 0 in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'b
+==============================

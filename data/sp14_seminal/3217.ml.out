@@ -1,0 +1,120 @@
+------------------------------------------------------------------
+File "3217.ml", line 50, characters 10-179:
+This expression has type expr * expr * expr * expr * expr
+but is here used with type expr * expr
+Relevant code: ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+            (build (rand, (depth - 1))), (build (rand, (depth - 1))),
+            (build (rand, (depth - 1))))
+------------------------------------------------------------------
+File "3217.ml", line 50, characters 10-179:
+Try replacing
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1));
+    [[...]]
+of type
+    expr * expr
+==============================
+File "3217.ml", line 49, characters 8-21:
+Try replacing
+    buildFiboPlus
+with
+    buildFiboPlus; [[...]]
+of type
+    expr * expr * expr *
+    expr * expr -> expr
+within context
+    let rec build (rand, depth) = (if depth > 0 then (match (rand (0, 8)) with 
+                                                      | 0 -> (buildX ())
+                                                      | 1 -> (buildY ())
+                                                      | 2 ->
+                                                        (buildSine
+                                                            (build
+                                                              (rand, depth - 1)))
+                                                      | 3 ->
+                                                        (buildCosine
+                                                            (build
+                                                              (rand, depth - 1)))
+                                                      | 4 ->
+                                                        (buildAverage
+                                                            ((build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1))))
+                                                      | 5 ->
+                                                        (buildTimes
+                                                            ((build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1))))
+                                                      | 6 ->
+                                                        (buildThresh
+                                                            ((build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1))))
+                                                      | 7 ->
+                                                        ((buildFiboPlus; [[...]])
+                                                            ((build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1))))
+                                                      | 8 ->
+                                                        (buildTheThing
+                                                            ((build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand,
+                                                                      depth
+                                                                        -
+                                                                        1))))) else (match
+                                                                                     (rand
+                                                                                       (0
+                                                                                           ,
+                                                                                           1))
+                                                                                     with
+                                                                                     
+                                                                                     |
+                                                                                       0
+                                                                                       ->
+                                                                                       (buildX
+                                                                                           ())
+                                                                                     |
+                                                                                       1
+                                                                                       ->
+                                                                                       (buildY
+                                                                                           ()))) ;; 
+==============================

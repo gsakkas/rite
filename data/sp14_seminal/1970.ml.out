@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "1970.ml", line 6, characters 18-30:
+This expression has type 'a list but is here used with type string
+Relevant code: (List.rev x)
+------------------------------------------------------------------
+File "1970.ml", line 6, characters 18-30:
+Try replacing
+    (List.rev x)
+with
+    (List.rev x); [[...]]
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = ((List.rev x); [[...]]) ^ a in
+             let base = sep in let l = sl in (List.fold_left f base  l)))
+==============================
+File "1970.ml", line 6, characters 31-32:
+Try replacing
+    ^
+with
+    ^; [[...]]
+of type
+    'b list -> 'c -> 'd
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = ((List.rev x) ^; [[...]] a) in
+             let base = sep in let l = sl in (List.fold_left f base  l)))
+==============================

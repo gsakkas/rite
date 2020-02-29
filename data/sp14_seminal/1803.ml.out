@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1803.ml", line 16, characters 36-55:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: additivePersAndRoot
+------------------------------------------------------------------
+File "1803.ml", line 16, characters 56-59:
+Try replacing
+    (additivePersAndRoot abs n  0)
+with
+    (additivePersAndRoot n 0)
+of type
+    int * int
+within context
+    let rec digitalRoot n = let (l, r) = (additivePersAndRoot n 0) in r ;; 
+==============================

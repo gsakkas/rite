@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2335.ml", line 7, characters 27-39:
+This expression has type 'a list -> bool but is here used with type bool
+Relevant code: (List.mem h)
+------------------------------------------------------------------
+File "2335.ml", line 7, characters 28-36:
+Try replacing
+    List.mem
+with
+    not
+of type
+    bool -> bool
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (not (not h)) then h :: seen else seen) in
+             let rest' = t in (helper (seen', rest'))))
+==============================

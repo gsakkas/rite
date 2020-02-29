@@ -1,0 +1,80 @@
+------------------------------------------------------------------
+File "1196.ml", line 38, characters 13-34:
+This expression has type (int * int) list but is here used with type int list
+Relevant code: (add (padZero l1 l2))
+------------------------------------------------------------------
+File "1196.ml", line 38, characters 2-12:
+Try replacing
+    removeZero
+with
+    =
+of type
+    (int * int) list -> (int * int) list -> bool
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match x with 
+                                                       | (x1, x2) -> (match a with 
+                                                                      | (o, z) ->
+                                                                        (if
+                                                                            (o + x1)
+                                                                                + x2
+                                                                              > 9
+                                                                            then
+                                                                            1,
+                                                                              (mod
+                                                                                    ((o
+                                                                                            +
+                                                                                            x1)
+                                                                                        +
+                                                                                        x2)
+                                                                                    10)
+                                                                                  ::
+                                                                                  z
+                                                                            else
+                                                                            0,
+                                                                              (o +
+                                                                                        x1)
+                                                                                    +
+                                                                                    x2
+                                                                                  ::
+                                                                                  z))) in let
+        base
+        =
+        0, []
+        in
+        let args =
+        let rec pair list1 list2 = (match (List.rev list1), (List.rev list2) with 
+                                    | (h1 :: t1, h2 :: t2) -> h1, h2 :: (pair t1 t2)
+                                    | (_, _) -> []) in (pair l1 l2)
+        in
+        let (_, res) = (List.fold_left f base  args) in
+        args in (= (add (padZero l1 l2))) ;; 
+==============================
+File "1196.ml", line 37, characters 48-52:
+Try replacing
+    args
+with
+    res
+of type
+    int list
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (x1, x2) -> (match a with 
+                                                 | (o, z) ->
+                                                   (if (o + x1) + x2 > 9 then
+                                                       1,
+                                                         (mod ((o + x1) + x2) 10) ::
+                                                             z
+                                                       else
+                                                       0,
+                                                         (o + x1) + x2 ::
+                                                             z))) in let base =
+          0, []
+          in
+          let args =
+          let rec pair list1 list2 = (match (List.rev list1), (List.rev list2) with 
+                                      | (h1 :: t1, h2 :: t2) ->
+                                        h1, h2 :: (pair t1 t2)
+                                      | (_, _) -> []) in (pair l1 l2)
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

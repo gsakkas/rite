@@ -1,0 +1,76 @@
+------------------------------------------------------------------
+File "0818.ml", line 16, characters 32-38:
+This expression has type int -> int but is here used with type int
+Relevant code: itt y'
+------------------------------------------------------------------
+File "0818.ml", line 16, characters 38-38:
+Try replacing
+    (itt y')
+with
+    (itt [[...]] y')
+of type
+    int
+within context
+    let rec additivePersistence n =
+    let rec itt x i =
+      (if x < 10 then i else
+        (let x' = (sumList (digitsOfInt x)) in
+            (if x' > 9 then 1 + (itt x' i) else 1)))
+      in
+      (match n with 
+       | 0 -> 0
+       | y' -> (itt [[...]] y'))
+    ;; 
+==============================
+File "0818.ml", line 16, characters 38-38:
+Try replacing
+    (itt y')
+with
+    (itt y' [[...]])
+of type
+    int
+within context
+    let rec additivePersistence n =
+    let rec itt x i =
+      (if x < 10 then i else
+        (let x' = (sumList (digitsOfInt x)) in
+            (if x' > 9 then 1 + (itt x' i) else 1)))
+      in
+      (match n with 
+       | 0 -> 0
+       | y' -> (itt y' [[...]]))
+    ;; 
+==============================
+File "0818.ml", line 16, characters 22-23:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    int -> int
+within context
+    let rec additivePersistence n =
+    let rec itt x i =
+      (if x < 10 then i else
+        (let x' = (sumList (digitsOfInt x)) in
+            (if x' > 9 then 1 + (itt x' i) else 1)))
+      in
+      (match n with 
+       | 0 -> (0; [[...]])
+       | y' -> (itt y'))
+    ;; 
+==============================
+Triaged the following locations:
+File "0818.ml", line 11, characters 4-121:
+And modified the following location:
+File "0818.ml", line 10, characters 16-141:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun i ->
+      (if x < 10 then i else
+        (let x' = (sumList (digitsOfInt x)) in
+            (if x' > 9 then 1 + (itt x' i) else 1)))
+with
+    fun i -> [[...other program...]]; [[...]]
+The actual replacement has type
+    'a
+==============================

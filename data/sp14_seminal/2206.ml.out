@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "2206.ml", line 30, characters 25-26:
+This expression has type int but is here used with type int list
+Relevant code: 1
+------------------------------------------------------------------
+Triaged the following locations:
+File "2206.ml", line 30, characters 9-15:
+And modified the following location:
+File "2206.ml", line 30, characters 18-24:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+The actual replacement has type
+    int -> int -> 'a list -> 'b
+within context
+    let rec mulByDigit i l = (match i with 
+                              | 0 -> []
+                              | 1 -> l
+                              | _ ->
+                                ((bigAdd; [[...]])
+                                    (((bigAdd; [[...]]) 1 1)
+                                      (mulByDigit (i - 2) l)))) ;; 
+==============================

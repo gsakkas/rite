@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "2732.ml", line 2, characters 45-49:
+This pattern matches values of type 'a list
+but is here used to match values of type int
+Relevant code: h::t
+------------------------------------------------------------------
+Triaged the following locations:
+File "2732.ml", line 2, characters 40-42:
+File "2732.ml", line 2, characters 53-75:
+And modified the following location:
+File "2732.ml", line 2, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    _
+The actual replacement has type
+    'b list -> 'c
+within context
+    let rec clone x n = (match n with 
+                         | _ -> [[...other program...]]
+                         | h :: t -> [[...other program...]]) ;; 
+==============================
+File "2732.ml", line 2, characters 45-75:
+Try replacing
+    (match n with 
+     | 0 -> []
+     | h :: t -> x :: (clone x n) - 1)
+with
+    (match n with 
+     | 0 -> []
+     | _ -> [[...]])
+of type
+    'd list
+==============================
+Triaged the following locations:
+File "2732.ml", line 2, characters 40-42:
+File "2732.ml", line 2, characters 53-75:
+And modified the following location:
+File "2732.ml", line 2, characters 45-49:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    int -> 'e
+within context
+    let rec clone x n = (match n with 
+                         | 0 -> [[...other program...]]
+                         | _ -> [[...other program...]]) ;; 
+==============================

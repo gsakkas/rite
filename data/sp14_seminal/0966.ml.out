@@ -1,0 +1,72 @@
+------------------------------------------------------------------
+File "0966.ml", line 26, characters 8-10:
+This pattern matches values of type 'a list
+but is here used to match values of type int * 'b
+Relevant code: []
+------------------------------------------------------------------
+File "0966.ml", line 25, characters 12-13:
+Try replacing
+    a
+with
+    a; [[...]]
+of type
+    int list
+within context
+    let (cin, l) = a in
+      let result = (n1 + n2) + cin in
+      let cout = result / 10 in let r = (mod result 10) in (match (a; [[...]]) with 
+                                                            | [] ->
+                                                              (cout,
+                                                                    (List.append
+                                                                      [r] l))
+                                                            | h :: t ->
+                                                              (cout,
+                                                                    (List.append
+                                                                      [r] t)))
+==============================
+Triaged the following locations:
+File "0966.ml", line 26, characters 14-41:
+File "0966.ml", line 27, characters 8-12:
+File "0966.ml", line 27, characters 16-43:
+And modified the following location:
+File "0966.ml", line 26, characters 8-10:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    int * 'c
+within context
+    let (cin, l) = a in
+      let result = (n1 + n2) + cin in
+      let cout = result / 10 in let r = (mod result 10) in (match a with 
+                                                            | _ ->
+                                                              [[...other program...]]
+                                                            |
+                                                              [[...other pattern...]]
+                                                              ->
+                                                              [[...other program...]])
+==============================
+Triaged the following locations:
+File "0966.ml", line 26, characters 8-10:
+File "0966.ml", line 26, characters 14-41:
+File "0966.ml", line 27, characters 16-43:
+And modified the following location:
+File "0966.ml", line 27, characters 8-12:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    int * 'd
+within context
+    let (cin, l) = a in
+      let result = (n1 + n2) + cin in
+      let cout = result / 10 in let r = (mod result 10) in (match a with 
+                                                            |
+                                                              [[...other pattern...]]
+                                                              ->
+                                                              [[...other program...]]
+                                                            | _ ->
+                                                              [[...other program...]])
+==============================

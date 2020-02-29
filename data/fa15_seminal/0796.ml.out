@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "0796.ml", line 5, characters 27-33:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: append
+------------------------------------------------------------------
+Triaged the following locations:
+File "0796.ml", line 5, characters 58-61:
+And modified the following location:
+File "0796.ml", line 5, characters 27-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mod
+If you ignore other surrounding code, try replacing
+    append
+with
+    append; [[...]]
+The actual replacement has type
+    (int -> int list) -> int -> int -> 'a
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [n] else
+      ((mod; [[...]]) ((append; [[...]]) digitsOfInt (n / 10)  n) 10))
+    ;; 
+==============================

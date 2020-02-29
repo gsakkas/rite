@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2681.ml", line 19, characters 23-63:
+This expression has type float but is here used with type int
+Relevant code: ((eval (i1, x, y)) +. (eval (i2, x, y)))
+------------------------------------------------------------------
+File "2681.ml", line 19, characters 64-65:
+Try replacing
+    /
+with
+    /; [[...]]
+of type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine i -> (sin (pi *. (eval (i, x, y))))
+                              | Cosine i -> (cos (pi *. (eval (i, x, y))))
+                              | Average (i1, i2) ->
+                                (((eval (i1, x, y)) +. (eval (i2, x, y)))
+                                      /; [[...]] 2.0)
+                              | Times (i1, i2) ->
+                                ((eval (i1, x, y)) *. (eval (i2, x, y)))) ;; 
+==============================

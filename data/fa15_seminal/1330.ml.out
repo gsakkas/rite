@@ -1,0 +1,261 @@
+------------------------------------------------------------------
+File "1330.ml", line 29, characters 4-510:
+This expression has type expr but is here used with type unit -> expr
+Relevant code: (match rand (2, 7) with
+     | 2 -> buildSine (build (rand, (depth - 1)))
+     | 3 -> buildCosine (build (rand, (depth - 1)))
+     | 4 ->
+         buildAverage
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 5 ->
+         buildTimes
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+     | 6 ->
+         buildThresh
+           ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))), (build (rand, (depth - 1)))))
+------------------------------------------------------------------
+File "1330.ml", line 27, characters 7-57:
+Try replacing
+    (match (rand (0, 0)) with 
+     | 0 -> buildX
+     | 1 -> buildY)
+with
+    (match (rand (0, 0)) with 
+     | 0 -> buildX
+     | 1 -> buildY); [[...]]
+of type
+    expr
+==============================
+Triaged the following locations:
+File "1330.ml", line 31, characters 12-51:
+File "1330.ml", line 33, characters 9-91:
+File "1330.ml", line 36, characters 9-89:
+File "1330.ml", line 39, characters 9-161:
+And modified the following location:
+File "1330.ml", line 30, characters 12-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildSine
+with
+    buildSine; [[...]]
+The actual replacement has type
+    (unit -> expr) -> unit -> expr
+within context
+    let rec build (rand, depth) = (if depth = 0 then (match (rand (0, 0)) with 
+                                                      | 0 -> buildX
+                                                      | 1 ->
+                                                        buildY) else (match
+                                                                      (rand (2, 7))
+                                                                      with
+                                                                      
+                                                                      | 2 ->
+                                                                        ((buildSine;
+                                                                              [[...]])
+                                                                            (build
+                                                                              (rand,
+                                                                                  depth
+                                                                                    -
+                                                                                    1)))
+                                                                      | 3 ->
+                                                                        [[...other program...]]
+                                                                      | 4 ->
+                                                                        [[...other program...]]
+                                                                      | 5 ->
+                                                                        [[...other program...]]
+                                                                      | 6 ->
+                                                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1330.ml", line 30, characters 12-49:
+File "1330.ml", line 31, characters 12-51:
+File "1330.ml", line 36, characters 9-89:
+File "1330.ml", line 39, characters 9-161:
+And modified the following location:
+File "1330.ml", line 33, characters 9-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildAverage
+with
+    buildAverage; [[...]]
+The actual replacement has type
+    (unit -> expr) * (unit -> expr) ->
+    unit -> expr
+within context
+    let rec build (rand, depth) = (if depth = 0 then (match (rand (0, 0)) with 
+                                                      | 0 -> buildX
+                                                      | 1 ->
+                                                        buildY) else (match
+                                                                      (rand (2, 7))
+                                                                      with
+                                                                      
+                                                                      | 2 ->
+                                                                        [[...other program...]]
+                                                                      | 3 ->
+                                                                        [[...other program...]]
+                                                                      | 4 ->
+                                                                        ((buildAverage;
+                                                                              [[...]])
+                                                                            ((build
+                                                                                  (rand
+                                                                                      ,
+                                                                                      depth
+                                                                                        -
+                                                                                        1))
+                                                                                ,
+                                                                                (build
+                                                                                  (rand
+                                                                                      ,
+                                                                                      depth
+                                                                                        -
+                                                                                        1))))
+                                                                      | 5 ->
+                                                                        [[...other program...]]
+                                                                      | 6 ->
+                                                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1330.ml", line 30, characters 12-49:
+File "1330.ml", line 33, characters 9-91:
+File "1330.ml", line 36, characters 9-89:
+File "1330.ml", line 39, characters 9-161:
+And modified the following location:
+File "1330.ml", line 31, characters 12-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildCosine
+with
+    buildCosine; [[...]]
+The actual replacement has type
+    (unit -> expr) -> unit -> expr
+within context
+    let rec build (rand, depth) = (if depth = 0 then (match (rand (0, 0)) with 
+                                                      | 0 -> buildX
+                                                      | 1 ->
+                                                        buildY) else (match
+                                                                      (rand (2, 7))
+                                                                      with
+                                                                      
+                                                                      | 2 ->
+                                                                        [[...other program...]]
+                                                                      | 3 ->
+                                                                        ((buildCosine;
+                                                                              [[...]])
+                                                                            (build
+                                                                              (rand,
+                                                                                  depth
+                                                                                    -
+                                                                                    1)))
+                                                                      | 4 ->
+                                                                        [[...other program...]]
+                                                                      | 5 ->
+                                                                        [[...other program...]]
+                                                                      | 6 ->
+                                                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1330.ml", line 30, characters 12-49:
+File "1330.ml", line 31, characters 12-51:
+File "1330.ml", line 33, characters 9-91:
+File "1330.ml", line 36, characters 9-89:
+And modified the following location:
+File "1330.ml", line 39, characters 9-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildThresh
+with
+    buildThresh; [[...]]
+The actual replacement has type
+    (unit -> expr) * (unit -> expr) *
+    (unit -> expr) * (unit -> expr) ->
+    unit -> expr
+within context
+    let rec build (rand, depth) = (if depth = 0 then (match (rand (0, 0)) with 
+                                                      | 0 -> buildX
+                                                      | 1 ->
+                                                        buildY) else (match
+                                                                      (rand (2, 7))
+                                                                      with
+                                                                      
+                                                                      | 2 ->
+                                                                        [[...other program...]]
+                                                                      | 3 ->
+                                                                        [[...other program...]]
+                                                                      | 4 ->
+                                                                        [[...other program...]]
+                                                                      | 5 ->
+                                                                        [[...other program...]]
+                                                                      | 6 ->
+                                                                        ((buildThresh;
+                                                                              [[...]])
+                                                                            ((build
+                                                                                  (rand
+                                                                                      ,
+                                                                                      depth
+                                                                                        -
+                                                                                        1))
+                                                                                ,
+                                                                                (build
+                                                                                  (rand
+                                                                                      ,
+                                                                                      depth
+                                                                                        -
+                                                                                        1))
+                                                                                ,
+                                                                                (build
+                                                                                  (rand
+                                                                                      ,
+                                                                                      depth
+                                                                                        -
+                                                                                        1))
+                                                                                ,
+                                                                                (build
+                                                                                  (rand
+                                                                                      ,
+                                                                                      depth
+                                                                                        -
+                                                                                        1)))))) ;; 
+==============================
+Triaged the following locations:
+File "1330.ml", line 30, characters 12-49:
+File "1330.ml", line 31, characters 12-51:
+File "1330.ml", line 33, characters 9-91:
+File "1330.ml", line 39, characters 9-161:
+And modified the following location:
+File "1330.ml", line 36, characters 9-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    (unit -> expr) * (unit -> expr) ->
+    unit -> expr
+within context
+    let rec build (rand, depth) = (if depth = 0 then (match (rand (0, 0)) with 
+                                                      | 0 -> buildX
+                                                      | 1 ->
+                                                        buildY) else (match
+                                                                      (rand (2, 7))
+                                                                      with
+                                                                      
+                                                                      | 2 ->
+                                                                        [[...other program...]]
+                                                                      | 3 ->
+                                                                        [[...other program...]]
+                                                                      | 4 ->
+                                                                        [[...other program...]]
+                                                                      | 5 ->
+                                                                        ((buildTimes;
+                                                                              [[...]])
+                                                                            ((build
+                                                                                  (rand
+                                                                                      ,
+                                                                                      depth
+                                                                                        -
+                                                                                        1))
+                                                                                ,
+                                                                                (build
+                                                                                  (rand
+                                                                                      ,
+                                                                                      depth
+                                                                                        -
+                                                                                        1))))
+                                                                      | 6 ->
+                                                                        [[...other program...]])) ;; 
+==============================

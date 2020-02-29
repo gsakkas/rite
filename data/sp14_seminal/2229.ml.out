@@ -1,0 +1,260 @@
+------------------------------------------------------------------
+File "2229.ml", line 3, characters 49-51:
+This expression has type 'a but is here used with type ('a * 'b) list
+Relevant code: lk
+------------------------------------------------------------------
+Triaged the following locations:
+File "2229.ml", line 3, characters 45-51:
+And modified the following location:
+File "2229.ml", line 3, characters 65-70:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    assoc
+with
+    assoc; [[...]]
+The actual replacement has type
+    'c -> ('d * 'c) list -> ('d * 'c) list -> 'c
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if [[...other program...]] then lv else
+                                     ((assoc; [[...]]) d k  ls))) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 45-51:
+And modified the following location:
+File "2229.ml", line 3, characters 65-70:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    assoc
+with
+    l
+The actual replacement has type
+    'e -> ('f * 'e) list -> ('f * 'e) list -> 'e
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if [[...other program...]] then lv else
+                                     (l d k  ls))) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 49-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    lk
+with
+    k
+The actual replacement has type
+    ('g * 'h) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if k = k then lv else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 49-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    lk
+with
+    lk; [[...]]
+The actual replacement has type
+    ('i * 'j) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if k = (lk; [[...]]) then lv else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 49-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    lk
+with
+    ls
+The actual replacement has type
+    ('k * 'l) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if k = ls then lv else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 49-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    lk
+with
+    l
+The actual replacement has type
+    ('m * 'n) list
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if k = l then lv else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 45-51:
+And modified the following location:
+File "2229.ml", line 3, characters 71-74:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (assoc d k  ls)
+with
+    (assoc (d, k, ls))
+The actual replacement has type
+    'o
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if [[...other program...]] then lv else
+                                     (assoc (d, k, ls)))) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 47-48:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    =
+with
+    l
+The actual replacement has type
+    ('p * 'q) list -> 'p -> bool
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if (k l lk) then lv else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 47-48:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    =
+with
+    =; [[...]]
+The actual replacement has type
+    ('r * 's) list -> 'r -> bool
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if (k =; [[...]] lk) then lv else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k
+with
+    k; [[...]]
+The actual replacement has type
+    't
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if (k; [[...]]) = lk then lv else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k
+with
+    l
+The actual replacement has type
+    'u
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if l = lk then lv else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k
+with
+    =
+The actual replacement has type
+    'v -> 'v -> bool
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if = = lk then lv else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k
+with
+    lk
+The actual replacement has type
+    'w
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if lk = lk then lv else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k
+with
+    d
+The actual replacement has type
+    'x
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if d = lk then lv else
+                                     [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2229.ml", line 3, characters 65-77:
+And modified the following location:
+File "2229.ml", line 3, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k
+with
+    lv
+The actual replacement has type
+    'y
+within context
+    let rec assoc (d, k, l) = (match k with 
+                               | [] -> d
+                               | (lk, lv) :: ls ->
+                                 (if lv = lk then lv else
+                                     [[...other program...]])) ;; 
+==============================

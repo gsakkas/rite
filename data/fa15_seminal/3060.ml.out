@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3060.ml", line 3, characters 20-21:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "3060.ml", line 3, characters 15-18:
+Try replacing
+    [a]
+with
+    [a]; [[...]]
+of type
+    int
+within context
+    fun l2 ->
+      (let f a x = [[a]; [[...]] ; 0] in
+          let base = [] in let args = l2 in (List.fold_left f base  args))
+==============================

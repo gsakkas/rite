@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "2068.ml", line 27, characters 10-14:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: eval
+------------------------------------------------------------------
+File "2068.ml", line 27, characters 10-14:
+Try replacing
+    eval
+with
+    eval; [[...]]
+of type
+    expr * float * float -> expr -> int
+within context
+    fun (e, x, y) -> (match e with 
+                      | Thresh (a, b, c, d) ->
+                        (if (eval (a, x, y)) < (eval (b, x, y)) then
+                            (eval (c, x, y))
+                            else
+                            (eval (d, x, y)))
+                      | Times (a, b) -> ((eval (a, x, y)) *. (eval (b, x, y)))
+                      | Average (a, b) ->
+                        (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                      | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                      | Sine a -> (sin (pi *. (eval (a, x, y))))
+                      | VarY -> y
+                      | VarX -> x
+                      | Abs a ->
+                        (if ((eval; [[...]]) (a, x, y) a) < 0 then
+                            ((eval (a, x, y)) *. -1.0)
+                            else
+                            (eval (a, x, y))))
+==============================
+Triaged the following locations:
+File "2068.ml", line 17, characters 6-96:
+File "2068.ml", line 20, characters 19-55:
+File "2068.ml", line 21, characters 21-66:
+File "2068.ml", line 22, characters 16-44:
+File "2068.ml", line 23, characters 14-42:
+And modified the following location:
+File "2068.ml", line 28, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    (expr -> int) -> float -> expr -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Sine a -> [[...other program...]]
+                              | VarY -> y
+                              | VarX -> x
+                              | Abs a ->
+                                (if (eval (a, x, y) a) < 0 then
+                                    ((eval (a, x, y)) *.; [[...]] -1.0)
+                                    else
+                                    (eval (a, x, y)))) ;; 
+==============================

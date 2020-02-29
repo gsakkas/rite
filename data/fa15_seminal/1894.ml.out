@@ -1,0 +1,394 @@
+------------------------------------------------------------------
+File "1894.ml", line 26, characters 19-35:
+This expression has type float but is here used with type int
+Relevant code: (eval (a, x, y))
+------------------------------------------------------------------
+File "1894.ml", line 26, characters 36-37:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Power (a, b) ->
+                                ((eval (a, x, y)) +; [[...]] (eval (b, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 20-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * int * int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (a, x, y)) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 26-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    b
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (b, x, y)) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 26-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (a, x, y)) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 26-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    e
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (e, x, y)) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 26-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a, x, y
+with
+    a, x, y
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (a, x, y)) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 29-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (a, y, y)) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 29-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (a, x, y)) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 32-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (a, x, x)) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 29-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a, x, y
+with
+    a, y, x
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (a, y, x)) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 32-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (a, x, y)) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 20-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (a, x, y))
+with
+    (eval ((a, x, y)))
+The actual replacement has type
+    int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval ((a, x, y))) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 39-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * int * int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (a, x, y)) + (eval (b, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    b
+with
+    a
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (a, x, y)) + (eval (a, x, y))) ;; 
+==============================
+Triaged the following locations:
+File "1894.ml", line 18, characters 14-42:
+File "1894.ml", line 19, characters 16-44:
+File "1894.ml", line 20, characters 23-70:
+File "1894.ml", line 21, characters 21-59:
+File "1894.ml", line 23, characters 6-96:
+And modified the following location:
+File "1894.ml", line 26, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    b
+with
+    b
+The actual replacement has type
+    expr * int * int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | Power (a, b) ->
+                                (eval (a, x, y)) + (eval (b, x, y))) ;; 
+==============================

@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1692.ml", line 24, characters 43-46:
+This expression is not a function, it cannot be applied
+Relevant code: "^"
+------------------------------------------------------------------
+File "1692.ml", line 24, characters 43-46:
+Try replacing
+    "^"
+with
+    "^"; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    (exprToString w) ^
+      ("?" ^ ((exprToString x) ^ ((exprToString "^"; [[...]] y) ^ ")")))
+==============================

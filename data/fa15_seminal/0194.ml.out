@@ -1,0 +1,257 @@
+------------------------------------------------------------------
+File "0194.ml", line 23, characters 4-8:
+This pattern matches values of type expr
+but is here used to match values of type 'a * 'b * 'c
+Relevant code: VarX
+------------------------------------------------------------------
+Triaged the following locations:
+File "0194.ml", line 23, characters 4-8:
+File "0194.ml", line 23, characters 13-14:
+File "0194.ml", line 24, characters 4-8:
+File "0194.ml", line 24, characters 13-14:
+File "0194.ml", line 25, characters 4-11:
+File "0194.ml", line 25, characters 15-34:
+File "0194.ml", line 26, characters 4-13:
+File "0194.ml", line 26, characters 17-38:
+File "0194.ml", line 27, characters 4-19:
+File "0194.ml", line 27, characters 23-58:
+File "0194.ml", line 28, characters 21-54:
+File "0194.ml", line 29, characters 4-24:
+File "0194.ml", line 29, characters 28-56:
+And modified the following location:
+File "0194.ml", line 28, characters 4-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    Times (e1, e2)
+with
+    _
+The actual replacement has type
+    'd * 'e * 'f
+within context
+    let rec eval (e, x, y) = (match e, x, y with 
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              | _ -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0194.ml", line 23, characters 13-14:
+File "0194.ml", line 24, characters 4-8:
+File "0194.ml", line 24, characters 13-14:
+File "0194.ml", line 25, characters 4-11:
+File "0194.ml", line 25, characters 15-34:
+File "0194.ml", line 26, characters 4-13:
+File "0194.ml", line 26, characters 17-38:
+File "0194.ml", line 27, characters 4-19:
+File "0194.ml", line 27, characters 23-58:
+File "0194.ml", line 28, characters 4-17:
+File "0194.ml", line 28, characters 21-54:
+File "0194.ml", line 29, characters 4-24:
+File "0194.ml", line 29, characters 28-56:
+And modified the following location:
+File "0194.ml", line 23, characters 4-8:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    VarX
+with
+    _
+The actual replacement has type
+    'g * 'h * 'i
+within context
+    let rec eval (e, x, y) = (match e, x, y with 
+                              | _ -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0194.ml", line 23, characters 4-8:
+File "0194.ml", line 23, characters 13-14:
+File "0194.ml", line 24, characters 4-8:
+File "0194.ml", line 24, characters 13-14:
+File "0194.ml", line 25, characters 15-34:
+File "0194.ml", line 26, characters 4-13:
+File "0194.ml", line 26, characters 17-38:
+File "0194.ml", line 27, characters 4-19:
+File "0194.ml", line 27, characters 23-58:
+File "0194.ml", line 28, characters 4-17:
+File "0194.ml", line 28, characters 21-54:
+File "0194.ml", line 29, characters 4-24:
+File "0194.ml", line 29, characters 28-56:
+And modified the following location:
+File "0194.ml", line 25, characters 4-11:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    Sine e1
+with
+    _
+The actual replacement has type
+    'j * 'k * 'l
+within context
+    let rec eval (e, x, y) = (match e, x, y with 
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              | _ -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0194.ml", line 23, characters 4-8:
+File "0194.ml", line 23, characters 13-14:
+File "0194.ml", line 24, characters 13-14:
+File "0194.ml", line 25, characters 4-11:
+File "0194.ml", line 25, characters 15-34:
+File "0194.ml", line 26, characters 4-13:
+File "0194.ml", line 26, characters 17-38:
+File "0194.ml", line 27, characters 4-19:
+File "0194.ml", line 27, characters 23-58:
+File "0194.ml", line 28, characters 4-17:
+File "0194.ml", line 28, characters 21-54:
+File "0194.ml", line 29, characters 4-24:
+File "0194.ml", line 29, characters 28-56:
+And modified the following location:
+File "0194.ml", line 24, characters 4-8:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    VarY
+with
+    _
+The actual replacement has type
+    'm * 'n * 'o
+within context
+    let rec eval (e, x, y) = (match e, x, y with 
+                              |[[...other pattern...]]->[[...other program...]]
+                              | _ -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0194.ml", line 23, characters 4-8:
+File "0194.ml", line 23, characters 13-14:
+File "0194.ml", line 24, characters 4-8:
+File "0194.ml", line 24, characters 13-14:
+File "0194.ml", line 25, characters 4-11:
+File "0194.ml", line 25, characters 15-34:
+File "0194.ml", line 26, characters 4-13:
+File "0194.ml", line 26, characters 17-38:
+File "0194.ml", line 27, characters 23-58:
+File "0194.ml", line 28, characters 4-17:
+File "0194.ml", line 28, characters 21-54:
+File "0194.ml", line 29, characters 4-24:
+File "0194.ml", line 29, characters 28-56:
+And modified the following location:
+File "0194.ml", line 27, characters 4-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    Average (e1, e2)
+with
+    _
+The actual replacement has type
+    'p * 'q * 'r
+within context
+    let rec eval (e, x, y) = (match e, x, y with 
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              | _ -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0194.ml", line 23, characters 4-8:
+File "0194.ml", line 23, characters 13-14:
+File "0194.ml", line 24, characters 4-8:
+File "0194.ml", line 24, characters 13-14:
+File "0194.ml", line 25, characters 4-11:
+File "0194.ml", line 25, characters 15-34:
+File "0194.ml", line 26, characters 17-38:
+File "0194.ml", line 27, characters 4-19:
+File "0194.ml", line 27, characters 23-58:
+File "0194.ml", line 28, characters 4-17:
+File "0194.ml", line 28, characters 21-54:
+File "0194.ml", line 29, characters 4-24:
+File "0194.ml", line 29, characters 28-56:
+And modified the following location:
+File "0194.ml", line 26, characters 4-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    Cosine e1
+with
+    _
+The actual replacement has type
+    's * 't * 'u
+within context
+    let rec eval (e, x, y) = (match e, x, y with 
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              | _ -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0194.ml", line 23, characters 4-8:
+File "0194.ml", line 23, characters 13-14:
+File "0194.ml", line 24, characters 4-8:
+File "0194.ml", line 24, characters 13-14:
+File "0194.ml", line 25, characters 4-11:
+File "0194.ml", line 25, characters 15-34:
+File "0194.ml", line 26, characters 4-13:
+File "0194.ml", line 26, characters 17-38:
+File "0194.ml", line 27, characters 4-19:
+File "0194.ml", line 27, characters 23-58:
+File "0194.ml", line 28, characters 4-17:
+File "0194.ml", line 28, characters 21-54:
+File "0194.ml", line 29, characters 28-56:
+And modified the following location:
+File "0194.ml", line 29, characters 4-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    Thresh (e1, e2, e3, e4)
+with
+    _
+The actual replacement has type
+    'v * 'w * 'x
+within context
+    let rec eval (e, x, y) = (match e, x, y with 
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              | _ -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0194.ml", line 23, characters 13-14:
+File "0194.ml", line 24, characters 13-14:
+File "0194.ml", line 25, characters 15-34:
+File "0194.ml", line 26, characters 17-38:
+File "0194.ml", line 27, characters 23-58:
+File "0194.ml", line 28, characters 21-54:
+File "0194.ml", line 29, characters 28-56:
+And modified the following location:
+File "0194.ml", line 22, characters 8-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e, x, y
+with
+    e, x, y; [[...]]
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match (e, x, y; [[...]]) with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================

@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0745.ml", line 7, characters 28-40:
+This expression has type ('a * bool) * int but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((h b f), b)
+------------------------------------------------------------------
+File "0745.ml", line 7, characters 21-27:
+Try replacing
+    wwhile
+with
+    <
+of type
+    ('c * bool) * int -> ('c * bool) * int -> bool
+within context
+    let fixpoint (f, b) = (< ((h b f), b)) ;; 
+==============================

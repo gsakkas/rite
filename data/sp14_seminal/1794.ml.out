@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1794.ml", line 6, characters 31-34:
+This expression is not a function, it cannot be applied
+Relevant code: ";"
+------------------------------------------------------------------
+File "1794.ml", line 6, characters 35-36:
+Try replacing
+    (( ";" ) b)
+with
+    ";"
+of type
+    string
+within context
+    fun a b -> "[" ^ (a ^ (";" ^ "]"))
+==============================

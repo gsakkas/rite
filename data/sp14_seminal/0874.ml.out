@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0874.ml", line 46, characters 30-31:
+This expression has type int * 'a but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+File "0874.ml", line 46, characters 30-31:
+Try replacing
+    a
+with
+    la
+of type
+    int list
+within context
+    let (v, l) = x in
+      let (ac, la) = a in
+      let mul = (mulByDigit v l) in
+      let shift = (mulByDigit ac la) in ac * 10, (bigAdd mul shift)
+==============================

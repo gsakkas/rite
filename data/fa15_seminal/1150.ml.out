@@ -1,0 +1,128 @@
+------------------------------------------------------------------
+File "1150.ml", line 55, characters 38-42:
+This expression has type int list but is here used with type int list list
+Relevant code: args
+------------------------------------------------------------------
+File "1150.ml", line 55, characters 31-32:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'a list -> int -> int * 'a list
+within context
+    let f a x = (match a with 
+                 | (r, v) ->
+                   (let sum = (intListToInt (mulByDigit (intListToInt l1) x)) in
+                         (if sum + r > 9 then
+                             (intListToInt
+                                 (carryFunc (mulByDigit (intListToInt l1) x)))
+                               ,
+                               (mod (sum + r) 10) :: v
+                             else
+                             0,
+                               (mod (sum + r) 10) ::
+                                   v))) in let base = 0, [] in
+      let args = [0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0] @ l2 in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "1150.ml", line 55, characters 38-42:
+Try replacing
+    args
+with
+    args; [[...]]
+of type
+    int list list
+within context
+    let f a x = (match a with 
+                 | (r, v) ->
+                   (let sum = (intListToInt (mulByDigit (intListToInt l1) x)) in
+                         (if sum + r > 9 then
+                             (intListToInt
+                                 (carryFunc (mulByDigit (intListToInt l1) x)))
+                               ,
+                               (mod (sum + r) 10) :: v
+                             else
+                             0,
+                               (mod (sum + r) 10) ::
+                                   v))) in let base = 0, [] in
+      let args = [0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0] @ l2 in
+      let (_, res) = (List.fold_left f base  (args; [[...]])) in res
+==============================
+File "1150.ml", line 55, characters 16-30:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> int list -> int * int list) ->
+    int * 'b list -> int list -> 'c * 'd
+within context
+    let f a x = (match a with 
+                 | (r, v) ->
+                   (let sum = (intListToInt (mulByDigit (intListToInt l1) x)) in
+                         (if sum + r > 9 then
+                             (intListToInt
+                                 (carryFunc (mulByDigit (intListToInt l1) x)))
+                               ,
+                               (mod (sum + r) 10) :: v
+                             else
+                             0,
+                               (mod (sum + r) 10) ::
+                                   v))) in let base = 0, [] in
+      let args = [0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0] @ l2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "1150.ml", line 54, characters 13-39:
+Try replacing
+    [0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0] @ l2
+with
+    [0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0] @ l2; [[...]]
+of type
+    'e
+within context
+    fun l1 l2 -> (let f a x = (match a with 
+                               | (r, v) ->
+                                 (let sum =
+                                       (intListToInt
+                                         (mulByDigit (intListToInt l1) x))
+                                       in
+                                       (if sum + r > 9 then
+                                           (intListToInt
+                                               (carryFunc
+                                                 (mulByDigit (intListToInt l1) x)))
+                                             ,
+                                             (mod (sum + r) 10) :: v
+                                           else
+                                           0,
+                                             (mod (sum + r) 10) ::
+                                                 v))) in let base = 0, [] in
+            let args = [0 ; 0 ; 0 ; 0 ; 0 ; 0 ; 0] @ l2; [[...]] in
+            let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "1150.ml", line 44, characters 8-305:
+Try replacing
+    fun a x -> (match a with 
+                | (r, v) ->
+                  (let sum = (intListToInt (mulByDigit (intListToInt l1) x)) in
+                        (if sum + r > 9 then
+                            (intListToInt
+                                (carryFunc (mulByDigit (intListToInt l1) x)))
+                              ,
+                              (mod (sum + r) 10) :: v
+                            else
+                            0, (mod (sum + r) 10) :: v)))
+with
+    fun a x -> (match a with 
+                | (r, v) ->
+                  (let sum = (intListToInt (mulByDigit (intListToInt l1) x)) in
+                        (if sum + r > 9 then
+                            (intListToInt
+                                (carryFunc (mulByDigit (intListToInt l1) x)))
+                              ,
+                              (mod (sum + r) 10) :: v
+                            else
+                            0, (mod (sum + r) 10) :: v))); [[...]]
+of type
+    'f
+==============================

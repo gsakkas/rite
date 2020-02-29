@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2850.ml", line 25, characters 8-91:
+This expression has type expr * (expr * expr) but is here used with type unit
+Relevant code: ((buildTangent (build (rand, (depth - 1)))),
+          (build (rand, (depth - 1))))
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "2850.ml", line 25, characters 8-91:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildTangent (build (rand, depth - 1))), (build (rand, depth - 1))
+with
+    [[...]]
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 ->
+                                     (if (rand (0, 1)) = 1 then (buildX ()) else
+                                         (buildY ()))
+                                   | _ ->
+                                     (if (rand (0, 1)) = 1 then [[...]] else
+                                         [[...]])) ;; 
+==============================

@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1407.ml", line 2, characters 32-68:
+This expression has type bool but is here used with type int
+Relevant code: n = (additivePersistence (n mod 10))
+------------------------------------------------------------------
+File "1407.ml", line 2, characters 34-35:
+Try replacing
+    =
+with
+    mod
+of type
+    int -> int -> int
+within context
+    let rec additivePersistence n = n mod (additivePersistence (mod n 10)) ;; 
+==============================

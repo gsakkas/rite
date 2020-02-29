@@ -1,0 +1,34 @@
+------------------------------------------------------------------
+File "3039.ml", line 7, characters 39-40:
+This expression has type 'a -> string but is here used with type
+  'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "3039.ml", line 7, characters 39-40:
+Try replacing
+    f
+with
+    ^
+of type
+    string -> string -> string
+within context
+    fun l -> (match l with 
+              | [] -> "[]"
+              | x :: xs ->
+                (let g a x = a ^ ("; " ^ (f x)) in
+                      let base = (f x) in (List.fold_left ^ base  xs)))
+==============================
+File "3039.ml", line 7, characters 39-40:
+Try replacing
+    f
+with
+    g
+of type
+    string -> 'c -> string
+within context
+    fun l -> (match l with 
+              | [] -> "[]"
+              | x :: xs ->
+                (let g a x = a ^ ("; " ^ (f x)) in
+                      let base = (f x) in (List.fold_left g base  xs)))
+==============================

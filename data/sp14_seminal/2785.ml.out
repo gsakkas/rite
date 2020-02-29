@@ -1,0 +1,421 @@
+------------------------------------------------------------------
+File "2785.ml", line 25, characters 9-27:
+This expression has type string but is here used with type float
+Relevant code: "ya dun f*cked up"
+------------------------------------------------------------------
+File "2785.ml", line 25, characters 9-27:
+Try replacing
+    "ya dun f*cked up"
+with
+    "ya dun f*cked up"; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> (sin (pi *. (eval (e0, x, y))))
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Average (e2, e3) ->
+                                (((eval (e2, x, y)) +. (eval (e3, x, y))) /. 2.0)
+                              | Times (e4, e5) ->
+                                ((eval (e4, x, y)) *. (eval (e5, x, y)))
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, x, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> ("ya dun f*cked up"; [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 10-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * string * string -> string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, x, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 16-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e6
+with
+    e6
+The actual replacement has type
+    expr * string * string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, x, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 16-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e6
+with
+    e7
+The actual replacement has type
+    expr * string * string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e7, x, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 16-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e6
+with
+    e
+The actual replacement has type
+    expr * string * string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e, x, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * string * string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, x, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    expr * string * string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, y, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 16-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e6, x, y
+with
+    e6, x, y
+The actual replacement has type
+    expr * string * string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, x, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 20-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e6, x, y
+with
+    e6, y, x
+The actual replacement has type
+    expr * string * string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, y, x)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * string * string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, x, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * string * string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, x, x)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 10-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (e6, x, y))
+with
+    (eval ((e6, x, y)))
+The actual replacement has type
+    string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval ((e6, x, y))) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 27-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    <
+with
+    <
+The actual replacement has type
+    string -> string -> bool
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, x, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 30-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * string * string -> string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, x, y)) < (eval (e7, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================
+Triaged the following locations:
+File "2785.ml", line 17, characters 15-44:
+File "2785.ml", line 18, characters 17-46:
+File "2785.ml", line 19, characters 23-70:
+File "2785.ml", line 20, characters 21-59:
+And modified the following location:
+File "2785.ml", line 22, characters 36-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e7
+with
+    e6
+The actual replacement has type
+    expr * string * string
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e0 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e2, e3) -> [[...other program...]]
+                              | Times (e4, e5) -> [[...other program...]]
+                              | Thresh (e6, e7, e8, e9) ->
+                                (if (eval (e6, x, y)) < (eval (e6, x, y)) then
+                                    (eval (e8, x, y))
+                                    else
+                                    (eval (e9, x, y)))
+                              | _ -> "ya dun f*cked up") ;; 
+==============================

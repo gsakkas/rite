@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "0756.ml", line 20, characters 35-38:
+This expression is not a function, it cannot be applied
+Relevant code: "*"
+------------------------------------------------------------------
+File "0756.ml", line 20, characters 39-56:
+Try replacing
+    (( "*" ) (exprToString t2))
+with
+    "*"
+of type
+    string
+within context
+    fun e -> (match e with 
+              | VarX -> "x"
+              | VarY -> "y"
+              | Sine sin -> "(sin(pi*" ^ ((exprToString sin) ^ ")")
+              | Cosine cos -> "(cos(pi*" ^ ((exprToString cos) ^ ")")
+              | Average (n1, n2) ->
+                "( " ^ ((exprToString n1) ^ ("+" ^ ((exprToString n2) ^ ")/2")))
+              | Times (t1, t2) -> "(" ^ ((exprToString t1) ^ ("*" ^ ")"))
+              | Thresh (th1, th2, th3, th4) -> "bullshit")
+==============================

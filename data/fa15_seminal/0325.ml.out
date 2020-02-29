@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "0325.ml", line 38, characters 31-36:
+This expression has type 'a list list but is here used with type int list
+Relevant code: base'
+------------------------------------------------------------------
+File "0325.ml", line 38, characters 28-30:
+Try replacing
+    f'
+with
+    f'; [[...]]
+of type
+    'b list list -> 'c -> 'b list list
+within context
+    let base = 0, [] in
+      let f' aa xx = (List.append aa (mulByDigit xx l1)) in
+      let base' = [[]] in
+      let args = (List.fold_left (f'; [[...]]) base'  l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "0325.ml", line 38, characters 13-27:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int -> int list) -> 'd list list -> 'e -> 'f
+within context
+    let base = 0, [] in
+      let f' aa xx = (List.append aa (mulByDigit xx l1)) in
+      let base' = [[]] in
+      let args = ((List.fold_left; [[...]]) f' base'  l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "0325.ml", line 36, characters 9-50:
+Try replacing
+    fun aa xx -> (List.append aa (mulByDigit xx l1))
+with
+    fun aa xx -> (List.append aa (mulByDigit xx l1)); [[...]]
+of type
+    'g
+within context
+    fun l1
+      l2 ->
+        (let f a x =
+            let (bit, l) = a in
+              let movedList = (List.append l [0]) in bit + 1, (bigAdd movedList x)
+            in
+            let base = 0, [] in
+            let f' = fun aa xx -> (List.append aa (mulByDigit xx l1)); [[...]] in
+            let base' = [[]] in
+            let args = (List.fold_left f' base'  l2) in
+            let (_, res) = (List.fold_left f base  args) in res)
+==============================

@@ -1,0 +1,114 @@
+------------------------------------------------------------------
+File "0454.ml", line 19, characters 4-21:
+The constructor Thresh expects 4 argument(s),
+but is here applied to 3 argument(s)
+Relevant code: Thresh (e1,e2,e3)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0454.ml", line 13, characters 13-17:
+File "0454.ml", line 14, characters 13-17:
+File "0454.ml", line 15, characters 15-30:
+File "0454.ml", line 16, characters 17-32:
+File "0454.ml", line 17, characters 23-60:
+File "0454.ml", line 18, characters 21-58:
+File "0454.ml", line 20, characters 6-65:
+And modified the following location:
+File "0454.ml", line 19, characters 11-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1, e2, e3
+with
+    _, e1, e2, e3
+The actual replacement has type
+    expr -> 'f
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (_, e1, e2, e3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0454.ml", line 13, characters 13-17:
+File "0454.ml", line 14, characters 13-17:
+File "0454.ml", line 15, characters 15-30:
+File "0454.ml", line 16, characters 17-32:
+File "0454.ml", line 17, characters 23-60:
+File "0454.ml", line 18, characters 21-58:
+File "0454.ml", line 20, characters 6-65:
+And modified the following location:
+File "0454.ml", line 19, characters 11-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1, e2, e3
+with
+    e1, _, e2, e3
+The actual replacement has type
+    expr -> 'e
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, _, e2, e3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0454.ml", line 13, characters 13-17:
+File "0454.ml", line 14, characters 13-17:
+File "0454.ml", line 15, characters 15-30:
+File "0454.ml", line 16, characters 17-32:
+File "0454.ml", line 17, characters 23-60:
+File "0454.ml", line 18, characters 21-58:
+File "0454.ml", line 20, characters 6-65:
+And modified the following location:
+File "0454.ml", line 19, characters 11-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1, e2, e3
+with
+    e1, e2, _, e3
+The actual replacement has type
+    expr -> 'd
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, _, e3) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0454.ml", line 13, characters 13-17:
+File "0454.ml", line 14, characters 13-17:
+File "0454.ml", line 15, characters 15-30:
+File "0454.ml", line 16, characters 17-32:
+File "0454.ml", line 17, characters 23-60:
+File "0454.ml", line 18, characters 21-58:
+File "0454.ml", line 20, characters 6-65:
+And modified the following location:
+File "0454.ml", line 19, characters 11-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1, e2, e3
+with
+    e1, e2, e3, _
+The actual replacement has type
+    expr -> 'c
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, _) ->
+                                [[...other program...]]) ;; 
+==============================

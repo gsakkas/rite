@@ -1,0 +1,70 @@
+------------------------------------------------------------------
+File "1894.ml", line 9, characters 19-26:
+This expression has type 'a list * 'a but is here used with type
+  'a list * 'a list
+Relevant code: ([], l)
+------------------------------------------------------------------
+File "1894.ml", line 7, characters 32-33:
+Try replacing
+    l
+with
+    h
+of type
+    'b
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem h seen) then seen else h :: seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "1894.ml", line 7, characters 54-55:
+Try replacing
+    h
+with
+    l
+of type
+    'c list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem l seen) then seen else l :: seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "1894.ml", line 7, characters 54-55:
+Try replacing
+    h
+with
+    rest
+of type
+    'd list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem l seen) then seen else rest :: seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "1894.ml", line 7, characters 54-55:
+Try replacing
+    h
+with
+    t
+of type
+    'e list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem l seen) then seen else t :: seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================

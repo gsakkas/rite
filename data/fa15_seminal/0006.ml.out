@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0006.ml", line 2, characters 43-44:
+This expression has type int but is here used with type 'a list
+Relevant code: x
+------------------------------------------------------------------
+File "0006.ml", line 2, characters 23-24:
+Try replacing
+    x
+with
+    n
+of type
+    int
+within context
+    let rec clone x n = (if (n <= 0) then [] else x @ (clone x (n - 1))) ;; 
+==============================

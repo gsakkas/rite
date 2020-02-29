@@ -1,0 +1,115 @@
+------------------------------------------------------------------
+File "2936.ml", line 26, characters 33-34:
+This expression has type int * 'a list -> int * int -> int * int
+but is here used with type int * 'a list -> int * int -> int * 'a list
+Relevant code: f
+------------------------------------------------------------------
+File "2936.ml", line 26, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> 'c * 'd -> int * 'b list
+within context
+    let f a x = let carry = (match a with 
+                             | (f, g :: []) -> f) in let digit = (match x with 
+                                                                  | (f, g) ->
+                                                                    (if
+                                                                        (f + g)
+                                                                            + carry
+                                                                          > 9
+                                                                        then
+                                                                        1,
+                                                                          (f + g) +
+                                                                            (mod
+                                                                              carry 10)
+                                                                        else
+                                                                        0,
+                                                                          (f + g) +
+                                                                            (mod
+                                                                              carry
+                                                                              10))) in digit in let
+      base
+      =
+      0, []
+      in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2936.ml", line 26, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * 'e list -> int * int -> int * int) ->
+    int * 'f list -> ('g * 'h) list -> 'i * 'j
+within context
+    let f a x = let carry = (match a with 
+                             | (f, g :: []) -> f) in let digit = (match x with 
+                                                                  | (f, g) ->
+                                                                    (if
+                                                                        (f + g)
+                                                                            + carry
+                                                                          > 9
+                                                                        then
+                                                                        1,
+                                                                          (f + g) +
+                                                                            (mod
+                                                                              carry 10)
+                                                                        else
+                                                                        0,
+                                                                          (f + g) +
+                                                                            (mod
+                                                                              carry
+                                                                              10))) in digit in let
+      base
+      =
+      0, []
+      in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2936.ml", line 15, characters 10-274:
+Try replacing
+    fun a x -> (let carry = (match a with 
+                             | (f, g :: []) -> f) in let digit = (match x with 
+                                                                  | (f, g) ->
+                                                                    (if
+                                                                        (f + g)
+                                                                            + carry
+                                                                          > 9
+                                                                        then
+                                                                        1,
+                                                                          (f + g) +
+                                                                            (mod
+                                                                              carry 10)
+                                                                        else
+                                                                        0,
+                                                                          (f + g) +
+                                                                            (mod
+                                                                              carry
+                                                                              10))) in digit)
+with
+    fun a x -> (let carry = (match a with 
+                             | (f, g :: []) -> f) in let digit = (match x with 
+                                                                  | (f, g) ->
+                                                                    (if
+                                                                        (f + g)
+                                                                            + carry
+                                                                          > 9
+                                                                        then
+                                                                        1,
+                                                                          (f + g) +
+                                                                            (mod
+                                                                              carry 10)
+                                                                        else
+                                                                        0,
+                                                                          (f + g) +
+                                                                            (mod
+                                                                              carry
+                                                                              10))) in digit); [[...]]
+of type
+    'k
+==============================

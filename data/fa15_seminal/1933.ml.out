@@ -1,0 +1,58 @@
+------------------------------------------------------------------
+File "1933.ml", line 20, characters 18-33:
+This expression has type int list but is here used with type 'a * 'b
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "1933.ml", line 20, characters 14-17:
+Try replacing
+    (removeZero (add (padZero l1 l2)))
+with
+    (add (removeZero (padZero l1 l2)))
+of type
+    'c
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = (failwith "to be implemented") in
+        let args = (failwith "to be implemented") in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (add (removeZero (padZero l1 l2)))
+    ;; 
+==============================
+File "1933.ml", line 15, characters 10-17:
+Try replacing
+    fun (l1, l2) ->
+      (let f a x = (failwith "to be implemented") in
+          let base = (failwith "to be implemented") in
+          let args = (failwith "to be implemented") in
+          let (_, res) = (List.fold_left f base  args) in res)
+with
+    fun l1
+      l2 ->
+        (let f a x = (failwith "to be implemented") in
+            let base = (failwith "to be implemented") in
+            let args = (failwith "to be implemented") in
+            let (_, res) = (List.fold_left f base  args) in res)
+of type
+    'd -> 'e -> 'f
+==============================
+File "1933.ml", line 20, characters 19-26:
+Try replacing
+    (add (padZero l1 l2))
+with
+    (padZero (add l1 l2))
+of type
+    'g list -> int list
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = (failwith "to be implemented") in
+        let args = (failwith "to be implemented") in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (padZero (add l1 l2)))
+    ;; 
+==============================

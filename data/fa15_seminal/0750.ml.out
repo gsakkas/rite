@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "0750.ml", line 3, characters 27-33:
+This pattern matches values of type 'a list
+but is here used to match values of type int
+Relevant code: x::xs'
+------------------------------------------------------------------
+Triaged the following locations:
+File "0750.ml", line 3, characters 22-24:
+File "0750.ml", line 3, characters 37-72:
+And modified the following location:
+File "0750.ml", line 3, characters 17-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    _
+The actual replacement has type
+    'b list -> 'c
+within context
+    let rec digitsOfInt n = (match n with 
+                             | _ -> [[...other program...]]
+                             | x :: xs' -> [[...other program...]]) ;; 
+==============================
+File "0750.ml", line 3, characters 27-72:
+Try replacing
+    (match n with 
+     | 0 -> []
+     | x :: xs' -> (digitsOfInt n) / 10 @ [(mod n 10)])
+with
+    (match n with 
+     | 0 -> []
+     | _ -> [[...]])
+of type
+    'd list
+==============================
+Triaged the following locations:
+File "0750.ml", line 3, characters 22-24:
+File "0750.ml", line 3, characters 37-72:
+And modified the following location:
+File "0750.ml", line 3, characters 27-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x :: xs'
+with
+    _
+The actual replacement has type
+    int -> 'e
+within context
+    let rec digitsOfInt n = (match n with 
+                             | 0 -> [[...other program...]]
+                             | _ -> [[...other program...]]) ;; 
+==============================

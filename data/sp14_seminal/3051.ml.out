@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3051.ml", line 17, characters 30-73:
+This expression has type unit -> expr but is here used with type unit
+Relevant code: match base with | 0 -> buildX | 1 -> buildY
+------------------------------------------------------------------
+File "3051.ml", line 17, characters 7-73:
+Try replacing
+    let base = (rand 0 2) in (match base with 
+                              | 0 -> buildX
+                              | 1 -> buildY)
+with
+    let base = (rand 0 2) in (match base with 
+                              | 0 -> buildX
+                              | 1 -> buildY); [[...]]
+of type
+    unit
+==============================

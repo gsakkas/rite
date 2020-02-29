@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1264.ml", line 12, characters 43-50:
+This expression has type int list -> int but is here used with type int
+Relevant code: sumList
+------------------------------------------------------------------
+File "1264.ml", line 8, characters 28-141:
+Try replacing
+    fun n -> (let x = (digitsOfInt n) in (match x with 
+                                          | head -> 0
+                                          | head :: tail ->
+                                            1 + (additivePersistence sumList n)))
+with
+    fun _ n -> (let x = (digitsOfInt n) in (match x with 
+                                            | head -> 0
+                                            | head :: tail ->
+                                              1 + (additivePersistence sumList n)))
+of type
+    (int list -> int) -> int -> int
+==============================

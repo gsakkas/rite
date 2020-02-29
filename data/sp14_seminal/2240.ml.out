@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "2240.ml", line 23, characters 9-18:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: mod_float
+------------------------------------------------------------------
+File "2240.ml", line 23, characters 9-18:
+Try replacing
+    mod_float
+with
+    mod_float; [[...]]
+of type
+    float ->
+    (expr * float * float -> float) ->
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, y)))
+                              | TimesMod (w, t, u) ->
+                                (((eval (w, x, y)) *. (eval (t, x, y))) /.
+                                      ((mod_float; [[...]])
+                                        ((eval (w, x, y)) *. (eval (t, x, y))) eval (u, x, y)))
+                              | Times (t, u) ->
+                                ((eval (t, x, y)) *. (eval (u, x, y)))
+                              | Average (t, u) ->
+                                (((eval (t, x, y)) +. (eval (u, x, y))) /. 2.0)
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================

@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0628.ml", line 19, characters 16-17:
+This expression has type bool but is here used with type 'a list
+Relevant code: s
+------------------------------------------------------------------
+Triaged the following locations:
+File "0628.ml", line 19, characters 11-17:
+And modified the following location:
+File "0628.ml", line 18, characters 9-10:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    c :: s
+If you ignore other surrounding code, try replacing
+    s
+with
+    s; [[...]]
+The actual replacement has type
+    bool
+within context
+    fun a
+      x ->
+        (let (x', x'') = x in
+            let (c, s) = a in
+            (if (s; [[...]]) then (c :: s; [[...]]) else
+                ((c + x') + x'') / 10, (mod ((c + x') + x'') 10) :: s))
+==============================

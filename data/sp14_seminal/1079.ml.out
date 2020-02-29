@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1079.ml", line 4, characters 39-63:
+This expression has type 'a * int * 'a list but is here used with type 'a
+Relevant code: (x, (n - 1), (x :: acc))
+------------------------------------------------------------------
+File "1079.ml", line 4, characters 39-63:
+Try replacing
+    (cloneHelper (x, n - 1, x :: acc))
+with
+    (cloneHelper x (n - 1)  x :: acc)
+of type
+    'b list
+within context
+    let rec cloneHelper x n acc =
+      (if n < 0 then acc else (cloneHelper x (n - 1)  x :: acc))
+      in
+      (cloneHelper x n  [])
+==============================

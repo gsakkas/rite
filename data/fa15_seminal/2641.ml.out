@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "2641.ml", line 34, characters 26-45:
+This expression has type int list -> int list but is here used with type int
+Relevant code: (mulByDigit (x l2))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2641.ml", line 34, characters 23-24:
+And modified the following location:
+File "2641.ml", line 34, characters 25-60:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    (mulByDigit (x l2)) * 10 ** pow
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    fun a x -> (let (pow, total) = a in pow + 1, (total +; [[...]] [[...]]))
+==============================

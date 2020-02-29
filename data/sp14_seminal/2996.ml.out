@@ -1,0 +1,78 @@
+------------------------------------------------------------------
+File "2996.ml", line 26, characters 51-52:
+This expression has type int * 'a but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "2996.ml", line 27, characters 15-46:
+And modified the following location:
+File "2996.ml", line 26, characters 51-52:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun a x -> (let (arg1, arg2) = x in (match a with 
+                                         | (0, _) ->
+                                           (if arg1 + arg2 > 9 then
+                                               1, [(mod (arg1 + arg2) 10)]
+                                               else
+                                               0, [arg1 + arg2])
+                                         | (_, _) ->
+                                           (if (arg1 + arg2) + 1 > 9 then
+                                               1,
+                                                 [(mod ((arg1 + arg2) + 1) 10)]
+                                                   @ (a; [[...]])
+                                               else
+                                               [[...other program...]])))
+==============================
+Triaged the following locations:
+File "2996.ml", line 27, characters 15-46:
+And modified the following location:
+File "2996.ml", line 26, characters 49-50:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int list -> int * 'b -> int list
+within context
+    fun a x -> (let (arg1, arg2) = x in (match a with 
+                                         | (0, _) ->
+                                           (if arg1 + arg2 > 9 then
+                                               1, [(mod (arg1 + arg2) 10)]
+                                               else
+                                               0, [arg1 + arg2])
+                                         | (_, _) ->
+                                           (if (arg1 + arg2) + 1 > 9 then
+                                               1,
+                                                 ([(mod ((arg1 + arg2) + 1) 10)]
+                                                     @; [[...]] a)
+                                               else
+                                               [[...other program...]])))
+==============================
+Triaged the following locations:
+File "2996.ml", line 26, characters 15-54:
+And modified the following location:
+File "2996.ml", line 27, characters 43-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun a x -> (let (arg1, arg2) = x in (match a with 
+                                         | (0, _) ->
+                                           (if arg1 + arg2 > 9 then
+                                               1, [(mod (arg1 + arg2) 10)]
+                                               else
+                                               0, [arg1 + arg2])
+                                         | (_, _) ->
+                                           (if (arg1 + arg2) + 1 > 9 then
+                                               [[...other program...]]
+                                               else
+                                               0, (arg1 + arg2) + 1 :: a; [[...]])))
+==============================

@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "3004.ml", line 16, characters 13-15:
+This expression has type unit but is here used with type 'a * 'b
+Relevant code: ()
+------------------------------------------------------------------
+File "3004.ml", line 16, characters 9-10:
+Try replacing
+    x
+with
+    x; [[...]]
+of type
+    unit
+within context
+    fun x ->
+      (let (j, k) = x in
+          let (l, m) = a in
+          (if (x; [[...]]) = () then 0, l :: m else
+              (if (j + k) + l > 9 then 1, ((j + k) + l) - 10 :: m else
+                0, (j + k) + l :: m)))
+==============================
+File "3004.ml", line 16, characters 13-15:
+Try replacing
+    ()
+with
+    (); [[...]]
+of type
+    int * int
+within context
+    fun x ->
+      (let (j, k) = x in
+          let (l, m) = a in
+          (if x = ((); [[...]]) then 0, l :: m else
+              (if (j + k) + l > 9 then 1, ((j + k) + l) - 10 :: m else
+                0, (j + k) + l :: m)))
+==============================
+File "3004.ml", line 16, characters 11-12:
+Try replacing
+    =
+with
+    =; [[...]]
+of type
+    int * int -> unit -> bool
+within context
+    fun x ->
+      (let (j, k) = x in
+          let (l, m) = a in
+          (if (x =; [[...]] ()) then 0, l :: m else
+              (if (j + k) + l > 9 then 1, ((j + k) + l) - 10 :: m else
+                0, (j + k) + l :: m)))
+==============================

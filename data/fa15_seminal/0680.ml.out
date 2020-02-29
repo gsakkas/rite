@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "0680.ml", line 26, characters 30-35:
+This expression is not a function, it cannot be applied
+Relevant code: ")/("
+------------------------------------------------------------------
+File "0680.ml", line 26, characters 30-35:
+Try replacing
+    ")/("
+with
+    ")/("; [[...]]
+of type
+    string -> string -> string
+within context
+    let exp = exprToString in (match e with 
+                               | VarX -> "x"
+                               | VarY -> "y"
+                               | Sine a -> "sin(pi*" ^ ((exp a) ^ ")")
+                               | Cosine a -> "cos(pi*" ^ ((exp a) ^ ")")
+                               | Average (a, b) ->
+                                 "((" ^ ((exp a) ^ ("+" ^ ((exp b) ^ ")/2)")))
+                               | Times (a, b) -> (exp a) ^ ("*" ^ (exp b))
+                               | Thresh (a, b, c, d) ->
+                                 "(" ^
+                                     ((exp a) ^
+                                         ("<" ^
+                                             ((exp b) ^
+                                                 ("?" ^
+                                                     ((exp c) ^
+                                                         (":" ^
+                                                             ((exp d) ^ ")")))))))
+                               | Hoi (a, b) ->
+                                 "sin(pi*" ^
+                                     ((exp a) ^
+                                         ("cos(pi*" ^ ((exp b) ^ ")")
+                                             ")/("; [[...]] ")")))
+==============================

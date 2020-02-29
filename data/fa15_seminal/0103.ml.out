@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "0103.ml", line 4, characters 44-50:
+This expression is not a function, it cannot be applied
+Relevant code: return
+------------------------------------------------------------------
+Triaged the following locations:
+File "0103.ml", line 4, characters 66-68:
+And modified the following location:
+File "0103.ml", line 4, characters 44-50:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /.
+If you ignore other surrounding code, try replacing
+    return
+with
+    return; [[...]]
+The actual replacement has type
+    (int -> int list) -> int -> 'a
+within context
+    fun n ->
+      (let return = [] in
+          (if n < 0 then return else
+              (mod n 10) :: (((return; [[...]]) digitsOfInt n) /.; [[...]] 10)))
+==============================

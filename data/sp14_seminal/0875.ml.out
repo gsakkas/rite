@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0875.ml", line 46, characters 27-30:
+This expression has type int list but is here used with type int
+Relevant code: mul
+------------------------------------------------------------------
+File "0875.ml", line 46, characters 27-33:
+Try replacing
+    (mulByDigit mul ac)
+with
+    (mulByDigit ac mul)
+of type
+    int list
+within context
+    fun x ->
+      (let (v, l) = x in
+          let (ac, la) = a in
+          let mul = (mulByDigit v l) in
+          let shift = (mulByDigit ac mul) in ac * 10, (bigAdd shift la))
+==============================

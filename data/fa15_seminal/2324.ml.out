@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "2324.ml", line 30, characters 33-45:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+File "2324.ml", line 30, characters 33-45:
+Try replacing
+    exprToString
+with
+    exprToString; [[...]]
+of type
+    expr ->
+    string ->
+    (expr -> string) -> expr -> string
+within context
+    fun e -> (match e with 
+              | VarX -> "x"
+              | VarY -> "y"
+              | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+              | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+              | Average (x, y) ->
+                "((" ^ ((exprToString y) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+              | Times (x, y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+              | Thresh (w, x, y, z) ->
+                "(" ^
+                    ((exprToString w) ^
+                        ("<" ^
+                            ((exprToString x) ^
+                                ("?" ^
+                                    ((exprToString y) ^
+                                        (":" ^ (exprToString z)))))))
+              | Squares e -> (exprToString e) ^ ("*" ^ (exprToString e))
+              | Volume (j, k, l) ->
+                (exprToString e) ^
+                    ("*" ^ ((exprToString; [[...]]) e "*"  exprToString  e)))
+==============================

@@ -1,0 +1,48 @@
+------------------------------------------------------------------
+File "1659.ml", line 8, characters 4-88:
+This expression has type ('a * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((let whilesFun f' = let fOfB = f' b in (fOfB, (fOfB = b)) in whilesFun f),
+      b)
+------------------------------------------------------------------
+File "1659.ml", line 8, characters 20-62:
+Try replacing
+    fun f' -> (let fOfB = (f' b) in fOfB, fOfB = b)
+with
+    fun f' _ -> (let fOfB = (f' b) in fOfB, fOfB = b)
+of type
+    ('c -> 'c) -> 'd -> 'c * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile
+      ((let whilesFun f' _ = let fOfB = (f' b) in fOfB, fOfB = b in (whilesFun f)),
+          b))
+    ;; 
+==============================
+File "1659.ml", line 7, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('e * bool) * 'e -> ('e * bool) * 'e -> bool
+within context
+    let fixpoint (f, b) =
+    (=
+      ((let whilesFun f' = let fOfB = (f' b) in fOfB, fOfB = b in (whilesFun f)),
+          b))
+    ;; 
+==============================
+File "1659.ml", line 8, characters 66-75:
+Try replacing
+    whilesFun
+with
+    wwhile
+of type
+    (('f -> 'f * bool) -> ('f -> 'f * bool) * bool) * ('f -> 'f * bool) ->
+    'f -> 'f * bool
+within context
+    fun (f, b) ->
+      (wwhile
+        ((let whilesFun f' = let fOfB = (f' b) in fOfB, fOfB = b in (wwhile f)), b))
+==============================

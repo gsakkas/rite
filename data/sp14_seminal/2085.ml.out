@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "2085.ml", line 30, characters 15-16:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "2085.ml", line 30, characters 15-16:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    (int * int) list
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (d1, d2) -> (match a with 
+                                                 | (carry, result) ->
+                                                   (if (d1 + d2) + carry > 9 then
+                                                       1,
+                                                         ((d1 + d2) + carry) - 10 ::
+                                                             result
+                                                       else
+                                                       0,
+                                                         (d1 + d2) + carry ::
+                                                             result))) in let base =
+          0, []
+          in
+          let args = (0; [[...]]) @ (List.combine (List.rev l1) (List.rev l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "2085.ml", line 30, characters 17-18:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> ('b * 'c) list -> 'd
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (d1, d2) -> (match a with 
+                                                 | (carry, result) ->
+                                                   (if (d1 + d2) + carry > 9 then
+                                                       1,
+                                                         ((d1 + d2) + carry) - 10 ::
+                                                             result
+                                                       else
+                                                       0,
+                                                         (d1 + d2) + carry ::
+                                                             result))) in let base =
+          0, []
+          in
+          let args = (0 @; [[...]] (List.combine (List.rev l1) (List.rev l2))) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

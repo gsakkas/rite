@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "2488.ml", line 19, characters 30-45:
+This expression has type int -> int -> float but is here used with type float
+Relevant code: (evalhelper p1)
+------------------------------------------------------------------
+File "2488.ml", line 19, characters 30-45:
+Try replacing
+    (evalhelper p1)
+with
+    (evalhelper p1); [[...]]
+of type
+    float
+within context
+    fun x y -> (match e with 
+                | VarX -> (float x)
+                | VarY -> (float y)
+                | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                | Cosine p1 -> (cos (pi *. (evalhelper p1); [[...]])))
+==============================
+File "2488.ml", line 19, characters 27-29:
+Try replacing
+    *.
+with
+    *.; [[...]]
+of type
+    float -> (int -> int -> float) -> float
+within context
+    fun x y -> (match e with 
+                | VarX -> (float x)
+                | VarY -> (float y)
+                | Sine p1 -> (sin (pi *. (evalhelper p1 x  y)))
+                | Cosine p1 -> (cos (pi *.; [[...]] (evalhelper p1))))
+==============================

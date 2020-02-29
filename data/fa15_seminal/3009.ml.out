@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "3009.ml", line 2, characters 54-55:
+This expression has type 'a list but is here used with type 'a
+Relevant code: x
+------------------------------------------------------------------
+Triaged the following locations:
+File "3009.ml", line 2, characters 60-71:
+And modified the following location:
+File "3009.ml", line 2, characters 47-52:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    clone
+with
+    clone; [[...]]
+The actual replacement has type
+    'b list list -> 'b list
+within context
+    let rec clone x n =
+    (if n = 1 then [] @ x else ((clone; [[...]]) [x]) @ [[...other program...]])
+    ;; 
+==============================

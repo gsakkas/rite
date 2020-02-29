@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "2098.ml", line 17, characters 16-27:
+This expression has type expr but is here used with type unit
+Relevant code: (buildY ())
+------------------------------------------------------------------
+File "2098.ml", line 17, characters 9-15:
+Try replacing
+    buildX
+with
+    depth
+of type
+    expr -> expr
+within context
+    let rec build (rand, depth) = (match (rand (1, 7)) with 
+                                   | 1 -> (depth (buildY ()))
+                                   | 2 -> (buildY ())
+                                   | 3 -> (buildX ())
+                                   | 4 -> (buildY ())
+                                   | 5 -> (buildX ())
+                                   | 6 -> (buildY ())
+                                   | 7 -> (buildX ())) ;; 
+==============================
+File "2098.ml", line 17, characters 17-23:
+Try replacing
+    buildY
+with
+    depth
+of type
+    unit -> unit
+within context
+    let rec build (rand, depth) = (match (rand (1, 7)) with 
+                                   | 1 -> (buildX (depth ()))
+                                   | 2 -> (buildY ())
+                                   | 3 -> (buildX ())
+                                   | 4 -> (buildY ())
+                                   | 5 -> (buildX ())
+                                   | 6 -> (buildY ())
+                                   | 7 -> (buildX ())) ;; 
+==============================

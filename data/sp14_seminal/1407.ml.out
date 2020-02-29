@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1407.ml", line 16, characters 6-13:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sumList
+------------------------------------------------------------------
+Triaged the following locations:
+File "1407.ml", line 17, characters 7-8:
+File "1407.ml", line 18, characters 7-42:
+And modified the following location:
+File "1407.ml", line 16, characters 6-13:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    1 + (additivePersistence sumList n)
+
+    0
+If you ignore other surrounding code, try replacing
+    sumList
+with
+    sumList; [[...]]
+The actual replacement has type
+    (int -> int list) -> (int list -> int) -> int
+within context
+    let rec additivePersistence n =
+    (if ((sumList; [[...]]) digitsOfInt n) < 9 then (0; [[...]]) else
+      (1 + (additivePersistence sumList n); [[...]]))
+    ;; 
+==============================

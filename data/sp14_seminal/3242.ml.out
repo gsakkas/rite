@@ -1,0 +1,75 @@
+------------------------------------------------------------------
+File "3242.ml", line 19, characters 23-26:
+This expression has type expr but is here used with type string
+Relevant code: ex1
+------------------------------------------------------------------
+Triaged the following locations:
+File "3242.ml", line 19, characters 27-28:
+And modified the following location:
+File "3242.ml", line 19, characters 34-35:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    ^
+If you ignore other surrounding code, try replacing
+    ^
+with
+    ^; [[...]]
+The actual replacement has type
+    string -> expr -> 'a
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+                              | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+                              | Average (ex1, ex2) ->
+                                "((" ^
+                                    ((exprToString ex1) ^
+                                        ("+" ^ ((exprToString ex2) ^ ")/2)")))
+                              | Times (ex1, ex2) ->
+                                (ex1 ^; [[...]] ("*" ^; [[...]] ex2))
+                              | Thresh (ex1, ex2, ex3, ex4) ->
+                                "(" ^
+                                    ((exprToString ex1) ^
+                                        ("<" ^
+                                            ((exprToString ex2) ^
+                                                ("?" ^
+                                                    ((exprToString ex3) ^
+                                                        (":" ^
+                                                            ((exprToString ex4)
+                                                                ^ ")")))))))) ;; 
+==============================
+Triaged the following locations:
+File "3242.ml", line 19, characters 27-28:
+And modified the following location:
+File "3242.ml", line 19, characters 36-39:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    ^
+If you ignore other surrounding code, try replacing
+    ex2
+with
+    ex2; [[...]]
+The actual replacement has type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine ex -> "sin(pi*" ^ ((exprToString ex) ^ ")")
+                              | Cosine ex -> "cos(pi*" ^ ((exprToString ex) ^ ")")
+                              | Average (ex1, ex2) ->
+                                "((" ^
+                                    ((exprToString ex1) ^
+                                        ("+" ^ ((exprToString ex2) ^ ")/2)")))
+                              | Times (ex1, ex2) ->
+                                (ex1 ^; [[...]] "*" ^ (ex2; [[...]]))
+                              | Thresh (ex1, ex2, ex3, ex4) ->
+                                "(" ^
+                                    ((exprToString ex1) ^
+                                        ("<" ^
+                                            ((exprToString ex2) ^
+                                                ("?" ^
+                                                    ((exprToString ex3) ^
+                                                        (":" ^
+                                                            ((exprToString ex4)
+                                                                ^ ")")))))))) ;; 
+==============================

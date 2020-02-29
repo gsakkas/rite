@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "1714.ml", line 2, characters 47-48:
+This expression has type int but is here used with type 'a list
+Relevant code: 1
+------------------------------------------------------------------
+File "1714.ml", line 2, characters 47-48:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    'b list
+within context
+    let rec digitsOfInt n = (if (n <= 0) then [] else (1; [[...]])) ;; 
+==============================
+File "1714.ml", line 2, characters 39-41:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int
+within context
+    let rec digitsOfInt n = (if (n <= 0) then ([]; [[...]]) else 1) ;; 
+==============================

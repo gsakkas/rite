@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0833.ml", line 5, characters 66-68:
+This expression has type 'a * bool but is here used with type 'a
+Relevant code: b'
+------------------------------------------------------------------
+File "0833.ml", line 3, characters 14-117:
+Try replacing
+    fun result -> (let res = (f result) in (match res with 
+                                            | (b', c') ->
+                                              (if c' then (acc b') else b')
+                                            | b' -> b'))
+with
+    function | result -> (let res = (f result) in (match res with 
+                                                   | (b', c') ->
+                                                     (if c' then (acc b') else
+                                                         b'))) | b' -> b'
+of type
+    'b -> 'b
+==============================

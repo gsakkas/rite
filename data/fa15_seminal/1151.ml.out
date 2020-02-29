@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "1151.ml", line 56, characters 33-34:
+This expression has type int but is here used with type int list
+Relevant code: x
+------------------------------------------------------------------
+File "1151.ml", line 56, characters 3-11:
+Try replacing
+    List.map
+with
+    List.map; [[...]]
+of type
+    (int -> int) -> int -> int
+within context
+    let args = l2 in
+      let (x, res) = (List.fold_left f base  args) in
+      [((List.map; [[...]]) (fun i -> (mod i 10)) x)] @ res
+==============================
+File "1151.ml", line 55, characters 16-42:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f base  args); [[...]]
+of type
+    'a * 'b
+within context
+    fun l2 -> (let f a x = (match a with 
+                            | (r, v) ->
+                              (let sum =
+                                    (intListToInt
+                                      (mulByDigit (intListToInt l1) [x]))
+                                    in
+                                    (if sum + r > 9 then
+                                        (intListToInt
+                                            (carryFunc
+                                              (mulByDigit (intListToInt l1) [x])))
+                                          ,
+                                          (mod (sum + r) 10) :: v
+                                        else
+                                        0,
+                                          (mod (sum + r) 10) ::
+                                              v))) in let base = 0, [] in
+          let args = l2 in
+          let (x, res) = (List.fold_left f base  args); [[...]] in
+          [(List.map (fun i -> (mod i 10)) x)] @ res)
+==============================

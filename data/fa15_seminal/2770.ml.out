@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "2770.ml", line 21, characters 19-24:
+This expression has type int but is here used with type int list
+Relevant code: i * h
+------------------------------------------------------------------
+File "2770.ml", line 21, characters 19-24:
+Try replacing
+    i * h
+with
+    i * h; [[...]]
+of type
+    int list
+within context
+    (if i = 0 || i > 9 then [] else (match (List.rev l) with 
+                                     | [] -> []
+                                     | h :: t -> (match t with 
+                                                  | [] ->
+                                                    (if i * h > 10 then
+                                                        [(carry i h)] @
+                                                          [(remainder i h)]
+                                                        else
+                                                        [])
+                                                  | h' :: t' ->
+                                                    (let multNext x = (match x with 
+                                                                       | [] -> 0
+                                                                       | h1 :: t1 ->
+                                                                         h1) in (if
+                                                              i * h > 10
+                                                              then
+                                                              (mulByDigit i t') @
+                                                                ([
+                                                                        (carry i h')
+                                                                          +
+                                                                          (remainder
+                                                                            h' i)
+                                                                        ]
+                                                                    @
+                                                                    [(remainder h i)
+                                                                        ])
+                                                              else
+                                                              (i * h; [[...]]))))))
+==============================

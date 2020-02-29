@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2160.ml", line 5, characters 47-48:
+This expression has type 'a -> 'b -> 'c but is here used with type 'b
+Relevant code: b
+------------------------------------------------------------------
+Triaged the following locations:
+File "2160.ml", line 5, characters 54-55:
+And modified the following location:
+File "2160.ml", line 5, characters 43-44:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    b
+If you ignore other surrounding code, try replacing
+    b
+with
+    b; [[...]]
+The actual replacement has type
+    ('d -> 'd * bool) -> 'd -> bool
+within context
+    fun (f, b) ->
+      (wwhile ((fun x -> (if ((b; [[...]]) f b) then (b; [[...]]) else (f b))), b))
+==============================

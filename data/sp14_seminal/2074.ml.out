@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2074.ml", line 25, characters 37-43:
+The constructor Thresh expects 4 argument(s),
+but is here applied to 0 argument(s)
+Relevant code: Thresh
+------------------------------------------------------------------
+File "2074.ml", line 24, characters 2-323:
+Try replacing
+    (match e with 
+     | Thresh (a, b, c, d) -> (exprToString Thresh (a, b, c, d))
+     | Times (a, b) -> (exprToString buildTimes (a, b))
+     | Average (a, b) -> (exprToString buildAverage (a, b))
+     | Cosine a -> (exprToString buildCosine a)
+     | Sine a -> (exprToString buildSine a)
+     | VarY -> (exprToString buildY)
+     | VarX -> (exprToString buildX))
+with
+    [[...]]
+of type
+    'c
+==============================

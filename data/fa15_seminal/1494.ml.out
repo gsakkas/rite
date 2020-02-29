@@ -1,0 +1,6 @@
+------------------------------------------------------------------
+File "1494.ml", line 5, characters 57-67:
+This expression has type bool * 'a but is here used with type bool
+Relevant code: (false, b)
+------------------------------------------------------------------
+<pre>Couldn't find repairs.</pre>

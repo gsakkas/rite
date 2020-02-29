@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "0937.ml", line 7, characters 9-14:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: clone
+------------------------------------------------------------------
+Triaged the following locations:
+File "0937.ml", line 7, characters 35-36:
+And modified the following location:
+File "0937.ml", line 7, characters 15-30:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    (clone "0" List.length  l1)
+with
+    (clone ("0", List.length, l1))
+The actual replacement has type
+    int -> (string * ('a list -> int) * string list list) list
+within context
+    fun l1
+      l2 ->
+        (if (List.length l1) < (List.length l2) then
+          (clone "0" ((List.length l2) - (List.length l1))) :: l1
+          else
+          ((clone ("0", List.length, l1)) -; [[...]] (List.length l2)) :: l2)
+==============================
+Triaged the following locations:
+File "0937.ml", line 7, characters 35-36:
+And modified the following location:
+File "0937.ml", line 7, characters 9-14:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    clone
+with
+    clone; [[...]]
+The actual replacement has type
+    string -> ('b list -> int) -> string list list -> 'c
+within context
+    fun l1
+      l2 ->
+        (if (List.length l1) < (List.length l2) then
+          (clone "0" ((List.length l2) - (List.length l1))) :: l1
+          else
+          (((clone; [[...]]) "0" List.length  l1) -; [[...]] (List.length l2)) ::
+              l2)
+==============================

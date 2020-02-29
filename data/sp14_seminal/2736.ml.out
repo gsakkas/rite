@@ -1,0 +1,34 @@
+------------------------------------------------------------------
+File "2736.ml", line 8, characters 7-39:
+This expression has type int list but is here used with type
+  'a list * int list
+Relevant code: List.append (clone 0 (0 - a)) l2
+------------------------------------------------------------------
+File "2736.ml", line 8, characters 7-39:
+Try replacing
+    (List.append (clone 0 (0 - a)) l2)
+with
+    (List.append (clone 0 (0 - a)) l2); [[...]]
+of type
+    'b list * int list
+within context
+    let padZero l1 l2 =
+    let a = (List.length l1) - (List.length l2) in
+      (if a > 0 then l1, (List.append (clone 0 a) l2) else
+          ((List.append (clone 0 (0 - a)) l2); [[...]]))
+    ;; 
+==============================
+File "2736.ml", line 7, characters 7-41:
+Try replacing
+    l1, (List.append (clone 0 a) l2)
+with
+    l1, (List.append (clone 0 a) l2); [[...]]
+of type
+    int list
+within context
+    let padZero l1 l2 =
+    let a = (List.length l1) - (List.length l2) in
+      (if a > 0 then (l1, (List.append (clone 0 a) l2); [[...]]) else
+          (List.append (clone 0 (0 - a)) l2))
+    ;; 
+==============================

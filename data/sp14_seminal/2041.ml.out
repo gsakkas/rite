@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2041.ml", line 12, characters 65-77:
+This expression has type expr -> 'a but is here used with type string
+Relevant code: exprToString
+------------------------------------------------------------------
+File "2041.ml", line 11, characters 21-102:
+Try replacing
+    fun e -> (match e with 
+              | VarX -> "x"
+              | VarY -> "y"
+              | Sine m -> "sin" ^ exprToString)
+with
+    fun e -> (match e with 
+              | VarX -> "x"
+              | VarY -> "y"
+              | Sine m -> "sin" ^ exprToString); [[...]]
+of type
+    string
+==============================

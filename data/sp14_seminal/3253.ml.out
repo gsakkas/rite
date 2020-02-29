@@ -1,0 +1,34 @@
+------------------------------------------------------------------
+File "3253.ml", line 19, characters 33-34:
+This expression has type 'a * 'b -> 'c -> 'a but is here used with type
+  'a * 'b -> 'c -> 'a * 'b
+Relevant code: f
+------------------------------------------------------------------
+File "3253.ml", line 16, characters 57-62:
+Try replacing
+    carry
+with
+    a
+of type
+    'd * 'e
+within context
+    fun (l1, l2) -> (let f a x = let carry = (match a with 
+                                              | (x, y) ->
+                                                x) in a in let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "3253.ml", line 16, characters 52-53:
+Try replacing
+    x
+with
+    a
+of type
+    'f * 'g
+within context
+    let f a x = let carry = (match a with 
+                             | (x, y) ->
+                               a) in carry in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

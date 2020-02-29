@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "3063.ml", line 3, characters 18-19:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "3063.ml", line 3, characters 16-17:
+Try replacing
+    @
+with
+    l1
+of type
+    'b list -> int -> 'b list
+within context
+    fun l2 ->
+      (let f a x = (a l1 0) in
+          let base = [] in let args = l2 in (List.fold_left f base  args))
+==============================
+File "3063.ml", line 3, characters 16-17:
+Try replacing
+    @
+with
+    x
+of type
+    'c -> int -> 'd
+within context
+    fun l2 ->
+      (let f a x = (a x 0) in
+          let base = [] in let args = l2 in (List.fold_left f base  args))
+==============================

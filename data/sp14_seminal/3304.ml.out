@@ -1,0 +1,89 @@
+------------------------------------------------------------------
+File "3304.ml", line 11, characters 38-42:
+This expression has type (int * 'a) list but is here used with type
+  ('b list * int list) list
+Relevant code: args
+------------------------------------------------------------------
+File "3304.ml", line 3, characters 8-11:
+Try replacing
+    fun a x -> x
+with
+    fun x a -> x
+of type
+    'c -> 'd -> 'c
+within context
+    let bigMul l1 l2 =
+    let f x a = x in
+      let base = [], [0] in let args = let rec helper acc l1 l2 = (match l1 with 
+                                                                   | [] -> acc
+                                                                   | h :: t ->
+                                                                     (helper
+                                                                         h, l2 ::
+                                                                             acc
+                                                                         (List.map
+                                                                           (fun x ->
+                                                                               x *
+                                                                                 10) t)
+                                                                         l2)) in (helper
+            [] (List.rev l1) l2) in let (_, res) = (List.fold_left f base  args) in res
+    ;; 
+==============================
+File "3304.ml", line 9, characters 41-49:
+Try replacing
+    List.map
+with
+    f
+of type
+    (int -> int) -> 'e list -> 'e list
+within context
+    fun l1 l2 -> (match l1 with 
+                  | [] -> acc
+                  | h :: t -> (helper h, l2 :: acc (f (fun x -> x * 10) t)  l2))
+==============================
+File "3304.ml", line 9, characters 25-26:
+Try replacing
+    h
+with
+    t
+of type
+    int list * 'f
+within context
+    fun l2 -> (match l1 with 
+               | [] -> acc
+               | h :: t -> (helper t, l2 :: acc (List.map (fun x -> x * 10) t)  l2))
+==============================
+File "3304.ml", line 9, characters 25-26:
+Try replacing
+    h
+with
+    l1
+of type
+    int list * 'g
+within context
+    fun l2 -> (match l1 with 
+               | [] -> acc
+               | h :: t ->
+                 (helper l1, l2 :: acc (List.map (fun x -> x * 10) t)  l2))
+==============================
+File "3304.ml", line 3, characters 14-15:
+Try replacing
+    x
+with
+    a
+of type
+    'h
+within context
+    fun l1
+      l2 ->
+        (let f a x = a in
+            let base = [], [0] in
+            let args = let rec helper acc l1 l2 = (match l1 with 
+                                                   | [] -> acc
+                                                   | h :: t ->
+                                                     (helper
+                                                         h, l2 :: acc
+                                                         (List.map
+                                                           (fun x -> x * 10) t)
+                                                         l2)) in (helper
+                  [] (List.rev l1) l2) in let (_, res) = (List.fold_left f base  args) in res)
+==============================

@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0939.ml", line 7, characters 7-54:
+This expression has type int list but is here used with type int
+Relevant code: (clone 0 ((List.length l1) - (List.length l2)))
+------------------------------------------------------------------
+File "0939.ml", line 7, characters 8-13:
+Try replacing
+    clone
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun l1
+      l2 ->
+        (if (List.length l1) < (List.length l2) then
+          (clone 0 ((List.length l2) - (List.length l1))) @ l1
+          else
+          (- 0 ((List.length l1) - (List.length l2))) :: l2)
+==============================

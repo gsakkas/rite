@@ -1,0 +1,120 @@
+------------------------------------------------------------------
+File "0483.ml", line 24, characters 48-49:
+This expression has type int * 'a but is here used with type 'b list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "0483.ml", line 26, characters 4-124:
+And modified the following location:
+File "0483.ml", line 24, characters 50-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int * 'c -> (int * int) list -> int * 'c
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = let (a1, a2) = a in (match x with 
+                                                                      |
+                                                                        (x1, x2)
+                                                                          :: t
+                                                                        ->
+                                                                        (let tens =
+                                                                              (x1
+                                                                                    +
+                                                                                    x2)
+                                                                                +
+                                                                                a1
+                                                                                  /
+                                                                                  10
+                                                                              in
+                                                                              let
+                                                                              ones
+                                                                              =
+                                                                              (x1
+                                                                                    +
+                                                                                    x2)
+                                                                                +
+                                                                                (mod
+                                                                                  a1
+                                                                                  10)
+                                                                              in
+                                                                              (a
+                                                                                    @;
+                                                                                    [[...]]
+                                                                                    [
+                                                                                        tens
+                                                                                          ,
+                                                                                          ones
+                                                                                        ]))
+                                                                      | [] ->
+                                                                        a) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0483.ml", line 26, characters 4-124:
+And modified the following location:
+File "0483.ml", line 20, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'd * 'e
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) = let f a x = let (a1, a2) = a; [[...]] in (match x with 
+                                                                      |
+                                                                        (x1, x2)
+                                                                          :: t
+                                                                        ->
+                                                                        (let tens =
+                                                                              (x1
+                                                                                    +
+                                                                                    x2)
+                                                                                +
+                                                                                a1
+                                                                                  /
+                                                                                  10
+                                                                              in
+                                                                              let
+                                                                              ones
+                                                                              =
+                                                                              (x1
+                                                                                    +
+                                                                                    x2)
+                                                                                +
+                                                                                (mod
+                                                                                  a1
+                                                                                  10)
+                                                                              in
+                                                                              a @
+                                                                                  [
+                                                                                      tens
+                                                                                        ,
+                                                                                        ones
+                                                                                      ])
+                                                                      | [] ->
+                                                                        a) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0483.ml", line 26, characters 4-124:
+And modified the following location:
+File "0483.ml", line 19, characters 4-338:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = let (a1, a2) = a in (match x with 
+                                     | (x1, x2) :: t ->
+                                       (let tens = (x1 + x2) + a1 / 10 in
+                                             let ones = (x1 + x2) + (mod a1 10) in
+                                             a @ [tens, ones])
+                                     | [] ->
+                                       a) in let base = [0, 0] in
+      let args = (List.rev List.combine l1  l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'f
+==============================

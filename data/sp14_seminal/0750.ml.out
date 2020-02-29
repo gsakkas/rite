@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "0750.ml", line 7, characters 54-55:
+This expression has type 'a list list but is here used with type 'a
+Relevant code: h
+------------------------------------------------------------------
+File "0750.ml", line 7, characters 32-38:
+Try replacing
+    (List.mem seen h)
+with
+    (List.mem h seen)
+of type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if (List.mem h seen) then seen else
+                                             h :: seen)
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================

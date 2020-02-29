@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0940.ml", line 30, characters 50-56:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: bigAdd
+------------------------------------------------------------------
+File "0940.ml", line 30, characters 50-56:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    int list -> ('f * 'g -> 'g) -> 'h -> 'i
+within context
+    fun a
+      x -> (let value = (mulByDigit x l1) in 0, ((bigAdd; [[...]]) value snd  a))
+==============================

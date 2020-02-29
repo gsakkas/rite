@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1791.ml", line 4, characters 47-64:
+This expression has type 'a -> 'b but is here used with type int
+Relevant code: f (fun x  -> x) h
+------------------------------------------------------------------
+File "1791.ml", line 4, characters 35-36:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    'c -> 'c
+within context
+    let pipe fs = let f a x g = (a (x g)) in let base = (match fs with 
+                                                         | [] -> (0; [[...]])
+                                                         | h :: t ->
+                                                           (f
+                                                               (fun x -> x)
+                                                               h)) in (List.fold_left
+          f base  fs) ;; 
+==============================
+File "1791.ml", line 3, characters 8-23:
+Try replacing
+    fun a x g -> (a (x g))
+with
+    fun a x g -> (a (x g)); [[...]]
+of type
+    'd
+within context
+    let pipe fs =
+    let f = fun a x g -> (a (x g)); [[...]] in let base = (match fs with 
+                                                           | [] -> 0
+                                                           | h :: t ->
+                                                             (f
+                                                                 (fun x -> x)
+                                                                 h)) in (List.fold_left
+          f base  fs)
+    ;; 
+==============================

@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "3442.ml", line 11, characters 57-76:
+This expression has type bool but is here used with type unit
+Relevant code: count = (count + 1)
+------------------------------------------------------------------
+File "3442.ml", line 11, characters 57-76:
+Try replacing
+    count = count + 1
+with
+    count = count + 1; [[...]]
+of type
+    unit
+within context
+    let rec additivePersistence n =
+    let count = 1 in
+      (if (sumList (digitsOfInt n)) > 9 then (count = count + 1; [[...]]))
+    ;; 
+==============================

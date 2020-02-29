@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "2536.ml", line 7, characters 36-38:
+This expression has type 'a but is here used with type 'a list list
+Relevant code: hd
+------------------------------------------------------------------
+File "2536.ml", line 7, characters 33-38:
+Try replacing
+    (List.mem tl hd)
+with
+    (List.mem hd tl)
+of type
+    bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | hd :: tl ->
+                           (let seen' =
+                                 (if (List.mem hd tl) = true then seen else
+                                   hd :: seen)
+                                 in
+                                 let rest' = tl in (helper (seen', rest'))))
+==============================
+File "2536.ml", line 7, characters 33-35:
+Try replacing
+    tl
+with
+    =
+of type
+    'b -> 'b -> bool
+within context
+    (match rest with 
+     | [] -> seen
+     | hd :: tl ->
+       (let seen' = (if (List.mem = hd) = true then seen else hd :: seen) in
+             let rest' = tl in (helper (seen', rest'))))
+==============================

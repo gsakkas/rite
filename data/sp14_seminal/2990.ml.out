@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "2990.ml", line 3, characters 55-62:
+This expression has type 'a list -> 'a list but is here used with type
+  int list
+Relevant code: List.tl
+------------------------------------------------------------------
+File "2990.ml", line 3, characters 55-62:
+Try replacing
+    (sumList List.tl xs)
+with
+    (sumList xs)
+of type
+    int
+within context
+    let rec sumList xs =
+    (if (List.length xs) > 0 then (List.hd xs) + (sumList xs) else 0)
+    ;; 
+==============================
+File "2990.ml", line 3, characters 47-62:
+Try replacing
+    (sumList List.tl xs)
+with
+    (sumList (List.tl xs))
+of type
+    int
+within context
+    let rec sumList xs =
+    (if (List.length xs) > 0 then (List.hd xs) + (sumList (List.tl xs)) else 0)
+    ;; 
+==============================

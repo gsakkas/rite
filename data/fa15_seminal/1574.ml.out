@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "1574.ml", line 10, characters 27-42:
+This expression has type 'a list but is here used with type string
+Relevant code: (listReverse w)
+------------------------------------------------------------------
+File "1574.ml", line 10, characters 28-39:
+Try replacing
+    (explode (listReverse w))
+with
+    (listReverse (explode w))
+of type
+    char list
+within context
+    let palindrome w = (listReverse (explode w)) ;; 
+==============================
+File "1574.ml", line 10, characters 19-26:
+Try replacing
+    explode
+with
+    @
+of type
+    'b list -> 'b list -> 'b list
+within context
+    let palindrome w = (@ (listReverse w)) ;; 
+==============================

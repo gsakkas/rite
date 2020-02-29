@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0668.ml", line 2, characters 45-46:
+This pattern matches values of type int
+but is here used to match values of type 'a list
+Relevant code: 1
+------------------------------------------------------------------
+File "0668.ml", line 2, characters 16-34:
+Try replacing
+    fun xs -> function | [] -> 0 | x :: 1 -> x + (sumList xs)
+with
+    fun [] xs -> 0
+of type
+    'b list -> 'c -> int
+within context
+    let rec sumList [] xs = 0 ;; 
+==============================

@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "0209.ml", line 17, characters 51-63:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+File "0209.ml", line 17, characters 67-71:
+Try replacing
+    (exprToString e2 "/2")
+with
+    (exprToString e2)
+of type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e1 -> "sin pi*" ^ (exprToString e1)
+                              | Cosine e1 -> "cos pi*" ^ (exprToString e1)
+                              | Average (e1, e2) ->
+                                (exprToString e1) ^ ("+" ^ (exprToString e2))
+                              | Times (e1, e2) ->
+                                (exprToString e1) ^ ("*" ^ (exprToString e2))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (exprToString e1) ^
+                                    ("<" ^
+                                        ((exprToString e2) ^
+                                            ("?" ^
+                                                ((exprToString e3) ^
+                                                    (":" ^
+                                                        (exprToString e4))))))) ;; 
+==============================

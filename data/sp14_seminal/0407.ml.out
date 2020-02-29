@@ -1,0 +1,6 @@
+------------------------------------------------------------------
+File "0407.ml", line 20, characters 17-18:
+This expression has type int but is here used with type float
+Relevant code: 1
+------------------------------------------------------------------
+<pre>Couldn't find repairs.</pre>

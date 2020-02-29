@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1104.ml", line 19, characters 39-47:
+This expression has type int list -> int but is here used with type int
+Relevant code: digitSum
+------------------------------------------------------------------
+File "1104.ml", line 19, characters 19-47:
+Try replacing
+    (additivePersistence digitSum (digits n))
+with
+    (additivePersistence (digitSum (digits n)))
+of type
+    int
+within context
+    let rec additivePersistence n = (match (arrayLen (digits n)) = 1 with 
+                                     | true -> 0
+                                     | false ->
+                                       1 +
+                                           (additivePersistence
+                                             (digitSum (digits n)))) ;; 
+==============================

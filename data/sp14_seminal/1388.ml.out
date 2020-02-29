@@ -1,0 +1,85 @@
+------------------------------------------------------------------
+File "1388.ml", line 6, characters 18-30:
+This expression has type int -> int list but is here used with type int
+Relevant code: (clone (-1))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1388.ml", line 6, characters 16-45:
+And modified the following location:
+File "1388.ml", line 6, characters 57-62:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    clone
+with
+    clone; [[...]]
+The actual replacement has type
+    int -> 'a list -> 'b
+within context
+    let padZero l1 l2 =
+    let l = (List.length l1) - (List.length l2) in
+      (if l < 0 then [[...other program...]] else l1, ((clone; [[...]]) l l2))
+    ;; 
+==============================
+Triaged the following locations:
+File "1388.ml", line 6, characters 16-45:
+And modified the following location:
+File "1388.ml", line 6, characters 63-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone l l2)
+with
+    (clone (l, l2))
+The actual replacement has type
+    'c list * (int -> (int * 'd list) list)
+within context
+    let padZero l1 l2 =
+    let l = (List.length l1) - (List.length l2) in
+      (if l < 0 then [[...other program...]] else l1, (clone (l, l2)))
+    ;; 
+==============================
+Triaged the following locations:
+File "1388.ml", line 6, characters 16-45:
+And modified the following location:
+File "1388.ml", line 6, characters 65-67:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l2
+with
+    l2; [[...]]
+The actual replacement has type
+    int
+within context
+    let padZero l1 l2 =
+    let l = (List.length l1) - (List.length l2) in
+      (if l < 0 then [[...other program...]] else l1, (clone l (l2; [[...]])))
+    ;; 
+==============================
+Triaged the following locations:
+File "1388.ml", line 6, characters 16-45:
+And modified the following location:
+File "1388.ml", line 6, characters 65-67:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l2
+with
+    l
+The actual replacement has type
+    int
+within context
+    let padZero l1 l2 =
+    let l = (List.length l1) - (List.length l2) in
+      (if l < 0 then [[...other program...]] else l1, (clone l l))
+    ;; 
+==============================
+Triaged the following locations:
+File "1388.ml", line 6, characters 51-69:
+And modified the following location:
+File "1388.ml", line 6, characters 17-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone -1) * (l l2)
+with
+    [[...]]
+The actual replacement has type
+    'e * 'f list
+within context
+    let padZero l1 l2 =
+    let l = (List.length l1) - (List.length l2) in
+      (if l < 0 then [[...]], l2 else [[...other program...]])
+    ;; 
+==============================

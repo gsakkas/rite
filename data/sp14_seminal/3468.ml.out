@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3468.ml", line 4, characters 51-62:
+This expression has type int -> 'a but is here used with type int list list
+Relevant code: digitsOfInt
+------------------------------------------------------------------
+File "3468.ml", line 4, characters 51-62:
+Try replacing
+    digitsOfInt
+with
+    myList
+of type
+    int list list
+within context
+    let rec digitsOfInt n =
+    let myList = [] in (if (n <= 0) then [] else (mod n 10) :: myList :: myList)
+    ;; 
+==============================

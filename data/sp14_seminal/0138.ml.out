@@ -1,0 +1,51 @@
+------------------------------------------------------------------
+File "0138.ml", line 16, characters 33-34:
+This expression has type 'a list -> 'a -> int * 'a list
+but is here used with type 'a list -> 'a -> 'a list
+Relevant code: f
+------------------------------------------------------------------
+File "0138.ml", line 16, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> 'c * 'd -> int * 'b list
+within context
+    let f a x = 0, x :: a in
+      let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0138.ml", line 16, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('e list -> 'e -> int * 'e list) ->
+    int * 'f list -> ('g * 'h) list -> 'i * 'j
+within context
+    let f a x = 0, x :: a in
+      let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0138.ml", line 13, characters 10-29:
+Try replacing
+    fun a x -> (0, x :: a)
+with
+    fun a x -> (0, x :: a); [[...]]
+of type
+    'k
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f = fun a x -> (0, x :: a); [[...]] in
+              let base = 0, [] in
+              let args = (List.combine l1 l2) in
+              let (_, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================

@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "1499.ml", line 8, characters 34-70:
+This expression has type int but is here used with type int list
+Relevant code: (((hd * i) / 10) + (mBDhelper i tl))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1499.ml", line 9, characters 13-41:
+And modified the following location:
+File "1499.ml", line 8, characters 13-70:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod (hd * i) 10) :: (hd * i) / 10 + (mBDhelper i tl)
+with
+    [[...]]
+The actual replacement has type
+    int
+within context
+    let rec mBDhelper i x = (match x with 
+                             | [] -> 0
+                             | hd :: tl ->
+                               (if (hd * i) / 10 != 0 then [[...]] else
+                                   [[...other program...]])) in (mBDhelper i l)
+==============================
+Triaged the following locations:
+File "1499.ml", line 8, characters 13-70:
+And modified the following location:
+File "1499.ml", line 9, characters 13-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    hd * i :: (mBDhelper i tl)
+with
+    [[...]]
+The actual replacement has type
+    int
+within context
+    let rec mBDhelper i x = (match x with 
+                             | [] -> 0
+                             | hd :: tl ->
+                               (if (hd * i) / 10 != 0 then [[...other program...]]
+                                   else
+                                   [[...]])) in (mBDhelper i l)
+==============================

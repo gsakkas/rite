@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1845.ml", line 4, characters 51-54:
+This expression has type 'a list but is here used with type 'a
+Relevant code: xs1
+------------------------------------------------------------------
+File "1845.ml", line 4, characters 50-61:
+Try replacing
+    xs1 :: hd
+with
+    [[...]]
+of type
+    'b
+within context
+    let rec append xs1 xs2 = (match xs2 with 
+                              | [] -> xs1
+                              | hd :: tl ->
+                                (append
+                                    [[...]] tl)) in let rec helper x = (match x with 
+                                                                 | 0 -> []
+                                                                 | m ->
+                                                                   (append
+                                                                       (helper
+                                                                         (m / 10))
+                                                                       [(mod m 10)
+                                                                           ])) in (helper
+          n)
+==============================

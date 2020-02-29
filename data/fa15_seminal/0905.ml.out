@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "0905.ml", line 20, characters 19-34:
+This expression is not a function, it cannot be applied
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "0905.ml", line 20, characters 20-27:
+Try replacing
+    padZero
+with
+    add
+of type
+    'd list * 'e list ->
+    'd list * 'e list -> 'd list * 'e list -> 'f list * 'g list
+within context
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = (failwith "to be implemented") in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add ((add l1 l2) (if l1 > l2 then l1 else l2))))
+==============================

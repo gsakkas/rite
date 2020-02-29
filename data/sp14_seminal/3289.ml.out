@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "3289.ml", line 19, characters 20-22:
+This expression has type 'a list but is here used with type int
+Relevant code: h1
+------------------------------------------------------------------
+File "3289.ml", line 15, characters 6-325:
+Try replacing
+    (match a with 
+     | (lh1 :: lt1, lh2 :: lt2) -> (match x with 
+                                    | (h1, h2) ->
+                                      (((h1 + h2) + lh1) / 10 :: lt1,
+                                            (mod ((h1 + h2) + lh1) 10) :: lt2)
+                                    | ([], []) -> (match x with 
+                                                   | (h1, h2) ->
+                                                     ([(h1 + h2) / 10],
+                                                           [(mod (h1 + h2) 10)]))))
+with
+    (match a with 
+     | (lh1 :: lt1, lh2 :: lt2) -> (match x with 
+                                    | (h1, h2) ->
+                                      (((h1 + h2) + lh1) / 10 :: lt1,
+                                            (mod ((h1 + h2) + lh1) 10) :: lt2))
+     | ([], []) -> (match x with 
+                    | (h1, h2) -> ([(h1 + h2) / 10], [(mod (h1 + h2) 10)])))
+of type
+    int list * int list
+==============================

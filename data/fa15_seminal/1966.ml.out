@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1966.ml", line 3, characters 46-68:
+This expression has type int but is here used with type int list
+Relevant code: (0 * (mulByDigit i t))
+------------------------------------------------------------------
+File "1966.ml", line 3, characters 49-50:
+Try replacing
+    *
+with
+    mulByDigit
+of type
+    int -> int list -> int list
+within context
+    fun i l -> (match l with 
+                | [] -> []
+                | h :: t -> [h * i] @ (0 mulByDigit (mulByDigit i t)))
+==============================

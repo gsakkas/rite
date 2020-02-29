@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "1821.ml", line 14, characters 33-64:
+This expression has type int but is here used with type 'a list
+Relevant code: num + (additivePersistence num)
+------------------------------------------------------------------
+File "1821.ml", line 14, characters 37-38:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int -> 'b list -> 'b list
+within context
+    fun n ->
+      (if n < 10 then [] else
+        (let myList = (digits n) in
+            let num = (sumList myList) in
+            (num +; [[...]] (additivePersistence num))))
+==============================
+File "1821.ml", line 11, characters 7-9:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int
+within context
+    let rec additivePersistence n =
+    (if n < 10 then ([]; [[...]]) else
+      (let myList = (digits n) in
+          let num = (sumList myList) in num + (additivePersistence num)))
+    ;; 
+==============================

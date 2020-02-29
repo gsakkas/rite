@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1655.ml", line 15, characters 15-19:
+The constructor Sine expects 1 argument(s),
+but is here applied to 0 argument(s)
+Relevant code: Sine
+------------------------------------------------------------------
+File "1655.ml", line 15, characters 15-19:
+Try replacing
+    Sine
+with
+    [[...]]
+of type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e1 -> [[...]] ^ (exprToString e1)) ;; 
+==============================

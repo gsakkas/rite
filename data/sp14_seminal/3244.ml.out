@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "3244.ml", line 73, characters 38-46:
+This expression is not a function, it cannot be applied
+Relevant code: ")*cos("
+------------------------------------------------------------------
+Triaged the following locations:
+File "3244.ml", line 73, characters 37-64:
+And modified the following location:
+File "3244.ml", line 73, characters 68-71:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ")"
+with
+    ")"; [[...]]
+The actual replacement has type
+    string -> string
+within context
+    "(" ^
+      ((exprToString ex1) ^
+          ("*sin(" ^
+              ((exprToString ex2) ^
+                  ([[...other program...]] ^ (( ")"; [[...]] ) ")")))))
+==============================
+Triaged the following locations:
+File "3244.ml", line 73, characters 37-64:
+And modified the following location:
+File "3244.ml", line 73, characters 72-75:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (( ")" ) ")")
+with
+    ")"
+The actual replacement has type
+    string
+within context
+    "(" ^
+      ((exprToString ex1) ^
+          ("*sin(" ^ ((exprToString ex2) ^ ([[...other program...]] ^ ")"))))
+==============================
+Triaged the following locations:
+File "3244.ml", line 73, characters 67-76:
+And modified the following location:
+File "3244.ml", line 73, characters 38-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ")*cos("
+with
+    ")*cos("; [[...]]
+The actual replacement has type
+    (expr -> string) -> expr -> string
+within context
+    "(" ^
+      ((exprToString ex1) ^
+          ("*sin(" ^
+              ((exprToString ex2) ^
+                  ((exprToString ")*cos("; [[...]] ex3)
+                      ^ [[...other program...]]))))
+==============================

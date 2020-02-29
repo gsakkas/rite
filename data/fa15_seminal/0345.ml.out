@@ -1,0 +1,105 @@
+------------------------------------------------------------------
+File "0345.ml", line 8, characters 7-34:
+This expression has type int list but is here used with type int
+Relevant code: (clone 0 (padLength l1 l2))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0345.ml", line 9, characters 7-39:
+And modified the following location:
+File "0345.ml", line 8, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    >
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then (clone 0 (padLength l1 l2)) > l1
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0345.ml", line 9, characters 7-39:
+And modified the following location:
+File "0345.ml", line 8, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    <
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then (clone 0 (padLength l1 l2)) < l1
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0345.ml", line 9, characters 7-39:
+And modified the following location:
+File "0345.ml", line 8, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    int list -> 'a list -> 'b
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then
+      ((clone 0 (padLength l1 l2)) *; [[...]] l1)
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0345.ml", line 8, characters 7-39:
+And modified the following location:
+File "0345.ml", line 9, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    >
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then [[...other program...]] else
+      (clone 0 (padLength l1 l2)) > l2)
+    ;; 
+==============================
+Triaged the following locations:
+File "0345.ml", line 8, characters 7-39:
+And modified the following location:
+File "0345.ml", line 9, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    int list -> 'c list -> 'd
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then [[...other program...]] else
+      ((clone 0 (padLength l1 l2)) *; [[...]] l2))
+    ;; 
+==============================
+Triaged the following locations:
+File "0345.ml", line 8, characters 7-39:
+And modified the following location:
+File "0345.ml", line 9, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    <
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then [[...other program...]] else
+      (clone 0 (padLength l1 l2)) < l2)
+    ;; 
+==============================

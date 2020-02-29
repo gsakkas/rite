@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1506.ml", line 14, characters 9-61:
+This expression has type int list but is here used with type unit
+Relevant code: (clone 0 ((List.length l2) - (List.length l1))) @ l1
+------------------------------------------------------------------
+File "1506.ml", line 13, characters 4-104:
+Try replacing
+    (if (List.length l1) < (List.length l2) then
+      (clone 0 ((List.length l2) - (List.length l1))) @ l1)
+with
+    [[...]]
+of type
+    int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      (clone 0 ((List.length l1) - (List.length l2))) @ l2
+      else
+      [[...]])
+    ;; 
+==============================

@@ -1,0 +1,125 @@
+------------------------------------------------------------------
+File "2556.ml", line 7, characters 35-37:
+This expression is not a function, it cannot be applied
+Relevant code: l1
+------------------------------------------------------------------
+Triaged the following locations:
+File "2556.ml", line 8, characters 7-54:
+And modified the following location:
+File "2556.ml", line 7, characters 38-48:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (l1 (pad @ l2))
+with
+    l1
+The actual replacement has type
+    'o list
+within context
+    let padZero l1 l2 =
+    let sizDif = (List.length l1) - (List.length l2) in
+      (if sizDif > 0 then (let pad = (clone 0 sizDif) in l1) else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2556.ml", line 8, characters 7-54:
+And modified the following location:
+File "2556.ml", line 7, characters 35-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    <=
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    let padZero l1 l2 =
+    let sizDif = (List.length l1) - (List.length l2) in
+      (if sizDif > 0 then (let pad = (clone 0 sizDif) in (<= (pad @ l2))) else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2556.ml", line 8, characters 7-54:
+And modified the following location:
+File "2556.ml", line 7, characters 35-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    >
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    let padZero l1 l2 =
+    let sizDif = (List.length l1) - (List.length l2) in
+      (if sizDif > 0 then (let pad = (clone 0 sizDif) in (> (pad @ l2))) else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2556.ml", line 8, characters 7-54:
+And modified the following location:
+File "2556.ml", line 7, characters 35-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    @
+The actual replacement has type
+    int list -> int list -> int list
+within context
+    let padZero l1 l2 =
+    let sizDif = (List.length l1) - (List.length l2) in
+      (if sizDif > 0 then (let pad = (clone 0 sizDif) in (@ (pad @ l2))) else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2556.ml", line 8, characters 7-54:
+And modified the following location:
+File "2556.ml", line 7, characters 35-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    int list -> 'p
+within context
+    let padZero l1 l2 =
+    let sizDif = (List.length l1) - (List.length l2) in
+      (if sizDif > 0 then (let pad = (clone 0 sizDif) in ((l1; [[...]]) (pad @ l2)))
+          else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2556.ml", line 7, characters 7-48:
+And modified the following location:
+File "2556.ml", line 8, characters 40-50:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    pad @ l1
+with
+    pad @ l1; [[...]]
+The actual replacement has type
+    'i list -> 'j
+within context
+    let padZero l1 l2 =
+    let sizDif = (List.length l1) - (List.length l2) in
+      (if sizDif > 0 then [[...other program...]] else
+          (let pad = (clone 0 (( ~- ) sizDif)) in ((pad @ l1; [[...]]) l2)))
+    ;; 
+==============================
+Triaged the following locations:
+File "2556.ml", line 7, characters 7-48:
+And modified the following location:
+File "2556.ml", line 8, characters 51-53:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ((pad @ l1) l2)
+with
+    pad @ l1
+The actual replacement has type
+    int list
+within context
+    let padZero l1 l2 =
+    let sizDif = (List.length l1) - (List.length l2) in
+      (if sizDif > 0 then [[...other program...]] else
+          (let pad = (clone 0 (( ~- ) sizDif)) in pad @ l1))
+    ;; 
+==============================

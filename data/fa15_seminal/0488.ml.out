@@ -1,0 +1,83 @@
+------------------------------------------------------------------
+File "0488.ml", line 19, characters 46-58:
+This expression has type int list * int list but is here used with type
+  ('a -> 'b -> 'c) * 'd
+Relevant code: padZeroLists
+------------------------------------------------------------------
+Triaged the following locations:
+File "0488.ml", line 20, characters 4-51:
+And modified the following location:
+File "0488.ml", line 19, characters 58-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (fst padZeroLists snd  padZeroLists)
+with
+    (fst [[...]] padZeroLists  snd  padZeroLists)
+The actual replacement has type
+    'e
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) ->
+                                      x1 + x2 ::
+                                            a) in let base = [], [] in
+        let args =
+        let padZeroLists = (padZero l1 l2) in
+          (fst [[...]] padZeroLists  snd  padZeroLists)
+        in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0488.ml", line 20, characters 4-51:
+And modified the following location:
+File "0488.ml", line 19, characters 42-45:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fst
+with
+    fst; [[...]]
+The actual replacement has type
+    int list * int list -> ('f * 'g -> 'g) -> int list * int list -> 'h
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) ->
+                                      x1 + x2 ::
+                                            a) in let base = [], [] in
+        let args =
+        let padZeroLists = (padZero l1 l2) in
+          ((fst; [[...]]) padZeroLists snd  padZeroLists)
+        in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0488.ml", line 20, characters 4-51:
+And modified the following location:
+File "0488.ml", line 19, characters 25-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (padZero l1 l2)
+with
+    (padZero l1 l2); [[...]]
+The actual replacement has type
+    'i
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) ->
+                                      x1 + x2 ::
+                                            a) in let base = [], [] in
+        let args =
+        let padZeroLists = (padZero l1 l2); [[...]] in
+          (fst padZeroLists snd  padZeroLists)
+        in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0488.ml", line 20, characters 4-51:
+And modified the following location:
+File "0488.ml", line 18, characters 4-145:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args =
+      let padZeroLists = (padZero l1 l2) in (fst padZeroLists snd  padZeroLists)
+      in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'j
+==============================

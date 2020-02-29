@@ -1,0 +1,48 @@
+------------------------------------------------------------------
+File "2018.ml", line 21, characters 15-23:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+Triaged the following locations:
+File "2018.ml", line 23, characters 2-43:
+And modified the following location:
+File "2018.ml", line 21, characters 15-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.rev List.combine l1  l2)
+with
+    (List.rev (List.combine l1 l2))
+The actual replacement has type
+    (int * int) list
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a (x, y) = (x + y) / 10 :: a in
+        let base = [] in
+        let args = (List.rev (List.combine l1 l2)) in
+        let res = (List.fold_left f base  args) in res
+      in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "2018.ml", line 23, characters 2-43:
+And modified the following location:
+File "2018.ml", line 21, characters 15-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    ('d list -> 'e list -> ('d * 'e) list) -> 'f -> 'g -> 'h
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a (x, y) = (x + y) / 10 :: a in
+        let base = [] in
+        let args = ((List.rev; [[...]]) List.combine l1  l2) in
+        let res = (List.fold_left f base  args) in res
+      in
+      [[...other program...]]
+    ;; 
+==============================

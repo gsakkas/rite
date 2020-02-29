@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "2323.ml", line 29, characters 27-28:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "2323.ml", line 29, characters 18-26:
+Try replacing
+    List.rev
+with
+    List.rev; [[...]]
+of type
+    int -> int
+within context
+    let f a x =
+      let (h :: t, b) = a in
+        (if x + h > 9 then
+            (let asd2 = (x + h) - 10 in
+                let h2 :: t2 = t in let asd3 = h2 + 1 :: t2 in asd3, asd2 :: b)
+            else
+            (if t = [] && x + h > 9 then
+              (let asd2 = (x + h) - 10 in [], 1 :: asd2 :: b)
+              else
+              t, x + h :: b))
+      in
+      let base = ((List.rev; [[...]]) 0) :: l1, [] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

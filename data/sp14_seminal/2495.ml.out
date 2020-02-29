@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "2495.ml", line 7, characters 28-62:
+This expression has type bool * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((let k x = (f x) != b in k b), b)
+------------------------------------------------------------------
+File "2495.ml", line 7, characters 41-42:
+Try replacing
+    (f x) != b
+with
+    (f (x != b))
+of type
+    'c -> 'c * bool
+within context
+    fun (f, b) -> (wwhile ((let k x = (f (x != b)) in (k b)), b))
+==============================
+File "2495.ml", line 7, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    bool * 'd -> bool * 'd -> bool
+within context
+    let fixpoint (f, b) = (= ((let k x = (f x) != b in (k b)), b)) ;; 
+==============================
+File "2495.ml", line 7, characters 21-27:
+Try replacing
+    wwhile
+with
+    !=
+of type
+    bool * 'e -> bool * 'e -> bool
+within context
+    let fixpoint (f, b) = (!= ((let k x = (f x) != b in (k b)), b)) ;; 
+==============================

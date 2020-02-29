@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "0382.ml", line 8, characters 14-29:
+This expression has type int list but is here used with type int
+Relevant code: (clone 0 lenl1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0382.ml", line 9, characters 7-45:
+And modified the following location:
+File "0382.ml", line 8, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    -
+with
+    -; [[...]]
+The actual replacement has type
+    int list -> int -> 'a list
+within context
+    fun l1
+      l2 ->
+        (let lenl1 = (List.length l1) in
+            let lenl2 = (List.length l2) in
+            (if lenl1 > lenl2 then l1, ((clone 0 lenl1) -; [[...]] lenl2) @ l2 else
+                [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0382.ml", line 8, characters 7-45:
+And modified the following location:
+File "0382.ml", line 9, characters 26-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    -
+with
+    -; [[...]]
+The actual replacement has type
+    int list -> int -> 'b list
+within context
+    fun l1
+      l2 ->
+        (let lenl1 = (List.length l1) in
+            let lenl2 = (List.length l2) in
+            (if lenl1 > lenl2 then [[...other program...]] else
+                ((clone 0 lenl2) -; [[...]] lenl1) @ l1, l2))
+==============================

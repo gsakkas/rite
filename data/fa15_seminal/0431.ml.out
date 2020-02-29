@@ -1,0 +1,87 @@
+------------------------------------------------------------------
+File "0431.ml", line 6, characters 46-55:
+This expression has type ('a -> 'a * bool) * ('a * bool)
+but is here used with type ('a -> 'a * bool) * 'a
+Relevant code: (funt, b)
+------------------------------------------------------------------
+File "0431.ml", line 6, characters 39-45:
+Try replacing
+    wwhile
+with
+    funt
+of type
+    ('b -> 'c) * 'c -> 'c
+within context
+    let fixpoint (f, b) = let funt x = b in (funt (funt, b)) ;; 
+==============================
+File "0431.ml", line 6, characters 39-45:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('d -> 'e) * 'e -> ('d -> 'e) * 'e -> bool
+within context
+    let fixpoint (f, b) = let funt x = b in (= (funt, b)) ;; 
+==============================
+File "0431.ml", line 6, characters 39-45:
+Try replacing
+    wwhile
+with
+    f
+of type
+    ('f -> 'g) * 'g -> 'h
+within context
+    let fixpoint (f, b) = let funt x = b in (f (funt, b)) ;; 
+==============================
+File "0431.ml", line 6, characters 47-51:
+Try replacing
+    funt
+with
+    f
+of type
+    ('i -> 'i * bool) * 'i
+within context
+    let fixpoint (f, b) = let funt x = b in (wwhile (f, b)) ;; 
+==============================
+File "0431.ml", line 6, characters 34-35:
+Try replacing
+    b
+with
+    f
+of type
+    'j * bool
+within context
+    let fixpoint (f, b) = let funt x = f in (wwhile (funt, b)) ;; 
+==============================
+File "0431.ml", line 6, characters 53-54:
+Try replacing
+    b
+with
+    f
+of type
+    ('k -> 'k * bool) * 'k
+within context
+    let fixpoint (f, b) = let funt x = b in (wwhile (funt, f)) ;; 
+==============================
+File "0431.ml", line 6, characters 53-54:
+Try replacing
+    b
+with
+    wwhile
+of type
+    ((('l -> 'l * bool) * 'l -> 'l) -> (('l -> 'l * bool) * 'l -> 'l) * bool) *
+    (('l -> 'l * bool) * 'l -> 'l)
+within context
+    let fixpoint (f, b) = let funt x = b in (wwhile (funt, wwhile)) ;; 
+==============================
+File "0431.ml", line 6, characters 53-54:
+Try replacing
+    b
+with
+    =
+of type
+    (('m -> 'm -> bool) -> ('m -> 'm -> bool) * bool) * ('m -> 'm -> bool)
+within context
+    let fixpoint (f, b) = let funt x = b in (wwhile (funt, =)) ;; 
+==============================

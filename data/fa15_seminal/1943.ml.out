@@ -1,0 +1,51 @@
+------------------------------------------------------------------
+File "1943.ml", line 20, characters 33-34:
+This expression has type 'a -> int * int -> int * 'a
+but is here used with type 'a -> int * int -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "1943.ml", line 20, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    (int * int) * 'b list -> 'c * 'd -> (int * int) * 'b list
+within context
+    let f a x = let (x1, x2) = x in (x1 + x2) / 10, a in
+      let base = (0, 0), [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "1943.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('e -> int * int -> int * 'e) ->
+    (int * int) * 'f list -> ('g * 'h) list -> 'i * 'j
+within context
+    let f a x = let (x1, x2) = x in (x1 + x2) / 10, a in
+      let base = (0, 0), [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "1943.ml", line 17, characters 10-56:
+Try replacing
+    fun a x -> (let (x1, x2) = x in (x1 + x2) / 10, a)
+with
+    fun a x -> (let (x1, x2) = x in (x1 + x2) / 10, a); [[...]]
+of type
+    'k
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f = fun a x -> (let (x1, x2) = x in (x1 + x2) / 10, a); [[...]] in
+              let base = (0, 0), [] in
+              let args = (List.rev (List.combine l1 l2)) in
+              let (_, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================

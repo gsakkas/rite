@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0343.ml", line 32, characters 47-51:
+This expression is not a function, it cannot be applied
+Relevant code: ")*"
+------------------------------------------------------------------
+File "0343.ml", line 32, characters 47-51:
+Try replacing
+    ")*"
+with
+    ")*"; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    (exprToString e1) ^
+      (")*sqrt(" ^ ((exprToString e2) ^ ((exprToString ")*"; [[...]] e3) ^ ")")))
+==============================

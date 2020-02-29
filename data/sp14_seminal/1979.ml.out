@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "1979.ml", line 3, characters 2-57:
+This expression has type 'a list but is here used with type int -> 'a
+Relevant code: if n < 0 then [] else [digitsOfInt (n / 10) (n mod 10)]
+------------------------------------------------------------------
+File "1979.ml", line 3, characters 25-36:
+Try replacing
+    digitsOfInt
+with
+    <
+of type
+    int -> int -> bool
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else [(< (n / 10) (mod n 10))]) ;; 
+==============================
+File "1979.ml", line 3, characters 25-36:
+Try replacing
+    digitsOfInt
+with
+    mod
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else [(mod (n / 10) (mod n 10))]) ;; 
+==============================
+File "1979.ml", line 3, characters 25-36:
+Try replacing
+    digitsOfInt
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else [(/ (n / 10) (mod n 10))]) ;; 
+==============================

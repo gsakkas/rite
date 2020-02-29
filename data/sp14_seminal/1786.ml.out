@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1786.ml", line 5, characters 24-26:
+This expression has type (('a -> 'b) * ('b -> 'a)) list
+but is here used with type ('b -> 'b) list
+Relevant code: fs
+------------------------------------------------------------------
+File "1786.ml", line 3, characters 19-20:
+Try replacing
+    x
+with
+    a
+of type
+    'c -> 'c
+within context
+    fun a x g -> (a (a g))
+==============================

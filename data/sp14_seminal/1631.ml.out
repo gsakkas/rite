@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1631.ml", line 3, characters 38-39:
+This expression is not a function, it cannot be applied
+Relevant code: f
+------------------------------------------------------------------
+File "1631.ml", line 3, characters 38-39:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'q -> ('q * bool) * 'r
+within context
+    let rec wwhile (f, b) = (match f with 
+                             | (x, true) -> (wwhile ((f; [[...]]) x))
+                             | (x, false) -> x) ;; 
+==============================

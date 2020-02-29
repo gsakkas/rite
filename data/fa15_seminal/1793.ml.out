@@ -1,0 +1,61 @@
+------------------------------------------------------------------
+File "1793.ml", line 18, characters 71-72:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+File "1793.ml", line 18, characters 71-72:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = let pi = 3.14 in (match e with 
+                                               | VarX -> x
+                                               | VarY -> y
+                                               | Sine ex ->
+                                                 (sin (pi *. (eval (ex, x, y))))
+                                               | Cosine ex ->
+                                                 (cos (pi *. (eval (ex, x, y))))
+                                               | Average (ex1, ex2) ->
+                                                 (((eval (ex1, x, y))
+                                                           +. (eval (ex2, x, y)))
+                                                       /. 2; [[...]])
+                                               | Times (ex1, ex2) ->
+                                                 ((eval (ex1, x, y))
+                                                       *. (eval (ex2, x, y)))
+                                               | Thresh (ex1, ex2, ex3, ex4) ->
+                                                 (if ex1 < ex2 then
+                                                     (eval (ex3, x, y))
+                                                     else
+                                                     (eval (ex4, x, y)))) ;; 
+==============================
+File "1793.ml", line 18, characters 68-70:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = let pi = 3.14 in (match e with 
+                                               | VarX -> x
+                                               | VarY -> y
+                                               | Sine ex ->
+                                                 (sin (pi *. (eval (ex, x, y))))
+                                               | Cosine ex ->
+                                                 (cos (pi *. (eval (ex, x, y))))
+                                               | Average (ex1, ex2) ->
+                                                 (((eval (ex1, x, y))
+                                                           +. (eval (ex2, x, y)))
+                                                       /.; [[...]] 2)
+                                               | Times (ex1, ex2) ->
+                                                 ((eval (ex1, x, y))
+                                                       *. (eval (ex2, x, y)))
+                                               | Thresh (ex1, ex2, ex3, ex4) ->
+                                                 (if ex1 < ex2 then
+                                                     (eval (ex3, x, y))
+                                                     else
+                                                     (eval (ex4, x, y)))) ;; 
+==============================

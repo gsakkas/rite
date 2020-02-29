@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "2192.ml", line 29, characters 15-27:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.combine
+------------------------------------------------------------------
+File "2192.ml", line 29, characters 15-27:
+Try replacing
+    List.combine
+with
+    List.combine; [[...]]
+of type
+    ('f list -> 'f list) -> 'g -> ('h list -> 'h list) -> 'i -> 'j
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (op1, op2) ->
+                                    (let res = op1 + op2 in
+                                          let (car, res) = res / 10, (mod res 10) in
+                                          let (c1, c2) = a in (match c1 with 
+                                                               | [] ->
+                                                                 ([car], res :: c2)
+                                                               | y :: s ->
+                                                                 (car :: s,
+                                                                       res + y ::
+                                                                           c2)))) in let
+          base
+          =
+          [], []
+          in
+          let args = ((List.combine; [[...]]) List.rev l1  List.rev  l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

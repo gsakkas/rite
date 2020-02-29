@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "2052.ml", line 6, characters 33-41:
+This expression has type 'a * 'b but is here used with type 'a
+Relevant code: (sep, x)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2052.ml", line 7, characters 6-59:
+And modified the following location:
+File "2052.ml", line 6, characters 33-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (sepConcat (sep, x))
+with
+    (sepConcat sep x)
+The actual replacement has type
+    string
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = a ^ (sepConcat sep x) in
+                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2052.ml", line 7, characters 6-59:
+And modified the following location:
+File "2052.ml", line 6, characters 23-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sepConcat
+with
+    sepConcat; [[...]]
+The actual replacement has type
+    'c * 'd -> string
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = a ^ ((sepConcat; [[...]]) (sep, x))
+                                        in
+                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2052.ml", line 7, characters 6-59:
+And modified the following location:
+File "2052.ml", line 6, characters 23-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sepConcat
+with
+    h
+The actual replacement has type
+    'e * 'f -> string
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = a ^ (h (sep, x)) in
+                                        [[...other program...]])) ;; 
+==============================

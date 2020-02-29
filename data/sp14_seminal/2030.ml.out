@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "2030.ml", line 11, characters 34-44:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: removeZero
+------------------------------------------------------------------
+File "2030.ml", line 11, characters 34-59:
+Try replacing
+    (removeZero List.fold_left f  base  args)
+with
+    (removeZero (List.fold_left f base  args))
+of type
+    int list
+within context
+    fun i l -> (let f a x = (match a with 
+                             | [] -> i * x :: a
+                             | h :: t ->
+                               [i * x + h / 10 ; (mod h 10)]
+                                   @
+                                   t) in let base = [] in
+            let args = (List.rev 0 :: l) in
+            (removeZero (List.fold_left f base  args)))
+==============================

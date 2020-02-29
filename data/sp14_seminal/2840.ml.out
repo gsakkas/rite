@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "2840.ml", line 12, characters 33-44:
+This expression has type char list but is here used with type
+  'a list -> 'a list
+Relevant code: (explode w)
+------------------------------------------------------------------
+File "2840.ml", line 12, characters 29-29:
+Try replacing
+    (listReverse (explode w))
+with
+    (listReverse [[...]] (explode w))
+of type
+    char list
+within context
+    let palindrome w =
+    (if (listReverse [[...]] (explode w)) = (explode w) then true else false)
+    ;; 
+==============================
+File "2840.ml", line 12, characters 30-30:
+Try replacing
+    (listReverse (explode w))
+with
+    (listReverse (explode w) [[...]])
+of type
+    char list
+within context
+    let palindrome w =
+    (if (listReverse (explode w) [[...]]) = (explode w) then true else false)
+    ;; 
+==============================
+File "2840.ml", line 12, characters 33-44:
+Try replacing
+    (explode w)
+with
+    (explode w); [[...]]
+of type
+    'b list -> 'b list
+within context
+    let palindrome w =
+    (if (listReverse (explode w)) = ((explode w); [[...]]) then true else false)
+    ;; 
+==============================
+File "2840.ml", line 12, characters 31-32:
+Try replacing
+    =
+with
+    =; [[...]]
+of type
+    ('c list -> 'c list) -> char list -> bool
+within context
+    let palindrome w =
+    (if ((listReverse (explode w)) =; [[...]] (explode w)) then true else false)
+    ;; 
+==============================

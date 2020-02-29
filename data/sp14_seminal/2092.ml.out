@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "2092.ml", line 9, characters 46-60:
+This expression has type 'a list -> 'b list but is here used with type string
+Relevant code: List.map (f l)
+------------------------------------------------------------------
+File "2092.ml", line 9, characters 56-57:
+Try replacing
+    (List.map (f l))
+with
+    (f (List.map l))
+of type
+    string
+within context
+    fun l -> "[" ^ ((sepConcat ";" [(f (List.map l))]) ^ "]")
+==============================
+File "2092.ml", line 9, characters 46-54:
+Try replacing
+    List.map
+with
+    l
+of type
+    'c -> string
+within context
+    "[" ^ ((sepConcat ";" [(l (f l))]) ^ "]")
+==============================
+File "2092.ml", line 9, characters 46-54:
+Try replacing
+    List.map
+with
+    f
+of type
+    string -> string
+within context
+    "[" ^ ((sepConcat ";" [(f (f l))]) ^ "]")
+==============================

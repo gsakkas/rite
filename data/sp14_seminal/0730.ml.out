@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0730.ml", line 5, characters 55-56:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: g
+------------------------------------------------------------------
+File "0730.ml", line 5, characters 55-56:
+Try replacing
+    g
+with
+    wwhile
+of type
+    (('o -> 'o -> 'o * bool) -> ('o -> 'o -> 'o * bool) * bool) *
+    ('o -> 'o -> 'o * bool) -> 'o -> 'o -> 'o * bool
+within context
+    fun (f, b) -> (wwhile (let g x = x, false in (wwhile f b), b))
+==============================

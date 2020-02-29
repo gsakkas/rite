@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2755.ml", line 10, characters 32-67:
+This expression has type int but is here used with type int list
+Relevant code: (((i * h) / 10) + (mulByDigit i t))
+------------------------------------------------------------------
+File "2755.ml", line 10, characters 48-49:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int -> int list -> int list
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t -> (match (List.length t) with 
+                           | 1 -> [i * h]
+                           | _ ->
+                             [(remainder h i)] @
+                                 ((i * h) / 10 +; [[...]] (mulByDigit i t))))
+==============================

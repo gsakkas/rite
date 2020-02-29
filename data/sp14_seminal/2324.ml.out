@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "2324.ml", line 40, characters 57-58:
+This expression has type int list * 'a -> int -> int list
+but is here used with type int list * 'a -> int -> int list * 'a
+Relevant code: f
+------------------------------------------------------------------
+File "2324.ml", line 40, characters 57-58:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'b * 'c list -> 'd -> 'b * 'c list
+within context
+    let f a x = let (q, w) = a in (mulByDigit x q) in
+      let base = l1, [] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2324.ml", line 40, characters 42-56:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list * 'e -> int -> int list) -> 'f * 'g list -> 'h list -> 'i * 'j
+within context
+    let f a x = let (q, w) = a in (mulByDigit x q) in
+      let base = l1, [] in
+      let args = (List.rev l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2324.ml", line 38, characters 8-45:
+Try replacing
+    fun a x -> (let (q, w) = a in (mulByDigit x q))
+with
+    fun a x -> (let (q, w) = a in (mulByDigit x q)); [[...]]
+of type
+    'k
+within context
+    let bigMul l1 l2 =
+    let f = fun a x -> (let (q, w) = a in (mulByDigit x q)); [[...]] in
+      let base = l1, [] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+    ;; 
+==============================

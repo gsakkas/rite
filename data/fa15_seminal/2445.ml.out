@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "2445.ml", line 23, characters 22-24:
+This expression has type int list -> int but is here used with type int list
+Relevant code: a1
+------------------------------------------------------------------
+File "2445.ml", line 21, characters 20-21:
+Try replacing
+    a
+with
+    a; [[...]]
+of type
+    'a * 'b
+within context
+    let f a x =
+      let (l1x, l2x) = x in
+        let (a1, a2) = a; [[...]] in
+        let sum = (l1x + l2x) + (a1 [0]) in sum / 10 :: a1, (mod sum 10) :: a2
+      in
+      let base = [], [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "2445.ml", line 22, characters 31-33:
+Try replacing
+    a1
+with
+    a1; [[...]]
+of type
+    int list -> int
+within context
+    let (l1x, l2x) = x in
+      let (a1, a2) = a in
+      let sum = (l1x + l2x) + ((a1; [[...]]) [0]) in
+      sum / 10 :: a1, (mod sum 10) :: a2
+==============================

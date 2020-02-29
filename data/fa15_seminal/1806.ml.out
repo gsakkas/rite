@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "1806.ml", line 9, characters 8-113:
+This expression has type bool but is here used with type 'a list
+Relevant code: if List.mem h rest'
+        then rest' = t
+        else (let seen' = h :: seen' in helper (seen', rest'))
+------------------------------------------------------------------
+File "1806.ml", line 10, characters 13-22:
+Try replacing
+    rest' = t
+with
+    rest' = t; [[...]]
+of type
+    'b list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' = [] in
+                                 let rest' = (List.rev t) in
+                                 (if (List.mem h rest') then (rest' = t; [[...]])
+                                     else
+                                     (let seen' = h :: seen' in
+                                         (helper (seen', rest'))))))
+==============================

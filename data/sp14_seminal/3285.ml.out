@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "3285.ml", line 19, characters 30-44:
+This expression has type int * int but is here used with type
+  int list * int list
+Relevant code: (list1, list2)
+------------------------------------------------------------------
+File "3285.ml", line 15, characters 6-170:
+Try replacing
+    (match a with 
+     | ([], []) -> (match x with 
+                    | (h1, h2) -> ([(h1 + h2) / 10], [(mod (h1 + h2) 10)])
+                    | (list1, list2) -> (list1, list2)))
+with
+    (match a with 
+     | ([], []) -> (match x with 
+                    | (h1, h2) -> ([(h1 + h2) / 10], [(mod (h1 + h2) 10)]))
+     | (list1, list2) -> (list1, list2))
+of type
+    int list * int list
+==============================

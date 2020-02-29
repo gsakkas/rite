@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1291.ml", line 48, characters 15-179:
+This expression has type expr but is here used with type unit
+Relevant code: buildThresh
+                 ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+                   (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+------------------------------------------------------------------
+File "1291.ml", line 46, characters 13-219:
+Try replacing
+    (if x = 4 then
+      (buildThresh
+        ((build (rand, depth - 1)),
+            (build (rand, depth - 1)),
+            (build (rand, depth - 1)), (build (rand, depth - 1)))))
+with
+    [[...]]
+of type
+    expr
+==============================

@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1437.ml", line 41, characters 14-99:
+This expression has type expr but is here used with type unit
+Relevant code: buildTimes
+                ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+------------------------------------------------------------------
+File "1437.ml", line 39, characters 12-137:
+Try replacing
+    (if r = 3 then
+      (buildTimes ((build (rand, depth - 1)), (build (rand, depth - 1)))))
+with
+    [[...]]
+of type
+    expr
+within context
+    (match depth with 
+     | 0 -> (let r = (rand (0, 2)) in (if r = 0 then (buildX ()) else (buildY ())))
+     | _ ->
+       (let r = (rand (0, 5)) in
+             (if r = 0 then (buildSine (build (rand, depth - 1))) else
+                 (if r = 1 then (buildCosine (build (rand, depth - 1))) else
+                   (if r = 2 then
+                     (buildAverage
+                       ((build (rand, depth - 1)), (build (rand, depth - 1))))
+                     else
+                     [[...]])))))
+==============================

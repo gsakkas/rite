@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2322.ml", line 26, characters 11-30:
+This expression has type int list * int list but is here used with type
+  int list * (int list * int list)
+Relevant code: (t, ((x + h) :: b))
+------------------------------------------------------------------
+File "2322.ml", line 23, characters 8-135:
+Try replacing
+    let asd = x / h in
+      let asd2 = (x + h) - asd * 10 in
+      let asd3 = asd :: t in asd3, (padZero asd3 asd2 :: b)
+with
+    let asd = x / h in
+      let asd2 = (x + h) - asd * 10 in
+      let asd3 = asd :: t in asd3, (padZero asd3 asd2 :: b);
+    [[...]]
+of type
+    int list * int list
+==============================

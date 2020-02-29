@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0410.ml", line 8, characters 11-13:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: fs
+------------------------------------------------------------------
+File "0410.ml", line 8, characters 11-13:
+Try replacing
+    fs
+with
+    f
+of type
+    'g -> bool -> 'g -> 'g * bool
+within context
+    fun (f, b) ->
+      (let fs bs = (if bs = 0 then 0 else (if bs > 1 then bs - 1 else bs + 1)) in
+          (wwhile ((f b true), b)))
+==============================

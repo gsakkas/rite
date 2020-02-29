@@ -1,0 +1,125 @@
+------------------------------------------------------------------
+File "1197.ml", line 33, characters 6-10:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: pair
+------------------------------------------------------------------
+File "1197.ml", line 33, characters 6-10:
+Try replacing
+    pair
+with
+    pair; [[...]]
+of type
+    ('h1 list -> 'h1 list) -> 'i1 -> ('j1 list -> 'j1 list) -> 'k1 -> 'l1
+within context
+    let f a x = (match x with 
+                 | (x1, x2) -> (match a with 
+                                | (o, z) ->
+                                  (if (o + x1) + x2 > 9 then
+                                      1, (mod ((o + x1) + x2) 10) :: z
+                                      else
+                                      0,
+                                        (o + x1) + x2 ::
+                                            z))) in let base = 0, [] in
+      let args = let rec pair list1 list2 = (match list1, list2 with 
+                                             | (h1 :: t1, h2 :: t2) ->
+                                               h1, h2 :: (pair t1 t2)
+                                             | (_, _) ->
+                                               []) in ((pair; [[...]])
+            List.rev l1 List.rev l2) in let (_, res) = (List.fold_left f base  args) in args
+==============================
+Triaged the following locations:
+File "1197.ml", line 31, characters 29-53:
+File "1197.ml", line 32, characters 19-21:
+And modified the following location:
+File "1197.ml", line 31, characters 11-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h1 :: t1
+with
+    _
+The actual replacement has type
+    'f list -> 'g
+within context
+    let args = let rec pair list1 list2 = (match list1, list2 with 
+                                           | (_, h2 :: t2) ->
+                                             [[...other program...]]
+                                           | (_, _) ->
+                                             [[...other program...]]) in (pair
+            List.rev l1 List.rev l2) in let (_, res) = (List.fold_left f base  args) in args
+==============================
+Triaged the following locations:
+File "1197.ml", line 31, characters 29-53:
+File "1197.ml", line 32, characters 19-21:
+And modified the following location:
+File "1197.ml", line 30, characters 14-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    list1, list2
+with
+    list1, list2; [[...]]
+The actual replacement has type
+    'k list * 'l list
+within context
+    let args = let rec pair list1 list2 = (match (list1, list2; [[...]]) with 
+                                           | (h1 :: t1, h2 :: t2) ->
+                                             [[...other program...]]
+                                           | (_, _) ->
+                                             [[...other program...]]) in (pair
+            List.rev l1 List.rev l2) in let (_, res) = (List.fold_left f base  args) in args
+==============================
+Triaged the following locations:
+File "1197.ml", line 31, characters 29-53:
+File "1197.ml", line 32, characters 19-21:
+And modified the following location:
+File "1197.ml", line 30, characters 15-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    list1
+with
+    l1
+The actual replacement has type
+    'o list * 'p list
+within context
+    let args = let rec pair list1 list2 = (match l1, list2 with 
+                                           | (h1 :: t1, h2 :: t2) ->
+                                             [[...other program...]]
+                                           | (_, _) ->
+                                             [[...other program...]]) in (pair
+            List.rev l1 List.rev l2) in let (_, res) = (List.fold_left f base  args) in args
+==============================
+Triaged the following locations:
+File "1197.ml", line 31, characters 29-53:
+File "1197.ml", line 32, characters 19-21:
+And modified the following location:
+File "1197.ml", line 30, characters 15-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    list1
+with
+    l2
+The actual replacement has type
+    'm list * 'n list
+within context
+    let args = let rec pair list1 list2 = (match l2, list2 with 
+                                           | (h1 :: t1, h2 :: t2) ->
+                                             [[...other program...]]
+                                           | (_, _) ->
+                                             [[...other program...]]) in (pair
+            List.rev l1 List.rev l2) in let (_, res) = (List.fold_left f base  args) in args
+==============================
+Triaged the following locations:
+File "1197.ml", line 31, characters 29-53:
+File "1197.ml", line 32, characters 19-21:
+And modified the following location:
+File "1197.ml", line 30, characters 15-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    list1
+with
+    list2
+The actual replacement has type
+    'q list * 'q list
+within context
+    let args = let rec pair list1 list2 = (match list2, list2 with 
+                                           | (h1 :: t1, h2 :: t2) ->
+                                             [[...other program...]]
+                                           | (_, _) ->
+                                             [[...other program...]]) in (pair
+            List.rev l1 List.rev l2) in let (_, res) = (List.fold_left f base  args) in args
+==============================

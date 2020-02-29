@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "0808.ml", line 11, characters 25-57:
+This expression has type 'a -> 'b but is here used with type int
+Relevant code: (loop (sumList (digitsOfInt x)))
+------------------------------------------------------------------
+File "0808.ml", line 11, characters 57-57:
+Try replacing
+    (loop (sumList (digitsOfInt x)))
+with
+    (loop (sumList (digitsOfInt x)) [[...]])
+of type
+    int
+within context
+    let rec loop x y =
+      (if x = 0 then y else (loop (sumList (digitsOfInt x)) [[...]]) + y)
+      in
+      (match n with 
+       | 0 -> 0
+       | x' -> (loop x' 0))
+==============================
+File "0808.ml", line 11, characters 56-56:
+Try replacing
+    (loop (sumList (digitsOfInt x)))
+with
+    (loop [[...]] (sumList (digitsOfInt x)))
+of type
+    int
+within context
+    let rec loop x y =
+      (if x = 0 then y else (loop [[...]] (sumList (digitsOfInt x))) + y)
+      in
+      (match n with 
+       | 0 -> 0
+       | x' -> (loop x' 0))
+==============================
+File "0808.ml", line 11, characters 58-59:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    ('c -> 'c) -> 'c -> 'c
+within context
+    let rec loop x y =
+      (if x = 0 then y else ((loop (sumList (digitsOfInt x))) +; [[...]] y))
+      in
+      (match n with 
+       | 0 -> 0
+       | x' -> (loop x' 0))
+==============================

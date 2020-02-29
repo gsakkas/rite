@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "0042.ml", line 46, characters 59-63:
+This expression has type 'a list * int list but is here used with type
+  'a list * int list list
+Relevant code: base
+------------------------------------------------------------------
+File "0042.ml", line 45, characters 14-32:
+Try replacing
+    (List.rev l1), [1]
+with
+    [1], (List.rev l1)
+of type
+    int list * int list list
+within context
+    let bigMul l1 l2 = let f a x = (match a with 
+                                    | (h1 :: t1, rh :: rt) ->
+                                      (t1,
+                                            (bigAdd (mulByDigit x rh) rh) ::
+                                                rt)) in let base =
+      [1], (List.rev l1)
+      in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res ;; 
+==============================

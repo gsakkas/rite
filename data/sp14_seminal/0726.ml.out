@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0726.ml", line 35, characters 63-67:
+This expression is not a function, it cannot be applied
+Relevant code: ")+"
+------------------------------------------------------------------
+File "0726.ml", line 35, characters 63-67:
+Try replacing
+    ")+"
+with
+    ")+"; [[...]]
+of type
+    int -> string -> string
+within context
+    let res = (exprToString expr) in
+      res ^ ("/(abs(" ^ (res ^ (1 ")+"; [[...]] ")")))
+==============================

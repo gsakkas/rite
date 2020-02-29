@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "0291.ml", line 3, characters 2-57:
+This expression has type 'a list but is here used with type
+  'a list -> 'a list
+Relevant code: match l with | [] -> l | h::t -> listReverse (h :: l) t
+------------------------------------------------------------------
+File "0291.ml", line 2, characters 20-81:
+Try replacing
+    fun l -> (match l with 
+              | [] -> l
+              | h :: t -> (listReverse h :: l t))
+with
+    fun l _ -> (match l with 
+                | [] -> l
+                | h :: t -> (listReverse h :: l t))
+of type
+    'b list -> 'b list -> 'b list
+==============================
+File "0291.ml", line 2, characters 20-81:
+Try replacing
+    fun l -> (match l with 
+              | [] -> l
+              | h :: t -> (listReverse h :: l t))
+with
+    fun _ l -> (match l with 
+                | [] -> l
+                | h :: t -> (listReverse h :: l t))
+of type
+    'c list -> 'c list -> 'c list
+==============================

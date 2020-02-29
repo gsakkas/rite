@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0666.ml", line 3, characters 45-70:
+This expression has type 'a list but is here used with type 'b option
+Relevant code: [listReverse back; front]
+------------------------------------------------------------------
+File "0666.ml", line 3, characters 45-70:
+Try replacing
+    [(listReverse back) ; front]
+with
+    [(listReverse back) ; front]; [[...]]
+of type
+    'c option
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> None
+                             | front :: back ->
+                               ([(listReverse back) ; front]; [[...]])) ;; 
+==============================

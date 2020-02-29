@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0486.ml", line 14, characters 31-38:
+This expression has type 'a list but is here used with type bool
+Relevant code: l :: lr
+------------------------------------------------------------------
+File "0486.ml", line 14, characters 31-38:
+Try replacing
+    l :: lr
+with
+    [[...]]
+of type
+    bool
+within context
+    let palindrome w =
+    let l = (explode w) in
+      let lr = (listReverse l) in (if [[...]] then true else false)
+    ;; 
+==============================

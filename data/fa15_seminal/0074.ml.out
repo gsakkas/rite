@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "0074.ml", line 31, characters 35-37:
+This expression has type expr but is here used with type expr * float * float
+Relevant code: e1
+------------------------------------------------------------------
+File "0074.ml", line 31, characters 35-37:
+Try replacing
+    e1
+with
+    e1; [[...]]
+of type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Uncreative (e1, e2, e3) ->
+                                ((((((eval (e1, x, y)) /. 2.0) *. (eval (e2, x, y)))
+                                              /. 3.0)
+                                          *. (eval (e3, x, y)))
+                                      /. 4.0)
+                              | Creative e1 -> (-1.0 *. (eval (e1; [[...]])))) ;; 
+==============================
+File "0074.ml", line 31, characters 30-34:
+Try replacing
+    eval
+with
+    eval; [[...]]
+of type
+    expr -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Uncreative (e1, e2, e3) ->
+                                ((((((eval (e1, x, y)) /. 2.0) *. (eval (e2, x, y)))
+                                              /. 3.0)
+                                          *. (eval (e3, x, y)))
+                                      /. 4.0)
+                              | Creative e1 -> (-1.0 *. ((eval; [[...]]) e1))) ;; 
+==============================

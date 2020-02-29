@@ -1,0 +1,91 @@
+------------------------------------------------------------------
+File "0383.ml", line 27, characters 7-23:
+This expression has type float but is here used with type int
+Relevant code: (eval (t, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0383.ml", line 27, characters 6-31:
+And modified the following location:
+File "0383.ml", line 27, characters 53-56:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    mod
+with
+    mod; [[...]]
+The actual replacement has type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Average (t, s) ->
+                                (((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0)
+                              | Times (t, s) ->
+                                ((eval (t, x, y)) *. (eval (s, x, y)))
+                              | Thresh (t, r, s, q) ->
+                                (if (eval (t, x, y)) < (eval (r, x, y)) then
+                                    (eval (s, x, y))
+                                    else
+                                    (eval (q, x, y)))
+                              | Trip (t, r, s) ->
+                                ([[...other program...]] +.
+                                      ((mod; [[...]])
+                                        (eval (r, x, y)) (eval (s, x, y))))) ;; 
+==============================
+Triaged the following locations:
+File "0383.ml", line 27, characters 35-74:
+And modified the following location:
+File "0383.ml", line 27, characters 24-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    mod
+with
+    mod; [[...]]
+The actual replacement has type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Average (t, s) ->
+                                (((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0)
+                              | Times (t, s) ->
+                                ((eval (t, x, y)) *. (eval (s, x, y)))
+                              | Thresh (t, r, s, q) ->
+                                (if (eval (t, x, y)) < (eval (r, x, y)) then
+                                    (eval (s, x, y))
+                                    else
+                                    (eval (q, x, y)))
+                              | Trip (t, r, s) ->
+                                (((mod; [[...]]) (eval (t, x, y)) 30)
+                                      +. [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "0383.ml", line 18, characters 14-42:
+File "0383.ml", line 19, characters 16-44:
+File "0383.ml", line 20, characters 21-66:
+File "0383.ml", line 21, characters 19-55:
+File "0383.ml", line 23, characters 6-96:
+And modified the following location:
+File "0383.ml", line 27, characters 32-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +.
+with
+    +.; [[...]]
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine t -> [[...other program...]]
+                              | Cosine t -> [[...other program...]]
+                              | Average (t, s) -> [[...other program...]]
+                              | Times (t, s) -> [[...other program...]]
+                              | Thresh (t, r, s, q) -> [[...other program...]]
+                              | Trip (t, r, s) ->
+                                ((mod (eval (t, x, y)) 30) +.; [[...]]
+                                      (mod (eval (r, x, y)) (eval (s, x, y))))) ;; 
+==============================

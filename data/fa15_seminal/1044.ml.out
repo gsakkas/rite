@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1044.ml", line 34, characters 71-72:
+This expression has type int list list but is here used with type int list
+Relevant code: c
+------------------------------------------------------------------
+File "1044.ml", line 34, characters 57-64:
+Try replacing
+    List.hd
+with
+    List.rev
+of type
+    int list -> int list
+within context
+    let r = (bigAdd (mulByDigit x (List.rev l2)) [b]) in (match r with 
+                                                          | [] -> (0, [0] :: c)
+                                                          | h :: t ->
+                                                            (h, (List.rev t) :: c))
+==============================
+File "1044.ml", line 34, characters 65-66:
+Try replacing
+    t
+with
+    c
+of type
+    int list list
+within context
+    let r = (bigAdd (mulByDigit x (List.rev l2)) [b]) in (match r with 
+                                                          | [] -> (0, [0] :: c)
+                                                          | h :: t ->
+                                                            (h, (List.hd c) :: c))
+==============================

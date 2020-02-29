@@ -1,0 +1,298 @@
+------------------------------------------------------------------
+File "2499.ml", line 15, characters 20-22:
+This expression has type float but is here used with type int
+Relevant code: pi
+------------------------------------------------------------------
+Triaged the following locations:
+File "2499.ml", line 16, characters 17-38:
+File "2499.ml", line 18, characters 6-66:
+File "2499.ml", line 19, characters 21-59:
+And modified the following location:
+File "2499.ml", line 15, characters 23-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    float -> float -> float
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> (sin (pi *; [[...]] (exprToString e1)))
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 18, characters 6-66:
+File "2499.ml", line 19, characters 21-59:
+And modified the following location:
+File "2499.ml", line 16, characters 35-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> (cos (exprToString e))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 18, characters 6-66:
+File "2499.ml", line 19, characters 21-59:
+And modified the following location:
+File "2499.ml", line 16, characters 22-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString
+The actual replacement has type
+    expr -> float
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> (cos (exprToString e1))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 18, characters 6-66:
+File "2499.ml", line 19, characters 21-59:
+And modified the following location:
+File "2499.ml", line 16, characters 17-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    cos
+with
+    cos
+The actual replacement has type
+    float -> float
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> (cos (exprToString e1))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 18, characters 6-66:
+File "2499.ml", line 19, characters 21-59:
+And modified the following location:
+File "2499.ml", line 16, characters 22-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString e1)
+with
+    (exprToString (e1))
+The actual replacement has type
+    float
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> (cos (exprToString (e1)))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 18, characters 6-66:
+File "2499.ml", line 19, characters 21-59:
+And modified the following location:
+File "2499.ml", line 16, characters 35-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e1
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> (cos (exprToString e1))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 18, characters 6-66:
+File "2499.ml", line 19, characters 21-59:
+And modified the following location:
+File "2499.ml", line 16, characters 17-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    cos
+with
+    sin
+The actual replacement has type
+    float -> float
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> (sin (exprToString e1))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 16, characters 17-38:
+File "2499.ml", line 18, characters 6-66:
+And modified the following location:
+File "2499.ml", line 19, characters 22-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString
+The actual replacement has type
+    expr -> float
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) ->
+                                ((exprToString e1) *. (exprToString e2))) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 16, characters 17-38:
+File "2499.ml", line 18, characters 6-66:
+And modified the following location:
+File "2499.ml", line 19, characters 22-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString e1)
+with
+    (exprToString (e1))
+The actual replacement has type
+    float
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) ->
+                                ((exprToString (e1)) *. (exprToString e2))) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 16, characters 17-38:
+File "2499.ml", line 18, characters 6-66:
+And modified the following location:
+File "2499.ml", line 19, characters 35-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) ->
+                                ((exprToString e) *. (exprToString e2))) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 16, characters 17-38:
+File "2499.ml", line 18, characters 6-66:
+And modified the following location:
+File "2499.ml", line 19, characters 35-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e1
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) ->
+                                ((exprToString e1) *. (exprToString e2))) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 16, characters 17-38:
+File "2499.ml", line 18, characters 6-66:
+And modified the following location:
+File "2499.ml", line 19, characters 35-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e1
+with
+    e2
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) ->
+                                ((exprToString e2) *. (exprToString e2))) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 16, characters 17-38:
+File "2499.ml", line 18, characters 6-66:
+And modified the following location:
+File "2499.ml", line 19, characters 39-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) ->
+                                (exprToString e1) * (exprToString e2)) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 16, characters 17-38:
+File "2499.ml", line 18, characters 6-66:
+And modified the following location:
+File "2499.ml", line 19, characters 43-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString
+The actual replacement has type
+    expr -> float
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) ->
+                                ((exprToString e1) *. (exprToString e2))) ;; 
+==============================
+Triaged the following locations:
+File "2499.ml", line 15, characters 15-43:
+File "2499.ml", line 16, characters 17-38:
+File "2499.ml", line 18, characters 6-66:
+And modified the following location:
+File "2499.ml", line 19, characters 43-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString e2)
+with
+    (exprToString (e2))
+The actual replacement has type
+    float
+within context
+    let rec exprToString e = (match e with 
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) ->
+                                ((exprToString e1) *. (exprToString (e2)))) ;; 
+==============================

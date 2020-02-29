@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1505.ml", line 3, characters 66-68:
+This expression has type int list but is here used with type int
+Relevant code: tl
+------------------------------------------------------------------
+File "1505.ml", line 3, characters 66-68:
+Try replacing
+    tl
+with
+    a
+of type
+    int
+within context
+    fun a b -> (match b with 
+                | [] -> [a]
+                | hd :: tl -> [a + hd] @ [a])
+==============================

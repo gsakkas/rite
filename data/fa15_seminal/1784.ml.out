@@ -1,0 +1,241 @@
+------------------------------------------------------------------
+File "1784.ml", line 18, characters 9-13:
+The constructor Sine expects 1 argument(s),
+but is here applied to 0 argument(s)
+Relevant code: Sine
+------------------------------------------------------------------
+Triaged the following locations:
+File "1784.ml", line 16, characters 18-41:
+File "1784.ml", line 17, characters 18-41:
+File "1784.ml", line 18, characters 9-13:
+File "1784.ml", line 18, characters 18-55:
+File "1784.ml", line 19, characters 9-15:
+File "1784.ml", line 19, characters 20-57:
+File "1784.ml", line 20, characters 9-16:
+File "1784.ml", line 21, characters 25-26:
+File "1784.ml", line 22, characters 11-127:
+File "1784.ml", line 26, characters 25-26:
+File "1784.ml", line 27, characters 11-91:
+File "1784.ml", line 29, characters 9-15:
+File "1784.ml", line 30, characters 31-32:
+File "1784.ml", line 31, characters 11-308:
+And modified the following location:
+File "1784.ml", line 25, characters 9-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    Times
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | [] -> []
+                              | h :: e' -> (match h with 
+                                            | VarX -> [[...other program...]]
+                                            | VarY -> [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            | _ -> [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1784.ml", line 16, characters 18-41:
+File "1784.ml", line 17, characters 18-41:
+File "1784.ml", line 18, characters 18-55:
+File "1784.ml", line 19, characters 9-15:
+File "1784.ml", line 19, characters 20-57:
+File "1784.ml", line 20, characters 9-16:
+File "1784.ml", line 21, characters 25-26:
+File "1784.ml", line 22, characters 11-127:
+File "1784.ml", line 25, characters 9-14:
+File "1784.ml", line 26, characters 25-26:
+File "1784.ml", line 27, characters 11-91:
+File "1784.ml", line 29, characters 9-15:
+File "1784.ml", line 30, characters 31-32:
+File "1784.ml", line 31, characters 11-308:
+And modified the following location:
+File "1784.ml", line 18, characters 9-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    Sine
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | [] -> []
+                              | h :: e' -> (match h with 
+                                            | VarX -> [[...other program...]]
+                                            | VarY -> [[...other program...]]
+                                            | _ -> [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1784.ml", line 16, characters 18-41:
+File "1784.ml", line 17, characters 18-41:
+File "1784.ml", line 18, characters 9-13:
+File "1784.ml", line 18, characters 18-55:
+File "1784.ml", line 19, characters 9-15:
+File "1784.ml", line 19, characters 20-57:
+File "1784.ml", line 20, characters 9-16:
+File "1784.ml", line 21, characters 25-26:
+File "1784.ml", line 22, characters 11-127:
+File "1784.ml", line 25, characters 9-14:
+File "1784.ml", line 26, characters 25-26:
+File "1784.ml", line 27, characters 11-91:
+File "1784.ml", line 30, characters 31-32:
+File "1784.ml", line 31, characters 11-308:
+And modified the following location:
+File "1784.ml", line 29, characters 9-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    Thresh
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | [] -> []
+                              | h :: e' -> (match h with 
+                                            | VarX -> [[...other program...]]
+                                            | VarY -> [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            | _ -> [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1784.ml", line 16, characters 18-41:
+File "1784.ml", line 17, characters 18-41:
+File "1784.ml", line 18, characters 9-13:
+File "1784.ml", line 18, characters 18-55:
+File "1784.ml", line 19, characters 9-15:
+File "1784.ml", line 19, characters 20-57:
+File "1784.ml", line 21, characters 25-26:
+File "1784.ml", line 22, characters 11-127:
+File "1784.ml", line 25, characters 9-14:
+File "1784.ml", line 26, characters 25-26:
+File "1784.ml", line 27, characters 11-91:
+File "1784.ml", line 29, characters 9-15:
+File "1784.ml", line 30, characters 31-32:
+File "1784.ml", line 31, characters 11-308:
+And modified the following location:
+File "1784.ml", line 20, characters 9-16:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    Average
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | [] -> []
+                              | h :: e' -> (match h with 
+                                            | VarX -> [[...other program...]]
+                                            | VarY -> [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            | _ -> [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1784.ml", line 16, characters 18-41:
+File "1784.ml", line 17, characters 18-41:
+File "1784.ml", line 18, characters 9-13:
+File "1784.ml", line 18, characters 18-55:
+File "1784.ml", line 19, characters 20-57:
+File "1784.ml", line 20, characters 9-16:
+File "1784.ml", line 21, characters 25-26:
+File "1784.ml", line 22, characters 11-127:
+File "1784.ml", line 25, characters 9-14:
+File "1784.ml", line 26, characters 25-26:
+File "1784.ml", line 27, characters 11-91:
+File "1784.ml", line 29, characters 9-15:
+File "1784.ml", line 30, characters 31-32:
+File "1784.ml", line 31, characters 11-308:
+And modified the following location:
+File "1784.ml", line 19, characters 9-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    Cosine
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | [] -> []
+                              | h :: e' -> (match h with 
+                                            | VarX -> [[...other program...]]
+                                            | VarY -> [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            | _ -> [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]]
+                                            |
+                                              [[...other pattern...]]
+                                              ->
+                                              [[...other program...]])) ;; 
+==============================

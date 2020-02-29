@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "2103.ml", line 36, characters 66-73:
+This expression is not a function, it cannot be applied
+Relevant code: (i - 1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2103.ml", line 36, characters 44-50:
+And modified the following location:
+File "2103.ml", line 36, characters 66-73:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    i - 1
+with
+    i - 1; [[...]]
+The actual replacement has type
+    int -> int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else
+            ((bigAdd; [[...]]) l (mulByDigit ((i - 1; [[...]]) l)))))
+==============================
+Triaged the following locations:
+File "2103.ml", line 36, characters 44-50:
+And modified the following location:
+File "2103.ml", line 36, characters 74-75:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    ((i - 1) l)
+with
+    i - 1
+The actual replacement has type
+    int
+within context
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else ((bigAdd; [[...]]) l (mulByDigit (i - 1)))))
+==============================

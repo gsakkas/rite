@@ -1,0 +1,79 @@
+------------------------------------------------------------------
+File "3059.ml", line 4, characters 51-52:
+This expression has type int -> 'a -> int list but is here used with type
+  int -> 'a -> int
+Relevant code: f
+------------------------------------------------------------------
+File "3059.ml", line 3, characters 8-11:
+Try replacing
+    fun a x -> [a ; 0]
+with
+    fun x a -> [a ; 0]
+of type
+    'b -> int -> int list
+within context
+    let bigMul l1 l2 =
+    let f x a = [a ; 0] in
+      let base = [] in let args = l2 in (List.fold_left f base  args)
+    ;; 
+==============================
+File "3059.ml", line 4, characters 51-62:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left args f  base)
+of type
+    int -> 'c -> int list
+within context
+    fun l1
+      l2 ->
+        (let f a x = [a ; 0] in
+            let base = [] in let args = l2 in (List.fold_left args f  base))
+==============================
+File "3059.ml", line 4, characters 36-50:
+Try replacing
+    List.fold_left
+with
+    l1
+of type
+    (int -> 'd -> int list) -> 'e list -> 'f -> 'g
+within context
+    fun l2 ->
+      (let f a x = [a ; 0] in let base = [] in let args = l2 in (l1 f base  args))
+==============================
+File "3059.ml", line 4, characters 51-52:
+Try replacing
+    f
+with
+    l1
+of type
+    'h list -> 'i -> 'h list
+within context
+    fun l2 ->
+      (let f a x = [a ; 0] in
+          let base = [] in let args = l2 in (List.fold_left l1 base  args))
+==============================
+File "3059.ml", line 3, characters 15-16:
+Try replacing
+    a
+with
+    l1
+of type
+    int
+within context
+    fun l2 ->
+      (let f a x = [l1 ; 0] in
+          let base = [] in let args = l2 in (List.fold_left f base  args))
+==============================
+File "3059.ml", line 3, characters 15-16:
+Try replacing
+    a
+with
+    x
+of type
+    int
+within context
+    fun l2 ->
+      (let f a x = [x ; 0] in
+          let base = [] in let args = l2 in (List.fold_left f base  args))
+==============================

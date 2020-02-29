@@ -1,0 +1,60 @@
+------------------------------------------------------------------
+File "0969.ml", line 12, characters 26-31:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: clone
+------------------------------------------------------------------
+Triaged the following locations:
+File "0969.ml", line 12, characters 13-24:
+And modified the following location:
+File "0969.ml", line 12, characters 26-31:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    clone
+with
+    clone; [[...]]
+The actual replacement has type
+    int -> int -> int list -> 'a
+within context
+    let len1 = (List.length l1) in
+      let len2 = (List.length l2) in
+      (if l1 < l2 then (List.append (clone 0 (len2 - len1)) l1), l2 else
+          l1, ((List.append; [[...]]) ((clone; [[...]]) 0 (len1 - len2)  l2)))
+==============================
+Triaged the following locations:
+File "0969.ml", line 12, characters 13-24:
+And modified the following location:
+File "0969.ml", line 12, characters 32-47:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    (clone 0 (len1 - len2)  l2)
+with
+    (clone (0, len1 - len2, l2))
+The actual replacement has type
+    int -> (int * int * int list) list
+within context
+    let len1 = (List.length l1) in
+      let len2 = (List.length l2) in
+      (if l1 < l2 then (List.append (clone 0 (len2 - len1)) l1), l2 else
+          l1, ((List.append; [[...]]) (clone (0, len1 - len2, l2))))
+==============================
+Triaged the following locations:
+File "0969.ml", line 12, characters 13-24:
+And modified the following location:
+File "0969.ml", line 12, characters 48-50:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    (clone 0 (len1 - len2)  l2)
+with
+    (clone 0 (len1 - len2))
+The actual replacement has type
+    int list
+within context
+    let len1 = (List.length l1) in
+      let len2 = (List.length l2) in
+      (if l1 < l2 then (List.append (clone 0 (len2 - len1)) l1), l2 else
+          l1, ((List.append; [[...]]) (clone 0 (len1 - len2))))
+==============================

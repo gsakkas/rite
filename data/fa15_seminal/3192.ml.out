@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "3192.ml", line 31, characters 9-73:
+This expression has type int list * int list but is here used with type
+  int list * int
+Relevant code: ((a1 @ [((x1 + x2) + c) / 10]), (a2 @ [((x1 + x2) + c) mod 10]))
+------------------------------------------------------------------
+File "3192.ml", line 28, characters 11-52:
+Try replacing
+    [(x1 + x2) / 10 ; 0], (mod (x1 + x2) 10)
+with
+    [(x1 + x2) / 10 ; 0], (mod (x1 + x2) 10); [[...]]
+of type
+    int list * int list
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            (if (List.length a1) = 0 then
+                ([(x1 + x2) / 10 ; 0], (mod (x1 + x2) 10); [[...]])
+                else
+                (let c :: c' = a1 in
+                    a1 @ [((x1 + x2) + c) / 10], a2 @ [(mod ((x1 + x2) + c) 10)])))
+==============================

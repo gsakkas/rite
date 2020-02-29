@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2089.ml", line 30, characters 58-64:
+This expression has type int * int but is here used with type ('a * 'b) list
+Relevant code: (0, 0)
+------------------------------------------------------------------
+File "2089.ml", line 30, characters 16-56:
+Try replacing
+    (List.combine (List.rev l1) (List.rev l2))
+with
+    (List.combine (List.rev l1) (List.rev l2)); [[...]]
+of type
+    int * int
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (d1, d2) -> (match a with 
+                                                 | (carry, result) ->
+                                                   (if (d1 + d2) + carry > 9 then
+                                                       1,
+                                                         ((d1 + d2) + carry) - 10 ::
+                                                             result
+                                                       else
+                                                       0,
+                                                         (d1 + d2) + carry ::
+                                                             result))) in let base =
+          0, []
+          in
+          let args = [(List.combine (List.rev l1) (List.rev l2)); [[...]] ; 0, 0] in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

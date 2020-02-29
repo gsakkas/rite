@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "0302.ml", line 2, characters 74-76:
+This expression has type int but is here used with type 'a list
+Relevant code: fs
+------------------------------------------------------------------
+File "0302.ml", line 2, characters 69-73:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left f fs)
+of type
+    'b list -> int
+within context
+    let pipe fs = let f a x = a + fs in let base = 0 in (List.fold_left f fs) ;; 
+==============================
+File "0302.ml", line 2, characters 30-32:
+Try replacing
+    fs
+with
+    x
+of type
+    int
+within context
+    fun fs -> (let f a x = a + x in let base = 0 in (List.fold_left f base  fs))
+==============================
+File "0302.ml", line 2, characters 30-32:
+Try replacing
+    fs
+with
+    a
+of type
+    int
+within context
+    fun fs -> (let f a x = a + a in let base = 0 in (List.fold_left f base  fs))
+==============================

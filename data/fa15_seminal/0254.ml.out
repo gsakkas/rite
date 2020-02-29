@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0254.ml", line 33, characters 30-44:
+This expression has type int list but is here used with type int
+Relevant code: (bigAdd l1 l2)
+------------------------------------------------------------------
+File "0254.ml", line 33, characters 31-37:
+Try replacing
+    (mulByDigit (bigAdd l1 l2))
+with
+    (bigAdd (mulByDigit l1 l2))
+of type
+    int list -> int list
+within context
+    let bigMul l1 l2 = (bigAdd (mulByDigit l1 l2)) ;; 
+==============================

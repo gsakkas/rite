@@ -1,0 +1,71 @@
+------------------------------------------------------------------
+File "3101.ml", line 32, characters 13-59:
+This expression has type float but is here used with type int
+Relevant code: ((eval (expr2, x, y)) +. (eval (expr3, x, y)))
+------------------------------------------------------------------
+File "3101.ml", line 32, characters 9-12:
+Try replacing
+    abs
+with
+    sin
+of type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> (cos (pi *. (eval (expr, x, y))))
+                              | Average (expr1, expr2) ->
+                                (((eval (expr1, x, y)) +. (eval (expr2, x, y)))
+                                      /. 2.0)
+                              | Times (expr1, expr2) ->
+                                ((eval (expr1, x, y)) *. (eval (expr2, x, y)))
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                (if (eval (expr1, x, y)) < (eval (expr2, x, y)) then
+                                    (eval (expr3, x, y))
+                                    else
+                                    (eval (expr4, x, y)))
+                              | SumInts expr ->
+                                (((eval (expr, x, y)) *.
+                                          ((eval (expr, x, y)) +. 1.0))
+                                      /. 2.0)
+                              | Power (expr1, expr2, expr3) ->
+                                (eval (expr1, x, y)) **
+                                    (sin
+                                      ((eval (expr2, x, y))
+                                          +. (eval (expr3, x, y))))) ;; 
+==============================
+File "3101.ml", line 32, characters 9-12:
+Try replacing
+    abs
+with
+    cos
+of type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> (cos (pi *. (eval (expr, x, y))))
+                              | Average (expr1, expr2) ->
+                                (((eval (expr1, x, y)) +. (eval (expr2, x, y)))
+                                      /. 2.0)
+                              | Times (expr1, expr2) ->
+                                ((eval (expr1, x, y)) *. (eval (expr2, x, y)))
+                              | Thresh (expr1, expr2, expr3, expr4) ->
+                                (if (eval (expr1, x, y)) < (eval (expr2, x, y)) then
+                                    (eval (expr3, x, y))
+                                    else
+                                    (eval (expr4, x, y)))
+                              | SumInts expr ->
+                                (((eval (expr, x, y)) *.
+                                          ((eval (expr, x, y)) +. 1.0))
+                                      /. 2.0)
+                              | Power (expr1, expr2, expr3) ->
+                                (eval (expr1, x, y)) **
+                                    (cos
+                                      ((eval (expr2, x, y))
+                                          +. (eval (expr3, x, y))))) ;; 
+==============================

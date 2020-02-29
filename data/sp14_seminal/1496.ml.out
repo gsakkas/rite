@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "1496.ml", line 5, characters 2-13:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: clonehelper
+------------------------------------------------------------------
+File "1496.ml", line 5, characters 14-15:
+Try replacing
+    (clonehelper x abs  n)
+with
+    (clonehelper abs n)
+of type
+    (int -> int) list
+within context
+    let rec clone x n = let rec clonehelper tx tn = (match tn = 0 with 
+                                                     | true -> []
+                                                     | false ->
+                                                       tx ::
+                                                             (clone
+                                                               tx
+                                                               (tn
+                                                                   -
+                                                                   1))) in (clonehelper
+          abs n) ;; 
+==============================
+File "1496.ml", line 5, characters 16-19:
+Try replacing
+    (clonehelper x abs  n)
+with
+    (clonehelper x n)
+of type
+    'b1 list
+within context
+    let rec clone x n = let rec clonehelper tx tn = (match tn = 0 with 
+                                                     | true -> []
+                                                     | false ->
+                                                       tx ::
+                                                             (clone
+                                                               tx
+                                                               (tn
+                                                                   -
+                                                                   1))) in (clonehelper
+          x n) ;; 
+==============================

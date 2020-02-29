@@ -1,0 +1,60 @@
+------------------------------------------------------------------
+File "2604.ml", line 22, characters 37-41:
+This expression has type 'a list * 'b list but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+File "2604.ml", line 22, characters 35-36:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'c list * 'd list -> 'e * 'f -> 'c list * 'd list
+within context
+    let f a x = (match x with 
+                 | (a, b) ->
+                   (mod
+                       (a + b)
+                       10)) in let base = [], [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (bar, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2604.ml", line 22, characters 20-34:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('g -> int * int -> int) -> 'h list * 'i list -> ('j * 'k) list -> 'l * 'm
+within context
+    let f a x = (match x with 
+                 | (a, b) ->
+                   (mod
+                       (a + b)
+                       10)) in let base = [], [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (bar, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2604.ml", line 19, characters 10-54:
+Try replacing
+    fun a x -> (match x with 
+                | (a, b) -> (mod (a + b) 10))
+with
+    fun a x -> (match x with 
+                | (a, b) -> (mod (a + b) 10)); [[...]]
+of type
+    'n
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f = fun a x -> (match x with 
+                                                         | (a, b) ->
+                                                           (mod
+                                                               (a + b)
+                                                               10)); [[...]] in let
+              base
+              =
+              [], []
+              in
+              let args = (List.rev (List.combine l1 l2)) in
+              let (bar, res) = (List.fold_left f base  args) in
+              res in (removeZero (add (padZero l1 l2))))
+==============================

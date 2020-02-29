@@ -1,0 +1,105 @@
+------------------------------------------------------------------
+File "2157.ml", line 6, characters 54-60:
+This expression has type ('a -> 'a * bool) * ('a * bool)
+but is here used with type ('a -> 'a * bool) * 'a
+Relevant code: (f, b)
+------------------------------------------------------------------
+File "2157.ml", line 6, characters 34-36:
+Try replacing
+    xx != b
+with
+    ( != ) (xx, b)
+of type
+    ('b * bool) * (('b * bool) * 'b -> bool)
+within context
+    fun (f, b) ->
+      (let g x = let xx = (f x) in xx, ( != ) (xx, b) in (wwhile (f, b)))
+==============================
+File "2157.ml", line 6, characters 47-53:
+Try replacing
+    wwhile
+with
+    !=
+of type
+    ('c -> 'd) * 'd -> ('c -> 'd) * 'd -> bool
+within context
+    let fixpoint (f, b) = let g x = let xx = (f x) in xx, xx != b in (!= (f, b)) ;; 
+==============================
+File "2157.ml", line 6, characters 21-22:
+Try replacing
+    f
+with
+    !=
+of type
+    'e -> 'e -> bool
+within context
+    fun (f, b) -> (let g x = let xx = (!= x) in xx, xx != b in (wwhile (f, b)))
+==============================
+File "2157.ml", line 6, characters 21-22:
+Try replacing
+    f
+with
+    not
+of type
+    bool -> bool
+within context
+    fun (f, b) -> (let g x = let xx = (not x) in xx, xx != b in (wwhile (f, b)))
+==============================
+File "2157.ml", line 6, characters 40-41:
+Try replacing
+    b
+with
+    xx
+of type
+    'f * bool
+within context
+    let g x = let xx = (f x) in xx, xx != xx in (wwhile (f, b))
+==============================
+File "2157.ml", line 6, characters 55-56:
+Try replacing
+    f
+with
+    g
+of type
+    ('g -> 'g * bool) * 'g
+within context
+    let fixpoint (f, b) = let g x = let xx = (f x) in xx, xx != b in (wwhile (g, b))
+    ;; 
+==============================
+File "2157.ml", line 6, characters 58-59:
+Try replacing
+    b
+with
+    not
+of type
+    ((bool -> bool) -> (bool -> bool) * bool) * (bool -> bool)
+within context
+    let fixpoint (f, b) =
+    let g x = let xx = (f x) in xx, xx != b in (wwhile (f, not))
+    ;; 
+==============================
+File "2157.ml", line 6, characters 58-59:
+Try replacing
+    b
+with
+    !=
+of type
+    (('h -> 'h -> bool) -> ('h -> 'h -> bool) * bool) * ('h -> 'h -> bool)
+within context
+    let fixpoint (f, b) =
+    let g x = let xx = (f x) in xx, xx != b in (wwhile (f, !=))
+    ;; 
+==============================
+File "2157.ml", line 6, characters 58-59:
+Try replacing
+    b
+with
+    wwhile
+of type
+    ((('i -> 'i * bool) * 'i -> 'i) -> (('i -> 'i * bool) * 'i -> 'i) * bool) *
+    (('i -> 'i * bool) * 'i -> 'i)
+within context
+    let fixpoint (f, b) =
+    let g x = let xx = (f x) in xx, xx != b in (wwhile (f, wwhile))
+    ;; 
+==============================

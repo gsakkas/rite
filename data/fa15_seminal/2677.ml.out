@@ -1,0 +1,191 @@
+------------------------------------------------------------------
+File "2677.ml", line 45, characters 23-61:
+This expression has type expr * expr but is here used with type expr
+Relevant code: ((build (rand, d)), (build (rand, d)))
+------------------------------------------------------------------
+File "2677.ml", line 45, characters 11-22:
+Try replacing
+    buildSquare
+with
+    buildTimes
+of type
+    expr * expr -> expr
+within context
+    let r = (rand (1, 7)) in let d = depth - 1 in (if d != 0 then (match r with 
+                                                                   | 1 ->
+                                                                     (buildSine
+                                                                         (build
+                                                                           (rand,
+                                                                               d)))
+                                                                   | 2 ->
+                                                                     (buildCosine
+                                                                         (build
+                                                                           (rand,
+                                                                               d)))
+                                                                   | 3 ->
+                                                                     (buildAverage
+                                                                         ((build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))))
+                                                                   | 4 ->
+                                                                     (buildTimes
+                                                                         ((build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))))
+                                                                   | 5 ->
+                                                                     (buildThresh
+                                                                         ((build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))))
+                                                                   | 6 ->
+                                                                     (buildTimes
+                                                                         ((build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))))
+                                                                   | _ ->
+                                                                     (buildExponential
+                                                                         ((build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))))) else (let
+              rr
+              =
+              (rand (1, 8))
+              in
+              (match rr with 
+               | 6 -> (buildX ())
+               | 8 -> (buildY ())
+               | _ -> (buildX ()))))
+==============================
+File "2677.ml", line 45, characters 11-22:
+Try replacing
+    buildSquare
+with
+    buildAverage
+of type
+    expr * expr -> expr
+within context
+    let r = (rand (1, 7)) in let d = depth - 1 in (if d != 0 then (match r with 
+                                                                   | 1 ->
+                                                                     (buildSine
+                                                                         (build
+                                                                           (rand,
+                                                                               d)))
+                                                                   | 2 ->
+                                                                     (buildCosine
+                                                                         (build
+                                                                           (rand,
+                                                                               d)))
+                                                                   | 3 ->
+                                                                     (buildAverage
+                                                                         ((build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))))
+                                                                   | 4 ->
+                                                                     (buildTimes
+                                                                         ((build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))))
+                                                                   | 5 ->
+                                                                     (buildThresh
+                                                                         ((build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))))
+                                                                   | 6 ->
+                                                                     (buildAverage
+                                                                         ((build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))))
+                                                                   | _ ->
+                                                                     (buildExponential
+                                                                         ((build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))
+                                                                             ,
+                                                                             (build
+                                                                               (rand
+                                                                                   ,
+                                                                                   d))))) else (let
+              rr
+              =
+              (rand (1, 8))
+              in
+              (match rr with 
+               | 6 -> (buildX ())
+               | 8 -> (buildY ())
+               | _ -> (buildX ()))))
+==============================

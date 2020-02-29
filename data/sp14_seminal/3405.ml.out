@@ -1,0 +1,242 @@
+------------------------------------------------------------------
+File "3405.ml", line 48, characters 35-39:
+This expression has type int * 'a list but is here used with type int list
+Relevant code: base
+------------------------------------------------------------------
+File "3405.ml", line 48, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> int * ('c * 'd) -> int * 'b list
+within context
+    let f a x = (match x with 
+                 | (d, (b, c)) ->
+                   (let sum = b + c in (if sum < 10 then (match a with 
+                                                          | [] -> sum :: a
+                                                          | x' :: xs' ->
+                                                            (if x' = -1 then
+                                                                (if sum = 9 then
+                                                                  -1 :: 0 :: xs'
+                                                                  else
+                                                                  sum + 1 :: xs')
+                                                                else
+                                                                sum ::
+                                                                    a)) else (match
+                                                                              a
+                                                                              with
+                                                                              
+                                                                              | []
+                                                                                ->
+                                                                                -1
+                                                                                      ::
+                                                                                      (mod
+                                                                                        sum
+                                                                                        10)
+                                                                                      ::
+                                                                                      a
+                                                                              |
+                                                                                x'
+                                                                                  ::
+                                                                                  xs'
+                                                                                ->
+                                                                                (if
+                                                                                    x'
+                                                                                      =
+                                                                                      -1
+                                                                                    then
+                                                                                    -1
+                                                                                        ::
+                                                                                        (mod
+                                                                                          sum
+                                                                                          10)
+                                                                                        ::
+                                                                                        a
+                                                                                    else
+                                                                                    -1
+                                                                                        ::
+                                                                                        (mod
+                                                                                          sum
+                                                                                          10)
+                                                                                        ::
+                                                                                        a))))) in let
+      base
+      =
+      (List.length l1), []
+      in
+      let args =
+      (List.combine
+        (clone (List.length l1) (List.length l1)) (List.combine (List.rev l1) (List.rev l2)))
+      in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "3405.ml", line 48, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> 'e * (int * int) -> int list) ->
+    int * 'f list -> (int * ('g * 'h)) list -> 'i * 'j
+within context
+    let f a x = (match x with 
+                 | (d, (b, c)) ->
+                   (let sum = b + c in (if sum < 10 then (match a with 
+                                                          | [] -> sum :: a
+                                                          | x' :: xs' ->
+                                                            (if x' = -1 then
+                                                                (if sum = 9 then
+                                                                  -1 :: 0 :: xs'
+                                                                  else
+                                                                  sum + 1 :: xs')
+                                                                else
+                                                                sum ::
+                                                                    a)) else (match
+                                                                              a
+                                                                              with
+                                                                              
+                                                                              | []
+                                                                                ->
+                                                                                -1
+                                                                                      ::
+                                                                                      (mod
+                                                                                        sum
+                                                                                        10)
+                                                                                      ::
+                                                                                      a
+                                                                              |
+                                                                                x'
+                                                                                  ::
+                                                                                  xs'
+                                                                                ->
+                                                                                (if
+                                                                                    x'
+                                                                                      =
+                                                                                      -1
+                                                                                    then
+                                                                                    -1
+                                                                                        ::
+                                                                                        (mod
+                                                                                          sum
+                                                                                          10)
+                                                                                        ::
+                                                                                        a
+                                                                                    else
+                                                                                    -1
+                                                                                        ::
+                                                                                        (mod
+                                                                                          sum
+                                                                                          10)
+                                                                                        ::
+                                                                                        a))))) in let
+      base
+      =
+      (List.length l1), []
+      in
+      let args =
+      (List.combine
+        (clone (List.length l1) (List.length l1)) (List.combine (List.rev l1) (List.rev l2)))
+      in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "3405.ml", line 24, characters 10-604:
+Try replacing
+    fun a x -> (match x with 
+                | (d, (b, c)) ->
+                  (let sum = b + c in (if sum < 10 then (match a with 
+                                                         | [] -> sum :: a
+                                                         | x' :: xs' ->
+                                                           (if x' = -1 then
+                                                               (if sum = 9 then
+                                                                 -1 :: 0 :: xs'
+                                                                 else
+                                                                 sum + 1 :: xs')
+                                                               else
+                                                               sum ::
+                                                                   a)) else (match a
+                                                                             with
+                                                                             
+                                                                             | [] ->
+                                                                               -1 ::
+                                                                                     (mod
+                                                                                       sum
+                                                                                       10)
+                                                                                     ::
+                                                                                     a
+                                                                             |
+                                                                               x'
+                                                                                 ::
+                                                                                 xs'
+                                                                               ->
+                                                                               (if
+                                                                                   x'
+                                                                                     =
+                                                                                     -1
+                                                                                   then
+                                                                                   -1
+                                                                                       ::
+                                                                                       (mod
+                                                                                         sum
+                                                                                         10)
+                                                                                       ::
+                                                                                       a
+                                                                                   else
+                                                                                   -1
+                                                                                       ::
+                                                                                       (mod
+                                                                                         sum
+                                                                                         10)
+                                                                                       ::
+                                                                                       a)))))
+with
+    fun a x -> (match x with 
+                | (d, (b, c)) ->
+                  (let sum = b + c in (if sum < 10 then (match a with 
+                                                         | [] -> sum :: a
+                                                         | x' :: xs' ->
+                                                           (if x' = -1 then
+                                                               (if sum = 9 then
+                                                                 -1 :: 0 :: xs'
+                                                                 else
+                                                                 sum + 1 :: xs')
+                                                               else
+                                                               sum ::
+                                                                   a)) else (match a
+                                                                             with
+                                                                             
+                                                                             | [] ->
+                                                                               -1 ::
+                                                                                     (mod
+                                                                                       sum
+                                                                                       10)
+                                                                                     ::
+                                                                                     a
+                                                                             |
+                                                                               x'
+                                                                                 ::
+                                                                                 xs'
+                                                                               ->
+                                                                               (if
+                                                                                   x'
+                                                                                     =
+                                                                                     -1
+                                                                                   then
+                                                                                   -1
+                                                                                       ::
+                                                                                       (mod
+                                                                                         sum
+                                                                                         10)
+                                                                                       ::
+                                                                                       a
+                                                                                   else
+                                                                                   -1
+                                                                                       ::
+                                                                                       (mod
+                                                                                         sum
+                                                                                         10)
+                                                                                       ::
+                                                                                       a))))); [[...]]
+of type
+    'k
+==============================

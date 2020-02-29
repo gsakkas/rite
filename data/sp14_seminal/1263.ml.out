@@ -1,0 +1,132 @@
+------------------------------------------------------------------
+File "1263.ml", line 23, characters 27-36:
+This expression has type int but is here used with type 'a list
+Relevant code: nextCarry
+------------------------------------------------------------------
+File "1263.ml", line 21, characters 22-33:
+Try replacing
+    result / 10
+with
+    result / 10; [[...]]
+of type
+    'b
+within context
+    fun x ->
+      (let (addC, resOfAdd) = a in
+          let (i1, i2) = x in
+          let result = (i1 + i2) + addC in
+          let nextCarry = result / 10; [[...]] in (match resOfAdd with 
+                                                   | [] ->
+                                                     (nextCarry,
+                                                           nextCarry @
+                                                             ([(mod result 10)]
+                                                                 @ []))
+                                                   | h :: t ->
+                                                     (nextCarry,
+                                                           nextCarry @
+                                                             ([(mod result 10)]
+                                                                 @ t))))
+==============================
+Triaged the following locations:
+File "1263.ml", line 23, characters 14-63:
+And modified the following location:
+File "1263.ml", line 24, characters 29-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    nextCarry
+with
+    nextCarry; [[...]]
+The actual replacement has type
+    int list
+within context
+    let (addC, resOfAdd) = a in
+      let (i1, i2) = x in
+      let result = (i1 + i2) + addC in
+      let nextCarry = result / 10 in (match resOfAdd with 
+                                      | [] -> [[...other program...]]
+                                      | h :: t ->
+                                        (nextCarry,
+                                              (nextCarry; [[...]]) @
+                                                ([(mod result 10)] @ t)))
+==============================
+Triaged the following locations:
+File "1263.ml", line 23, characters 14-63:
+And modified the following location:
+File "1263.ml", line 24, characters 29-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    nextCarry
+with
+    t
+The actual replacement has type
+    int list
+within context
+    let (addC, resOfAdd) = a in
+      let (i1, i2) = x in
+      let result = (i1 + i2) + addC in
+      let nextCarry = result / 10 in (match resOfAdd with 
+                                      | [] -> [[...other program...]]
+                                      | h :: t ->
+                                        (nextCarry, t @ ([(mod result 10)] @ t)))
+==============================
+Triaged the following locations:
+File "1263.ml", line 23, characters 14-63:
+And modified the following location:
+File "1263.ml", line 24, characters 39-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int -> int list -> 'c
+within context
+    let (addC, resOfAdd) = a in
+      let (i1, i2) = x in
+      let result = (i1 + i2) + addC in
+      let nextCarry = result / 10 in (match resOfAdd with 
+                                      | [] -> [[...other program...]]
+                                      | h :: t ->
+                                        (nextCarry,
+                                              (nextCarry @; [[...]]
+                                                  [(mod result 10)] @ t)))
+==============================
+Triaged the following locations:
+File "1263.ml", line 24, characters 16-64:
+And modified the following location:
+File "1263.ml", line 23, characters 37-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int -> int list -> 'd
+within context
+    let (addC, resOfAdd) = a in
+      let (i1, i2) = x in
+      let result = (i1 + i2) + addC in
+      let nextCarry = result / 10 in (match resOfAdd with 
+                                      | [] ->
+                                        (nextCarry,
+                                              (nextCarry @; [[...]]
+                                                  [(mod result 10)] @ []))
+                                      | h :: t -> [[...other program...]])
+==============================
+Triaged the following locations:
+File "1263.ml", line 24, characters 16-64:
+And modified the following location:
+File "1263.ml", line 23, characters 27-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    nextCarry
+with
+    nextCarry; [[...]]
+The actual replacement has type
+    int list
+within context
+    let (addC, resOfAdd) = a in
+      let (i1, i2) = x in
+      let result = (i1 + i2) + addC in
+      let nextCarry = result / 10 in (match resOfAdd with 
+                                      | [] ->
+                                        (nextCarry,
+                                              (nextCarry; [[...]]) @
+                                                ([(mod result 10)] @ []))
+                                      | h :: t -> [[...other program...]])
+==============================

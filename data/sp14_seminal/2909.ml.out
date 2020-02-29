@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "2909.ml", line 18, characters 61-66:
+This expression has type bool but is here used with type unit
+Relevant code: false
+------------------------------------------------------------------
+Triaged the following locations:
+File "2909.ml", line 19, characters 4-92:
+And modified the following location:
+File "2909.ml", line 18, characters 39-66:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if h1 + h2 > 9 then false)
+with
+    [[...]]
+The actual replacement has type
+    'a list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | ([], []) -> []
+                                                  | (h1 :: t1 :: [], h2 :: t2 :: [])
+                                                    ->
+                                                    [[...]]) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "2909.ml", line 19, characters 4-92:
+And modified the following location:
+File "2909.ml", line 15, characters 4-219:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match x with 
+                 | ([], []) -> []
+                 | (h1 :: t1 :: [], h2 :: t2 :: []) ->
+                   (if h1 + h2 > 9 then
+                       false)) in let base = [] in
+      let args = (l1 l2) in let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'b
+==============================

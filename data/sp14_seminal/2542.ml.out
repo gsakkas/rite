@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2542.ml", line 9, characters 13-27:
+This expression has type int -> int but is here used with type int
+Relevant code: (reverseInt n)
+------------------------------------------------------------------
+File "2542.ml", line 9, characters 4-76:
+Try replacing
+    let x = (reverseInt n) / 10 in
+      (if x = 0 && y = 0 then [] else y :: (digitsOfInt x))
+with
+    let x = [[...]] in (if x = 0 && y = 0 then [] else y :: (digitsOfInt x))
+of type
+    'a list
+within context
+    let rec digitsOfInt n =
+    (if n < 0 then [] else
+      (let x = [[...]] in (if x = 0 && y = 0 then [] else y :: (digitsOfInt x))))
+    ;; 
+==============================

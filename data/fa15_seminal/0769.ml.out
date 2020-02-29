@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "0769.ml", line 18, characters 22-45:
+This expression has type int but is here used with type 'a list
+Relevant code: (((a1 + x1) + x2) - 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0769.ml", line 19, characters 11-40:
+And modified the following location:
+File "0769.ml", line 18, characters 15-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a2 :: ((a1 + x1) + x2) - 10
+with
+    [[...]]
+The actual replacement has type
+    int * 'b
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            (if ((a1 + x1) + x2 >= 10) then 1, [[...]] else
+                [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0769.ml", line 18, characters 11-47:
+And modified the following location:
+File "0769.ml", line 19, characters 15-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a2 :: (a1 + x1) + x2
+with
+    [[...]]
+The actual replacement has type
+    int * 'c
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            (if ((a1 + x1) + x2 >= 10) then [[...other program...]] else
+                0, [[...]]))
+==============================

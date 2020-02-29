@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "1186.ml", line 18, characters 61-64:
+This expression is not a function, it cannot be applied
+Relevant code: ")"
+------------------------------------------------------------------
+File "1186.ml", line 18, characters 65-70:
+Try replacing
+    (( ")" ) "/2)")
+with
+    ")"
+of type
+    string
+within context
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine a -> "(pi*" ^ ((exprToString a) ^ ")")
+     | Cosine b -> "(pi*" ^ ((exprToString b) ^ ")")
+     | Average (c, d) ->
+       "((" ^ ((exprToString c) ^ ("+" ^ ((exprToString d) ^ ")")))
+     | Times (e, f) -> (exprToString e) ^ ("*" ^ (exprToString f))
+     | Thresh (g, h, i, j) ->
+       "(" ^
+           ((exprToString g) ^
+               ("<" ^
+                   ((exprToString h) ^
+                       ("?" ^
+                           ((exprToString i) ^
+                               (":" ^ ((exprToString j) ^ ")"))))))))
+==============================

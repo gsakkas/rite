@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2309.ml", line 19, characters 19-31:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: exprToString
+------------------------------------------------------------------
+File "2309.ml", line 19, characters 19-31:
+Try replacing
+    exprToString
+with
+    exprToString; [[...]]
+of type
+    expr ->
+    string ->
+    (expr -> string) -> expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+                              | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+                              | Average (x, y) ->
+                                "((" ^
+                                    ((exprToString e) ^
+                                        ("+" ^ ((exprToString e) ^ ")/2)")))
+                              | Times (x, y) ->
+                                ((exprToString; [[...]])
+                                    e "*"  exprToString  e)) ;; 
+==============================

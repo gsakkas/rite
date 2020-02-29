@@ -1,0 +1,115 @@
+------------------------------------------------------------------
+File "3129.ml", line 7, characters 61-62:
+This expression has type 'a but is here used with type 'a list
+Relevant code: h
+------------------------------------------------------------------
+File "3129.ml", line 7, characters 34-38:
+Try replacing
+    seen
+with
+    l
+of type
+    'b list list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' = (if (List.mem h l) then seen else seen @ h)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "3129.ml", line 7, characters 34-38:
+Try replacing
+    seen
+with
+    t
+of type
+    'c list list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' = (if (List.mem h t) then seen else seen @ h)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "3129.ml", line 7, characters 32-33:
+Try replacing
+    h
+with
+    @
+of type
+    'd list -> 'd list -> 'd list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem @ seen) then seen else seen @ h)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "3129.ml", line 7, characters 61-62:
+Try replacing
+    h
+with
+    l
+of type
+    'e list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem h seen) then seen else seen @ l)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "3129.ml", line 7, characters 61-62:
+Try replacing
+    h
+with
+    rest
+of type
+    'f list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem h seen) then seen else seen @ rest)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "3129.ml", line 7, characters 61-62:
+Try replacing
+    h
+with
+    seen
+of type
+    'g list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem h seen) then seen else seen @ seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "3129.ml", line 7, characters 61-62:
+Try replacing
+    h
+with
+    t
+of type
+    'h list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem h seen) then seen else seen @ t)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================

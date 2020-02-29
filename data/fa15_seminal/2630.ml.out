@@ -1,0 +1,107 @@
+------------------------------------------------------------------
+File "2630.ml", line 21, characters 13-34:
+This expression has type int but is here used with type int list
+Relevant code: (add (padZero l1 l2))
+------------------------------------------------------------------
+File "2630.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('a -> 'b -> 'c) -> int * int -> ('d * 'e) list -> 'f * 'g
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = 0, 0 in
+      let args = (List.combine l1 l2) in let (_, res) = (f f base  args) in res
+==============================
+File "2630.ml", line 21, characters 2-12:
+Try replacing
+    removeZero
+with
+    <
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 0, 0 in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (< (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2630.ml", line 21, characters 2-12:
+Try replacing
+    removeZero
+with
+    >
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 0, 0 in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (> (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2630.ml", line 21, characters 2-12:
+Try replacing
+    removeZero
+with
+    =
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 0, 0 in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (= (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2630.ml", line 21, characters 2-12:
+Try replacing
+    removeZero
+with
+    -
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 0, 0 in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (- (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2630.ml", line 21, characters 2-12:
+Try replacing
+    removeZero
+with
+    clone
+of type
+    int -> int -> int list
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 0, 0 in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (clone (add (padZero l1 l2)))
+    ;; 
+==============================

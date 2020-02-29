@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2389.ml", line 5, characters 47-55:
+This expression has type int but is here used with type int -> int
+Relevant code: n mod 10
+------------------------------------------------------------------
+File "2389.ml", line 5, characters 31-45:
+Try replacing
+    digOfIntHelper
+with
+    n
+of type
+    int
+within context
+    let rec digitsOfInt n = (match n > 0 with 
+                             | true -> [n ; (mod n 10)]
+                             | false -> []) ;; 
+==============================

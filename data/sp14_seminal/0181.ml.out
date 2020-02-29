@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0181.ml", line 6, characters 7-77:
+This expression has type 'a list * 'b list but is here used with type unit
+Relevant code: (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2))
+------------------------------------------------------------------
+File "0181.ml", line 6, characters 7-77:
+Try replacing
+    l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2)
+with
+    l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2); [[...]]
+of type
+    unit
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      (l1, (List.append (clone 0 ((List.length l1) - (List.length l2))) l2);
+        [[...]]))
+    ;; 
+==============================

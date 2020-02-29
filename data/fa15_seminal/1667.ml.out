@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1667.ml", line 5, characters 64-65:
+This expression has type int list but is here used with type int
+Relevant code: t
+------------------------------------------------------------------
+File "1667.ml", line 5, characters 65-65:
+Try replacing
+    (mulByDigit t)
+with
+    (mulByDigit [[...]] t)
+of type
+    int list
+within context
+    fun i l -> (if (i <= 0) then [] else (match l with 
+                                          | [] -> []
+                                          | h :: t ->
+                                            [h * i] @ (mulByDigit [[...]] t)))
+==============================

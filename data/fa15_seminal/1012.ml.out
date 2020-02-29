@@ -1,0 +1,72 @@
+------------------------------------------------------------------
+File "1012.ml", line 14, characters 30-39:
+This expression has type 'a list * 'a but is here used with type
+  'a list * 'a list
+Relevant code: (seen, h)
+------------------------------------------------------------------
+File "1012.ml", line 10, characters 27-31:
+Try replacing
+    seen
+with
+    l
+of type
+    'b list list
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let x = (List.mem h l) in
+                                           (if x then (helper (seen, t)) else
+                                               (let seen' = (append (seen, h)) in
+                                                   let rest' = t in
+                                                   (helper
+                                                       (seen',
+                                                           rest')))))) in (helper
+          ([], l))
+==============================
+File "1012.ml", line 10, characters 27-31:
+Try replacing
+    seen
+with
+    t
+of type
+    'c list list
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let x = (List.mem h t) in
+                                           (if x then (helper (seen, t)) else
+                                               (let seen' = (append (seen, h)) in
+                                                   let rest' = t in
+                                                   (helper
+                                                       (seen',
+                                                           rest')))))) in (helper
+          ([], l))
+==============================
+File "1012.ml", line 14, characters 37-38:
+Try replacing
+    h
+with
+    l
+of type
+    'd list * 'd list
+within context
+    let x = (List.mem h seen) in
+      (if x then (helper (seen, t)) else
+          (let seen' = (append (seen, l)) in
+              let rest' = t in (helper (seen', rest'))))
+==============================
+File "1012.ml", line 14, characters 37-38:
+Try replacing
+    h
+with
+    t
+of type
+    'e list * 'e list
+within context
+    let x = (List.mem h seen) in
+      (if x then (helper (seen, t)) else
+          (let seen' = (append (seen, t)) in
+              let rest' = t in (helper (seen', rest'))))
+==============================

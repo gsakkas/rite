@@ -1,0 +1,68 @@
+------------------------------------------------------------------
+File "1144.ml", line 56, characters 38-42:
+This expression has type ((int * int) * (int * int)) list
+but is here used with type (int * 'a) list
+Relevant code: args
+------------------------------------------------------------------
+File "1144.ml", line 55, characters 47-65:
+Try replacing
+    [(0, 0), (0, 0)]
+with
+    [0, 0 ; 0, 0]
+of type
+    (int * int) list
+within context
+    fun l2 -> (let f a x = let (s, t) = x in (match a with 
+                                              | (r, v) ->
+                                                (let sum =
+                                                      (intListToInt
+                                                        (mulByDigit
+                                                          (intListToInt l1) [s]))
+                                                      in
+                                                      (if sum + r > 9 then
+                                                          (intListToInt
+                                                              (carryFunc
+                                                                (mulByDigit
+                                                                  (intListToInt l1) [s])))
+                                                            ,
+                                                            (mod (sum + r) 10) :: v
+                                                          else
+                                                          0,
+                                                            (mod (sum + r) 10) ::
+                                                                v))) in let base =
+          0, []
+          in
+          let args = (List.rev (List.combine l2 l2)) @ [0, 0 ; 0, 0] in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "1144.ml", line 45, characters 16-17:
+Try replacing
+    x
+with
+    a
+of type
+    int * int list
+within context
+    fun l2 -> (let f a x = let (s, t) = a in (match a with 
+                                              | (r, v) ->
+                                                (let sum =
+                                                      (intListToInt
+                                                        (mulByDigit
+                                                          (intListToInt l1) [s]))
+                                                      in
+                                                      (if sum + r > 9 then
+                                                          (intListToInt
+                                                              (carryFunc
+                                                                (mulByDigit
+                                                                  (intListToInt l1) [s])))
+                                                            ,
+                                                            (mod (sum + r) 10) :: v
+                                                          else
+                                                          0,
+                                                            (mod (sum + r) 10) ::
+                                                                v))) in let base =
+          0, []
+          in
+          let args = (List.rev (List.combine l2 l2)) @ [(0, 0), (0, 0)] in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

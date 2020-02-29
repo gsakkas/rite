@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "3202.ml", line 2, characters 66-70:
+This expression has type int but is here used with type unit
+Relevant code: base
+------------------------------------------------------------------
+File "3202.ml", line 2, characters 44-45:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    'a
+within context
+    let sqsum xs =
+    let f a x = () in let base = 0; [[...]] in (List.fold_left f base  xs)
+    ;; 
+==============================
+File "3202.ml", line 2, characters 64-65:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int -> 'b -> int
+within context
+    let sqsum xs =
+    let f a x = () in let base = 0 in (List.fold_left (f; [[...]]) base  xs)
+    ;; 
+==============================
+File "3202.ml", line 2, characters 66-70:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    unit
+within context
+    let sqsum xs =
+    let f a x = () in let base = 0 in (List.fold_left f (base; [[...]])  xs)
+    ;; 
+==============================
+File "3202.ml", line 2, characters 21-29:
+Try replacing
+    fun a x -> ()
+with
+    fun a x -> (); [[...]]
+of type
+    'c
+within context
+    let sqsum xs =
+    let f = fun a x -> (); [[...]] in let base = 0 in (List.fold_left f base  xs)
+    ;; 
+==============================
+File "3202.ml", line 2, characters 49-63:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('d -> 'e -> unit) -> int -> 'f -> 'g
+within context
+    let sqsum xs =
+    let f a x = () in let base = 0 in ((List.fold_left; [[...]]) f base  xs)
+    ;; 
+==============================

@@ -1,0 +1,111 @@
+------------------------------------------------------------------
+File "1612.ml", line 7, characters 46-51:
+This expression has type bool but is here used with type
+  ('a * 'b) list -> bool
+Relevant code: false
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "1612.ml", line 7, characters 43-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.mem (h, seen))
+with
+    (List.mem (h, seen) [[...]])
+The actual replacement has type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if (List.mem (h, seen) [[...]]) = false
+                                             then
+                                             seen @ [h]
+                                             else
+                                             [[...]])
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================
+Triaged the following locations:
+And modified the following location:
+File "1612.ml", line 7, characters 44-45:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    =
+with
+    =; [[...]]
+The actual replacement has type
+    (('c * 'c list) list -> bool) -> bool -> bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if
+                                             ((List.mem (h, seen)) =; [[...]] false)
+                                             then
+                                             seen @ [h]
+                                             else
+                                             [[...]])
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================
+Triaged the following locations:
+And modified the following location:
+File "1612.ml", line 7, characters 46-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    false
+with
+    false; [[...]]
+The actual replacement has type
+    ('d * 'd list) list -> bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if
+                                             (List.mem (h, seen)) = (false; [[...]])
+                                             then
+                                             seen @ [h]
+                                             else
+                                             [[...]])
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================
+Triaged the following locations:
+And modified the following location:
+File "1612.ml", line 7, characters 33-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.mem (h, seen))
+with
+    (List.mem h seen)
+The actual replacement has type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if (List.mem h seen) = false then
+                                             seen @ [h]
+                                             else
+                                             [[...]])
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================

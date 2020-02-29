@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "0731.ml", line 5, characters 53-67:
+This expression has type ('a * bool) * 'b but is here used with type
+  ('c -> 'c * bool) * 'c
+Relevant code: ((g (f b)), b)
+------------------------------------------------------------------
+File "0731.ml", line 5, characters 58-59:
+Try replacing
+    (g (f b))
+with
+    (f (g b))
+of type
+    ('d -> 'd * bool) * 'd
+within context
+    let fixpoint (f, b) = (wwhile (let g x = x, false in (f (g b)), b)) ;; 
+==============================
+File "0731.ml", line 5, characters 35-49:
+Try replacing
+    fun x -> (x, false)
+with
+    fun _ x -> (x, false)
+of type
+    'e -> 'f -> 'f * bool
+within context
+    let fixpoint (f, b) = (wwhile (let g _ x = x, false in (g (f b)), b)) ;; 
+==============================
+File "0731.ml", line 5, characters 35-49:
+Try replacing
+    fun x -> (x, false)
+with
+    fun x _ -> (x, false)
+of type
+    'g -> 'h -> 'g * bool
+within context
+    let fixpoint (f, b) = (wwhile (let g x _ = x, false in (g (f b)), b)) ;; 
+==============================
+File "0731.ml", line 5, characters 55-56:
+Try replacing
+    g
+with
+    wwhile
+of type
+    (('i -> 'i * bool) -> ('i -> 'i * bool) * bool) * ('i -> 'i * bool) ->
+    'i -> 'i * bool
+within context
+    fun (f, b) -> (wwhile (let g x = x, false in (wwhile (f b)), b))
+==============================

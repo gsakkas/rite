@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1198.ml", line 35, characters 19-25:
+This expression has type int * int but is here used with type ('a * 'b) list
+Relevant code: (0, 0)
+------------------------------------------------------------------
+File "1198.ml", line 35, characters 19-25:
+Try replacing
+    0, 0
+with
+    0, 0; [[...]]
+of type
+    ('c * 'd) list
+within context
+    let args = let rec pair list1 list2 = (match list1, list2 with 
+                                           | (h1 :: t1, h2 :: t2) ->
+                                             h1, h2 :: (pair t1 t2)
+                                           | (_, _) ->
+                                             (0, 0;
+                                                 [[...]])) in (pair
+            (List.rev l1) (List.rev l2)) in let (_, res) = (List.fold_left f base  args) in res
+==============================

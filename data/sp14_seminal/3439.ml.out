@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3439.ml", line 2, characters 42-69:
+This expression has type unit but is here used with type int
+Relevant code: (if t != [] then sumList t)
+------------------------------------------------------------------
+File "3439.ml", line 2, characters 40-41:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    'a -> unit -> unit
+within context
+    let rec sumList xs =
+    let x :: t = xs in (x +; [[...]] (if t != [] then (sumList t)))
+    ;; 
+==============================

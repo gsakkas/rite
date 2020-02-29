@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2029.ml", line 8, characters 20-21:
+This expression has type ('a -> 'b) -> ('c -> 'a) -> 'c -> 'b
+but is here used with type int
+Relevant code: y
+------------------------------------------------------------------
+File "2029.ml", line 8, characters 20-21:
+Try replacing
+    y
+with
+    h
+of type
+    int
+within context
+    (match a with 
+     | [] -> i * x :: a
+     | h :: t -> [x * h + h / 10 ; (mod h 10)] @ t)
+==============================

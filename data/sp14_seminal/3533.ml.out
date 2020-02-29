@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "3533.ml", line 20, characters 18-22:
+This expression is not a function, it cannot be applied
+Relevant code: rand
+------------------------------------------------------------------
+File "3533.ml", line 18, characters 8-12:
+Try replacing
+    rand
+with
+    rand; [[...]]
+of type
+    int
+within context
+    let rec build (rand, depth) = (match (rand; [[...]]) with 
+                                   | 0 ->
+                                     (let halff = (rand (0, 2)) in
+                                           (if halff = 0 then (buildY ()) else
+                                               (buildX ())))
+                                   | 1 ->
+                                     (let halff = (rand (0, 2)) in
+                                           (if halff = 0 then
+                                               (Cosine (build (rand, depth - 1)))
+                                               else
+                                               (Sine (build (rand, depth - 1)))))
+                                   | 2 ->
+                                     (Average
+                                         (build (rand, depth - 1)),
+                                           (build (rand, depth - 1))
+                                         )
+                                   | 3 ->
+                                     (Times
+                                         (build (rand, depth - 1)),
+                                           (build (rand, depth - 1))
+                                         )) ;; 
+==============================

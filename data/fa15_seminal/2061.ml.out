@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2061.ml", line 2, characters 32-38:
+This expression has type 'a * 'b but is here used with type 'c -> 'd
+Relevant code: (f, l)
+------------------------------------------------------------------
+File "2061.ml", line 2, characters 32-38:
+Try replacing
+    (List.map (f, l))
+with
+    (List.map f l)
+of type
+    'e list
+within context
+    let stringOfList f l = (List.map f l) ;; 
+==============================

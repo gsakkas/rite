@@ -1,0 +1,68 @@
+------------------------------------------------------------------
+File "0927.ml", line 15, characters 38-42:
+This expression has type int list * int list but is here used with type
+  'a list
+Relevant code: args
+------------------------------------------------------------------
+File "0927.ml", line 15, characters 33-42:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f args  base)
+of type
+    int list * int list
+within context
+    fun l2 ->
+      (let f a x = (failwith "to be implemented") in
+          let base = (failwith "to be implemented") in
+          let args =
+          (padZero l1 l2),
+            (if ((List.length l1) >= (List.length l2)) then l1 else l2)
+          in
+          let (_, res) = (List.fold_left f args  base) in res)
+==============================
+File "0927.ml", line 15, characters 16-30:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('b -> 'c -> 'd) -> 'e -> int list * int list -> 'f * 'g
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemented") in
+      let args =
+      (padZero l1 l2), (if ((List.length l1) >= (List.length l2)) then l1 else l2)
+      in
+      let (_, res) = (f f base  args) in res
+==============================
+File "0927.ml", line 15, characters 16-30:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    ('h -> 'i -> 'j) -> 'k -> int list * int list -> 'l * 'm
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemented") in
+      let args =
+      (padZero l1 l2), (if ((List.length l1) >= (List.length l2)) then l1 else l2)
+      in
+      let (_, res) = (base f base  args) in res
+==============================
+File "0927.ml", line 15, characters 38-42:
+Try replacing
+    args
+with
+    base
+of type
+    'n list
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemented") in
+      let args =
+      (padZero l1 l2), (if ((List.length l1) >= (List.length l2)) then l1 else l2)
+      in
+      let (_, res) = (List.fold_left f base  base) in res
+==============================

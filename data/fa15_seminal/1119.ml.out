@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "1119.ml", line 21, characters 43-71:
+This expression has type int but is here used with type int list
+Relevant code: (((fst x) + (snd x)) mod 10)
+------------------------------------------------------------------
+File "1119.ml", line 21, characters 43-71:
+Try replacing
+    (mod ((fst x) + (snd x)) 10)
+with
+    (mod ((fst x) + (snd x)) 10); [[...]]
+of type
+    int list
+within context
+    let f a x = (match a with 
+                 | hd :: tl ->
+                   (((fst x) + (snd x)) + hd) / 10 ::
+                         (mod (((fst x) + (snd x)) + hd) 10) :: tl
+                 | _ ->
+                   ((fst x) + (snd x)) / 10 ::
+                         (mod ((fst x) + (snd x)) 10);
+                         [[...]]) in let base = [] in
+      let args = (List.combine l1 l2) in (List.fold_left f base  args)
+==============================

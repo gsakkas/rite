@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "3190.ml", line 28, characters 33-34:
+This expression has type int but is here used with type int list
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "3190.ml", line 28, characters 11-56:
+And modified the following location:
+File "3190.ml", line 31, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    'a -> int -> 'b
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            (if (List.length a1) = 0 then [[...other program...]] else
+                (let c :: c' = a1 in
+                    a1 @ [((x1 + x2) + c) / 10],
+                        (a2 @; [[...]] (mod ((x1 + x2) + c) 10)))))
+==============================
+Triaged the following locations:
+File "3190.ml", line 28, characters 11-56:
+And modified the following location:
+File "3190.ml", line 31, characters 47-71:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod ((x1 + x2) + c) 10)
+with
+    (mod ((x1 + x2) + c) 10); [[...]]
+The actual replacement has type
+    'c list
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            (if (List.length a1) = 0 then [[...other program...]] else
+                (let c :: c' = a1 in
+                    a1 @ [((x1 + x2) + c) / 10],
+                        a2 @ ((mod ((x1 + x2) + c) 10); [[...]]))))
+==============================

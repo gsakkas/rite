@@ -1,0 +1,82 @@
+------------------------------------------------------------------
+File "0188.ml", line 3, characters 38-42:
+This pattern matches values of type 'a list
+but is here used to match values of type 'b * 'c
+Relevant code: h::t
+------------------------------------------------------------------
+Triaged the following locations:
+File "0188.ml", line 3, characters 34-35:
+File "0188.ml", line 3, characters 38-42:
+File "0188.ml", line 3, characters 46-61:
+File "0188.ml", line 3, characters 69-70:
+And modified the following location:
+File "0188.ml", line 3, characters 25-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k, _
+with
+    k, _, _
+The actual replacement has type
+    'd * 'e * 'f
+within context
+    let rec assoc (d, k, l) = (match d, k, l with 
+                               | (k, _, _) -> [[...other program...]]
+                               |[[...other pattern...]]->[[...other program...]]
+                               | _ -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0188.ml", line 3, characters 34-35:
+File "0188.ml", line 3, characters 38-42:
+File "0188.ml", line 3, characters 46-61:
+File "0188.ml", line 3, characters 69-70:
+And modified the following location:
+File "0188.ml", line 3, characters 25-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k, _
+with
+    _, k, _
+The actual replacement has type
+    'g * 'h * 'i
+within context
+    let rec assoc (d, k, l) = (match d, k, l with 
+                               | (_, k, _) -> [[...other program...]]
+                               |[[...other pattern...]]->[[...other program...]]
+                               | _ -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0188.ml", line 3, characters 34-35:
+File "0188.ml", line 3, characters 38-42:
+File "0188.ml", line 3, characters 46-61:
+File "0188.ml", line 3, characters 69-70:
+And modified the following location:
+File "0188.ml", line 3, characters 25-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k, _
+with
+    k, _, _
+The actual replacement has type
+    'j * 'k * 'l
+within context
+    let rec assoc (d, k, l) = (match d, k, l with 
+                               | (k, _, _) -> [[...other program...]]
+                               |[[...other pattern...]]->[[...other program...]]
+                               | _ -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0188.ml", line 3, characters 25-30:
+File "0188.ml", line 3, characters 34-35:
+File "0188.ml", line 3, characters 46-61:
+File "0188.ml", line 3, characters 69-70:
+And modified the following location:
+File "0188.ml", line 3, characters 38-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    'm * 'n * 'o
+within context
+    let rec assoc (d, k, l) = (match d, k, l with 
+                               |[[...other pattern...]]->[[...other program...]]
+                               | _ -> [[...other program...]]
+                               | _ -> [[...other program...]]) ;; 
+==============================

@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1024.ml", line 24, characters 33-34:
+This expression has type int * int -> int * int list -> int * int list
+but is here used with type int * int -> int * int list -> int * int
+Relevant code: f
+------------------------------------------------------------------
+File "1024.ml", line 19, characters 10-13:
+Try replacing
+    fun a
+      x ->
+        (let (y, z) = x in
+            let (r, s) = a in let m = (r + s) + y in m / 10, (mod m 10) :: z)
+with
+    fun x
+      a ->
+        (let (y, z) = x in
+            let (r, s) = a in let m = (r + s) + y in m / 10, (mod m 10) :: z)
+of type
+    int * int list -> int * int -> int * int list
+==============================

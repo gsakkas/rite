@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "3290.ml", line 25, characters 23-30:
+This pattern matches values of type 'a list * 'b list
+but is here used to match values of type 'c list
+Relevant code: ([],[])
+------------------------------------------------------------------
+Triaged the following locations:
+File "3290.ml", line 23, characters 25-120:
+File "3290.ml", line 27, characters 39-77:
+And modified the following location:
+File "3290.ml", line 20, characters 18-22:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x :: y
+with
+    _
+The actual replacement has type
+    'd
+within context
+    fun a x -> (match a with 
+                | (lh1 :: lt1, lh2 :: lt2) -> (match x with 
+                                               | (h1, h2) -> (match h1 with 
+                                                              | _ ->
+                                                                [[...other program...]])))
+==============================

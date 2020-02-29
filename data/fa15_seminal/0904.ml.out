@@ -1,0 +1,76 @@
+------------------------------------------------------------------
+File "0904.ml", line 20, characters 18-33:
+This expression has type int list but is here used with type
+  'a list * 'b list
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "0904.ml", line 15, characters 10-17:
+Try replacing
+    fun (l1, l2) ->
+      (let f a x = (failwith "to be implemented") in
+          let base = (failwith "to be implemented") in
+          let args = (List.combine l1 l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+with
+    fun l1
+      l2 ->
+        (let f a x = (failwith "to be implemented") in
+            let base = (failwith "to be implemented") in
+            let args = (List.combine l1 l2) in
+            let (_, res) = (List.fold_left f base  args) in res)
+of type
+    'c list -> 'd list -> 'e
+==============================
+File "0904.ml", line 20, characters 18-33:
+Try replacing
+    (add (padZero l1 l2) (if l1 > l2 then l1 else l2))
+with
+    (add ((padZero l1 l2), (if l1 > l2 then l1 else l2)))
+of type
+    int list
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = (failwith "to be implemented") in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add ((padZero l1 l2), (if l1 > l2 then l1 else l2))))
+    ;; 
+==============================
+File "0904.ml", line 20, characters 14-17:
+Try replacing
+    add
+with
+    @
+of type
+    int list -> int list -> int list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = (failwith "to be implemented") in
+              let base = (failwith "to be implemented") in
+              let args = (List.combine l1 l2) in
+              let (_, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero (@ (padZero l1 l2) (if l1 > l2 then l1 else l2))))
+==============================
+File "0904.ml", line 20, characters 19-26:
+Try replacing
+    padZero
+with
+    add
+of type
+    'f list * 'g list -> 'f list * 'g list -> 'h list * 'i list
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x = (failwith "to be implemented") in
+            let base = (failwith "to be implemented") in
+            let args = (List.combine l1 l2) in
+            let (_, res) = (List.fold_left f base  args) in res
+          in
+          (removeZero (add (add l1 l2) (if l1 > l2 then l1 else l2))))
+==============================

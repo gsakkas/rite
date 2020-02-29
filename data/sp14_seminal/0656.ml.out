@@ -1,0 +1,97 @@
+------------------------------------------------------------------
+File "0656.ml", line 32, characters 44-74:
+This expression has type int list -> int list but is here used with type
+  'a * int list
+Relevant code: bigAdd (mulByDigit (h l1') a')
+------------------------------------------------------------------
+Triaged the following locations:
+File "0656.ml", line 32, characters 25-33:
+File "0656.ml", line 32, characters 44-74:
+And modified the following location:
+File "0656.ml", line 32, characters 10-11:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'b list
+within context
+    let f a x = let (l1', a') = x in (match (a; [[...]]) with 
+                                      | [] -> [[...other program...]]
+                                      | h :: t ->
+                                        [[...other program...]]) in let base =
+      l1, [0]
+      in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "0656.ml", line 32, characters 25-33:
+File "0656.ml", line 32, characters 44-74:
+And modified the following location:
+File "0656.ml", line 32, characters 10-11:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a'
+The actual replacement has type
+    'c list
+within context
+    let f a x = let (l1', a') = x in (match a' with 
+                                      | [] -> [[...other program...]]
+                                      | h :: t ->
+                                        [[...other program...]]) in let base =
+      l1, [0]
+      in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "0656.ml", line 32, characters 25-33:
+File "0656.ml", line 32, characters 36-40:
+File "0656.ml", line 32, characters 44-74:
+And modified the following location:
+File "0656.ml", line 32, characters 19-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    'd
+within context
+    let f a x = let (l1', a') = x in (match a with 
+                                      | _ -> [[...other program...]]
+                                      |
+                                        [[...other pattern...]]
+                                        ->
+                                        [[...other program...]]) in let base =
+      l1, [0]
+      in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "0656.ml", line 32, characters 19-21:
+File "0656.ml", line 32, characters 25-33:
+File "0656.ml", line 32, characters 44-74:
+And modified the following location:
+File "0656.ml", line 32, characters 36-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    'e
+within context
+    let f a x = let (l1', a') = x in (match a with 
+                                      |
+                                        [[...other pattern...]]
+                                        ->
+                                        [[...other program...]]
+                                      | _ ->
+                                        [[...other program...]]) in let base =
+      l1, [0]
+      in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

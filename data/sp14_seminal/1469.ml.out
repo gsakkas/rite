@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "1469.ml", line 25, characters 57-61:
+This expression has type 'a list * 'b list but is here used with type unit
+Relevant code: base
+------------------------------------------------------------------
+File "1469.ml", line 23, characters 10-18:
+Try replacing
+    fun a x -> ()
+with
+    fun a x -> (); [[...]]
+of type
+    'c
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f = fun a x -> (); [[...]] in
+              let base = [], [] in
+              let args = (f l1 l2) in
+              let (_, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+File "1469.ml", line 25, characters 40-54:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('d -> 'e -> unit) -> 'f list * 'g list -> unit -> 'h * 'i
+within context
+    let f a x = () in
+      let base = [], [] in
+      let args = (f l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

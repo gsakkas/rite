@@ -1,0 +1,106 @@
+------------------------------------------------------------------
+File "1380.ml", line 29, characters 43-44:
+This expression has type int but is here used with type float
+Relevant code: 1
+------------------------------------------------------------------
+Triaged the following locations:
+File "1380.ml", line 29, characters 45-47:
+And modified the following location:
+File "1380.ml", line 29, characters 49-53:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +.
+If you ignore other surrounding code, try replacing
+    sqrt
+with
+    sqrt; [[...]]
+The actual replacement has type
+    int -> 'a
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine sine -> (sin (pi *. (eval (sine, x, y))))
+                      | Cosine cosine -> (cos (pi *. (eval (cosine, x, y))))
+                      | Average (e1, e2) ->
+                        (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                      | Times (t1, t2) -> ((eval (t1, x, y)) *. (eval (t2, x, y)))
+                      | Thresh (th1, th2, th3, th4) ->
+                        (if (eval (th1, x, y)) < (eval (th2, x, y)) then
+                            (eval (th3, x, y))
+                            else
+                            (eval (th4, x, y)))
+                      | Circ (circ1, circ2) ->
+                        (sqrt
+                            ((eval (circ1, x, y)) ** 2.0
+                                +. (eval (circ2, x, y)) ** 2.0))
+                      | GoldTimes m4 ->
+                        (((eval (m4, x, y)) *. (1 +.; [[...]] ((sqrt; [[...]]) 5)))
+                              /. 2.0))
+==============================
+Triaged the following locations:
+File "1380.ml", line 29, characters 45-47:
+And modified the following location:
+File "1380.ml", line 29, characters 49-53:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +.
+If you ignore other surrounding code, try replacing
+    sqrt
+with
+    <
+The actual replacement has type
+    int -> int -> bool
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine sine -> (sin (pi *. (eval (sine, x, y))))
+                      | Cosine cosine -> (cos (pi *. (eval (cosine, x, y))))
+                      | Average (e1, e2) ->
+                        (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                      | Times (t1, t2) -> ((eval (t1, x, y)) *. (eval (t2, x, y)))
+                      | Thresh (th1, th2, th3, th4) ->
+                        (if (eval (th1, x, y)) < (eval (th2, x, y)) then
+                            (eval (th3, x, y))
+                            else
+                            (eval (th4, x, y)))
+                      | Circ (circ1, circ2) ->
+                        (sqrt
+                            ((eval (circ1, x, y)) ** 2.0
+                                +. (eval (circ2, x, y)) ** 2.0))
+                      | GoldTimes m4 ->
+                        (((eval (m4, x, y)) *. (1 +.; [[...]] (< 5))) /. 2.0))
+==============================
+Triaged the following locations:
+File "1380.ml", line 29, characters 45-47:
+And modified the following location:
+File "1380.ml", line 29, characters 54-55:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +.
+If you ignore other surrounding code, try replacing
+    5
+with
+    5; [[...]]
+The actual replacement has type
+    float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine sine -> (sin (pi *. (eval (sine, x, y))))
+                      | Cosine cosine -> (cos (pi *. (eval (cosine, x, y))))
+                      | Average (e1, e2) ->
+                        (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                      | Times (t1, t2) -> ((eval (t1, x, y)) *. (eval (t2, x, y)))
+                      | Thresh (th1, th2, th3, th4) ->
+                        (if (eval (th1, x, y)) < (eval (th2, x, y)) then
+                            (eval (th3, x, y))
+                            else
+                            (eval (th4, x, y)))
+                      | Circ (circ1, circ2) ->
+                        (sqrt
+                            ((eval (circ1, x, y)) ** 2.0
+                                +. (eval (circ2, x, y)) ** 2.0))
+                      | GoldTimes m4 ->
+                        (((eval (m4, x, y)) *. (1 +.; [[...]] (sqrt (5; [[...]]))))
+                              /. 2.0))
+==============================

@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "1488.ml", line 5, characters 62-68:
+This expression has type bool * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: (f, b)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1488.ml", line 5, characters 71-72:
+And modified the following location:
+File "1488.ml", line 5, characters 68-68:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    b
+If you ignore other surrounding code, try replacing
+    (wwhile (f, b))
+with
+    (wwhile [[...]] (f, b))
+The actual replacement has type
+    'c -> 'c * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile (if f = true then b else (wwhile [[...]] (f, b)), (b; [[...]])))
+    ;; 
+==============================
+Triaged the following locations:
+File "1488.ml", line 5, characters 71-72:
+And modified the following location:
+File "1488.ml", line 5, characters 55-61:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    b
+If you ignore other surrounding code, try replacing
+    wwhile
+with
+    wwhile; [[...]]
+The actual replacement has type
+    bool * (('d -> 'd * bool) * 'd) -> 'd -> 'd * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile (if f = true then b else ((wwhile; [[...]]) (f, b)), (b; [[...]])))
+    ;; 
+==============================

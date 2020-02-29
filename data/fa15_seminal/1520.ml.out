@@ -1,0 +1,188 @@
+------------------------------------------------------------------
+File "1520.ml", line 36, characters 10-109:
+This expression has type expr * expr * expr but is here used with type
+  expr * expr * expr * expr
+Relevant code: ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+            (build (rand, (depth - 1))))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1520.ml", line 25, characters 11-15:
+File "1520.ml", line 26, characters 11-15:
+File "1520.ml", line 27, characters 11-48:
+File "1520.ml", line 28, characters 11-50:
+File "1520.ml", line 30, characters 8-89:
+File "1520.ml", line 33, characters 8-77:
+And modified the following location:
+File "1520.ml", line 35, characters 8-19:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    VarY
+
+    VarX
+If you ignore other surrounding code, try replacing
+    buildThresh
+with
+    buildThresh; [[...]]
+The actual replacement has type
+    unit * unit * unit -> unit
+within context
+    let rec build (rand, depth) = (if depth > 0 then (match (rand (1, 7)) with 
+                                                      | 1 -> (VarX; [[...]])
+                                                      | 2 -> (VarY; [[...]])
+                                                      | 3 -> [[...other program...]]
+                                                      | 4 -> [[...other program...]]
+                                                      | 5 -> [[...other program...]]
+                                                      | 6 -> [[...other program...]]
+                                                      | 7 ->
+                                                        ((buildThresh; [[...]])
+                                                            ((build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand,
+                                                                      depth
+                                                                        -
+                                                                        1)))))) ;; 
+==============================
+Triaged the following locations:
+File "1520.ml", line 25, characters 11-15:
+File "1520.ml", line 26, characters 11-15:
+File "1520.ml", line 27, characters 11-48:
+File "1520.ml", line 28, characters 11-50:
+File "1520.ml", line 30, characters 8-89:
+File "1520.ml", line 35, characters 8-129:
+And modified the following location:
+File "1520.ml", line 33, characters 8-18:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    VarY
+
+    VarX
+If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    unit * unit -> unit
+within context
+    let rec build (rand, depth) = (if depth > 0 then (match (rand (1, 7)) with 
+                                                      | 1 -> (VarX; [[...]])
+                                                      | 2 -> (VarY; [[...]])
+                                                      | 3 -> [[...other program...]]
+                                                      | 4 -> [[...other program...]]
+                                                      | 5 -> [[...other program...]]
+                                                      | 6 ->
+                                                        ((buildTimes; [[...]])
+                                                            ((build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1))))
+                                                      | 7 ->
+                                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1520.ml", line 25, characters 11-15:
+File "1520.ml", line 26, characters 11-15:
+File "1520.ml", line 28, characters 11-50:
+File "1520.ml", line 30, characters 8-89:
+File "1520.ml", line 33, characters 8-77:
+File "1520.ml", line 35, characters 8-129:
+And modified the following location:
+File "1520.ml", line 27, characters 11-20:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    VarY
+
+    VarX
+If you ignore other surrounding code, try replacing
+    buildSine
+with
+    buildSine; [[...]]
+The actual replacement has type
+    unit -> unit
+within context
+    let rec build (rand, depth) = (if depth > 0 then (match (rand (1, 7)) with 
+                                                      | 1 -> (VarX; [[...]])
+                                                      | 2 -> (VarY; [[...]])
+                                                      | 3 ->
+                                                        ((buildSine; [[...]])
+                                                            (build
+                                                              (rand, depth - 1)))
+                                                      | 4 -> [[...other program...]]
+                                                      | 5 -> [[...other program...]]
+                                                      | 6 -> [[...other program...]]
+                                                      | 7 ->
+                                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1520.ml", line 25, characters 11-15:
+File "1520.ml", line 26, characters 11-15:
+File "1520.ml", line 27, characters 11-48:
+File "1520.ml", line 28, characters 11-50:
+File "1520.ml", line 33, characters 8-77:
+File "1520.ml", line 35, characters 8-129:
+And modified the following location:
+File "1520.ml", line 30, characters 8-20:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    VarY
+
+    VarX
+If you ignore other surrounding code, try replacing
+    buildAverage
+with
+    buildAverage; [[...]]
+The actual replacement has type
+    unit * unit -> unit
+within context
+    let rec build (rand, depth) = (if depth > 0 then (match (rand (1, 7)) with 
+                                                      | 1 -> (VarX; [[...]])
+                                                      | 2 -> (VarY; [[...]])
+                                                      | 3 -> [[...other program...]]
+                                                      | 4 -> [[...other program...]]
+                                                      | 5 ->
+                                                        ((buildAverage; [[...]])
+                                                            ((build
+                                                                  (rand, depth - 1))
+                                                                ,
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1))))
+                                                      | 6 -> [[...other program...]]
+                                                      | 7 ->
+                                                        [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "1520.ml", line 25, characters 11-15:
+File "1520.ml", line 26, characters 11-15:
+File "1520.ml", line 27, characters 11-48:
+File "1520.ml", line 30, characters 8-89:
+File "1520.ml", line 33, characters 8-77:
+File "1520.ml", line 35, characters 8-129:
+And modified the following location:
+File "1520.ml", line 28, characters 11-22:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    VarY
+
+    VarX
+If you ignore other surrounding code, try replacing
+    buildCosine
+with
+    buildCosine; [[...]]
+The actual replacement has type
+    unit -> unit
+within context
+    let rec build (rand, depth) = (if depth > 0 then (match (rand (1, 7)) with 
+                                                      | 1 -> (VarX; [[...]])
+                                                      | 2 -> (VarY; [[...]])
+                                                      | 3 -> [[...other program...]]
+                                                      | 4 ->
+                                                        ((buildCosine; [[...]])
+                                                            (build
+                                                              (rand, depth - 1)))
+                                                      | 5 -> [[...other program...]]
+                                                      | 6 -> [[...other program...]]
+                                                      | 7 ->
+                                                        [[...other program...]])) ;; 
+==============================

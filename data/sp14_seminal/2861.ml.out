@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "2861.ml", line 8, characters 29-71:
+This expression has type 'a list -> 'a list but is here used with type
+  'b list
+Relevant code: append ((digitsOfInt (n / 10)) [n mod 10])
+------------------------------------------------------------------
+Triaged the following locations:
+File "2861.ml", line 8, characters 29-35:
+And modified the following location:
+File "2861.ml", line 8, characters 37-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    append
+If you ignore other surrounding code, try replacing
+    (digitsOfInt (n / 10))
+with
+    (digitsOfInt (n / 10)); [[...]]
+The actual replacement has type
+    int list -> 'c
+within context
+    let rec digitsOfInt n =
+    (if n < 0 then [] else
+      (if n = 0 then [] else
+        ((append; [[...]]) (((digitsOfInt (n / 10)); [[...]]) [(mod n 10)]))))
+    ;; 
+==============================
+Triaged the following locations:
+File "2861.ml", line 8, characters 29-35:
+And modified the following location:
+File "2861.ml", line 8, characters 60-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    append
+If you ignore other surrounding code, try replacing
+    ((digitsOfInt (n / 10)) [(mod n 10)])
+with
+    (digitsOfInt (n / 10))
+The actual replacement has type
+    'd list
+within context
+    let rec digitsOfInt n =
+    (if n < 0 then [] else
+      (if n = 0 then [] else ((append; [[...]]) (digitsOfInt (n / 10)))))
+    ;; 
+==============================

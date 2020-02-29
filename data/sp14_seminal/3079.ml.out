@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "3079.ml", line 21, characters 60-64:
+This expression has type 'a list but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+Triaged the following locations:
+File "3079.ml", line 22, characters 2-56:
+And modified the following location:
+File "3079.ml", line 21, characters 43-57:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+The actual replacement has type
+    (int -> int -> int) -> 'b list -> ('c * 'd) list -> 'e * 'f
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = [] in
+        let args = [l1, l2] in
+        let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+      in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "3079.ml", line 22, characters 2-56:
+And modified the following location:
+File "3079.ml", line 18, characters 2-202:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let add (l1, l2) =
+      let f a x = a + x in
+        let base = [] in
+        let args = [l1, l2] in let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)) 0  0  9  9) + (1 0 0  2)
+with
+    [[...other program...]]
+The actual replacement has type
+    'g
+==============================

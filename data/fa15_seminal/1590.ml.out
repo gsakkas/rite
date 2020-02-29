@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1590.ml", line 7, characters 33-34:
+This expression has type string but is here used with type char list
+Relevant code: w
+------------------------------------------------------------------
+File "1590.ml", line 7, characters 19-30:
+Try replacing
+    (explode w) = w
+with
+    ( = ) ((explode w), w)
+of type
+    char list * string -> bool
+within context
+    let palindrome w = ( = ) ((explode w), w) ;; 
+==============================

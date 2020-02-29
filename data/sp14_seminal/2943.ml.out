@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "2943.ml", line 32, characters 28-42:
+This expression has type 'a -> 'b but is here used with type int
+Relevant code: (mulByDigit i)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2943.ml", line 32, characters 27-51:
+And modified the following location:
+File "2943.ml", line 32, characters 52-76:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mulByDigit i) - (1 l)
+with
+    [[...]]
+The actual replacement has type
+    int list
+within context
+    fun i
+      l ->
+        (if i = 0 then l else
+          (let a = [i] in (bigAdd [[...other program...]] [[...]])))
+==============================
+Triaged the following locations:
+File "2943.ml", line 32, characters 52-76:
+And modified the following location:
+File "2943.ml", line 32, characters 27-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mulByDigit i) - (1 l)
+with
+    [[...]]
+The actual replacement has type
+    int list
+within context
+    fun i
+      l ->
+        (if i = 0 then l else
+          (let a = [i] in (bigAdd [[...]] [[...other program...]])))
+==============================

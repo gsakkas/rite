@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "1395.ml", line 7, characters 51-52:
+This expression has type ('a -> 'b) -> 'a -> 'b but is here used with type
+  ('a -> 'b) -> 'a -> 'a -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "1395.ml", line 6, characters 12-15:
+Try replacing
+    fun a x -> (a x)
+with
+    fun x a -> (a x)
+of type
+    'c -> ('c -> 'd) -> 'd
+within context
+    let rec sepConcat sep sl = (match sl with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f x a = (a x) in
+                                        let base = "" in
+                                        let l = h in
+                                        (List.fold_left f base  l))) ;; 
+==============================
+File "1395.ml", line 7, characters 36-50:
+Try replacing
+    List.fold_left
+with
+    sep
+of type
+    (('e -> 'f) -> 'e -> 'f) -> string -> 'g -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (a x) in let base = "" in let l = h in (sep f base  l)))
+==============================

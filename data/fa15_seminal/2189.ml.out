@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "2189.ml", line 7, characters 4-92:
+This expression has type ('a * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((let helper func = let result = func b in (result, (result = b)) in
+      helper f), b)
+------------------------------------------------------------------
+File "2189.ml", line 7, characters 17-69:
+Try replacing
+    fun func -> (let result = (func b) in result, result = b)
+with
+    fun func _ -> (let result = (func b) in result, result = b)
+of type
+    ('c -> 'c) -> 'd -> 'c * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile
+      ((let helper func _ = let result = (func b) in result, result = b in
+              (helper f))
+          ,
+          b))
+    ;; 
+==============================
+File "2189.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('e * bool) * 'e -> ('e * bool) * 'e -> bool
+within context
+    let fixpoint (f, b) =
+    (=
+      ((let helper func = let result = (func b) in result, result = b in (helper f))
+          ,
+          b))
+    ;; 
+==============================
+File "2189.ml", line 8, characters 6-12:
+Try replacing
+    helper
+with
+    wwhile
+of type
+    (('f -> 'f * bool) -> ('f -> 'f * bool) * bool) * ('f -> 'f * bool) ->
+    'f -> 'f * bool
+within context
+    fun (f, b) ->
+      (wwhile
+        ((let helper func = let result = (func b) in result, result = b in
+                (wwhile f))
+            ,
+            b))
+==============================

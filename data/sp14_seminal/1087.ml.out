@@ -1,0 +1,90 @@
+------------------------------------------------------------------
+File "1087.ml", line 10, characters 21-47:
+This expression has type int list * 'a list but is here used with type
+  'b list
+Relevant code: ((clone 0 (abs diff)), l1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1087.ml", line 11, characters 7-64:
+And modified the following location:
+File "1087.ml", line 10, characters 21-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.append ((clone 0 (abs diff)), l1))
+with
+    (List.append (clone 0 (abs diff)) l1)
+The actual replacement has type
+    int list * 'c list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (List.append (clone 0 (abs diff)) l1), l2 else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1087.ml", line 11, characters 7-64:
+And modified the following location:
+File "1087.ml", line 10, characters 9-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    >
+The actual replacement has type
+    int list * 'd list -> int list * 'd list -> bool
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (> ((clone 0 (abs diff)), l1)), l2 else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1087.ml", line 11, characters 7-64:
+And modified the following location:
+File "1087.ml", line 10, characters 9-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    List.append; [[...]]
+The actual replacement has type
+    int list * 'e list -> 'f
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then ((List.append; [[...]]) ((clone 0 (abs diff)), l1)), l2 else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1087.ml", line 11, characters 7-64:
+And modified the following location:
+File "1087.ml", line 10, characters 9-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    <
+The actual replacement has type
+    int list * 'g list -> int list * 'g list -> bool
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (< ((clone 0 (abs diff)), l1)), l2 else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1087.ml", line 10, characters 7-53:
+And modified the following location:
+File "1087.ml", line 11, characters 24-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1, (List.append ((clone 0 diff), l2))
+with
+    [[...]]
+The actual replacement has type
+    unit
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then [[...other program...]] else (if diff > 0 then [[...]]))
+    ;; 
+==============================

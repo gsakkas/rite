@@ -1,0 +1,68 @@
+------------------------------------------------------------------
+File "0081.ml", line 8, characters 9-17:
+This expression has type (('a -> 'a) -> 'a -> 'a * bool) * 'b
+but is here used with type (('a -> 'a) -> ('a -> 'a) * bool) * ('a -> 'a)
+Relevant code: (foo, b)
+------------------------------------------------------------------
+File "0081.ml", line 8, characters 10-16:
+Try replacing
+    foo, b
+with
+    b, foo
+of type
+    ((('c -> 'c) -> 'c -> 'c * bool) -> (('c -> 'c) -> 'c -> 'c * bool) * bool) *
+    (('c -> 'c) -> 'c -> 'c * bool)
+within context
+    let fixpoint (f, b) =
+    let foo f b =
+      let result = (f b) in (if result = b then result, false else result, true)
+      in
+      (wwhile (b, foo))
+    ;; 
+==============================
+File "0081.ml", line 8, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    (('d -> 'd) -> 'd -> 'd * bool) * 'e ->
+    (('d -> 'd) -> 'd -> 'd * bool) * 'e -> bool
+within context
+    let fixpoint (f, b) =
+    let foo f b =
+      let result = (f b) in (if result = b then result, false else result, true)
+      in
+      (= (foo, b))
+    ;; 
+==============================
+File "0081.ml", line 8, characters 2-8:
+Try replacing
+    wwhile
+with
+    f
+of type
+    (('f -> 'f) -> 'f -> 'f * bool) * 'g -> 'h
+within context
+    let fixpoint (f, b) =
+    let foo f b =
+      let result = (f b) in (if result = b then result, false else result, true)
+      in
+      (f (foo, b))
+    ;; 
+==============================
+File "0081.ml", line 8, characters 10-13:
+Try replacing
+    foo
+with
+    f
+of type
+    ('i -> 'i * bool) * 'i
+within context
+    let fixpoint (f, b) =
+    let foo f b =
+      let result = (f b) in (if result = b then result, false else result, true)
+      in
+      (wwhile (f, b))
+    ;; 
+==============================

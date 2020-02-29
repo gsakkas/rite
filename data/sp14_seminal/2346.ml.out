@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2346.ml", line 3, characters 68-70:
+This expression has type string but is here used with type unit
+Relevant code: ""
+------------------------------------------------------------------
+File "2346.ml", line 3, characters 68-70:
+Try replacing
+    ""
+with
+    ""; [[...]]
+of type
+    unit
+within context
+    let padZero l1 l2 =
+    let (a, b) = (List.length l1), (List.length l2) in (if a < b then (""; [[...]]))
+    ;; 
+==============================

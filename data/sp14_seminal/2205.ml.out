@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2205.ml", line 30, characters 24-25:
+This expression has type int but is here used with type int list
+Relevant code: 1
+------------------------------------------------------------------
+File "2205.ml", line 30, characters 17-23:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    int -> int -> int list
+within context
+    fun i l -> (match i with 
+                | 0 -> []
+                | 1 -> l
+                | _ -> (bigAdd ((bigAdd; [[...]]) 1 1) (mulByDigit (i - 2) l)))
+==============================

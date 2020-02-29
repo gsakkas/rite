@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1852.ml", line 2, characters 70-74:
+This expression has type 'a -> 'a but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+File "1852.ml", line 2, characters 20-31:
+Try replacing
+    fun a x -> 3 + a
+with
+    fun _ a x -> 3 + a
+of type
+    'b -> int -> 'c -> int
+within context
+    let pipe fs =
+    let f _ a x = 3 + a in let base y = y in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1852.ml", line 2, characters 28-29:
+Try replacing
+    +
+with
+    x
+of type
+    int -> 'd -> 'e
+within context
+    fun fs -> (let f a x = (3 x a) in let base y = y in (List.fold_left f base  fs))
+==============================

@@ -1,0 +1,58 @@
+------------------------------------------------------------------
+File "1835.ml", line 17, characters 35-55:
+This expression has type int but is here used with type 'a list
+Relevant code: (sumList (digits n))
+------------------------------------------------------------------
+File "1835.ml", line 17, characters 45-51:
+Try replacing
+    (sumList (digits n))
+with
+    (digits (sumList n))
+of type
+    int list
+within context
+    let rec helper count x = (match x with 
+                              | [] -> count
+                              | hd :: tl ->
+                                (helper
+                                    (count + 1) (digits (sumList n)))) in (helper 0)
+==============================
+File "1835.ml", line 17, characters 16-22:
+Try replacing
+    helper
+with
+    +
+of type
+    int -> int -> int
+within context
+    let rec helper count x = (match x with 
+                              | [] -> count
+                              | hd :: tl ->
+                                (+ (count + 1) (sumList (digits n)))) in (helper 0)
+==============================
+File "1835.ml", line 17, characters 16-22:
+Try replacing
+    helper
+with
+    hd
+of type
+    int -> int -> int
+within context
+    let rec helper count x = (match x with 
+                              | [] -> count
+                              | hd :: tl ->
+                                (hd (count + 1) (sumList (digits n)))) in (helper 0)
+==============================
+File "1835.ml", line 17, characters 16-22:
+Try replacing
+    helper
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec helper count x = (match x with 
+                              | [] -> count
+                              | hd :: tl ->
+                                (/ (count + 1) (sumList (digits n)))) in (helper 0)
+==============================

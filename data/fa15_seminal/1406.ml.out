@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1406.ml", line 2, characters 34-64:
+This expression has type int -> 'a but is here used with type 'a
+Relevant code: additivePersistence (n mod 10)
+------------------------------------------------------------------
+File "1406.ml", line 2, characters 34-53:
+Try replacing
+    additivePersistence
+with
+    mod
+of type
+    int -> int -> int
+within context
+    let rec additivePersistence n n = (mod (mod n 10)) ;; 
+==============================

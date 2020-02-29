@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2167.ml", line 2, characters 48-57:
+This expression has type 'a * 'b but is here used with type ('b -> 'a) * 'b
+Relevant code: (temp, b)
+------------------------------------------------------------------
+File "2167.ml", line 2, characters 49-53:
+Try replacing
+    temp
+with
+    f
+of type
+    ('c -> 'd) * 'c
+within context
+    let rec wwhile (f, b) = let temp = (f b) in (wwhile (f, b)) ;; 
+==============================

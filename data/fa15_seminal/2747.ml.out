@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2747.ml", line 2, characters 49-50:
+This expression has type 'a list but is here used with type 'a
+Relevant code: x
+------------------------------------------------------------------
+File "2747.ml", line 2, characters 49-50:
+Try replacing
+    x
+with
+    -
+of type
+    int -> int -> int
+within context
+    let rec clone x n = (match n with 
+                         | 0 -> x
+                         | _ -> - :: (clone x (n - 1))) ;; 
+==============================
+File "2747.ml", line 2, characters 49-50:
+Try replacing
+    x
+with
+    n
+of type
+    int
+within context
+    let rec clone x n = (match n with 
+                         | 0 -> x
+                         | _ -> n :: (clone x (n - 1))) ;; 
+==============================

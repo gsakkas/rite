@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "1450.ml", line 17, characters 21-59:
+This expression has type float but is here used with type int
+Relevant code: ((eval (a, x, y)) +. (eval (b, x, y)))
+------------------------------------------------------------------
+File "1450.ml", line 17, characters 60-61:
+Try replacing
+    /
+with
+    /; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (eval (a, x, y)))
+                              | Cosine a -> (cos (eval (a, x, y)))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y)))
+                                      /; [[...]] 2)) ;; 
+==============================
+Triaged the following locations:
+File "1450.ml", line 15, characters 14-34:
+File "1450.ml", line 16, characters 16-36:
+And modified the following location:
+File "1450.ml", line 17, characters 39-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +.
+with
+    +.; [[...]]
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) ->
+                                ((eval (a, x, y)) +.; [[...]] (eval (b, x, y)))
+                                    / 2) ;; 
+==============================
+Triaged the following locations:
+File "1450.ml", line 15, characters 14-34:
+File "1450.ml", line 16, characters 16-36:
+And modified the following location:
+File "1450.ml", line 17, characters 39-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +.
+with
+    /
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) ->
+                                ((eval (a, x, y)) / (eval (b, x, y))) / 2) ;; 
+==============================

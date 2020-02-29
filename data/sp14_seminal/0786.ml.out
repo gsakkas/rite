@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "0786.ml", line 28, characters 53-57:
+This expression has type 'a * 'b * 'c -> 'd but is here used with type expr
+Relevant code: eval
+------------------------------------------------------------------
+File "0786.ml", line 28, characters 53-57:
+Try replacing
+    eval
+with
+    e
+of type
+    expr
+within context
+    let rec eval (e, x, y) = (float_of_string (exprToString e)) ;; 
+==============================
+File "0786.ml", line 28, characters 53-57:
+Try replacing
+    eval
+with
+    y
+of type
+    expr
+within context
+    let rec eval (e, x, y) = (float_of_string (exprToString y)) ;; 
+==============================
+File "0786.ml", line 28, characters 53-57:
+Try replacing
+    eval
+with
+    x
+of type
+    expr
+within context
+    let rec eval (e, x, y) = (float_of_string (exprToString x)) ;; 
+==============================

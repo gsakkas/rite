@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2211.ml", line 5, characters 29-51:
+This expression is not a function, it cannot be applied
+Relevant code: (f, (not ((f b) = b)))
+------------------------------------------------------------------
+File "2211.ml", line 5, characters 29-51:
+Try replacing
+    f, (not ((f b) = b))
+with
+    f, (not ((f b) = b)); [[...]]
+of type
+    'g -> ('h -> 'h * bool) * 'h
+within context
+    let fixpoint (f, b) = (wwhile ((f, (not ((f b) = b)); [[...]]) b)) ;; 
+==============================

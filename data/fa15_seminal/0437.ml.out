@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0437.ml", line 7, characters 19-42:
+This expression has type ('a * 'b) * bool but is here used with type 'a * 'b
+Relevant code: ((funt b), ((f b) = b))
+------------------------------------------------------------------
+File "0437.ml", line 7, characters 21-25:
+Try replacing
+    funt
+with
+    f
+of type
+    'c -> 'c
+within context
+    fun (f, b) -> (let rec funt x = (f b), (f b) = b in (wwhile (funt, b)))
+==============================

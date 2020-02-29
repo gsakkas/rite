@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0579.ml", line 6, characters 28-76:
+This expression should not be a function, the expected type is
+('a -> 'a * bool) * 'a
+Relevant code: (fun y  -> fun x  -> (((f x), ((f x) != b)), b))
+------------------------------------------------------------------
+File "0579.ml", line 6, characters 21-27:
+Try replacing
+    wwhile
+with
+    !=
+of type
+    ('b -> 'c -> ('d * bool) * 'd) -> ('b -> 'c -> ('d * bool) * 'd) -> bool
+within context
+    let fixpoint (f, b) = (!= (fun y x -> (((f x), (f x) != b), b))) ;; 
+==============================

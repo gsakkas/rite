@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0287.ml", line 3, characters 42-43:
+This expression is not a function, it cannot be applied
+Relevant code: l
+------------------------------------------------------------------
+File "0287.ml", line 3, characters 42-43:
+Try replacing
+    l
+with
+    l; [[...]]
+of type
+    ('h list -> 'h list) -> 'h list -> 'h list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: t -> h :: ((l; [[...]]) listReverse t)) ;; 
+==============================

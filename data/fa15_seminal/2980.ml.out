@@ -1,0 +1,56 @@
+------------------------------------------------------------------
+File "2980.ml", line 2, characters 56-60:
+This expression has type 'a -> 'b -> 'a but is here used with type 'a
+Relevant code: base
+------------------------------------------------------------------
+File "2980.ml", line 2, characters 54-62:
+Try replacing
+    (List.fold_left f base  l)
+with
+    (List.fold_left l base  f)
+of type
+    'c list
+within context
+    let stringOfList f l = let base = f in (List.fold_left l base  f) ;; 
+==============================
+File "2980.ml", line 2, characters 56-60:
+Try replacing
+    base
+with
+    List.fold_left
+of type
+    ('d -> 'e -> 'd) -> 'd -> 'e list -> 'd
+within context
+    let stringOfList f l = let base = f in (List.fold_left f List.fold_left  l) ;; 
+==============================
+File "2980.ml", line 2, characters 56-60:
+Try replacing
+    base
+with
+    l
+of type
+    'f list
+within context
+    let stringOfList f l = let base = f in (List.fold_left f l  l) ;; 
+==============================
+File "2980.ml", line 2, characters 34-35:
+Try replacing
+    f
+with
+    List.fold_left
+of type
+    ('g -> 'h -> 'g) -> 'g -> 'h list -> 'g
+within context
+    let stringOfList f l = let base = List.fold_left in (List.fold_left f base  l)
+    ;; 
+==============================
+File "2980.ml", line 2, characters 34-35:
+Try replacing
+    f
+with
+    l
+of type
+    'i list
+within context
+    let stringOfList f l = let base = l in (List.fold_left f base  l) ;; 
+==============================

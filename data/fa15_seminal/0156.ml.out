@@ -1,0 +1,67 @@
+------------------------------------------------------------------
+File "0156.ml", line 16, characters 21-23:
+This expression has type expr but is here used with type string
+Relevant code: e1
+------------------------------------------------------------------
+File "0156.ml", line 16, characters 21-23:
+Try replacing
+    e1
+with
+    e1; [[...]]
+of type
+    string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Neg e1 -> "(" ^ ((e1; [[...]]) ^ " * -1)")
+                              | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+                              | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) ->
+                                (exprToString e1) ^ ("*" ^ (exprToString e2))
+                              | Thresh (e1, e2, e3, e4) ->
+                                "(" ^
+                                    ((exprToString e1) ^
+                                        ("<" ^
+                                            ((exprToString e2) ^
+                                                ("?" ^
+                                                    ((exprToString e3) ^
+                                                        (":" ^
+                                                            ((exprToString e4)
+                                                                ^ ")")))))))) ;; 
+==============================
+File "0156.ml", line 16, characters 24-25:
+Try replacing
+    ^
+with
+    ^; [[...]]
+of type
+    expr -> string -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Neg e1 -> "(" ^ (e1 ^; [[...]] " * -1)")
+                              | Sine e1 -> "sin(pi*" ^ ((exprToString e1) ^ ")")
+                              | Cosine e1 -> "cos(pi*" ^ ((exprToString e1) ^ ")")
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) ->
+                                (exprToString e1) ^ ("*" ^ (exprToString e2))
+                              | Thresh (e1, e2, e3, e4) ->
+                                "(" ^
+                                    ((exprToString e1) ^
+                                        ("<" ^
+                                            ((exprToString e2) ^
+                                                ("?" ^
+                                                    ((exprToString e3) ^
+                                                        (":" ^
+                                                            ((exprToString e4)
+                                                                ^ ")")))))))) ;; 
+==============================

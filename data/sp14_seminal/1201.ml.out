@@ -1,0 +1,85 @@
+------------------------------------------------------------------
+File "1201.ml", line 34, characters 51-59:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: (h1, h2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1201.ml", line 35, characters 19-41:
+And modified the following location:
+File "1201.ml", line 34, characters 51-59:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h1, h2
+with
+    h1, h2; [[...]]
+The actual replacement has type
+    'd list
+within context
+    let rec pair acc list1 list2 = (match list1, list2 with 
+                                    | (h1 :: t1, h2 :: t2) ->
+                                      (pair
+                                          (List.append acc (h1, h2; [[...]])) t1 t2)
+                                    | (_, _) ->
+                                      [[...other program...]]) in (pair
+          [] (List.rev l1)  (List.rev l2))
+==============================
+Triaged the following locations:
+File "1201.ml", line 34, characters 29-66:
+And modified the following location:
+File "1201.ml", line 35, characters 19-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    List.append; [[...]]
+The actual replacement has type
+    'e -> int * int -> 'f
+within context
+    let rec pair acc list1 list2 = (match list1, list2 with 
+                                    | (h1 :: t1, h2 :: t2) ->
+                                      [[...other program...]]
+                                    | (_, _) ->
+                                      ((List.append; [[...]])
+                                          acc
+                                          (0,
+                                              0))) in (pair
+          [] (List.rev l1)  (List.rev l2))
+==============================
+Triaged the following locations:
+File "1201.ml", line 35, characters 19-41:
+And modified the following location:
+File "1201.ml", line 34, characters 35-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.append
+with
+    List.append; [[...]]
+The actual replacement has type
+    'g -> 'h * 'i -> 'g
+within context
+    let rec pair acc list1 list2 = (match list1, list2 with 
+                                    | (h1 :: t1, h2 :: t2) ->
+                                      (pair
+                                          ((List.append; [[...]]) acc (h1, h2)) t1 t2)
+                                    | (_, _) ->
+                                      [[...other program...]]) in (pair
+          [] (List.rev l1)  (List.rev l2))
+==============================
+Triaged the following locations:
+File "1201.ml", line 34, characters 29-66:
+And modified the following location:
+File "1201.ml", line 35, characters 35-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0, 0
+with
+    0, 0; [[...]]
+The actual replacement has type
+    'j list
+within context
+    let rec pair acc list1 list2 = (match list1, list2 with 
+                                    | (h1 :: t1, h2 :: t2) ->
+                                      [[...other program...]]
+                                    | (_, _) ->
+                                      (List.append
+                                          acc
+                                          (0, 0;
+                                            [[...]]))) in (pair
+          [] (List.rev l1)  (List.rev l2))
+==============================

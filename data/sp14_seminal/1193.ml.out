@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "1193.ml", line 27, characters 47-55:
+This expression has type 'a list * 'b list but is here used with type 'a list
+Relevant code: (t1, t2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1193.ml", line 30, characters 4-51:
+And modified the following location:
+File "1193.ml", line 27, characters 47-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (pair (t1, t2))
+with
+    (pair t1 t2)
+The actual replacement has type
+    ('c * 'd) list
+within context
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 0 in
+        let args = let rec pair list1 list2 = (match list1, list2 with 
+                                               | (h1 :: t1, h2 :: t2) ->
+                                                 h1, h2 :: (pair t1 t2)
+                                               | ([], []) ->
+                                                 []) in (pair
+              l1 l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1193.ml", line 30, characters 4-51:
+And modified the following location:
+File "1193.ml", line 27, characters 42-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    pair
+with
+    pair; [[...]]
+The actual replacement has type
+    'e list * 'f list -> ('e * 'f) list
+within context
+    let add (l1, l2) =
+      let f a x = (failwith "to be implemented") in
+        let base = 0 in
+        let args = let rec pair list1 list2 = (match list1, list2 with 
+                                               | (h1 :: t1, h2 :: t2) ->
+                                                 h1, h2 ::
+                                                       ((pair; [[...]]) (t1, t2))
+                                               | ([], []) ->
+                                                 []) in (pair
+              l1 l2) in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

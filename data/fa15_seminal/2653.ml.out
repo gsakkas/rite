@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2653.ml", line 28, characters 47-53:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: bigAdd
+------------------------------------------------------------------
+File "2653.ml", line 28, characters 47-53:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    'd -> (int -> 'd -> 'e list) -> int -> 'd -> 'e list
+within context
+    let rec mulByDigit i l =
+    (if i = 0 then [] else ((bigAdd; [[...]]) l mulByDigit  (i - 1)  l))
+    ;; 
+==============================

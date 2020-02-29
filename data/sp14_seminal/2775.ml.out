@@ -1,0 +1,171 @@
+------------------------------------------------------------------
+File "2775.ml", line 28, characters 31-35:
+This expression is not a function, it cannot be applied
+Relevant code: rand
+------------------------------------------------------------------
+Triaged the following locations:
+File "2775.ml", line 29, characters 12-60:
+File "2775.ml", line 31, characters 9-122:
+File "2775.ml", line 35, characters 9-120:
+File "2775.ml", line 39, characters 9-223:
+And modified the following location:
+File "2775.ml", line 28, characters 36-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (rand (0, 5))
+with
+    rand
+The actual replacement has type
+    int * int
+within context
+    let rec build (rand, depth) =
+    (if (depth <= 0) then (buildX ()) else (match rand with 
+                                            | 0 ->
+                                              (buildSine (build (rand, depth - 1)))
+                                            | 1 -> [[...other program...]]
+                                            | 2 -> [[...other program...]]
+                                            | 3 -> [[...other program...]]
+                                            | 4 -> [[...other program...]]))
+    ;; 
+==============================
+Triaged the following locations:
+File "2775.ml", line 29, characters 12-60:
+File "2775.ml", line 31, characters 9-122:
+File "2775.ml", line 35, characters 9-120:
+File "2775.ml", line 39, characters 9-223:
+And modified the following location:
+File "2775.ml", line 28, characters 31-35:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand
+with
+    rand; [[...]]
+The actual replacement has type
+    int * int -> int
+within context
+    let rec build (rand, depth) =
+    (if (depth <= 0) then (buildX ()) else (match rand with 
+                                            | 0 ->
+                                              (buildSine
+                                                  (build
+                                                    (((rand; [[...]]) (0, 5)),
+                                                        depth - 1)))
+                                            | 1 -> [[...other program...]]
+                                            | 2 -> [[...other program...]]
+                                            | 3 -> [[...other program...]]
+                                            | 4 -> [[...other program...]]))
+    ;; 
+==============================
+Triaged the following locations:
+File "2775.ml", line 28, characters 12-58:
+File "2775.ml", line 29, characters 12-60:
+File "2775.ml", line 35, characters 9-120:
+File "2775.ml", line 39, characters 9-223:
+And modified the following location:
+File "2775.ml", line 32, characters 11-100:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build ((rand (0, 5)), depth - 2)), (build ((rand (0, 5)), depth - 2))
+with
+    [[...]]
+The actual replacement has type
+    expr * expr
+within context
+    let rec build (rand, depth) =
+    (if (depth <= 0) then (buildX ()) else (match rand with 
+                                            | 0 -> [[...other program...]]
+                                            | 1 -> [[...other program...]]
+                                            | 2 -> (buildAverage [[...]])
+                                            | 3 -> [[...other program...]]
+                                            | 4 -> [[...other program...]]))
+    ;; 
+==============================
+Triaged the following locations:
+File "2775.ml", line 28, characters 12-58:
+File "2775.ml", line 31, characters 9-122:
+File "2775.ml", line 35, characters 9-120:
+File "2775.ml", line 39, characters 9-223:
+And modified the following location:
+File "2775.ml", line 29, characters 33-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand
+with
+    rand; [[...]]
+The actual replacement has type
+    int * int -> int
+within context
+    let rec build (rand, depth) =
+    (if (depth <= 0) then (buildX ()) else (match rand with 
+                                            | 0 -> [[...other program...]]
+                                            | 1 ->
+                                              (buildCosine
+                                                  (build
+                                                    (((rand; [[...]]) (0, 5)),
+                                                        depth - 1)))
+                                            | 2 -> [[...other program...]]
+                                            | 3 -> [[...other program...]]
+                                            | 4 -> [[...other program...]]))
+    ;; 
+==============================
+Triaged the following locations:
+File "2775.ml", line 28, characters 12-58:
+File "2775.ml", line 31, characters 9-122:
+File "2775.ml", line 35, characters 9-120:
+File "2775.ml", line 39, characters 9-223:
+And modified the following location:
+File "2775.ml", line 29, characters 38-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (rand (0, 5))
+with
+    rand
+The actual replacement has type
+    int * int
+within context
+    let rec build (rand, depth) =
+    (if (depth <= 0) then (buildX ()) else (match rand with 
+                                            | 0 -> [[...other program...]]
+                                            | 1 ->
+                                              (buildCosine
+                                                  (build (rand, depth - 1)))
+                                            | 2 -> [[...other program...]]
+                                            | 3 -> [[...other program...]]
+                                            | 4 -> [[...other program...]]))
+    ;; 
+==============================
+Triaged the following locations:
+File "2775.ml", line 28, characters 12-58:
+File "2775.ml", line 29, characters 12-60:
+File "2775.ml", line 31, characters 9-122:
+File "2775.ml", line 39, characters 9-223:
+And modified the following location:
+File "2775.ml", line 36, characters 11-100:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build ((rand (0, 5)), depth - 2)), (build ((rand (0, 5)), depth - 2))
+with
+    [[...]]
+The actual replacement has type
+    expr * expr
+within context
+    let rec build (rand, depth) =
+    (if (depth <= 0) then (buildX ()) else (match rand with 
+                                            | 0 -> [[...other program...]]
+                                            | 1 -> [[...other program...]]
+                                            | 2 -> [[...other program...]]
+                                            | 3 -> (buildTimes [[...]])
+                                            | 4 -> [[...other program...]]))
+    ;; 
+==============================
+Triaged the following locations:
+File "2775.ml", line 28, characters 12-58:
+File "2775.ml", line 29, characters 12-60:
+File "2775.ml", line 31, characters 9-122:
+File "2775.ml", line 35, characters 9-120:
+And modified the following location:
+File "2775.ml", line 40, characters 11-202:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (build ((rand (0, 5)), depth - 4)),
+      (build ((rand (0, 5)), depth - 4)),
+      (build ((rand (0, 5)), depth - 4)), (build ((rand (0, 5)), depth - 4))
+with
+    [[...]]
+The actual replacement has type
+    expr * expr * expr *
+    expr
+==============================

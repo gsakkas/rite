@@ -1,0 +1,61 @@
+------------------------------------------------------------------
+File "0453.ml", line 9, characters 9-22:
+This expression has type (int -> bool) * 'a but is here used with type
+  (int -> int * bool) * int
+Relevant code: (isFPoint, b)
+------------------------------------------------------------------
+File "0453.ml", line 9, characters 10-21:
+Try replacing
+    isFPoint, b
+with
+    b, isFPoint
+of type
+    ((int -> bool) -> (int -> bool) * bool) * (int -> bool)
+within context
+    let fixpoint (f, b) =
+    let isFPoint x = (f x) - x < 0 in
+      let rec test x = (if (isFPoint x) then x, true else (test (f x))) in
+      (wwhile (b, isFPoint))
+    ;; 
+==============================
+File "0453.ml", line 9, characters 2-8:
+Try replacing
+    wwhile
+with
+    <
+of type
+    (int -> bool) * 'b -> (int -> bool) * 'b -> bool
+within context
+    let fixpoint (f, b) =
+    let isFPoint x = (f x) - x < 0 in
+      let rec test x = (if (isFPoint x) then x, true else (test (f x))) in
+      (< (isFPoint, b))
+    ;; 
+==============================
+File "0453.ml", line 9, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    (int -> bool) * 'c -> (int -> bool) * 'c -> bool
+within context
+    let fixpoint (f, b) =
+    let isFPoint x = (f x) - x < 0 in
+      let rec test x = (if (isFPoint x) then x, true else (test (f x))) in
+      (= (isFPoint, b))
+    ;; 
+==============================
+File "0453.ml", line 9, characters 10-18:
+Try replacing
+    isFPoint
+with
+    test
+of type
+    (int -> int * bool) * int
+within context
+    fun (f, b) ->
+      (let isFPoint x = (f x) - x < 0 in
+          let rec test x = (if (isFPoint x) then x, true else (test (f x))) in
+          (wwhile (test, b)))
+==============================

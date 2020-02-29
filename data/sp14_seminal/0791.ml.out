@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "0791.ml", line 29, characters 9-39:
+This expression has type float but is here used with type int
+Relevant code: (tan (pi *. (eval (e, x, y))))
+------------------------------------------------------------------
+File "0791.ml", line 29, characters 40-41:
+Try replacing
+    /
+with
+    /; [[...]]
+of type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine e -> (cos (pi *. (eval (e, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Op1 e ->
+                                (tan (pi *. (eval (e, x, y)))) -.
+                                    ((tan (pi *. (eval (e, x, y)))) /; [[...]] 2.0)
+                              | Op2 (e1, e2, e3) ->
+                                (if (eval (e1, x, y)) > (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e1, x, y)) -. (eval (e2, x, y)))) ;; 
+==============================

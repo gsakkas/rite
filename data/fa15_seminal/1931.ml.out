@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "1931.ml", line 3, characters 50-51:
+This expression has type int but is here used with type bool
+Relevant code: n
+------------------------------------------------------------------
+File "1931.ml", line 3, characters 52-53:
+Try replacing
+    &
+with
+    /
+of type
+    int -> int -> int
+within context
+    fun n -> (if n < 0 then [] else (digitsOfInt (n / 10)) @ [n / 10])
+==============================
+File "1931.ml", line 3, characters 52-53:
+Try replacing
+    &
+with
+    <
+of type
+    int -> int -> bool
+within context
+    fun n -> (if n < 0 then [] else (digitsOfInt (n / 10)) @ [n < 10])
+==============================

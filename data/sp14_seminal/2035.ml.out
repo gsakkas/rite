@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "2035.ml", line 29, characters 27-54:
+This expression has type expr but is here used with type expr * expr
+Relevant code: (build (rand, (depth - 1)))
+------------------------------------------------------------------
+File "2035.ml", line 29, characters 14-26:
+Try replacing
+    buildAverage
+with
+    buildSine
+of type
+    expr -> expr
+within context
+    let num = (rand (0, 5)) in (match num with 
+                                | 0 -> (buildSine (build (rand, depth - 1)))
+                                | 1 ->
+                                  (buildAverage
+                                      ((build (rand, depth - 1)),
+                                          (buildSine (build (rand, depth - 1)))))
+                                | 2 ->
+                                  (buildTimes
+                                      ((build (rand, depth - 1)),
+                                          (build (rand, depth - 1))))
+                                | _ -> (buildCosine (build (rand, depth - 1))))
+==============================
+File "2035.ml", line 29, characters 14-26:
+Try replacing
+    buildAverage
+with
+    buildCosine
+of type
+    expr -> expr
+within context
+    let num = (rand (0, 5)) in (match num with 
+                                | 0 -> (buildSine (build (rand, depth - 1)))
+                                | 1 ->
+                                  (buildAverage
+                                      ((build (rand, depth - 1)),
+                                          (buildCosine (build (rand, depth - 1)))))
+                                | 2 ->
+                                  (buildTimes
+                                      ((build (rand, depth - 1)),
+                                          (build (rand, depth - 1))))
+                                | _ -> (buildCosine (build (rand, depth - 1))))
+==============================

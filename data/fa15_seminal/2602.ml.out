@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "2602.ml", line 24, characters 35-41:
+This expression has type int but is here used with type bool
+Relevant code: n / 10
+------------------------------------------------------------------
+File "2602.ml", line 24, characters 37-38:
+Try replacing
+    /
+with
+    <
+of type
+    int -> int -> bool
+within context
+    let rec additivePersistence n = (if n < 10 then 0 else (addHelp (n, 0))) ;; 
+==============================
+File "2602.ml", line 24, characters 37-38:
+Try replacing
+    /
+with
+    =
+of type
+    int -> int -> bool
+within context
+    let rec additivePersistence n = (if n = 10 then 0 else (addHelp (n, 0))) ;; 
+==============================

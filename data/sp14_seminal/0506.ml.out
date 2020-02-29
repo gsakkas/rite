@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0506.ml", line 49, characters 32-33:
+This expression has type int but is here used with type int list
+Relevant code: 0
+------------------------------------------------------------------
+File "0506.ml", line 49, characters 32-35:
+Try replacing
+    (helper 0 i  l)
+with
+    (helper i 0  l)
+of type
+    int list
+within context
+    let rec mulByDigit i l = (helper i 0  l) ;; 
+==============================

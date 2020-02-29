@@ -1,0 +1,80 @@
+------------------------------------------------------------------
+File "1130.ml", line 29, characters 35-39:
+This expression has type int * 'a list but is here used with type int * int
+Relevant code: base
+------------------------------------------------------------------
+File "1130.ml", line 29, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> 'c * 'd -> int * 'b list
+within context
+    let f a x = (match a with 
+                 | (c, d) ->
+                   (if ((fst x) + (snd x)) + c > 9 then
+                       1, (mod (((fst x) + (snd x)) + c) 10)
+                       else
+                       0, (mod (((fst x) + (snd x)) + c) 10))
+                 | _ ->
+                   (if (fst x) + (snd x) > 9 then 1, (mod ((fst x) + (snd x)) 10)
+                       else
+                       0,
+                         (mod
+                           ((fst x) + (snd x))
+                           10))) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "1130.ml", line 29, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * 'e -> int * int -> int * int) ->
+    int * 'f list -> ('g * 'h) list -> 'i * 'j
+within context
+    let f a x = (match a with 
+                 | (c, d) ->
+                   (if ((fst x) + (snd x)) + c > 9 then
+                       1, (mod (((fst x) + (snd x)) + c) 10)
+                       else
+                       0, (mod (((fst x) + (snd x)) + c) 10))
+                 | _ ->
+                   (if (fst x) + (snd x) > 9 then 1, (mod ((fst x) + (snd x)) 10)
+                       else
+                       0,
+                         (mod
+                           ((fst x) + (snd x))
+                           10))) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "1130.ml", line 17, characters 10-352:
+Try replacing
+    fun a x -> (match a with 
+                | (c, d) ->
+                  (if ((fst x) + (snd x)) + c > 9 then
+                      1, (mod (((fst x) + (snd x)) + c) 10)
+                      else
+                      0, (mod (((fst x) + (snd x)) + c) 10))
+                | _ ->
+                  (if (fst x) + (snd x) > 9 then 1, (mod ((fst x) + (snd x)) 10)
+                      else
+                      0, (mod ((fst x) + (snd x)) 10)))
+with
+    fun a x -> (match a with 
+                | (c, d) ->
+                  (if ((fst x) + (snd x)) + c > 9 then
+                      1, (mod (((fst x) + (snd x)) + c) 10)
+                      else
+                      0, (mod (((fst x) + (snd x)) + c) 10))
+                | _ ->
+                  (if (fst x) + (snd x) > 9 then 1, (mod ((fst x) + (snd x)) 10)
+                      else
+                      0, (mod ((fst x) + (snd x)) 10))); [[...]]
+of type
+    'k
+==============================

@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "2108.ml", line 2, characters 65-66:
+This expression has type ('a -> 'b) -> 'a -> 'b but is here used with type
+  ('a -> 'b) -> 'a -> 'a -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "2108.ml", line 2, characters 65-66:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'c list -> 'c -> 'c list
+within context
+    let pipe fs =
+    let f a x = (a x) in let base = fs in (List.fold_left (f; [[...]]) base  fs)
+    ;; 
+==============================
+File "2108.ml", line 2, characters 20-29:
+Try replacing
+    fun a x -> (a x)
+with
+    fun a x -> (a x); [[...]]
+of type
+    'd
+within context
+    let pipe fs =
+    let f = fun a x -> (a x); [[...]] in
+      let base = fs in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2108.ml", line 2, characters 50-64:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (('e -> 'f) -> 'e -> 'f) -> 'g -> 'g -> 'h
+within context
+    let pipe fs =
+    let f a x = (a x) in let base = fs in ((List.fold_left; [[...]]) f base  fs)
+    ;; 
+==============================

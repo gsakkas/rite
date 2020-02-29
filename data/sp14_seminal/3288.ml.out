@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "3288.ml", line 19, characters 27-29:
+This expression has type 'a list but is here used with type int
+Relevant code: h1
+------------------------------------------------------------------
+File "3288.ml", line 18, characters 13-20:
+Try replacing
+    [], []
+with
+    _
+of type
+    int list * int list
+within context
+    let f a x = (match a with 
+                 | ([], []) -> (match x with 
+                                | _ -> a
+                                | (h1, h2) ->
+                                  ([(h1 + h2) / 10],
+                                        [(mod (h1 + h2) 10)
+                                            ]))) in let base = [], [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

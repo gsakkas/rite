@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+File "0456.ml", line 8, characters 9-16:
+This expression has type ((int -> int) -> (int -> int) * bool) * int
+but is here used with type
+  ((int -> int) -> (int -> int) * bool) * (int -> int)
+Relevant code: (gs, b)
+------------------------------------------------------------------
+File "0456.ml", line 8, characters 2-8:
+Try replacing
+    wwhile
+with
+    <
+of type
+    ('a -> (int -> int) * bool) * int ->
+    ('a -> (int -> int) * bool) * int -> bool
+within context
+    let fixpoint (f, b) =
+    let gs x = let isFPoint x = (f x) - x < 0 in f, (f b) = b in (< (gs, b))
+    ;; 
+==============================
+File "0456.ml", line 8, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('b -> (int -> int) * bool) * int ->
+    ('b -> (int -> int) * bool) * int -> bool
+within context
+    let fixpoint (f, b) =
+    let gs x = let isFPoint x = (f x) - x < 0 in f, (f b) = b in (= (gs, b))
+    ;; 
+==============================
+File "0456.ml", line 7, characters 50-51:
+Try replacing
+    f
+with
+    x
+of type
+    'c * bool
+within context
+    fun (f, b) ->
+      (let gs x = let isFPoint x = (f x) - x < 0 in x, (f b) = b in
+          (wwhile (gs, b)))
+==============================
+File "0456.ml", line 7, characters 50-51:
+Try replacing
+    f
+with
+    b
+of type
+    int * bool
+within context
+    fun (f, b) ->
+      (let gs x = let isFPoint x = (f x) - x < 0 in b, (f b) = b in
+          (wwhile (gs, b)))
+==============================
+File "0456.ml", line 8, characters 14-15:
+Try replacing
+    b
+with
+    f
+of type
+    ((int -> int) -> (int -> int) * bool) * (int -> int)
+within context
+    let fixpoint (f, b) =
+    let gs x = let isFPoint x = (f x) - x < 0 in f, (f b) = b in (wwhile (gs, f))
+    ;; 
+==============================

@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "2756.ml", line 10, characters 43-51:
+This expression has type string * 'a but is here used with type string
+Relevant code: (";", l)
+------------------------------------------------------------------
+File "2756.ml", line 10, characters 33-42:
+Try replacing
+    sepConcat
+with
+    >
+of type
+    string * 'b -> string * 'b -> bool
+within context
+    let stringOfList f l = (List.map (> (";", l))) ;; 
+==============================
+File "2756.ml", line 10, characters 33-42:
+Try replacing
+    sepConcat
+with
+    f
+of type
+    string * 'c -> 'd -> 'e
+within context
+    let stringOfList f l = (List.map (f (";", l))) ;; 
+==============================

@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1798.ml", line 17, characters 44-65:
+This expression has type int -> int * int but is here used with type 'a * 'b
+Relevant code: additivePersAndRoot n
+------------------------------------------------------------------
+File "1798.ml", line 17, characters 65-65:
+Try replacing
+    (additivePersAndRoot n)
+with
+    (additivePersAndRoot [[...]] n)
+of type
+    int * int
+within context
+    let rec additivePersistence n =
+    let (l, r) = (additivePersAndRoot [[...]] n) in l
+    ;; 
+==============================
+File "1798.ml", line 17, characters 65-65:
+Try replacing
+    (additivePersAndRoot n)
+with
+    (additivePersAndRoot n [[...]])
+of type
+    int * int
+within context
+    let rec additivePersistence n =
+    let (l, r) = (additivePersAndRoot n [[...]]) in l
+    ;; 
+==============================

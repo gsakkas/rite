@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1784.ml", line 11, characters 25-48:
+This expression has type int list but is here used with type int
+Relevant code: (clone 0 (first - sec))
+------------------------------------------------------------------
+File "1784.ml", line 11, characters 9-20:
+Try replacing
+    List.append
+with
+    List.append; [[...]]
+of type
+    int list -> int list list -> int list * int list list
+within context
+    let first = (List.length l1) in
+      let sec = (List.length l2) in
+      (if first < sec then (List.append (clone 0 (sec - first)) l1), l2 else
+          (if first > sec then
+            ((List.append; [[...]]) l1 (clone 0 (first - sec)) :: l2)
+            else
+            l1, l2))
+==============================

@@ -1,0 +1,123 @@
+------------------------------------------------------------------
+File "1949.ml", line 45, characters 13-15:
+This expression is not a function, it cannot be applied
+Relevant code: l1
+------------------------------------------------------------------
+Triaged the following locations:
+File "1949.ml", line 43, characters 26-28:
+And modified the following location:
+File "1949.ml", line 43, characters 39-67:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    []
+If you ignore other surrounding code, try replacing
+    (bigAdd (mulByDigit h l1) res)
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    fun a x -> (let (x1, x2) = x in let (carry, res) = a in (match x2 with 
+                                                             | [] -> ([]; [[...]])
+                                                             | h :: t -> [[...]]))
+==============================
+Triaged the following locations:
+File "1949.ml", line 46, characters 2-63:
+And modified the following location:
+File "1949.ml", line 45, characters 16-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (l1 (tenEx 0 l2))
+with
+    l1
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 -> (let f a x = let (x1, x2) = x in let (carry, res) = a in (match x2 with 
+                                                                      | [] -> []
+                                                                      | h :: t ->
+                                                                        (bigAdd
+                                                                            (mulByDigit
+                                                                              h l1)
+                                                                            res)) in let
+            base
+            =
+            0, []
+            in
+            let args = l1 in [[...other program...]])
+==============================
+Triaged the following locations:
+File "1949.ml", line 46, characters 2-63:
+And modified the following location:
+File "1949.ml", line 45, characters 13-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    int list -> 'c
+within context
+    fun l1
+      l2 -> (let f a x = let (x1, x2) = x in let (carry, res) = a in (match x2 with 
+                                                                      | [] -> []
+                                                                      | h :: t ->
+                                                                        (bigAdd
+                                                                            (mulByDigit
+                                                                              h l1)
+                                                                            res)) in let
+            base
+            =
+            0, []
+            in
+            let args = ((l1; [[...]]) (tenEx 0 l2)) in [[...other program...]])
+==============================
+Triaged the following locations:
+File "1949.ml", line 46, characters 2-63:
+And modified the following location:
+File "1949.ml", line 45, characters 13-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    <
+The actual replacement has type
+    int list -> int list -> bool
+within context
+    fun l1
+      l2 -> (let f a x = let (x1, x2) = x in let (carry, res) = a in (match x2 with 
+                                                                      | [] -> []
+                                                                      | h :: t ->
+                                                                        (bigAdd
+                                                                            (mulByDigit
+                                                                              h l1)
+                                                                            res)) in let
+            base
+            =
+            0, []
+            in
+            let args = (< (tenEx 0 l2)) in [[...other program...]])
+==============================
+Triaged the following locations:
+File "1949.ml", line 46, characters 2-63:
+And modified the following location:
+File "1949.ml", line 45, characters 2-95:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (l1 (tenEx 0 l2)) in
+      let (carry, res) = (List.fold_left f base  args) in [carry] @ res
+with
+    [[...other program...]]
+The actual replacement has type
+    'g
+within context
+    fun l1
+      l2 -> (let f a x = let (x1, x2) = x in let (carry, res) = a in (match x2 with 
+                                                                      | [] -> []
+                                                                      | h :: t ->
+                                                                        (bigAdd
+                                                                            (mulByDigit
+                                                                              h l1)
+                                                                            res)) in let
+            base
+            =
+            0, []
+            in
+            [[...other program...]])
+==============================

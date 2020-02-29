@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "3074.ml", line 5, characters 49-50:
+This expression has type 'a list but is here used with type 'a
+Relevant code: t
+------------------------------------------------------------------
+File "3074.ml", line 5, characters 49-50:
+Try replacing
+    t
+with
+    cat
+of type
+    'b list -> 'b -> 'b list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: t -> (listReverse cat :: (cat l h))) ;; 
+==============================
+File "3074.ml", line 5, characters 49-50:
+Try replacing
+    t
+with
+    h
+of type
+    'c
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: t -> (listReverse h :: (cat l h))) ;; 
+==============================

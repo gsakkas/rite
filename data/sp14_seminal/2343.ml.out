@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2343.ml", line 4, characters 15-32:
+This expression has type 'a list but is here used with type unit
+Relevant code: List.append l1 l1
+------------------------------------------------------------------
+File "2343.ml", line 4, characters 15-32:
+Try replacing
+    (List.append l1 l1)
+with
+    (List.append l1 l1); [[...]]
+of type
+    unit
+within context
+    let padZero l1 l2 =
+    let (a, b) = (List.length l1), (List.length l2) in
+      (if true then ((List.append l1 l1); [[...]]))
+    ;; 
+==============================

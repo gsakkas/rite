@@ -1,0 +1,71 @@
+------------------------------------------------------------------
+File "2053.ml", line 7, characters 58-59:
+This expression has type 'a list but is here used with type 'a list list
+Relevant code: l
+------------------------------------------------------------------
+File "2053.ml", line 7, characters 36-50:
+Try replacing
+    List.fold_left
+with
+    sep
+of type
+    (string -> 'b list -> string) -> string -> 'b list -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sepConcat sep x) in
+             let base = "" in let l = t in (sep f base  l)))
+==============================
+File "2053.ml", line 6, characters 23-32:
+Try replacing
+    sepConcat
+with
+    ^
+of type
+    string -> string -> string
+within context
+    let f a x = a ^ (^ sep x) in
+      let base = "" in let l = t in (List.fold_left f base  l)
+==============================
+File "2053.ml", line 3, characters 8-10:
+Try replacing
+    sl
+with
+    sep
+of type
+    'c list
+within context
+    let rec sepConcat sep sl = (match sep with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = a ^ (sepConcat sep x) in
+                                        let base = "" in
+                                        let l = t in
+                                        (List.fold_left f base  l))) ;; 
+==============================
+File "2053.ml", line 6, characters 37-38:
+Try replacing
+    x
+with
+    t
+of type
+    'd list
+within context
+    let f a x = a ^ (sepConcat sep t) in
+      let base = "" in let l = t in (List.fold_left f base  l)
+==============================
+File "2053.ml", line 7, characters 51-52:
+Try replacing
+    f
+with
+    ^
+of type
+    string -> string -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sepConcat sep x) in
+             let base = "" in let l = t in (List.fold_left ^ base  l)))
+==============================

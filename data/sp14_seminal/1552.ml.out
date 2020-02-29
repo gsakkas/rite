@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1552.ml", line 4, characters 4-60:
+This expression has type 'a list but is here used with type 'a
+Relevant code: match l with | [] -> l2 | h::t -> (listHelper t h) :: l2
+------------------------------------------------------------------
+File "1552.ml", line 3, characters 21-88:
+Try replacing
+    fun l l2 -> (match l with 
+                 | [] -> l2
+                 | h :: t -> (listHelper t h) :: l2)
+with
+    fun l l2 -> (match l with 
+                 | [] -> l2
+                 | h :: t -> (listHelper t h) :: l2); [[...]]
+of type
+    'b list list -> 'b list -> 'c
+==============================

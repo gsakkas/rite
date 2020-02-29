@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1266.ml", line 10, characters 24-61:
+This expression has type int but is here used with type 'a list
+Relevant code: ((List.length l1) - (List.length l2))
+------------------------------------------------------------------
+File "1266.ml", line 10, characters 62-63:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int -> int list -> int
+within context
+    (if (List.length l1) = (List.length l2) then l1, l2 else
+      (if (List.length l1) < (List.length l2) then
+        (clone 0 ((List.length l2) - (List.length l1))) @ l1, l2
+        else
+        l1, (clone 0 ((List.length l1) - (List.length l2) @; [[...]] l2))))
+==============================

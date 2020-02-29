@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "2172.ml", line 19, characters 50-51:
+This expression has type int list -> int -> int * int list
+but is here used with type int list -> int -> int list
+Relevant code: f
+------------------------------------------------------------------
+File "2172.ml", line 19, characters 50-51:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'a list -> 'b -> int * 'a list
+within context
+    let f a x = (match l1 with 
+                 | [] -> (0, [])
+                 | h :: t ->
+                   (0,
+                         x + h ::
+                             a)) in let base = 0, [] in
+      let args = l2 in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2172.ml", line 19, characters 35-49:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int -> int * int list) -> int * 'c list -> 'd -> 'e * 'f
+within context
+    let f a x = (match l1 with 
+                 | [] -> (0, [])
+                 | h :: t ->
+                   (0,
+                         x + h ::
+                             a)) in let base = 0, [] in
+      let args = l2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2172.ml", line 17, characters 10-75:
+Try replacing
+    fun a x -> (match l1 with 
+                | [] -> (0, [])
+                | h :: t -> (0, x + h :: a))
+with
+    fun a x -> (match l1 with 
+                | [] -> (0, [])
+                | h :: t -> (0, x + h :: a)); [[...]]
+of type
+    'g
+==============================

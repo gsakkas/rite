@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0387.ml", line 10, characters 20-31:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: listReverse
+------------------------------------------------------------------
+File "0387.ml", line 10, characters 32-39:
+Try replacing
+    (listReverse explode w)
+with
+    (listReverse w)
+of type
+    'g list
+within context
+    let palindrome w = (listReverse w) == w ;; 
+==============================

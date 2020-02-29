@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "0967.ml", line 3, characters 48-69:
+This expression has type 'a list but is here used with type 'a
+Relevant code: (List.append [x] acc)
+------------------------------------------------------------------
+File "0967.ml", line 3, characters 49-60:
+Try replacing
+    List.append
+with
+    <=
+of type
+    bool list -> bool list -> bool
+within context
+    fun acc n -> (if (n <= 0) then acc else (clone (<= [x] acc) (n - 1)))
+==============================
+File "0967.ml", line 3, characters 62-63:
+Try replacing
+    x
+with
+    n
+of type
+    int
+within context
+    fun n -> (if (n <= 0) then acc else (clone (List.append [n] acc) (n - 1)))
+==============================
+File "0967.ml", line 3, characters 62-63:
+Try replacing
+    x
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun n -> (if (n <= 0) then acc else (clone (List.append [-] acc) (n - 1)))
+==============================
+File "0967.ml", line 3, characters 62-63:
+Try replacing
+    x
+with
+    <=
+of type
+    'b -> 'b -> bool
+within context
+    fun n -> (if (n <= 0) then acc else (clone (List.append [<=] acc) (n - 1)))
+==============================

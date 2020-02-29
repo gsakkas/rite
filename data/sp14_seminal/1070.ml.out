@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "1070.ml", line 4, characters 28-64:
+This expression has type (((bool -> bool) -> bool -> 'a) -> 'a) * 'b
+but is here used with type
+  (((bool -> bool) -> bool -> 'a) -> ((bool -> bool) -> bool -> 'a) * bool) *
+  ((bool -> bool) -> bool -> 'a)
+Relevant code: ((fun x  -> f x not ((f x) = x)), b)
+------------------------------------------------------------------
+File "1070.ml", line 4, characters 29-63:
+Try replacing
+    (fun x -> (f x not  ((f x) = x))), b
+with
+    b, (fun x -> (f x not  ((f x) = x)))
+of type
+    ((((bool -> bool) -> bool -> 'c) -> 'c) ->
+     (((bool -> bool) -> bool -> 'c) -> 'c) * bool) *
+    (((bool -> bool) -> bool -> 'c) -> 'c)
+within context
+    let fixpoint (f, b) = (wwhile (b, (fun x -> (f x not  ((f x) = x))))) ;; 
+==============================
+File "1070.ml", line 4, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    (((bool -> bool) -> bool -> 'd) -> 'd) * 'e ->
+    (((bool -> bool) -> bool -> 'd) -> 'd) * 'e -> bool
+within context
+    let fixpoint (f, b) = (= ((fun x -> (f x not  ((f x) = x))), b)) ;; 
+==============================
+File "1070.ml", line 4, characters 50-51:
+Try replacing
+    f
+with
+    not
+of type
+    bool -> bool
+within context
+    (fun x -> (f x not  ((not x) = x))), b
+==============================

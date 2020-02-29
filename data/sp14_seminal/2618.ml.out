@@ -1,0 +1,66 @@
+------------------------------------------------------------------
+File "2618.ml", line 2, characters 69-73:
+This expression has type string but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+File "2618.ml", line 2, characters 67-68:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    string -> 'a -> string
+within context
+    let pipe fs =
+    let f a x = x + a in let base = "" in (List.fold_left (f; [[...]]) base  fs)
+    ;; 
+==============================
+File "2618.ml", line 2, characters 46-48:
+Try replacing
+    ""
+with
+    ""; [[...]]
+of type
+    'b
+within context
+    let pipe fs =
+    let f a x = x + a in let base = ""; [[...]] in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2618.ml", line 2, characters 69-73:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    int
+within context
+    let pipe fs =
+    let f a x = x + a in let base = "" in (List.fold_left f (base; [[...]])  fs)
+    ;; 
+==============================
+File "2618.ml", line 2, characters 20-31:
+Try replacing
+    fun a x -> x + a
+with
+    fun a x -> x + a; [[...]]
+of type
+    'c
+within context
+    let pipe fs =
+    let f = fun a x -> x + a; [[...]] in
+      let base = "" in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2618.ml", line 2, characters 52-66:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int -> int -> int) -> string -> 'd -> 'e
+within context
+    let pipe fs =
+    let f a x = x + a in let base = "" in ((List.fold_left; [[...]]) f base  fs)
+    ;; 
+==============================

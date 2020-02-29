@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "3229.ml", line 7, characters 35-64:
+This expression has type int list list but is here used with type int list
+Relevant code: ((mulByDigit i [x']) @ [x''])
+------------------------------------------------------------------
+File "3229.ml", line 7, characters 59-62:
+Try replacing
+    x''
+with
+    x'
+of type
+    int
+within context
+    (match l with 
+     | [] -> []
+     | x :: x' :: x'' ->
+       [(x * i) / 10] @ ([(mod (x * i) 10) + x'] @ ((mulByDigit i [x']) @ [x'])))
+==============================
+File "3229.ml", line 7, characters 59-62:
+Try replacing
+    x''
+with
+    i
+of type
+    int
+within context
+    (match l with 
+     | [] -> []
+     | x :: x' :: x'' ->
+       [(x * i) / 10] @ ([(mod (x * i) 10) + x'] @ ((mulByDigit i [x']) @ [i])))
+==============================
+File "3229.ml", line 7, characters 59-62:
+Try replacing
+    x''
+with
+    x
+of type
+    int
+within context
+    (match l with 
+     | [] -> []
+     | x :: x' :: x'' ->
+       [(x * i) / 10] @ ([(mod (x * i) 10) + x'] @ ((mulByDigit i [x']) @ [x])))
+==============================

@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "3262.ml", line 6, characters 34-47:
+This expression has type string but is here used with type unit
+Relevant code: a ^ (x ^ sep)
+------------------------------------------------------------------
+File "3262.ml", line 6, characters 18-47:
+Try replacing
+    (if a = "a" then a ^ (x ^ sep))
+with
+    [[...]]
+of type
+    'a
+within context
+    fun sl -> (match sl with 
+               | [] -> ""
+               | h :: t ->
+                 (let f a x = [[...]] in
+                       let base = "" in let l = sl in (List.fold_left f base  l)))
+==============================

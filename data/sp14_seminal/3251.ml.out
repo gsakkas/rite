@@ -1,0 +1,195 @@
+------------------------------------------------------------------
+File "3251.ml", line 20, characters 13-34:
+This expression has type int but is here used with type int list
+Relevant code: (add (padZero l1 l2))
+------------------------------------------------------------------
+File "3251.ml", line 16, characters 10-13:
+Try replacing
+    fun a x -> x
+with
+    fun x a -> x
+of type
+    'a -> 'b -> 'a
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f x a = x in
+              let base = (failwith "to be implemented") in
+              let args = (List.rev (List.combine l1 l2)) in
+              let (_, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+File "3251.ml", line 19, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('c -> 'd -> 'd) -> (('e * 'f) list -> 'g * 'h) -> ('e * 'f) list -> 'g * 'h
+within context
+    let f a x = x in
+      let base = (failwith "to be implemented") in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (f f base  args) in res
+==============================
+File "3251.ml", line 19, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    ('i -> 'j -> 'j) -> 'k -> ('l * 'm) list -> 'n * 'o
+within context
+    let f a x = x in
+      let base = (failwith "to be implemented") in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (base f base  args) in res
+==============================
+File "3251.ml", line 18, characters 25-37:
+Try replacing
+    List.combine
+with
+    base
+of type
+    'p -> 'q -> 'r list
+within context
+    let f a x = x in
+      let base = (failwith "to be implemented") in
+      let args = (List.rev (base l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "3251.ml", line 20, characters 2-12:
+Try replacing
+    removeZero
+with
+    +
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = x in
+        let base = (failwith "to be implemented") in
+        let args = (List.rev (List.combine l1 l2)) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (+ (add (padZero l1 l2)))
+    ;; 
+==============================
+File "3251.ml", line 20, characters 2-12:
+Try replacing
+    removeZero
+with
+    <
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = x in
+        let base = (failwith "to be implemented") in
+        let args = (List.rev (List.combine l1 l2)) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (< (add (padZero l1 l2)))
+    ;; 
+==============================
+File "3251.ml", line 20, characters 2-12:
+Try replacing
+    removeZero
+with
+    =
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = x in
+        let base = (failwith "to be implemented") in
+        let args = (List.rev (List.combine l1 l2)) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (= (add (padZero l1 l2)))
+    ;; 
+==============================
+File "3251.ml", line 20, characters 2-12:
+Try replacing
+    removeZero
+with
+    -
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x = x in
+        let base = (failwith "to be implemented") in
+        let args = (List.rev (List.combine l1 l2)) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (- (add (padZero l1 l2)))
+    ;; 
+==============================
+File "3251.ml", line 18, characters 15-23:
+Try replacing
+    List.rev
+with
+    base
+of type
+    ('s * 't) list -> 'u
+within context
+    fun (l1, l2) ->
+      (let f a x = x in
+          let base = (failwith "to be implemented") in
+          let args = (base (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "3251.ml", line 20, characters 19-26:
+Try replacing
+    padZero
+with
+    add
+of type
+    'v list * ('w -> 'x list * int list list) list ->
+    'w -> 'x list * int list list
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x = x in
+            let base = (failwith "to be implemented") in
+            let args = (List.rev (List.combine l1 l2)) in
+            let (_, res) = (List.fold_left f base  args) in res
+          in
+          (removeZero (add (add l1 l2))))
+==============================
+File "3251.ml", line 19, characters 40-44:
+Try replacing
+    args
+with
+    base
+of type
+    ('y * 'z) list
+within context
+    let f a x = x in
+      let base = (failwith "to be implemented") in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  base) in res
+==============================
+File "3251.ml", line 16, characters 16-17:
+Try replacing
+    x
+with
+    a
+of type
+    'a1
+within context
+    let add (l1, l2) =
+      let f a x = a in
+        let base = (failwith "to be implemented") in
+        let args = (List.rev (List.combine l1 l2)) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

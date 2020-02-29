@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "3010.ml", line 23, characters 40-44:
+This expression has type int * int list but is here used with type 'a list
+Relevant code: args
+------------------------------------------------------------------
+File "3010.ml", line 23, characters 40-44:
+Try replacing
+    args
+with
+    args; [[...]]
+of type
+    'b list
+within context
+    let f a x = 0, [] in
+      let base = 0, [] in
+      let args = 0, (clone 0 (List.length l1)) in
+      let (_, res) = (List.fold_left f base  (args; [[...]])) in res
+==============================
+File "3010.ml", line 23, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('c -> 'd -> int * 'e list) -> int * 'f list -> int * int list -> 'g * 'h
+within context
+    let f a x = 0, [] in
+      let base = 0, [] in
+      let args = 0, (clone 0 (List.length l1)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "3010.ml", line 22, characters 15-46:
+Try replacing
+    0, (clone 0 (List.length l1))
+with
+    0, (clone 0 (List.length l1)); [[...]]
+of type
+    'i
+within context
+    let add (l1, l2) =
+      let f a x = 0, [] in
+        let base = 0, [] in
+        let args = 0, (clone 0 (List.length l1)); [[...]] in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "1659.ml", line 20, characters 35-39:
+This expression has type int * 'a list but is here used with type
+  (int * int) list
+Relevant code: base
+------------------------------------------------------------------
+File "1659.ml", line 20, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> 'c * 'd -> int * 'b list
+within context
+    let f a x =
+      (if (let (y, z) = x in y + z > 9) then
+        [1, (let (y, z) = x in (mod (y + z) 10))] @ a
+        else
+        [0, (let (y, z) = x in y + z)] @ a)
+      in
+      let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "1659.ml", line 20, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ((int * int) list -> int * int -> (int * int) list) ->
+    int * 'e list -> ('f * 'g) list -> 'h * 'i
+within context
+    let f a x =
+      (if (let (y, z) = x in y + z > 9) then
+        [1, (let (y, z) = x in (mod (y + z) 10))] @ a
+        else
+        [0, (let (y, z) = x in y + z)] @ a)
+      in
+      let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "1659.ml", line 14, characters 10-160:
+Try replacing
+    fun a
+      x ->
+        (if (let (y, z) = x in y + z > 9) then
+          [1, (let (y, z) = x in (mod (y + z) 10))] @ a
+          else
+          [0, (let (y, z) = x in y + z)] @ a)
+with
+    fun a
+      x ->
+        (if (let (y, z) = x in y + z > 9) then
+          [1, (let (y, z) = x in (mod (y + z) 10))] @ a
+          else
+          [0, (let (y, z) = x in y + z)] @ a);
+    [[...]]
+of type
+    'j
+==============================

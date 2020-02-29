@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "1133.ml", line 24, characters 10-134:
+This expression has type int * int but is here used with type int * int list
+Relevant code: if ((fst x) + (snd x)) > 9
+          then (1, (((fst x) + (snd x)) mod 10))
+          else (0, (((fst x) + (snd x)) mod 10))
+------------------------------------------------------------------
+File "1133.ml", line 24, characters 10-134:
+Try replacing
+    (if (fst x) + (snd x) > 9 then 1, (mod ((fst x) + (snd x)) 10) else
+      0, (mod ((fst x) + (snd x)) 10))
+with
+    (if (fst x) + (snd x) > 9 then 1, (mod ((fst x) + (snd x)) 10) else
+      0, (mod ((fst x) + (snd x)) 10));
+    [[...]]
+of type
+    int * int list
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (c, h :: t) ->
+                                    (if ((fst x) + (snd x)) + c > 9 then
+                                        1, (mod (((fst x) + (snd x)) + c) 10) :: t
+                                        else
+                                        0, (mod (((fst x) + (snd x)) + c) 10) :: t)
+                                  | _ ->
+                                    ((if (fst x) + (snd x) > 9 then
+                                          1, (mod ((fst x) + (snd x)) 10)
+                                          else
+                                          0, (mod ((fst x) + (snd x)) 10));
+                                        [[...]])) in let base = 0, [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

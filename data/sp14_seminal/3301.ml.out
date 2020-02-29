@@ -1,0 +1,75 @@
+------------------------------------------------------------------
+File "3301.ml", line 11, characters 31-32:
+This expression has type 'a -> 'b -> 'a list * 'b list
+but is here used with type 'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "3301.ml", line 11, characters 31-32:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'c list * int list -> int * 'd -> 'c list * int list
+within context
+    let f a x = [a], [x] in
+      let base = [], [0] in let args = let rec helper acc l1 l2 = (match l1 with 
+                                                                   | [] -> acc
+                                                                   | h :: t ->
+                                                                     (helper
+                                                                         h, l2 ::
+                                                                             acc
+                                                                         (List.map
+                                                                           (fun x ->
+                                                                               x *
+                                                                                 10) t)
+                                                                         l2)) in (helper
+            [] (List.rev l1) l2) in let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "3301.ml", line 11, characters 16-30:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('e -> 'f -> 'e list * 'f list) ->
+    'g list * int list -> (int * 'h) list -> 'i * 'j
+within context
+    let f a x = [a], [x] in
+      let base = [], [0] in let args = let rec helper acc l1 l2 = (match l1 with 
+                                                                   | [] -> acc
+                                                                   | h :: t ->
+                                                                     (helper
+                                                                         h, l2 ::
+                                                                             acc
+                                                                         (List.map
+                                                                           (fun x ->
+                                                                               x *
+                                                                                 10) t)
+                                                                         l2)) in (helper
+            [] (List.rev l1) l2) in let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "3301.ml", line 3, characters 8-24:
+Try replacing
+    fun a x -> ([a], [x])
+with
+    fun a x -> ([a], [x]); [[...]]
+of type
+    'k
+within context
+    let bigMul l1 l2 =
+    let f = fun a x -> ([a], [x]); [[...]] in
+      let base = [], [0] in let args = let rec helper acc l1 l2 = (match l1 with 
+                                                                   | [] -> acc
+                                                                   | h :: t ->
+                                                                     (helper
+                                                                         h, l2 ::
+                                                                             acc
+                                                                         (List.map
+                                                                           (fun x ->
+                                                                               x *
+                                                                                 10) t)
+                                                                         l2)) in (helper
+            [] (List.rev l1) l2) in let (_, res) = (List.fold_left f base  args) in res
+    ;; 
+==============================

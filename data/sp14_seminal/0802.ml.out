@@ -1,0 +1,395 @@
+------------------------------------------------------------------
+File "0802.ml", line 17, characters 24-41:
+This expression has type float but is here used with type int
+Relevant code: (eval (e1, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (eval (e', x, x)))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 20-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (eval (e', x, y)))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 26-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e', x, y
+with
+    e', x, y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (eval (e', x, y)))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 30-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e', x, y
+with
+    e', y, x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (eval (e', y, x)))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (eval (e', x, y)))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 26-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e'
+with
+    e
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (eval (e, x, y)))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (eval (e', y, y)))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (eval (e', x, y)))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 26-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e'
+with
+    e'
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (eval (e', x, y)))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 15-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sin
+with
+    cos
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (cos (eval (e', x, y)))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 20-35:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (e', x, y))
+with
+    (eval ((e', x, y)))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (eval ((e', x, y))))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 16, characters 17-38:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 15, characters 15-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sin
+with
+    sin
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (eval (e', x, y)))
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 15, characters 15-36:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 16, characters 22-26:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> [[...other program...]]
+                              | Cosine e' -> (cos (eval (e', x, y)))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 15, characters 15-36:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 16, characters 28-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e', x, y
+with
+    e', x, y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> [[...other program...]]
+                              | Cosine e' -> (cos (eval (e', x, y)))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0802.ml", line 15, characters 15-36:
+File "0802.ml", line 17, characters 23-66:
+File "0802.ml", line 18, characters 21-58:
+File "0802.ml", line 20, characters 6-100:
+And modified the following location:
+File "0802.ml", line 16, characters 32-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e', x, y
+with
+    e', y, x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> [[...other program...]]
+                              | Cosine e' -> (cos (eval (e', y, x)))
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) -> [[...other program...]]
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================

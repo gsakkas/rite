@@ -1,0 +1,75 @@
+------------------------------------------------------------------
+File "3095.ml", line 20, characters 7-27:
+This expression has type float but is here used with type int
+Relevant code: (eval (expr1, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "3095.ml", line 20, characters 52-54:
+And modified the following location:
+File "3095.ml", line 20, characters 28-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /.
+If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    float -> float -> 'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> (cos (pi *. (eval (expr, x, y))))
+                              | Average (expr1, expr2) ->
+                                (((eval (expr1, x, y))
+                                          +; [[...]] (eval (expr2, x, y)))
+                                      /.; [[...]] 2)
+                              | Times (expr1, expr2) ->
+                                ((eval (expr1, x, y)) *. (eval (expr2, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "3095.ml", line 17, characters 17-48:
+File "3095.ml", line 18, characters 19-50:
+File "3095.ml", line 21, characters 27-71:
+And modified the following location:
+File "3095.ml", line 20, characters 52-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    /.
+with
+    /.; [[...]]
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> [[...other program...]]
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) ->
+                                ((eval (expr1, x, y)) + (eval (expr2, x, y))
+                                      /.; [[...]] 2)
+                              | Times (expr1, expr2) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "3095.ml", line 17, characters 17-48:
+File "3095.ml", line 18, characters 19-50:
+File "3095.ml", line 21, characters 27-71:
+And modified the following location:
+File "3095.ml", line 20, characters 52-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    /.
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> [[...other program...]]
+                              | Cosine expr -> [[...other program...]]
+                              | Average (expr1, expr2) ->
+                                ((eval (expr1, x, y)) + (eval (expr2, x, y))) + 2
+                              | Times (expr1, expr2) -> [[...other program...]]) ;; 
+==============================

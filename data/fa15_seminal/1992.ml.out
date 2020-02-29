@@ -1,0 +1,71 @@
+------------------------------------------------------------------
+File "1992.ml", line 7, characters 50-51:
+This expression has type int -> string -> string but is here used with type
+  int -> string -> int
+Relevant code: f
+------------------------------------------------------------------
+File "1992.ml", line 6, characters 10-11:
+Try replacing
+    f
+with
+    _
+of type
+    int -> string -> string
+within context
+    let stringOfList f l = (match l with 
+                            | [] -> ""
+                            | h :: t ->
+                              (let _ a x = (string_of_int a) ^ x in
+                                    let base = h in
+                                    let l = t in (List.fold_left f base  l))) ;; 
+==============================
+File "1992.ml", line 6, characters 6-101:
+Try replacing
+    let f a x = (string_of_int a) ^ x in
+      let base = h in let l = t in (List.fold_left f base  l)
+with
+    let base = h in let l = t in (List.fold_left f base  l)
+of type
+    string
+within context
+    let stringOfList f l = (match l with 
+                            | [] -> ""
+                            | h :: t ->
+                              (let base = h in
+                                    let l = t in (List.fold_left f base  l))) ;; 
+==============================
+File "1992.ml", line 6, characters 19-32:
+Try replacing
+    string_of_int
+with
+    f
+of type
+    string -> string
+within context
+    let f a x = (f a) ^ x in let base = h in let l = t in (List.fold_left f base  l)
+==============================
+File "1992.ml", line 6, characters 33-34:
+Try replacing
+    a
+with
+    f
+of type
+    int
+within context
+    let f a x = (string_of_int f) ^ x in
+      let base = h in let l = t in (List.fold_left f base  l)
+==============================
+File "1992.ml", line 7, characters 50-51:
+Try replacing
+    f
+with
+    ^
+of type
+    string -> string -> string
+within context
+    (match l with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (string_of_int a) ^ x in
+             let base = h in let l = t in (List.fold_left ^ base  l)))
+==============================

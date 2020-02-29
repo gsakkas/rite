@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1970.ml", line 9, characters 66-68:
+This expression has type 'a list but is here used with type int
+Relevant code: l2
+------------------------------------------------------------------
+File "1970.ml", line 9, characters 65-69:
+Try replacing
+    [l2]
+with
+    [l2]; [[...]]
+of type
+    int list
+within context
+    fun l2 ->
+      (if (List.length l1) > (List.length l2) then
+        (clone 0 ((List.length l1) - (List.length l2))) @ l1
+        else
+        (if (List.length l1) < (List.length l2) then
+          (clone 0 ((List.length l2) - (List.length l1))) @ (l1 @ ([l2]; [[...]]))
+          else
+          []))
+==============================
+File "1970.ml", line 9, characters 63-64:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int list -> 'b list list -> int list
+within context
+    fun l2 ->
+      (if (List.length l1) > (List.length l2) then
+        (clone 0 ((List.length l1) - (List.length l2))) @ l1
+        else
+        (if (List.length l1) < (List.length l2) then
+          (clone 0 ((List.length l2) - (List.length l1))) @ (l1 @; [[...]] [l2])
+          else
+          []))
+==============================

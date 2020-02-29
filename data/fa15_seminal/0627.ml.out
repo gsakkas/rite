@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0627.ml", line 2, characters 20-69:
+This expression has type 'a list but is here used with type 'a
+Relevant code: match n with | 1 -> [x] | n' -> [clone x (n - 1)]
+------------------------------------------------------------------
+File "0627.ml", line 2, characters 53-58:
+Try replacing
+    clone
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun x n -> (match n with 
+                | 1 -> [x]
+                | n' -> [(- x (n - 1))])
+==============================

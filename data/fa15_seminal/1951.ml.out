@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "1951.ml", line 45, characters 35-36:
+This expression has type 'a * int list -> int list -> int list
+but is here used with type 'a * int list -> int list -> 'a * int list
+Relevant code: f
+------------------------------------------------------------------
+File "1951.ml", line 45, characters 35-36:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> int -> int * 'b list
+within context
+    let f a x = let (carry, res) = a in (match x with 
+                                         | [] -> []
+                                         | h :: t ->
+                                           (bigAdd
+                                               (mulByDigit h l1)
+                                               res)) in let base = 0, [] in
+      let args = (tenEx 0 l2) in
+      let (carry, res) = (List.fold_left (f; [[...]]) base  args) in [carry] @ res
+==============================
+File "1951.ml", line 45, characters 20-34:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('c * int list -> int list -> int list) ->
+    int * 'd list -> int list -> 'e * 'f
+within context
+    let f a x = let (carry, res) = a in (match x with 
+                                         | [] -> []
+                                         | h :: t ->
+                                           (bigAdd
+                                               (mulByDigit h l1)
+                                               res)) in let base = 0, [] in
+      let args = (tenEx 0 l2) in
+      let (carry, res) = ((List.fold_left; [[...]]) f base  args) in [carry] @ res
+==============================
+File "1951.ml", line 40, characters 8-107:
+Try replacing
+    fun a x -> (let (carry, res) = a in (match x with 
+                                         | [] -> []
+                                         | h :: t ->
+                                           (bigAdd (mulByDigit h l1) res)))
+with
+    fun a x -> (let (carry, res) = a in (match x with 
+                                         | [] -> []
+                                         | h :: t ->
+                                           (bigAdd (mulByDigit h l1) res))); [[...]]
+of type
+    'g
+==============================

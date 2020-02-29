@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "1968.ml", line 10, characters 9-18:
+This expression has type string but is here used with type int list
+Relevant code: "(" ^ ")"
+------------------------------------------------------------------
+File "1968.ml", line 10, characters 9-18:
+Try replacing
+    "(" ^ ")"
+with
+    "(" ^ ")"; [[...]]
+of type
+    int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      (clone 0 ((List.length l1) - (List.length l2)))
+      else
+      (if (List.length l1) < (List.length l2) then
+        (clone 0 ((List.length l2) - (List.length l1)))
+        else
+        ("(" ^ ")"; [[...]])))
+    ;; 
+==============================

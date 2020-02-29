@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+File "2451.ml", line 40, characters 57-58:
+This expression has type int list -> int -> int list * int list
+but is here used with type int list -> int -> int list
+Relevant code: f
+------------------------------------------------------------------
+File "2451.ml", line 40, characters 57-58:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'a list * 'b list -> 'c -> 'a list * 'b list
+within context
+    let f a x = let test = (match a with 
+                            | [] -> 1
+                            | h :: t ->
+                              10
+                                  *
+                                  h) in let multi = (mulByDigit (test * x) l1) in
+        test :: a,
+            (bigAdd
+              multi
+              a) in let base = [], [] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2451.ml", line 40, characters 42-56:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int -> int list * int list) ->
+    'd list * 'e list -> 'f list -> 'g * 'h
+within context
+    let f a x = let test = (match a with 
+                            | [] -> 1
+                            | h :: t ->
+                              10
+                                  *
+                                  h) in let multi = (mulByDigit (test * x) l1) in
+        test :: a,
+            (bigAdd
+              multi
+              a) in let base = [], [] in
+      let args = (List.rev l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2451.ml", line 36, characters 8-147:
+Try replacing
+    fun a x -> (let test = (match a with 
+                            | [] -> 1
+                            | h :: t ->
+                              10
+                                  *
+                                  h) in let multi = (mulByDigit (test * x) l1) in
+            test :: a, (bigAdd multi a))
+with
+    fun a x -> (let test = (match a with 
+                            | [] -> 1
+                            | h :: t ->
+                              10
+                                  *
+                                  h) in let multi = (mulByDigit (test * x) l1) in
+            test :: a, (bigAdd multi a)); [[...]]
+of type
+    'i
+==============================

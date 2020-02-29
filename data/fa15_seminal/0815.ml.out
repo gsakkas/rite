@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "0815.ml", line 11, characters 32-71:
+This expression has type int list but is here used with type int
+Relevant code: (digitsOfInt (sumList (digitsOfInt x)))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0815.ml", line 11, characters 26-30:
+And modified the following location:
+File "0815.ml", line 11, characters 33-44:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    loop
+If you ignore other surrounding code, try replacing
+    (digitsOfInt (sumList (digitsOfInt x))) + y
+with
+    (digitsOfInt ((sumList (digitsOfInt x)) + y))
+The actual replacement has type
+    int list
+within context
+    let rec loop x y =
+      (if x < 10 then y else
+        ((loop; [[...]]) (digitsOfInt ((sumList (digitsOfInt x)) + y))))
+      in
+      (match n with 
+       | 0 -> 0
+       | x' -> (loop x' 0))
+==============================
+Triaged the following locations:
+File "0815.ml", line 11, characters 26-30:
+And modified the following location:
+File "0815.ml", line 11, characters 72-73:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    loop
+If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    int list -> 'a -> 'b
+within context
+    let rec loop x y =
+      (if x < 10 then y else
+        ((loop; [[...]]) ((digitsOfInt (sumList (digitsOfInt x))) +; [[...]] y)))
+      in
+      (match n with 
+       | 0 -> 0
+       | x' -> (loop x' 0))
+==============================

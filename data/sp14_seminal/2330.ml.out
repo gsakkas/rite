@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "2330.ml", line 2, characters 60-75:
+This expression has type int but is here used with type 'a list
+Relevant code: (clone x n) - 1
+------------------------------------------------------------------
+File "2330.ml", line 2, characters 72-73:
+Try replacing
+    -
+with
+    x
+of type
+    'b list -> int -> 'b list
+within context
+    fun x n -> (let accum = [] in (if n < 1 then [] else ((clone x n) x 1)))
+==============================
+File "2330.ml", line 2, characters 72-73:
+Try replacing
+    -
+with
+    clone
+of type
+    'c list -> int -> 'c list
+within context
+    fun x n -> (let accum = [] in (if n < 1 then [] else ((clone x n) clone 1)))
+==============================

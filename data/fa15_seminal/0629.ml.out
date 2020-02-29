@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "0629.ml", line 2, characters 34-51:
+This expression has type int -> 'a but is here used with type 'b list
+Relevant code: (clone x (n - 1))
+------------------------------------------------------------------
+File "0629.ml", line 2, characters 50-50:
+Try replacing
+    (clone x (n - 1))
+with
+    (clone x [[...]]  (n - 1))
+of type
+    'c list
+within context
+    let rec clone x n n = (List.append (clone x [[...]]  (n - 1)) [x]) ;; 
+==============================
+File "0629.ml", line 2, characters 42-42:
+Try replacing
+    (clone x (n - 1))
+with
+    (clone [[...]] x  (n - 1))
+of type
+    'd list
+within context
+    let rec clone x n n = (List.append (clone [[...]] x  (n - 1)) [x]) ;; 
+==============================
+File "0629.ml", line 2, characters 51-51:
+Try replacing
+    (clone x (n - 1))
+with
+    (clone x (n - 1)  [[...]])
+of type
+    'e list
+within context
+    let rec clone x n n = (List.append (clone x (n - 1)  [[...]]) [x]) ;; 
+==============================

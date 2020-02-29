@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0169.ml", line 2, characters 25-38:
+This expression has type 'a list but is here used with type 'a
+Relevant code: digitsOfInt n
+------------------------------------------------------------------
+File "0169.ml", line 2, characters 20-49:
+Try replacing
+    fun n -> [(digitsOfInt n) ; (mod n 10)]
+with
+    fun n -> [(digitsOfInt n) ; (mod n 10)]; [[...]]
+of type
+    int -> int
+within context
+    let rec digitsOfInt = fun n -> [(digitsOfInt n) ; (mod n 10)]; [[...]] ;; 
+==============================

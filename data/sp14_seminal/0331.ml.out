@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "0331.ml", line 7, characters 9-24:
+This expression has type ('a * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((helper b), b)
+------------------------------------------------------------------
+File "0331.ml", line 6, characters 13-60:
+Try replacing
+    fun x -> (if b = (f b) then b, false else b, true)
+with
+    fun x _ -> (if b = (f b) then b, false else b, true)
+of type
+    'c -> 'd -> 'e * bool
+within context
+    let fixpoint (f, b) =
+    let helper x _ = (if b = (f b) then b, false else b, true) in
+      (wwhile ((helper b), b))
+    ;; 
+==============================
+File "0331.ml", line 6, characters 13-60:
+Try replacing
+    fun x -> (if b = (f b) then b, false else b, true)
+with
+    fun _ x -> (if b = (f b) then b, false else b, true)
+of type
+    'f -> 'g -> 'h * bool
+within context
+    let fixpoint (f, b) =
+    let helper _ x = (if b = (f b) then b, false else b, true) in
+      (wwhile ((helper b), b))
+    ;; 
+==============================
+File "0331.ml", line 7, characters 2-8:
+Try replacing
+    wwhile
+with
+    helper
+of type
+    ('i * bool) * 'i -> 'i * bool
+within context
+    let fixpoint (f, b) =
+    let helper x = (if b = (f b) then b, false else b, true) in
+      (helper ((helper b), b))
+    ;; 
+==============================
+File "0331.ml", line 7, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('j * bool) * 'j -> ('j * bool) * 'j -> bool
+within context
+    let fixpoint (f, b) =
+    let helper x = (if b = (f b) then b, false else b, true) in (= ((helper b), b))
+    ;; 
+==============================

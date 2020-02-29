@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1763.ml", line 22, characters 8-66:
+This expression has type int * int but is here used with type
+  (int * int) list
+Relevant code: (((((i + j) + s) + t) / 10), ((((i + j) + s) + t) mod 10))
+------------------------------------------------------------------
+File "1763.ml", line 21, characters 23-94:
+Try replacing
+    a :: (((i + j) + s) + t) / 10 :: (mod (((i + j) + s) + t) 10)
+with
+    [[...]]
+of type
+    'a
+within context
+    let f a x = let (i, j) = x in let (s, t) = a in [[...]] in
+      let base = 0, [] in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "1290.ml", line 31, characters 20-26:
+This expression has type unit -> expr but is here used with type expr
+Relevant code: buildX
+------------------------------------------------------------------
+Triaged the following locations:
+File "1290.ml", line 33, characters 7-591:
+And modified the following location:
+File "1290.ml", line 31, characters 10-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildSine
+with
+    buildSine; [[...]]
+The actual replacement has type
+    (unit -> expr) -> unit -> expr
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then (if (rand (0, 2)) < 1 then buildX else buildY) else
+      (let x = (rand (0, 5)) in
+          (if x = 0 then ((buildSine; [[...]]) buildX) else
+              [[...other program...]])))
+    ;; 
+==============================

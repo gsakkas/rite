@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "2247.ml", line 34, characters 63-64:
+This expression has type int * 'a but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+File "2247.ml", line 34, characters 38-44:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    int list -> int * 'b -> 'c
+within context
+    let f a x = (match a with 
+                 | (o, l) ->
+                   ((bigAdd; [[...]])
+                       (mulByDigit o l1)
+                       a)) in let base = 1, [] in
+      let args = l2 in let (_, res) = (List.fold_left f base  args) in res
+==============================

@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "3406.ml", line 38, characters 36-37:
+This expression has type 'a * int list but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "3406.ml", line 40, characters 12-260:
+And modified the following location:
+File "3406.ml", line 38, characters 36-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun a x -> (match x with 
+                | (b, c) -> (let sum = b + c in (if sum < 10 then (match a with 
+                                                                   | (len, []) ->
+                                                                     (len, [sum])
+                                                                   |
+                                                                     (len,
+                                                                         x' :: xs')
+                                                                     ->
+                                                                     (if x' = -1
+                                                                         then
+                                                                         (if sum = 9
+                                                                           then
+                                                                           len,
+                                                                             -1 ::
+                                                                                 0
+                                                                                 ::
+                                                                                 xs'
+                                                                           else
+                                                                           len,
+                                                                             sum + 1
+                                                                                 ::
+                                                                                 xs')
+                                                                         else
+                                                                         len,
+                                                                           sum ::
+                                                                               a;
+                                                                               [[...]])) else [[...other program...]])))
+==============================
+Triaged the following locations:
+File "3406.ml", line 30, characters 12-324:
+And modified the following location:
+File "3406.ml", line 44, characters 22-53:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    -1 :: (mod sum 10) + 1 :: a
+with
+    [[...]]
+The actual replacement has type
+    'b * int list
+within context
+    fun a x -> (match x with 
+                | (b, c) ->
+                  (let sum = b + c in
+                        (if sum < 10 then [[...other program...]] else
+                            (match a with 
+                             | (len, []) -> (len, [-1 ; (mod sum 10)])
+                             | (len, x' :: xs') ->
+                               (if x' = -1 then [[...]] else
+                                   len, -1 :: (mod sum 10) :: x' :: xs')))))
+==============================

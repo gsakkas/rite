@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "0059.ml", line 3, characters 61-65:
+This expression has type int but is here used with type
+  'a -> 'b -> ('b -> 'c) -> 'c
+Relevant code: base
+------------------------------------------------------------------
+File "0059.ml", line 3, characters 44-60:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left (f base fs))
+of type
+    (('d -> 'e) -> 'e) -> 'd list -> ('d -> 'e) -> 'e
+within context
+    let pipe fs =
+    let f a x f' a x = (x a) in let base = 0 in (List.fold_left (f base fs))
+    ;; 
+==============================
+File "0059.ml", line 3, characters 44-58:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('f -> 'g -> 'h -> 'i -> ('i -> 'j) -> 'j) ->
+    int -> 'k -> 'l -> ('l -> 'm) -> 'm
+within context
+    let pipe fs = let f a x f' a x = (x a) in let base = 0 in (f f base  fs) ;; 
+==============================
+File "0059.ml", line 3, characters 61-65:
+Try replacing
+    base
+with
+    f
+of type
+    'n -> 'o -> ('o -> 'p -> ('p -> 'q) -> 'q) -> 'p -> ('p -> 'q) -> 'q
+within context
+    let pipe fs =
+    let f a x f' a x = (x a) in let base = 0 in (List.fold_left f f  fs)
+    ;; 
+==============================

@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "2168.ml", line 2, characters 30-40:
+This expression has type 'a * 'b but is here used with type ('b -> 'a) * 'b
+Relevant code: ((f b), b)
+------------------------------------------------------------------
+File "2168.ml", line 2, characters 30-40:
+Try replacing
+    (f b), b
+with
+    (f b), b; [[...]]
+of type
+    ('c -> 'd) * 'c
+within context
+    let rec wwhile (f, b) = (wwhile ((f b), b; [[...]])) ;; 
+==============================
+File "2168.ml", line 2, characters 23-29:
+Try replacing
+    wwhile
+with
+    wwhile; [[...]]
+of type
+    'e * 'f -> 'g
+within context
+    let rec wwhile (f, b) = ((wwhile; [[...]]) ((f b), b)) ;; 
+==============================

@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "2203.ml", line 2, characters 46-57:
+This expression has type 'a but is here used with type int -> 'a
+Relevant code: (x (n - 1))
+------------------------------------------------------------------
+File "2203.ml", line 2, characters 57-57:
+Try replacing
+    (clone (x (n - 1)))
+with
+    (clone [[...]] (x (n - 1)))
+of type
+    (int -> int) list
+within context
+    let rec clone x n = (if n > 0 then x :: (clone [[...]] (x (n - 1))) else []) ;; 
+==============================
+File "2203.ml", line 2, characters 40-45:
+Try replacing
+    clone
+with
+    clone; [[...]]
+of type
+    'b -> (int -> 'b) list
+within context
+    fun x n -> (if n > 0 then x :: ((clone; [[...]]) (x (n - 1))) else [])
+==============================

@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "2171.ml", line 17, characters 51-70:
+This expression has type int * int list but is here used with type 'a list
+Relevant code: (0, ((x + h) :: a))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2171.ml", line 17, characters 38-40:
+And modified the following location:
+File "2171.ml", line 17, characters 67-68:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    []
+If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun (l1, l2) -> (let f a x = (match l1 with 
+                                  | [] -> ([]; [[...]])
+                                  | h :: t ->
+                                    (0,
+                                          x + h ::
+                                              a;
+                                              [[...]])) in let base = 0, [] in
+          let args = l2 in let (_, res) = (List.fold_left f base  args) in res)
+==============================

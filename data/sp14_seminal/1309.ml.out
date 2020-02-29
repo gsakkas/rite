@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "1309.ml", line 17, characters 52-70:
+This expression has type int but is here used with type int list
+Relevant code: ((h1 + h2) mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1309.ml", line 17, characters 20-30:
+And modified the following location:
+File "1309.ml", line 17, characters 52-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    removeZero
+If you ignore other surrounding code, try replacing
+    (mod (h1 + h2) 10)
+with
+    (mod (h1 + h2) 10); [[...]]
+The actual replacement has type
+    int list
+within context
+    fun a x -> (match x with 
+                | (h1, h2) ->
+                  ((removeZero; [[...]])
+                          (h1 + h2) / 10 :: (mod (h1 + h2) 10); [[...]])
+                        ::
+                        a
+                | _ -> a)
+==============================
+Triaged the following locations:
+File "1309.ml", line 17, characters 20-30:
+And modified the following location:
+File "1309.ml", line 17, characters 31-71:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    removeZero
+If you ignore other surrounding code, try replacing
+    (h1 + h2) / 10 :: (mod (h1 + h2) 10)
+with
+    (h1 + h2) / 10, (mod (h1 + h2) 10)
+The actual replacement has type
+    int * int
+within context
+    fun a x -> (match x with 
+                | (h1, h2) ->
+                  ((removeZero; [[...]]) ((h1 + h2) / 10, (mod (h1 + h2) 10))) :: a
+                | _ -> a)
+==============================

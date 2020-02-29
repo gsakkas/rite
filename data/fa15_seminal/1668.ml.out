@@ -1,0 +1,107 @@
+------------------------------------------------------------------
+File "1668.ml", line 6, characters 60-62:
+This expression has type 'a list but is here used with type int
+Relevant code: l1
+------------------------------------------------------------------
+Triaged the following locations:
+File "1668.ml", line 7, characters 7-69:
+And modified the following location:
+File "1668.ml", line 6, characters 59-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    [l1]
+with
+    [l1]; [[...]]
+The actual replacement has type
+    int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then
+      (clone 0 ((List.length l2) - (List.length l1))) @ ([l1]; [[...]]), l2
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1668.ml", line 7, characters 7-69:
+And modified the following location:
+File "1668.ml", line 6, characters 57-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int list -> 'b list list -> 'c
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then
+      ((clone 0 ((List.length l2) - (List.length l1))) @; [[...]] [l1]), l2
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1668.ml", line 6, characters 7-69:
+And modified the following location:
+File "1668.ml", line 7, characters 13-60:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 ((List.length l1) - (List.length l2)))
+with
+    (clone 0 ((List.length l1) - (List.length l2))); [[...]]
+The actual replacement has type
+    'd list list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then [[...other program...]] else
+      l1, ((clone 0 ((List.length l1) - (List.length l2))); [[...]]) @ [l2])
+    ;; 
+==============================
+Triaged the following locations:
+File "1668.ml", line 6, characters 7-69:
+And modified the following location:
+File "1668.ml", line 7, characters 61-62:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int list -> 'e list list -> 'f
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then [[...other program...]] else
+      l1, ((clone 0 ((List.length l1) - (List.length l2))) @; [[...]] [l2]))
+    ;; 
+==============================
+Triaged the following locations:
+File "1668.ml", line 7, characters 7-69:
+And modified the following location:
+File "1668.ml", line 6, characters 9-56:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 ((List.length l2) - (List.length l1)))
+with
+    (clone 0 ((List.length l2) - (List.length l1))); [[...]]
+The actual replacement has type
+    'g list list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then
+      ((clone 0 ((List.length l2) - (List.length l1))); [[...]]) @ [l1], l2
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1668.ml", line 6, characters 7-69:
+And modified the following location:
+File "1668.ml", line 7, characters 63-67:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    [l2]
+with
+    [l2]; [[...]]
+The actual replacement has type
+    int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then [[...other program...]] else
+      l1, (clone 0 ((List.length l1) - (List.length l2))) @ ([l2]; [[...]]))
+    ;; 
+==============================

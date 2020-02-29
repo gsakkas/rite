@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "3422.ml", line 4, characters 36-47:
+This expression has type int but is here used with type int list
+Relevant code: (sumList n)
+------------------------------------------------------------------
+File "3422.ml", line 4, characters 24-35:
+Try replacing
+    digitalRoot
+with
+    +
+of type
+    int -> int -> int
+within context
+    let rec digitalRoot n = (+ (sumList n)) ;; 
+==============================
+File "3422.ml", line 4, characters 37-44:
+Try replacing
+    sumList
+with
+    digitalRoot
+of type
+    'a -> 'a
+within context
+    let rec digitalRoot n = (digitalRoot (digitalRoot n)) ;; 
+==============================

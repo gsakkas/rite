@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2984.ml", line 3, characters 49-68:
+This expression has type 'a list but is here used with type string
+Relevant code: List.append a (f b)
+------------------------------------------------------------------
+File "2984.ml", line 3, characters 36-38:
+Try replacing
+    ""
+with
+    ""; [[...]]
+of type
+    string list
+within context
+    fun l -> (let fx a b = (match b with 
+                            | [] -> (""; [[...]])
+                            | h :: t ->
+                              (List.append
+                                  a
+                                  (f
+                                    b))) in let base = [""] in
+          (List.fold_left fx base  l))
+==============================

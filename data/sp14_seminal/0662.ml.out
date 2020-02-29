@@ -1,0 +1,46 @@
+------------------------------------------------------------------
+File "0662.ml", line 36, characters 22-30:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+File "0662.ml", line 36, characters 31-38:
+Try replacing
+    (List.rev List.hd l2)
+with
+    (List.rev l2)
+of type
+    int list list list
+within context
+    fun l2 -> (let f a x = let (l1', a') = a in (match x with 
+                                                 | [] -> (l1', a')
+                                                 | h :: t ->
+                                                   (l1',
+                                                         (bigAdd
+                                                           (mulByDigit h l1')
+                                                           a'))) in let base =
+          l1, [0]
+          in
+          let args = (List.hd (List.rev l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "0662.ml", line 36, characters 22-38:
+Try replacing
+    (List.rev List.hd l2)
+with
+    (List.rev (List.hd l2))
+of type
+    int list list list
+within context
+    fun l2 -> (let f a x = let (l1', a') = a in (match x with 
+                                                 | [] -> (l1', a')
+                                                 | h :: t ->
+                                                   (l1',
+                                                         (bigAdd
+                                                           (mulByDigit h l1')
+                                                           a'))) in let base =
+          l1, [0]
+          in
+          let args = (List.hd (List.rev (List.hd l2))) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

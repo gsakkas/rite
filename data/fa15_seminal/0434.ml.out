@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0434.ml", line 7, characters 21-25:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: funt
+------------------------------------------------------------------
+File "0434.ml", line 7, characters 21-25:
+Try replacing
+    funt
+with
+    funt; [[...]]
+of type
+    ('h -> 'h) -> 'h -> 'i
+within context
+    fun (f, b) ->
+      (let rec funt x = ((funt; [[...]]) f b), (f b) = b in (wwhile (funt, b)))
+==============================

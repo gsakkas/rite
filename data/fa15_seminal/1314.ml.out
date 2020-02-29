@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1314.ml", line 2, characters 28-29:
+This expression has type 'a -> 'b -> 'c but is here used with type 'a
+Relevant code: a
+------------------------------------------------------------------
+File "1314.ml", line 2, characters 26-27:
+Try replacing
+    a
+with
+    a; [[...]]
+of type
+    'd -> 'e -> 'f
+within context
+    fun fs ->
+      (let f a x = ((a; [[...]]) a x) in
+          let base = 0 in (List.fold_left f base  fs))
+==============================

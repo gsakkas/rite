@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "2754.ml", line 3, characters 2-188:
+This expression has type string but is here used with type string list
+Relevant code: match sl with
+  | [] -> ""
+  | h::t ->
+      let f a x = if (List.length t) > 2 then a ^ (x ^ sep) else x ^ x in
+      let base = "" in let l = sepConcat sep t in List.fold_left f base l
+------------------------------------------------------------------
+File "2754.ml", line 7, characters 72-73:
+Try replacing
+    l
+with
+    sl
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (if (List.length t) > 2 then a ^ (x ^ sep) else x ^ x) in
+             let base = "" in
+             let l = (sepConcat sep t) in (List.fold_left f base  sl)))
+==============================
+File "2754.ml", line 7, characters 72-73:
+Try replacing
+    l
+with
+    t
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (if (List.length t) > 2 then a ^ (x ^ sep) else x ^ x) in
+             let base = "" in
+             let l = (sepConcat sep t) in (List.fold_left f base  t)))
+==============================
+File "2754.ml", line 7, characters 72-73:
+Try replacing
+    l
+with
+    h
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (if (List.length t) > 2 then a ^ (x ^ sep) else x ^ x) in
+             let base = "" in
+             let l = (sepConcat sep t) in (List.fold_left f base  h)))
+==============================

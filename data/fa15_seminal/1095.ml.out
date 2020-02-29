@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1095.ml", line 5, characters 25-26:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: f
+------------------------------------------------------------------
+File "1095.ml", line 5, characters 2-86:
+Try replacing
+    let f a x = a * a + (f List.hd xs  x) in
+      let base = 0 in (List.fold_left f base  xs)
+with
+    let base = 0 in (List.fold_left f base  xs)
+of type
+    int
+within context
+    let sqsum xs = let base = 0 in (List.fold_left f base  xs) ;; 
+==============================

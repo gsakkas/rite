@@ -1,0 +1,85 @@
+------------------------------------------------------------------
+File "3186.ml", line 27, characters 20-21:
+This expression has type int but is here used with type int list
+Relevant code: 3
+------------------------------------------------------------------
+Triaged the following locations:
+File "3186.ml", line 27, characters 24-32:
+And modified the following location:
+File "3186.ml", line 27, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    3
+with
+    3; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun x -> (let (x1, x2) = x in let (a1, a2) = a in (match a1 with 
+                                                       | [] ->
+                                                         (a2 @ [(mod (x1 + x2) 10)],
+                                                               a1 @
+                                                                 [(x1 + x2) / 10])
+                                                       | _ ->
+                                                         (a1 @ (3; [[...]]),
+                                                               [[...other program...]])))
+==============================
+Triaged the following locations:
+File "3186.ml", line 27, characters 24-32:
+And modified the following location:
+File "3186.ml", line 27, characters 18-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int list -> int -> int list
+within context
+    fun x -> (let (x1, x2) = x in let (a1, a2) = a in (match a1 with 
+                                                       | [] ->
+                                                         (a2 @ [(mod (x1 + x2) 10)],
+                                                               a1 @
+                                                                 [(x1 + x2) / 10])
+                                                       | _ ->
+                                                         ((a1 @; [[...]] 3),
+                                                               [[...other program...]])))
+==============================
+Triaged the following locations:
+File "3186.ml", line 27, characters 14-22:
+And modified the following location:
+File "3186.ml", line 27, characters 28-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int list -> int -> int list
+within context
+    fun x -> (let (x1, x2) = x in let (a1, a2) = a in (match a1 with 
+                                                       | [] ->
+                                                         (a2 @ [(mod (x1 + x2) 10)],
+                                                               a1 @
+                                                                 [(x1 + x2) / 10])
+                                                       | _ ->
+                                                         ([[...other program...]],
+                                                               (a2 @; [[...]] 5))))
+==============================
+Triaged the following locations:
+File "3186.ml", line 27, characters 14-22:
+And modified the following location:
+File "3186.ml", line 27, characters 30-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    5
+with
+    5; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun x -> (let (x1, x2) = x in let (a1, a2) = a in (match a1 with 
+                                                       | [] ->
+                                                         (a2 @ [(mod (x1 + x2) 10)],
+                                                               a1 @
+                                                                 [(x1 + x2) / 10])
+                                                       | _ ->
+                                                         ([[...other program...]],
+                                                               a2 @ (5; [[...]]))))
+==============================

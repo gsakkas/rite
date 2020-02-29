@@ -1,0 +1,34 @@
+------------------------------------------------------------------
+File "0164.ml", line 7, characters 35-36:
+This expression has type ('a -> 'b) list but is here used with type 'a
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "0164.ml", line 7, characters 43-47:
+File "0164.ml", line 7, characters 53-58:
+And modified the following location:
+File "0164.ml", line 7, characters 23-37:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    false
+
+    true
+If you ignore other surrounding code, try replacing
+    (List.mem (h t))
+with
+    [[...]]
+The actual replacement has type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if [[...]] then (true; [[...]]) else
+                                             (false; [[...]]))
+                                           in
+                                           let rest' = (failwith "to be written") in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================

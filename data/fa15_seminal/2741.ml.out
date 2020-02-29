@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2741.ml", line 29, characters 54-58:
+This expression has type int but is here used with type int list
+Relevant code: base
+------------------------------------------------------------------
+File "2741.ml", line 29, characters 37-51:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int list -> int list) -> int -> ('a * 'b) list -> 'c
+within context
+    fun (l1, l2) ->
+      (let f a x = (addHelper (a, x)) in
+          let base = 0 in
+          let args = (List.combine l1 l2) in
+          ((List.fold_left; [[...]]) f base  args))
+==============================

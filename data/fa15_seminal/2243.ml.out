@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2243.ml", line 37, characters 19-35:
+This expression has type int list but is here used with type int
+Relevant code: (mulByDigit l x)
+------------------------------------------------------------------
+File "2243.ml", line 37, characters 20-30:
+Try replacing
+    mulByDigit
+with
+    mulByDigit; [[...]]
+of type
+    int list -> 'a -> int
+within context
+    fun x -> (match a with 
+              | (o, l) ->
+                (let prod = ((mulByDigit; [[...]]) l x) + o in
+                      (if prod < 10 then 0, prod :: l else
+                          prod / 10, (mod prod 10) :: l)))
+==============================

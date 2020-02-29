@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1154.ml", line 7, characters 57-77:
+This expression has type 'a list but is here used with type unit
+Relevant code: (digitsOfInt a) :: c
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "1154.ml", line 7, characters 57-72:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (digitsOfInt a)
+with
+    (digitsOfInt a); [[...]]
+The actual replacement has type
+    int
+within context
+    (if n < 0 then [] else
+      (let a = n / 10 in
+          let b = (mod n 10) in
+          let c = [a ; b] in
+          (if a > 9 then (digitsOfInt a); [[...]] :: c else [[...]])))
+==============================

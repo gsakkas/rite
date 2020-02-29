@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0305.ml", line 5, characters 36-62:
+This expression has type 'a list -> 'a list but is here used with type
+  'b list
+Relevant code: append (listReverse t [h])
+------------------------------------------------------------------
+File "0305.ml", line 5, characters 44-55:
+Try replacing
+    (append (listReverse t [h]))
+with
+    (listReverse (append t [h]))
+of type
+    'c list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: t -> (listReverse (append t [h]))) ;; 
+==============================

@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "3336.ml", line 10, characters 51-63:
+This expression has type bool but is here used with type 'a list
+Relevant code: helper [] h1
+------------------------------------------------------------------
+File "3336.ml", line 10, characters 19-63:
+Try replacing
+    let rec helper acc v = v = 0 in (helper [] h1)
+with
+    let rec helper acc v = v = 0 in (helper [] h1); [[...]]
+of type
+    int list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                (match
+                                 (mulByDigit
+                                     i (List.rev (List.map (fun x -> x * 10) t)))
+                                   @ [h * i]
+                                 with
+                                 
+                                 | [] -> []
+                                 | h1 :: t1 ->
+                                   (let rec helper acc v = v = 0 in (helper [] h1);
+                                       [[...]]))) ;; 
+==============================

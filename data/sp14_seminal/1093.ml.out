@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "1093.ml", line 4, characters 35-36:
+This expression has type (('a -> 'b) -> ('c -> 'a) -> 'c -> 'b) -> 'd -> bool
+but is here used with type
+  (('a -> 'b) -> ('c -> 'a) -> 'c -> 'b) ->
+  'd -> ('a -> 'b) -> ('c -> 'a) -> 'c -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "1093.ml", line 3, characters 8-57:
+Try replacing
+    fun a x -> a = (fun x a t -> (x (a t)))
+with
+    fun _ a x -> a = (fun x a t -> (x (a t)))
+of type
+    'e -> (('f -> 'g) -> ('h -> 'f) -> 'h -> 'g) -> 'i -> bool
+within context
+    let pipe fs =
+    let f _ a x = a = (fun x a t -> (x (a t))) in
+      let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "1093.ml", line 3, characters 16-17:
+Try replacing
+    =
+with
+    x
+of type
+    'j -> (('k -> 'l) -> ('m -> 'k) -> 'm -> 'l) -> 'n
+within context
+    fun fs ->
+      (let f a x = (a x fun x a t -> (x (a t))) in
+          let base x = x in (List.fold_left f base  fs))
+==============================

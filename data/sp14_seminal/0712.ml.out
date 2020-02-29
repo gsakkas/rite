@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0712.ml", line 16, characters 51-58:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sumList
+------------------------------------------------------------------
+File "0712.ml", line 16, characters 51-65:
+Try replacing
+    (sumList digits n)
+with
+    (sumList (digits n))
+of type
+    int
+within context
+    let rec additivePersistence n =
+    (if n / 10 = 0 then n else (additivePersistence (sumList (digits n))))
+    ;; 
+==============================

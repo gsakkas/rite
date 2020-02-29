@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "3057.ml", line 29, characters 48-49:
+This expression has type int -> int -> int list but is here used with type
+  int -> int -> int
+Relevant code: f
+------------------------------------------------------------------
+File "3057.ml", line 29, characters 33-47:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int -> int -> int list) -> 'a list -> 'b -> 'c * 'd
+within context
+    let f a x = (bigAdd [a ; 0] (mulByDigit x l1)) in
+      let base = [] in
+      let args = l2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

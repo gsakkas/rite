@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "1610.ml", line 2, characters 51-59:
+This expression has type int but is here used with type 'a list
+Relevant code: n mod 10
+------------------------------------------------------------------
+File "1610.ml", line 2, characters 47-49:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else [[]; [[...]] ; (mod n 10)]) ;; 
+==============================
+File "1610.ml", line 2, characters 51-60:
+Try replacing
+    [(mod n 10)]
+with
+    [(mod n 10)]; [[...]]
+of type
+    'b list list
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else [] :: [(mod n 10)]; [[...]]) ;; 
+==============================

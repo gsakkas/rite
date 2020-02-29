@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1827.ml", line 9, characters 38-44:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: append
+------------------------------------------------------------------
+File "1827.ml", line 9, characters 38-44:
+Try replacing
+    append
+with
+    append; [[...]]
+of type
+    int list -> (int -> 'd list) -> int -> 'd list
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [] else
+      (listReverse ((append; [[...]]) [(mod n 10)] digitsOfInt  (n / 10))))
+    ;; 
+==============================

@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "2084.ml", line 29, characters 28-58:
+This expression has type 'a list * 'b list but is here used with type 'c list
+Relevant code: ((List.rev l1), (List.rev l2))
+------------------------------------------------------------------
+File "2084.ml", line 29, characters 28-58:
+Try replacing
+    (List.combine ((List.rev l1), (List.rev l2)))
+with
+    (List.combine (List.rev l1) (List.rev l2))
+of type
+    (int * int) list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (d1, d2) -> (match a with 
+                                                   | (carry, result) ->
+                                                     (if (d1 + d2) + carry > 9 then
+                                                         1,
+                                                           ((d1 + d2) + 1) - 10 ::
+                                                               result
+                                                         else
+                                                         0,
+                                                           d1 + d2 ::
+                                                               result))) in let base
+        =
+        0, []
+        in
+        let args = (List.combine (List.rev l1) (List.rev l2)) in
+        let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add (padZero l1 l2)))
+==============================

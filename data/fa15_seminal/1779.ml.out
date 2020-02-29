@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1779.ml", line 5, characters 54-59:
+This expression has type 'a * 'b * ('b * ('c -> 'd -> 'e)) list -> 'f
+but is here used with type 'c
+Relevant code: assoc
+------------------------------------------------------------------
+File "1779.ml", line 5, characters 52-59:
+Try replacing
+    (b assoc (d, k, l'))
+with
+    (b (assoc (d, k, l')))
+of type
+    unit
+within context
+    let rec assoc (d, k, l) = (match l with 
+                               | [] -> d
+                               | h :: l' -> (match h with 
+                                             | (a, b) ->
+                                               (if a = k then
+                                                   (b (assoc (d, k, l')))))) ;; 
+==============================

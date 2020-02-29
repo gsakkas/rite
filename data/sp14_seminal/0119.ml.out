@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0119.ml", line 10, characters 39-40:
+This expression has type 'a but is here used with type 'b -> 'a
+Relevant code: b
+------------------------------------------------------------------
+File "0119.ml", line 9, characters 22-23:
+Try replacing
+    (f b)
+with
+    f
+of type
+    'c
+within context
+    fun (f, b) -> (wwhile (let g b = let helper = f in (match helper with 
+                                                        | b ->
+                                                          (if f = b then f, false
+                                                              else
+                                                              f, true)) in g, b))
+==============================

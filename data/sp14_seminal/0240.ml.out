@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0240.ml", line 19, characters 17-18:
+This expression has type int but is here used with type 'a list
+Relevant code: n
+------------------------------------------------------------------
+File "0240.ml", line 18, characters 2-86:
+Try replacing
+    (if (sumList (digits n)) < 10 then (numdigits n) else
+      (additivePersistence sumList n))
+with
+    [[...]]
+of type
+    'b
+within context
+    let rec additivePersistence n = [[...]] ;; 
+==============================

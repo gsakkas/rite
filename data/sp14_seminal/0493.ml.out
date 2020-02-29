@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0493.ml", line 27, characters 18-44:
+This expression has type (int * int) list but is here used with type 'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "0493.ml", line 27, characters 18-44:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f base  args); [[...]]
+of type
+    'c * 'd
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (x1, x2) = x in
+            let ha :: _ = a in
+            let (a1, a2) = ha in
+            let tens = (x1 + x2) + a1 / 10 in
+            let ones = (x1 + x2) + (mod a1 10) in tens, ones :: a
+          in
+          let base = [0, 0] in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args); [[...]] in res)
+==============================

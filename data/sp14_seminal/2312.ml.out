@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "2312.ml", line 21, characters 50-51:
+This expression has type int list * int list -> int -> bool
+but is here used with type int list * int list -> int -> int list * int list
+Relevant code: f
+------------------------------------------------------------------
+File "2312.ml", line 21, characters 50-51:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'a list * 'b list -> 'c -> 'a list * 'b list
+within context
+    let f a x = let (h :: t, b) = a in a = (t, x + h :: b) in
+      let base = (List.rev l1), [] in
+      let args = l2 in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2312.ml", line 21, characters 35-49:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list * int list -> int -> bool) -> 'd list * 'e list -> 'f -> 'g * 'h
+within context
+    let f a x = let (h :: t, b) = a in a = (t, x + h :: b) in
+      let base = (List.rev l1), [] in
+      let args = l2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2312.ml", line 19, characters 10-59:
+Try replacing
+    fun a x -> (let (h :: t, b) = a in a = (t, x + h :: b))
+with
+    fun a x -> (let (h :: t, b) = a in a = (t, x + h :: b)); [[...]]
+of type
+    'i
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f = fun a x -> (let (h :: t, b) = a in a = (t, x + h :: b)); [[...]]
+              in
+              let base = (List.rev l1), [] in
+              let args = l2 in let (_, res) = (List.fold_left f base  args) in res
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================

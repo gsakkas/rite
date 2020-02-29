@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "3463.ml", line 2, characters 58-60:
+This expression has type 'a list but is here used with type unit
+Relevant code: []
+------------------------------------------------------------------
+File "3463.ml", line 2, characters 58-60:
+Try replacing
+    []
+with
+    ()
+of type
+    unit
+within context
+    let rec digitsOfInt n = let myList = [] in (if (n <= 0) then ()) ;; 
+==============================

@@ -1,0 +1,67 @@
+------------------------------------------------------------------
+File "2875.ml", line 2, characters 67-71:
+This expression has type 'a -> 'a but is here used with type 'b list
+Relevant code: base
+------------------------------------------------------------------
+File "2875.ml", line 2, characters 65-66:
+Try replacing
+    (List.fold_right f base  fs)
+with
+    (List.fold_right base fs)
+of type
+    'c -> 'c
+within context
+    let pipe fs = let f a x = x in let base y = y in (List.fold_right base fs) ;; 
+==============================
+File "2875.ml", line 2, characters 67-74:
+Try replacing
+    (List.fold_right f base  fs)
+with
+    (List.fold_right f fs  base)
+of type
+    'd -> 'd
+within context
+    let pipe fs = let f a x = x in let base y = y in (List.fold_right f fs  base)
+    ;; 
+==============================
+File "2875.ml", line 2, characters 49-66:
+Try replacing
+    (List.fold_right f base  fs)
+with
+    (List.fold_right (f base fs))
+of type
+    'e list -> 'f -> 'f
+within context
+    let pipe fs = let f a x = x in let base y = y in (List.fold_right (f base fs))
+    ;; 
+==============================
+File "2875.ml", line 2, characters 49-64:
+Try replacing
+    List.fold_right
+with
+    base
+of type
+    (('g -> 'g) -> 'h -> 'h) -> ('g -> 'g) -> 'h -> 'h
+within context
+    let pipe fs = let f a x = x in let base y = y in (base f base  fs) ;; 
+==============================
+File "2875.ml", line 2, characters 49-64:
+Try replacing
+    List.fold_right
+with
+    f
+of type
+    ('i -> 'j -> 'j) -> ('k -> 'k) -> 'k -> 'k
+within context
+    let pipe fs = let f a x = x in let base y = y in (f f base  fs) ;; 
+==============================
+File "2875.ml", line 2, characters 67-71:
+Try replacing
+    base
+with
+    fs
+of type
+    'l list
+within context
+    let pipe fs = let f a x = x in let base y = y in (List.fold_right f fs  fs) ;; 
+==============================

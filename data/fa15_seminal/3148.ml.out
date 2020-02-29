@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "3148.ml", line 27, characters 40-44:
+This expression has type int list * int list but is here used with type
+  (int list * int list) list
+Relevant code: args
+------------------------------------------------------------------
+File "3148.ml", line 27, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ((int * int) list -> int list * int list -> (int * int) list) ->
+    (int * int) list -> int list * int list -> 'a * 'b
+within context
+    let f a x = let (b :: b', c :: c') = x in [b + c, b + c] @ a in
+      let base = [0, 0] in
+      let args = (padZero l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "1010.ml", line 11, characters 30-31:
+This expression has type 'a but is here used with type 'a list
+Relevant code: h
+------------------------------------------------------------------
+File "1010.ml", line 11, characters 24-28:
+Try replacing
+    seen
+with
+    x
+of type
+    bool
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let x = (List.mem h seen) in
+             (if x then (helper (seen, t)) else
+                 (let seen' = [x ; h] in
+                     let rest' = t in (helper (seen', rest'))))))
+==============================
+File "1010.ml", line 11, characters 24-28:
+Try replacing
+    seen
+with
+    h
+of type
+    'b
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let x = (List.mem h seen) in
+             (if x then (helper (seen, t)) else
+                 (let seen' = [h ; h] in
+                     let rest' = t in (helper (seen', rest'))))))
+==============================

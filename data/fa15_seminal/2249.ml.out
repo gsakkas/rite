@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "2249.ml", line 35, characters 48-62:
+This expression has type int list -> int list but is here used with type int
+Relevant code: (mulByDigit o)
+------------------------------------------------------------------
+File "2249.ml", line 35, characters 63-64:
+Try replacing
+    *
+with
+    *; [[...]]
+of type
+    (int list -> int list) -> 'a -> int list
+within context
+    fun x -> (match a with 
+              | (o, l) -> (10 * o, (bigAdd ((mulByDigit o) *; [[...]] (x l1)) l)))
+==============================

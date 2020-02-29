@@ -1,0 +1,61 @@
+------------------------------------------------------------------
+File "2693.ml", line 30, characters 9-169:
+This expression has type float * float * float but is here used with type
+  expr * float * float
+Relevant code: ((eval (a, (sin (pi *. x)), (sin (pi *. y)))),
+           (eval (b, (sin (pi *. x)), (sin (pi *. y)))),
+           (eval (c, (sin (pi *. x)), (sin (pi *. y)))))
+------------------------------------------------------------------
+File "2693.ml", line 30, characters 9-169:
+Try replacing
+    (eval (a, (sin (pi *. x)), (sin (pi *. y)))),
+      (eval (b, (sin (pi *. x)), (sin (pi *. y)))),
+      (eval (c, (sin (pi *. x)), (sin (pi *. y))))
+with
+    (eval (a, (sin (pi *. x)), (sin (pi *. y)))),
+      (eval (b, (sin (pi *. x)), (sin (pi *. y)))),
+      (eval (c, (sin (pi *. x)), (sin (pi *. y))));
+    [[...]]
+of type
+    expr * float * float
+==============================
+File "2693.ml", line 29, characters 7-11:
+Try replacing
+    eval
+with
+    eval; [[...]]
+of type
+    float * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a ->
+                                (eval (a, (sin (pi *. x)), (sin (pi *. y))))
+                              | Cosine a ->
+                                (eval (a, (cos (pi *. x)), (cos (pi *. y))))
+                              | Average (a, b) ->
+                                (((eval (a, x, y)) +. (eval (b, x, y))) /. 2.0)
+                              | Times (a, b) ->
+                                ((eval (a, x, y)) *. (eval (b, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Tan a ->
+                                (eval (a, (tan (pi *. x)), (tan (pi *. y))))
+                              | Sine_Avg (a, b, c) ->
+                                (((eval; [[...]])
+                                        ((eval
+                                              (a, (sin (pi *. x)), (sin (pi *. y))))
+                                            ,
+                                            (eval
+                                              (b, (sin (pi *. x)), (sin (pi *. y))))
+                                            ,
+                                            (eval
+                                              (c,
+                                                  (sin (pi *. x)),
+                                                  (sin (pi *. y))))))
+                                      /. 3.0)) ;; 
+==============================

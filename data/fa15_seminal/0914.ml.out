@@ -1,0 +1,104 @@
+------------------------------------------------------------------
+File "0914.ml", line 25, characters 18-33:
+This expression has type int list but is here used with type
+  int list * int list
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "0914.ml", line 25, characters 18-33:
+Try replacing
+    (padZero l1 l2)
+with
+    (padZero l1 l2); [[...]]
+of type
+    int list * int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (l1e, l2e) -> (match a with 
+                                                                   | (carry, list)
+                                                                     ->
+                                                                     (let num =
+                                                                           (l1e
+                                                                                 +
+                                                                                 l2e)
+                                                                             + carry
+                                                                           in
+                                                                           (mod
+                                                                                 num 9)
+                                                                               ,
+                                                                               [7]
+                                                                                 @
+                                                                                 list))) in let
+              base
+              =
+              0, []
+              in
+              let args = (List.combine l1 l2) in
+              let (_, res) = (List.fold_left f base  args) in
+              res in (removeZero (add ((padZero l1 l2); [[...]]))))
+==============================
+File "0914.ml", line 25, characters 14-17:
+Try replacing
+    add
+with
+    add; [[...]]
+of type
+    int list -> int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (l1e, l2e) -> (match a with 
+                                                                   | (carry, list)
+                                                                     ->
+                                                                     (let num =
+                                                                           (l1e
+                                                                                 +
+                                                                                 l2e)
+                                                                             + carry
+                                                                           in
+                                                                           (mod
+                                                                                 num 9)
+                                                                               ,
+                                                                               [7]
+                                                                                 @
+                                                                                 list))) in let
+              base
+              =
+              0, []
+              in
+              let args = (List.combine l1 l2) in
+              let (_, res) = (List.fold_left f base  args) in
+              res in (removeZero ((add; [[...]]) (padZero l1 l2))))
+==============================
+File "0914.ml", line 15, characters 10-323:
+Try replacing
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (l1e, l2e) -> (match a with 
+                                                   | (carry, list) ->
+                                                     (let num = (l1e + l2e) + carry
+                                                           in
+                                                           (mod num 9),
+                                                               [7]
+                                                                 @
+                                                                 list))) in let base
+          =
+          0, []
+          in
+          let args = (List.combine l1 l2) in
+          let (_, res) = (List.fold_left f base  args) in res)
+with
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (l1e, l2e) -> (match a with 
+                                                   | (carry, list) ->
+                                                     (let num = (l1e + l2e) + carry
+                                                           in
+                                                           (mod num 9),
+                                                               [7]
+                                                                 @
+                                                                 list))) in let base
+          =
+          0, []
+          in
+          let args = (List.combine l1 l2) in
+          let (_, res) = (List.fold_left f base  args) in res); [[...]]
+of type
+    'a
+==============================

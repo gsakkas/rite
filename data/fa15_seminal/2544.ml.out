@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2544.ml", line 2, characters 52-57:
+This expression has type ('a -> 'b -> 'c -> 'd) -> int -> 'e
+but is here used with type 'a
+Relevant code: clone
+------------------------------------------------------------------
+Triaged the following locations:
+File "2544.ml", line 2, characters 63-64:
+And modified the following location:
+File "2544.ml", line 2, characters 50-51:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    ('f -> int -> 'f list) -> 'f -> int -> 'g
+within context
+    fun x
+      n -> (if (n <= 0) then [] else x :: (((x; [[...]]) clone x  n) -; [[...]] 1))
+==============================

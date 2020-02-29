@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2710.ml", line 2, characters 38-51:
+This expression has type 'a list but is here used with type unit
+Relevant code: [n; n mod 10]
+------------------------------------------------------------------
+File "2710.ml", line 2, characters 38-51:
+Try replacing
+    [n ; (mod n 10)]
+with
+    [n ; (mod n 10)]; [[...]]
+of type
+    unit
+within context
+    let rec digitsOfInt n = (if n > 0 then ([n ; (mod n 10)]; [[...]])) ;; 
+==============================

@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "0589.ml", line 18, characters 18-44:
+This expression has type (unit * unit) list but is here used with type
+  'a * 'b
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "0589.ml", line 18, characters 35-44:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f args  base)
+of type
+    'c * 'd
+within context
+    fun (l1, l2) ->
+      (let f a x = (failwith "to be implemented") in
+          let base = [(), ()] in
+          let args = (failwith "to be implemented") in
+          let (_, res) = (List.fold_left f args  base) in res)
+==============================
+File "0589.ml", line 16, characters 15-25:
+Try replacing
+    [(), ()]
+with
+    ((), ()), []
+of type
+    (unit * unit) * 'e list
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x = (failwith "to be implemented") in
+            let base = ((), ()), [] in
+            let args = (failwith "to be implemented") in
+            let (_, res) = (List.fold_left f base  args) in res
+          in
+          (removeZero (add (padZero l1 l2))))
+==============================
+File "0589.ml", line 18, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('f -> 'g -> 'h) -> (unit * unit) list -> 'i -> 'j * 'k
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = [(), ()] in
+      let args = (failwith "to be implemented") in
+      let (_, res) = (f f base  args) in res
+==============================
+File "0589.ml", line 18, characters 35-39:
+Try replacing
+    base
+with
+    args
+of type
+    'l * 'm
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = [(), ()] in
+      let args = (failwith "to be implemented") in
+      let (_, res) = (List.fold_left f args  args) in res
+==============================

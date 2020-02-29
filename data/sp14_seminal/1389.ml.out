@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "1389.ml", line 8, characters 28-30:
+This expression has type int list but is here used with type int list list
+Relevant code: l2
+------------------------------------------------------------------
+File "1389.ml", line 8, characters 14-19:
+Try replacing
+    clone
+with
+    -
+of type
+    int -> int -> int
+within context
+    let l = (List.length l1) - (List.length l2) in
+      (if l < 0 then (clone 0 (-1 * l)) @ l2, l2 else l1, (- 0 l) :: l2)
+==============================
+File "1389.ml", line 8, characters 14-19:
+Try replacing
+    clone
+with
+    *
+of type
+    int -> int -> int
+within context
+    let l = (List.length l1) - (List.length l2) in
+      (if l < 0 then (clone 0 (-1 * l)) @ l2, l2 else l1, (* 0 l) :: l2)
+==============================
+File "1389.ml", line 7, characters 32-34:
+Try replacing
+    l2
+with
+    l1
+of type
+    int list
+within context
+    fun l2 ->
+      (let l = (List.length l1) - (List.length l2) in
+          (if l < 0 then (clone 0 (-1 * l)) @ l1, l2 else l1, (clone 0 l) :: l2))
+==============================

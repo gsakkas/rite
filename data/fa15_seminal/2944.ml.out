@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "2944.ml", line 19, characters 35-39:
+This expression has type 'a list but is here used with type 'b list * 'c list
+Relevant code: base
+------------------------------------------------------------------
+File "2944.ml", line 17, characters 15-17:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    'd
+within context
+    fun l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                               | (first, second) ->
+                                                 ([],
+                                                       [])) in let base =
+            []; [[...]]
+            in
+            let args = (List.rev (List.combine l1 l2)) in
+            let (_, res) = (List.fold_left f base  args) in
+            res in (removeZero (add (padZero l1 l2))))
+==============================
+File "2944.ml", line 19, characters 35-39:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    'e list * 'f list
+within context
+    let f a x = (match x with 
+                 | (first, second) ->
+                   ([],
+                         [])) in let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f (base; [[...]])  args) in res
+==============================
+File "2944.ml", line 19, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('g -> 'h * 'i -> 'j list * 'k list) -> 'l list -> ('m * 'n) list -> 'o * 'p
+within context
+    let f a x = (match x with 
+                 | (first, second) ->
+                   ([],
+                         [])) in let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

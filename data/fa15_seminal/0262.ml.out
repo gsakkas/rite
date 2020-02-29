@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "0262.ml", line 2, characters 31-32:
+This expression has type (('a -> 'b) -> 'a list -> 'b list) -> 'c -> 'd -> 'e
+but is here used with type 'c
+Relevant code: x
+------------------------------------------------------------------
+File "0262.ml", line 2, characters 20-30:
+Try replacing
+    (x List.map x  n)
+with
+    (x (List.map x n))
+of type
+    'f
+within context
+    let rec clone x n = (x (List.map x n)) ;; 
+==============================
+File "0262.ml", line 2, characters 31-32:
+Try replacing
+    x
+with
+    List.map
+of type
+    ('g -> 'h) -> 'g list -> 'h list
+within context
+    let rec clone x n = (x List.map List.map  n) ;; 
+==============================
+File "0262.ml", line 2, characters 31-32:
+Try replacing
+    x
+with
+    n
+of type
+    'i
+within context
+    let rec clone x n = (x List.map n  n) ;; 
+==============================

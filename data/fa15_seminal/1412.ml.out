@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1412.ml", line 10, characters 74-75:
+This expression has type int but is here used with type int list
+Relevant code: n
+------------------------------------------------------------------
+File "1412.ml", line 10, characters 66-73:
+Try replacing
+    (digits (sumList n))
+with
+    (sumList (digits n))
+of type
+    int
+within context
+    let rec digitalRoot n = (match (digits n) with 
+                             | x :: [] -> x
+                             | h :: t -> (digitalRoot (sumList (digits n)))) ;; 
+==============================

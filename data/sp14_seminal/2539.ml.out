@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "2539.ml", line 7, characters 37-38:
+This expression has type int but is here used with type 'a list
+Relevant code: 2
+------------------------------------------------------------------
+File "2539.ml", line 7, characters 33-39:
+Try replacing
+    (List.mem tl [2])
+with
+    (List.mem [2] tl)
+of type
+    bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | hd :: tl ->
+                           (let seen' =
+                                 (if (List.mem [2] tl) = true then seen else
+                                   hd :: seen)
+                                 in
+                                 let rest' = tl in (helper (seen', rest'))))
+==============================
+File "2539.ml", line 7, characters 24-32:
+Try replacing
+    List.mem
+with
+    =
+of type
+    int list -> int list -> bool
+within context
+    (match rest with 
+     | [] -> seen
+     | hd :: tl ->
+       (let seen' = (if (= tl [2]) = true then seen else hd :: seen) in
+             let rest' = tl in (helper (seen', rest'))))
+==============================
+File "2539.ml", line 7, characters 33-35:
+Try replacing
+    tl
+with
+    hd
+of type
+    int
+within context
+    (match rest with 
+     | [] -> seen
+     | hd :: tl ->
+       (let seen' = (if (List.mem hd [2]) = true then seen else hd :: seen) in
+             let rest' = tl in (helper (seen', rest'))))
+==============================

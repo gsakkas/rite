@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "1258.ml", line 29, characters 2-20:
+This expression has type 'a but is here used with type int list -> 'a
+Relevant code: mulByDigit i l [0]
+------------------------------------------------------------------
+File "1258.ml", line 26, characters 21-153:
+Try replacing
+    fun l -> (let rec adder n li acc = (match n with 
+                                        | 1 -> (bigAdd li acc)
+                                        | _ ->
+                                          (adder
+                                              (n - 1) li
+                                              (bigAdd
+                                                acc li))) in (mulByDigit i l  [0]))
+with
+    fun _ l -> (let rec adder n li acc = (match n with 
+                                          | 1 -> (bigAdd li acc)
+                                          | _ ->
+                                            (adder
+                                                (n - 1) li
+                                                (bigAdd
+                                                  acc li))) in (mulByDigit i l  [0]))
+of type
+    int list -> int list -> 'b
+==============================
+File "1258.ml", line 26, characters 21-153:
+Try replacing
+    fun l -> (let rec adder n li acc = (match n with 
+                                        | 1 -> (bigAdd li acc)
+                                        | _ ->
+                                          (adder
+                                              (n - 1) li
+                                              (bigAdd
+                                                acc li))) in (mulByDigit i l  [0]))
+with
+    fun l _ -> (let rec adder n li acc = (match n with 
+                                          | 1 -> (bigAdd li acc)
+                                          | _ ->
+                                            (adder
+                                                (n - 1) li
+                                                (bigAdd
+                                                  acc li))) in (mulByDigit i l  [0]))
+of type
+    'c -> int list -> 'd
+==============================

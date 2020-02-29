@@ -1,0 +1,138 @@
+------------------------------------------------------------------
+File "0005.ml", line 37, characters 16-31:
+This expression has type int list but is here used with type int
+Relevant code: intermediateSum
+------------------------------------------------------------------
+Triaged the following locations:
+File "0005.ml", line 37, characters 32-33:
+And modified the following location:
+File "0005.ml", line 37, characters 38-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    **
+with
+    -
+The actual replacement has type
+    int -> int -> int
+within context
+    fun x ->
+      (let (padCount, currList) = a in
+          let intermediateSum = (mulByDigit x l2) in
+          let toSum = (intermediateSum *; [[...]] 10 - padCount) in
+          padCount - 1, (bigAdd currList toSum))
+==============================
+Triaged the following locations:
+File "0005.ml", line 37, characters 32-33:
+And modified the following location:
+File "0005.ml", line 37, characters 38-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    **
+with
+    >
+The actual replacement has type
+    int -> int -> bool
+within context
+    fun x ->
+      (let (padCount, currList) = a in
+          let intermediateSum = (mulByDigit x l2) in
+          let toSum = (intermediateSum *; [[...]] 10 > padCount) in
+          padCount - 1, (bigAdd currList toSum))
+==============================
+Triaged the following locations:
+File "0005.ml", line 37, characters 32-33:
+And modified the following location:
+File "0005.ml", line 37, characters 38-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    **
+with
+    =
+The actual replacement has type
+    int -> int -> bool
+within context
+    fun x ->
+      (let (padCount, currList) = a in
+          let intermediateSum = (mulByDigit x l2) in
+          let toSum = (intermediateSum *; [[...]] 10 = padCount) in
+          padCount - 1, (bigAdd currList toSum))
+==============================
+Triaged the following locations:
+File "0005.ml", line 37, characters 32-33:
+And modified the following location:
+File "0005.ml", line 37, characters 38-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    **
+with
+    /
+The actual replacement has type
+    int -> int -> int
+within context
+    fun x ->
+      (let (padCount, currList) = a in
+          let intermediateSum = (mulByDigit x l2) in
+          let toSum = (intermediateSum *; [[...]] 10 / padCount) in
+          padCount - 1, (bigAdd currList toSum))
+==============================
+Triaged the following locations:
+File "0005.ml", line 37, characters 32-33:
+And modified the following location:
+File "0005.ml", line 37, characters 38-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    **
+with
+    *
+The actual replacement has type
+    int -> int -> int
+within context
+    fun x ->
+      (let (padCount, currList) = a in
+          let intermediateSum = (mulByDigit x l2) in
+          let toSum = (intermediateSum *; [[...]] 10 * padCount) in
+          padCount - 1, (bigAdd currList toSum))
+==============================
+Triaged the following locations:
+File "0005.ml", line 37, characters 32-33:
+And modified the following location:
+File "0005.ml", line 37, characters 38-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    **
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    fun x ->
+      (let (padCount, currList) = a in
+          let intermediateSum = (mulByDigit x l2) in
+          let toSum = (intermediateSum *; [[...]] 10 + padCount) in
+          padCount - 1, (bigAdd currList toSum))
+==============================
+Triaged the following locations:
+File "0005.ml", line 37, characters 32-33:
+And modified the following location:
+File "0005.ml", line 37, characters 38-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    **
+with
+    **; [[...]]
+The actual replacement has type
+    int -> int -> 'a
+within context
+    fun x ->
+      (let (padCount, currList) = a in
+          let intermediateSum = (mulByDigit x l2) in
+          let toSum = (intermediateSum *; [[...]] (10 **; [[...]] padCount)) in
+          padCount - 1, (bigAdd currList toSum))
+==============================

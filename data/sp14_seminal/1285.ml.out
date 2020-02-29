@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1285.ml", line 3, characters 2-62:
+This expression has type 'a list but is here used with type 'a
+Relevant code: if n <= 0 then [] else (match n with | n -> [digitsOfInt n])
+------------------------------------------------------------------
+File "1285.ml", line 3, characters 47-58:
+Try replacing
+    digitsOfInt
+with
+    <=
+of type
+    int -> int -> bool
+within context
+    fun n -> (if (n <= 0) then [] else (match n with 
+                                        | n -> [(<= n)]))
+==============================

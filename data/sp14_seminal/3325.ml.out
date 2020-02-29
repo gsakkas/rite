@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3325.ml", line 5, characters 12-46:
+This expression has type int but is here used with type 'a list
+Relevant code: ((mulByDigit i (List.rev t)) * 10)
+------------------------------------------------------------------
+File "3325.ml", line 5, characters 41-42:
+Try replacing
+    *
+with
+    *; [[...]]
+of type
+    int list -> int -> int list
+within context
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t -> ((mulByDigit i (List.rev t)) *; [[...]] 10) @ [h * i])
+==============================

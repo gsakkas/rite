@@ -1,0 +1,73 @@
+------------------------------------------------------------------
+File "1834.ml", line 5, characters 66-67:
+This expression is not a function, it cannot be applied
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "1834.ml", line 5, characters 58-64:
+And modified the following location:
+File "1834.ml", line 5, characters 66-67:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    append
+If you ignore other surrounding code, try replacing
+    t
+with
+    t; [[...]]
+The actual replacement has type
+    'f list -> 'g
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: t -> ((append; [[...]]) ((t; [[...]]) [h]))) ;; 
+==============================
+Triaged the following locations:
+File "1834.ml", line 5, characters 58-64:
+And modified the following location:
+File "1834.ml", line 5, characters 66-67:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    append
+If you ignore other surrounding code, try replacing
+    t
+with
+    append
+The actual replacement has type
+    'e list -> 'e list -> 'e list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: t -> ((append; [[...]]) (append [h]))) ;; 
+==============================
+Triaged the following locations:
+File "1834.ml", line 5, characters 58-64:
+And modified the following location:
+File "1834.ml", line 5, characters 66-67:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    append
+If you ignore other surrounding code, try replacing
+    t
+with
+    listReverse
+The actual replacement has type
+    'c list -> 'd list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: t -> ((append; [[...]]) (listReverse [h]))) ;; 
+==============================
+Triaged the following locations:
+File "1834.ml", line 5, characters 58-64:
+And modified the following location:
+File "1834.ml", line 5, characters 68-71:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    append
+If you ignore other surrounding code, try replacing
+    (t [h])
+with
+    t
+The actual replacement has type
+    'b list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: t -> ((append; [[...]]) t)) ;; 
+==============================

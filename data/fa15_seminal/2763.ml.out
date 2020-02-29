@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2763.ml", line 9, characters 16-17:
+This expression has type int list but is here used with type int
+Relevant code: i
+------------------------------------------------------------------
+File "2763.ml", line 4, characters 21-177:
+Try replacing
+    fun l -> (match i with 
+              | i -> []
+              | h :: t ->
+                (if (List.length t) = 0 then [h * i] @ (mulByDigit i t) else
+                    (remainder i h) :: (mulByDigit i t)))
+with
+    function | l -> (match i with 
+                     | i ->
+                       []) | h :: t ->
+        (if (List.length t) = 0 then [h * i] @ (mulByDigit i t) else
+          (remainder i h) :: (mulByDigit i t))
+of type
+    int list -> int list
+==============================

@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2847.ml", line 2, characters 42-46:
+This pattern matches values of type 'a list
+but is here used to match values of type 'b -> 'c
+Relevant code: h::t
+------------------------------------------------------------------
+File "2847.ml", line 2, characters 27-34:
+Try replacing
+    sumList
+with
+    xs
+of type
+    int list
+within context
+    let rec sumList xs = (match xs with 
+                          | h :: t -> h + (sumList t)) ;; 
+==============================

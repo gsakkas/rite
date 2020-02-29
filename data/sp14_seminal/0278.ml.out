@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0278.ml", line 8, characters 21-22:
+This expression has type int but is here used with type 'a list
+Relevant code: n
+------------------------------------------------------------------
+File "0278.ml", line 8, characters 9-20:
+Try replacing
+    listReverse
+with
+    listReverse; [[...]]
+of type
+    int -> int
+within context
+    fun n ->
+      (if (n <= 0) then [] else
+        (mod ((listReverse; [[...]]) n) 10) :: (listReverse (digitsOfInt (n / 10))))
+==============================

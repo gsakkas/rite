@@ -1,0 +1,73 @@
+------------------------------------------------------------------
+File "3062.ml", line 10, characters 67-71:
+This expression has type 'a list list but is here used with type 'a list
+Relevant code: seen
+------------------------------------------------------------------
+File "3062.ml", line 10, characters 34-38:
+Try replacing
+    seen
+with
+    t
+of type
+    'b list list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem h t) then seen else
+                                   (append_new h seen))
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "3062.ml", line 10, characters 34-38:
+Try replacing
+    seen
+with
+    l
+of type
+    'c list list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem h l) then seen else
+                                   (append_new h seen))
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "3062.ml", line 10, characters 65-66:
+Try replacing
+    h
+with
+    l
+of type
+    'd list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem h seen) then seen else
+                                   (append_new l seen))
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "3062.ml", line 10, characters 65-66:
+Try replacing
+    h
+with
+    t
+of type
+    'e list
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem h seen) then seen else
+                                   (append_new t seen))
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================

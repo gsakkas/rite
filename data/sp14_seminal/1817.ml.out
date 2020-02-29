@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1817.ml", line 33, characters 21-24:
+This expression has type int but is here used with type float
+Relevant code: 100
+------------------------------------------------------------------
+File "1817.ml", line 33, characters 21-24:
+Try replacing
+    100
+with
+    100; [[...]]
+of type
+    float
+within context
+    (if (mod (truncate (100; [[...]] *. (eval (e1, x, y)))) 5) = 0 then
+      (eval (e2, x, y))
+      else
+      (eval (e3, x, y)))
+==============================
+File "1817.ml", line 33, characters 25-27:
+Try replacing
+    *.
+with
+    *.; [[...]]
+of type
+    int -> float -> float
+within context
+    (if (mod (truncate (100 *.; [[...]] (eval (e1, x, y)))) 5) = 0 then
+      (eval (e2, x, y))
+      else
+      (eval (e3, x, y)))
+==============================

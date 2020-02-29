@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0245.ml", line 2, characters 38-42:
+This expression has type bool but is here used with type unit
+Relevant code: true
+------------------------------------------------------------------
+File "0245.ml", line 2, characters 38-42:
+Try replacing
+    true
+with
+    true; [[...]]
+of type
+    unit
+within context
+    let rec digitsOfInt n = (if n < 0 then (true; [[...]])) ;; 
+==============================

@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2422.ml", line 8, characters 43-59:
+This expression has type 'a list but is here used with type int
+Relevant code: [mulByDigit i t]
+------------------------------------------------------------------
+File "2422.ml", line 8, characters 41-42:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int -> int list list -> int list
+within context
+    (match (List.rev l) with 
+     | [] -> []
+     | h :: t ->
+       (let prod = h * i in
+             (if prod > 10 then
+                 (mod prod 10) :: (prod / 10 +; [[...]] [(mulByDigit i t)])
+                 else
+                 (mod prod 10) :: t)))
+==============================

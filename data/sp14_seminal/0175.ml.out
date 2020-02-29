@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0175.ml", line 2, characters 30-44:
+This expression has type 'a list but is here used with type string
+Relevant code: (List.map f l)
+------------------------------------------------------------------
+File "0175.ml", line 2, characters 45-46:
+Try replacing
+    ^
+with
+    f
+of type
+    (string -> string) list -> string -> string
+within context
+    let stringOfList f l = "[" ^ ((List.map f l) f "]") ;; 
+==============================
+File "0175.ml", line 2, characters 31-39:
+Try replacing
+    List.map
+with
+    ^
+of type
+    string -> string -> string
+within context
+    fun f l -> "[" ^ ((^ f l) ^ "]")
+==============================

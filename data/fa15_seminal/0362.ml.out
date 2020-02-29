@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "0362.ml", line 16, characters 16-18:
+This expression is not a function, it cannot be applied
+Relevant code: 0.
+------------------------------------------------------------------
+File "0362.ml", line 16, characters 19-24:
+Try replacing
+    (0. depth)
+with
+    0.
+of type
+    float
+within context
+    let rec build (rand, depth) = let r = (rand 0.) in (match depth with 
+                                                        | 0 ->
+                                                          (if (mod r 2) = 0 then
+                                                              buildX
+                                                              else
+                                                              buildY)
+                                                        | d ->
+                                                          (if r = 0 then
+                                                              (build (rand, d - 1))
+                                                              else
+                                                              (build
+                                                                (rand, d - 1)))) ;; 
+==============================

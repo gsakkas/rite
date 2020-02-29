@@ -1,0 +1,48 @@
+------------------------------------------------------------------
+File "2603.ml", line 22, characters 42-66:
+This expression has type 'a list * 'b list but is here used with type
+  ('c * 'd) list
+Relevant code: ((x :: one), (y :: two))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2603.ml", line 21, characters 6-18:
+And modified the following location:
+File "2603.ml", line 22, characters 9-19:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.combine
+If you ignore other surrounding code, try replacing
+    List.split
+with
+    List.split; [[...]]
+The actual replacement has type
+    'e list * 'f list -> 'g
+within context
+    let f a x =
+      let y = (List.hd l2) in
+        ((List.combine; [[...]])
+            ((List.split; [[...]]) (let (one, two) = a in x :: one, y :: two)))
+      in
+      let base = [], [] in
+      let args = l1 in let (bar, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "2603.ml", line 21, characters 6-18:
+And modified the following location:
+File "2603.ml", line 22, characters 20-67:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.combine
+If you ignore other surrounding code, try replacing
+    let (one, two) = a in x :: one, y :: two
+with
+    let (one, two) = a in x :: one, y :: two; [[...]]
+The actual replacement has type
+    ('h * 'i) list
+within context
+    let f a x =
+      let y = (List.hd l2) in
+        ((List.combine; [[...]])
+            (List.split (let (one, two) = a in x :: one, y :: two; [[...]])))
+      in
+      let base = [], [] in
+      let args = l1 in let (bar, res) = (List.fold_left f base  args) in res
+==============================

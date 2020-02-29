@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0480.ml", line 12, characters 47-48:
+This expression has type int but is here used with type int list
+Relevant code: n
+------------------------------------------------------------------
+File "0480.ml", line 12, characters 39-46:
+Try replacing
+    (digits (sumList n))
+with
+    (sumList (digits n))
+of type
+    int
+within context
+    let rec additivePersistence n =
+    (if (n / 10 <= 0) then 0 else (sumList (digits n)))
+    ;; 
+==============================

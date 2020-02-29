@@ -1,0 +1,96 @@
+------------------------------------------------------------------
+File "0046.ml", line 11, characters 51-57:
+This expression is not a function, it cannot be applied
+Relevant code: zeroes
+------------------------------------------------------------------
+Triaged the following locations:
+File "0046.ml", line 13, characters 6-96:
+And modified the following location:
+File "0046.ml", line 11, characters 58-60:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (zeroes l2)
+with
+    zeroes
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let length1 = (List.length l1) in
+            let length2 = (List.length l2) in (match (length1 >= length2) with 
+                                               | true ->
+                                                 (let n = length1 - length2 in
+                                                       let zeroes = (clone 0 n) in
+                                                       l1, (List.append zeroes))
+                                               | false -> [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0046.ml", line 13, characters 6-96:
+And modified the following location:
+File "0046.ml", line 11, characters 51-57:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    zeroes
+with
+    zeroes; [[...]]
+The actual replacement has type
+    'm list -> 'n list
+within context
+    fun l1
+      l2 ->
+        (let length1 = (List.length l1) in
+            let length2 = (List.length l2) in (match (length1 >= length2) with 
+                                               | true ->
+                                                 (let n = length1 - length2 in
+                                                       let zeroes = (clone 0 n) in
+                                                       l1,
+                                                           (List.append
+                                                             ((zeroes; [[...]])
+                                                               l2)))
+                                               | false -> [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0046.ml", line 13, characters 6-96:
+And modified the following location:
+File "0046.ml", line 11, characters 32-63:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1, (List.append (zeroes l2))
+with
+    l1
+The actual replacement has type
+    'q list
+within context
+    fun l1
+      l2 ->
+        (let length1 = (List.length l1) in
+            let length2 = (List.length l2) in (match (length1 >= length2) with 
+                                               | true ->
+                                                 (let n = length1 - length2 in
+                                                       let zeroes = (clone 0 n) in
+                                                       l1)
+                                               | false -> [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0046.ml", line 13, characters 6-96:
+And modified the following location:
+File "0046.ml", line 11, characters 19-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 n)
+with
+    (clone 0 n); [[...]]
+The actual replacement has type
+    'u
+within context
+    fun l1
+      l2 ->
+        (let length1 = (List.length l1) in
+            let length2 = (List.length l2) in (match (length1 >= length2) with 
+                                               | true ->
+                                                 (let n = length1 - length2 in
+                                                       let zeroes =
+                                                       (clone 0 n); [[...]]
+                                                       in
+                                                       l1,
+                                                           (List.append
+                                                             (zeroes l2)))
+                                               | false -> [[...other program...]]))
+==============================

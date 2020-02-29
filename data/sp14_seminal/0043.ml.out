@@ -1,0 +1,140 @@
+------------------------------------------------------------------
+File "0043.ml", line 44, characters 57-59:
+This expression has type int list list but is here used with type int list
+Relevant code: rt
+------------------------------------------------------------------
+Triaged the following locations:
+File "0043.ml", line 44, characters 32-38:
+And modified the following location:
+File "0043.ml", line 44, characters 40-50:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    mulByDigit; [[...]]
+The actual replacement has type
+    'a -> 'b -> 'c
+within context
+    fun x -> (match a with 
+              | (h1 :: t1, rh :: rt) ->
+                (t1, ((bigAdd; [[...]]) ((mulByDigit; [[...]]) x rh) rt) :: rt))
+==============================
+Triaged the following locations:
+File "0043.ml", line 44, characters 32-38:
+And modified the following location:
+File "0043.ml", line 44, characters 40-50:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    mulByDigit
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    fun x -> (match a with 
+              | (h1 :: t1, rh :: rt) -> (t1, ((bigAdd; [[...]]) (+ x rh) rt) :: rt))
+==============================
+Triaged the following locations:
+File "0043.ml", line 44, characters 32-38:
+And modified the following location:
+File "0043.ml", line 44, characters 51-52:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit x rh)
+with
+    (mulByDigit rh)
+The actual replacement has type
+    int list -> int list
+within context
+    fun x -> (match a with 
+              | (h1 :: t1, rh :: rt) ->
+                (t1, ((bigAdd; [[...]]) (mulByDigit rh) rt) :: rt))
+==============================
+Triaged the following locations:
+File "0043.ml", line 44, characters 32-38:
+And modified the following location:
+File "0043.ml", line 44, characters 40-52:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit x rh)
+with
+    (mulByDigit (x rh))
+The actual replacement has type
+    int list -> int list
+within context
+    fun x -> (match a with 
+              | (h1 :: t1, rh :: rt) ->
+                (t1, ((bigAdd; [[...]]) (mulByDigit (x rh)) rt) :: rt))
+==============================
+Triaged the following locations:
+File "0043.ml", line 44, characters 32-38:
+And modified the following location:
+File "0043.ml", line 44, characters 51-55:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (mulByDigit x rh)
+with
+    (mulByDigit rh x)
+The actual replacement has type
+    int list
+within context
+    fun x -> (match a with 
+              | (h1 :: t1, rh :: rt) ->
+                (t1, ((bigAdd; [[...]]) (mulByDigit rh x) rt) :: rt))
+==============================
+Triaged the following locations:
+File "0043.ml", line 44, characters 32-38:
+And modified the following location:
+File "0043.ml", line 44, characters 53-55:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    rh
+with
+    rt
+The actual replacement has type
+    int list
+within context
+    fun x -> (match a with 
+              | (h1 :: t1, rh :: rt) ->
+                (t1, ((bigAdd; [[...]]) (mulByDigit x rt) rt) :: rt))
+==============================
+Triaged the following locations:
+File "0043.ml", line 44, characters 32-38:
+And modified the following location:
+File "0043.ml", line 44, characters 53-55:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    rh
+with
+    rh; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun x -> (match a with 
+              | (h1 :: t1, rh :: rt) ->
+                (t1, ((bigAdd; [[...]]) (mulByDigit x (rh; [[...]])) rt) :: rt))
+==============================
+Triaged the following locations:
+File "0043.ml", line 44, characters 32-38:
+And modified the following location:
+File "0043.ml", line 44, characters 53-55:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    rh
+with
+    h1
+The actual replacement has type
+    int list
+within context
+    fun x -> (match a with 
+              | (h1 :: t1, rh :: rt) ->
+                (t1, ((bigAdd; [[...]]) (mulByDigit x h1) rt) :: rt))
+==============================

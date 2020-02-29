@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "0888.ml", line 17, characters 18-33:
+This expression has type int list * int list but is here used with type
+  ('a * 'b) * ('a * 'b) list
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "0888.ml", line 17, characters 19-26:
+Try replacing
+    padZero
+with
+    add
+of type
+    ('c * ('d -> ('e * int list) * ('e * int list) list)) *
+    ('c * ('d -> ('e * int list) * ('e * int list) list)) list ->
+    'd -> ('e * int list) * ('e * int list) list
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x = x in
+            let base = l1 in
+            let args = l2 in let (_, res) = (List.fold_left f base  args) in res
+          in
+          (removeZero (add (add l1 l2))))
+==============================

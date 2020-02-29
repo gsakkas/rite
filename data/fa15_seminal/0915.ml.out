@@ -1,0 +1,177 @@
+------------------------------------------------------------------
+File "0915.ml", line 24, characters 35-39:
+This expression has type int list * 'a list but is here used with type
+  int * int list
+Relevant code: base
+------------------------------------------------------------------
+Triaged the following locations:
+File "0915.ml", line 25, characters 2-65:
+And modified the following location:
+File "0915.ml", line 24, characters 35-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    base
+with
+    base; [[...]]
+The actual replacement has type
+    int * int list
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match x with 
+                                                       | (l1e, l2e) ->
+                                                         (match a with 
+                                                          | (carry, list) ->
+                                                            (let num =
+                                                                  (l1e + l2e)
+                                                                    + carry
+                                                                  in
+                                                                  (mod num 9),
+                                                                      [7]
+                                                                        @
+                                                                        list))) in let
+        base
+        =
+        [0], []
+        in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f (base; [[...]])  args) in
+        res in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "0915.ml", line 25, characters 2-65:
+And modified the following location:
+File "0915.ml", line 24, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    f
+with
+    f; [[...]]
+The actual replacement has type
+    int list * 'b list -> 'c * 'd -> int list * 'b list
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match x with 
+                                                       | (l1e, l2e) ->
+                                                         (match a with 
+                                                          | (carry, list) ->
+                                                            (let num =
+                                                                  (l1e + l2e)
+                                                                    + carry
+                                                                  in
+                                                                  (mod num 9),
+                                                                      [7]
+                                                                        @
+                                                                        list))) in let
+        base
+        =
+        [0], []
+        in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left (f; [[...]]) base  args) in
+        res in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "0915.ml", line 25, characters 2-65:
+And modified the following location:
+File "0915.ml", line 24, characters 18-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+The actual replacement has type
+    (int * int list -> int * int -> int * int list) ->
+    int list * 'e list -> ('f * 'g) list -> 'h * 'i
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match x with 
+                                                       | (l1e, l2e) ->
+                                                         (match a with 
+                                                          | (carry, list) ->
+                                                            (let num =
+                                                                  (l1e + l2e)
+                                                                    + carry
+                                                                  in
+                                                                  (mod num 9),
+                                                                      [7]
+                                                                        @
+                                                                        list))) in let
+        base
+        =
+        [0], []
+        in
+        let args = (List.combine l1 l2) in
+        let (_, res) = ((List.fold_left; [[...]]) f base  args) in
+        res in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "0915.ml", line 25, characters 2-65:
+And modified the following location:
+File "0915.ml", line 22, characters 15-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    [0], []
+with
+    [0], []; [[...]]
+The actual replacement has type
+    'j
+within context
+    let bigAdd l1 l2 = let add (l1, l2) = let f a x = (match x with 
+                                                       | (l1e, l2e) ->
+                                                         (match a with 
+                                                          | (carry, list) ->
+                                                            (let num =
+                                                                  (l1e + l2e)
+                                                                    + carry
+                                                                  in
+                                                                  (mod num 9),
+                                                                      [7]
+                                                                        @
+                                                                        list))) in let
+        base
+        =
+        [0], []; [[...]]
+        in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in
+        res in [[...other program...]] ;; 
+==============================
+Triaged the following locations:
+File "0915.ml", line 25, characters 2-65:
+And modified the following location:
+File "0915.ml", line 16, characters 10-185:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun a x -> (match x with 
+                | (l1e, l2e) -> (match a with 
+                                 | (carry, list) ->
+                                   (let num = (l1e + l2e) + carry in
+                                         (mod num 9), [7] @ list)))
+with
+    fun a x -> (match x with 
+                | (l1e, l2e) -> (match a with 
+                                 | (carry, list) ->
+                                   (let num = (l1e + l2e) + carry in
+                                         (mod num 9), [7] @ list))); [[...]]
+The actual replacement has type
+    'k
+==============================
+Triaged the following locations:
+File "0915.ml", line 25, characters 2-65:
+And modified the following location:
+File "0915.ml", line 15, characters 2-394:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (l1e, l2e) -> (match a with 
+                                                     | (carry, list) ->
+                                                       (let num =
+                                                             (l1e + l2e) + carry
+                                                             in
+                                                             (mod num 9),
+                                                                 [7]
+                                                                   @
+                                                                   list))) in let
+        base
+        =
+        [0], []
+        in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add ((padZero l1 l2) (if l1 > l2 then l1 else l2))))
+with
+    [[...other program...]]
+The actual replacement has type
+    'l
+==============================

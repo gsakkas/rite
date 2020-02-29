@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "3515.ml", line 7, characters 46-61:
+This expression has type (('a -> 'a) * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((func f b), b)
+------------------------------------------------------------------
+File "3515.ml", line 7, characters 2-8:
+Try replacing
+    wwhile
+with
+    <>
+of type
+    (('c -> 'c) * bool) * 'c -> (('c -> 'c) * bool) * 'c -> bool
+within context
+    let fixpoint (f, b) = (<> (let func x y = x, ((x y) <> y) in (func f b), b)) ;; 
+==============================

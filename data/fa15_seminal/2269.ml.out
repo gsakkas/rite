@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "2269.ml", line 31, characters 35-45:
+This expression has type int -> ('a -> 'b -> 'c -> 'd) -> 'e
+but is here used with type 'a
+Relevant code: mulByDigit
+------------------------------------------------------------------
+Triaged the following locations:
+File "2269.ml", line 31, characters 25-31:
+And modified the following location:
+File "2269.ml", line 31, characters 33-34:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    l
+with
+    l; [[...]]
+The actual replacement has type
+    (int -> 'f -> int list) -> int -> 'f -> 'g
+within context
+    let rec mulByDigit i l =
+    (if i = 0 then [0] else
+      ((bigAdd; [[...]]) ((l; [[...]]) mulByDigit (i - 1)  l)))
+    ;; 
+==============================
+Triaged the following locations:
+File "2269.ml", line 31, characters 25-31:
+And modified the following location:
+File "2269.ml", line 31, characters 33-45:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (l mulByDigit (i - 1)  l)
+with
+    (l (mulByDigit (i - 1) l))
+The actual replacement has type
+    'h
+within context
+    let rec mulByDigit i l =
+    (if i = 0 then [0] else ((bigAdd; [[...]]) (l (mulByDigit (i - 1) l))))
+    ;; 
+==============================

@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "1514.ml", line 13, characters 22-69:
+This expression is not a function, it cannot be applied
+Relevant code: (clone 0 ((List.length l1) - (List.length l2)))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1514.ml", line 13, characters 9-20:
+And modified the following location:
+File "1514.ml", line 13, characters 22-69:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    (clone 0 ((List.length l1) - (List.length l2)))
+with
+    (clone 0 ((List.length l1) - (List.length l2))); [[...]]
+The actual replacement has type
+    'e list -> 'f
+within context
+    fun l1 l2 -> (match (List.length l1) > (List.length l2) with 
+                  | true ->
+                    (l1,
+                          ((List.append; [[...]])
+                            (((clone 0 ((List.length l1) - (List.length l2)));
+                                [[...]])
+                              l2)))
+                  | false ->
+                    ((List.append
+                            (clone 0 ((List.length l2) - (List.length l1))) l1)
+                          ,
+                          l2))
+==============================
+Triaged the following locations:
+File "1514.ml", line 13, characters 9-20:
+And modified the following location:
+File "1514.ml", line 13, characters 70-72:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    ((clone 0 ((List.length l1) - (List.length l2))) l2)
+with
+    (clone 0 ((List.length l1) - (List.length l2)))
+The actual replacement has type
+    int list
+within context
+    fun l1 l2 -> (match (List.length l1) > (List.length l2) with 
+                  | true ->
+                    (l1,
+                          ((List.append; [[...]])
+                            (clone 0 ((List.length l1) - (List.length l2)))))
+                  | false ->
+                    ((List.append
+                            (clone 0 ((List.length l2) - (List.length l1))) l1)
+                          ,
+                          l2))
+==============================

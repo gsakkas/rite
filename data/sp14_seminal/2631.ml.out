@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "2631.ml", line 3, characters 63-67:
+This expression has type float but is here used with type
+  'a -> float -> float
+Relevant code: base
+------------------------------------------------------------------
+File "2631.ml", line 3, characters 46-62:
+Try replacing
+    (List.fold_left f base  xs)
+with
+    (List.fold_left (f base xs))
+of type
+    float -> float list -> float
+within context
+    let sqsum xs =
+    let f a x a x = (x *. x) in let base = 0.0 in (List.fold_left (f base xs))
+    ;; 
+==============================
+File "2631.ml", line 3, characters 46-60:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('b -> 'c -> 'd -> float -> float) -> float -> 'e -> float -> float
+within context
+    let sqsum xs = let f a x a x = (x *. x) in let base = 0.0 in (f f base  xs) ;; 
+==============================

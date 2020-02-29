@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "0632.ml", line 20, characters 13-72:
+This expression has type int * int list but is here used with type int list
+Relevant code: ((((c + x') + x'') / 10), ((((c + x') + x'') mod 10) :: s))
+------------------------------------------------------------------
+File "0632.ml", line 19, characters 14-26:
+Try replacing
+    c + 0 :: s
+with
+    c + 0, s
+of type
+    int * int list
+within context
+    fun a x -> (let (x', x'') = x in let (c, s) = a in (match s with 
+                                                        | [] -> (c + 0, s)
+                                                        | _ ->
+                                                          (((c + x') + x'') / 10,
+                                                                (mod
+                                                                      ((c + x')
+                                                                          + x'') 10)
+                                                                    ::
+                                                                    s)))
+==============================

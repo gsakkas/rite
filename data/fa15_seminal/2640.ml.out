@@ -1,0 +1,73 @@
+------------------------------------------------------------------
+File "2640.ml", line 2, characters 66-67:
+This expression has type ('a -> 'b) -> 'a -> 'b but is here used with type
+  ('a -> 'b) -> 'a -> 'a -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "2640.ml", line 2, characters 20-23:
+Try replacing
+    fun a x -> (a x)
+with
+    fun x a -> (a x)
+of type
+    'c -> ('c -> 'd) -> 'd
+within context
+    let pipe fs = let f x a = (a x) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2640.ml", line 2, characters 22-29:
+Try replacing
+    fun x -> (a x)
+with
+    fun _ x -> (a x)
+of type
+    'e -> 'f -> 'g
+within context
+    let pipe fs =
+    let f a _ x = (a x) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2640.ml", line 2, characters 22-29:
+Try replacing
+    fun x -> (a x)
+with
+    fun x _ -> (a x)
+of type
+    'h -> 'i -> 'j
+within context
+    let pipe fs =
+    let f a x _ = (a x) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2640.ml", line 2, characters 51-67:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left (f base fs))
+of type
+    'k -> 'l list -> 'k
+within context
+    let pipe fs =
+    let f a x = (a x) in let base x = x in (List.fold_left (f base fs))
+    ;; 
+==============================
+File "2640.ml", line 2, characters 51-65:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    (('m -> 'm) -> 'm -> 'm) -> ('m -> 'm) -> 'm -> 'm
+within context
+    let pipe fs = let f a x = (a x) in let base x = x in (f f base  fs) ;; 
+==============================
+File "2640.ml", line 2, characters 51-65:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('n -> 'n) -> 'n -> 'n) -> ('n -> 'n) -> 'n -> 'n
+within context
+    let pipe fs = let f a x = (a x) in let base x = x in (base f base  fs) ;; 
+==============================

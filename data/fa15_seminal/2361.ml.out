@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "2361.ml", line 12, characters 12-61:
+This expression has type bool but is here used with type int
+Relevant code: if (addNumbs (h :: t)) >= 10 then false else true
+------------------------------------------------------------------
+File "2361.ml", line 11, characters 10-11:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    bool
+within context
+    let rec additivePersistence n = (match (digits n) with 
+                                     | [] -> (0; [[...]])
+                                     | h :: t ->
+                                       (if ((addNumbs h :: t) >= 10) then false else
+                                           true)) ;; 
+==============================
+File "2361.ml", line 12, characters 12-61:
+Try replacing
+    (if ((addNumbs h :: t) >= 10) then false else true)
+with
+    (if ((addNumbs h :: t) >= 10) then false else true); [[...]]
+of type
+    int
+within context
+    let rec additivePersistence n = (match (digits n) with 
+                                     | [] -> 0
+                                     | h :: t ->
+                                       ((if ((addNumbs h :: t) >= 10) then false
+                                             else
+                                             true);
+                                           [[...]])) ;; 
+==============================

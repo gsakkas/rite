@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0142.ml", line 17, characters 33-60:
+This expression has type int * int list but is here used with type int
+Relevant code: (0, (num @ [addit mod 10]))
+------------------------------------------------------------------
+File "0142.ml", line 17, characters 26-27:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    int * int list
+within context
+    fun x ->
+      (let (carry, num) = a in
+          let (l1', l2') = x in
+          let addit = (l1' + l2') + carry in
+          (if (addit >= 10) then (1; [[...]]) else 0, num @ [(mod addit 10)]))
+==============================

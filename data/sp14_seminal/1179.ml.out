@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1179.ml", line 24, characters 54-57:
+This expression has type int but is here used with type int list
+Relevant code: dig
+------------------------------------------------------------------
+File "1179.ml", line 24, characters 54-57:
+Try replacing
+    dig
+with
+    dig; [[...]]
+of type
+    int list
+within context
+    let sumInit = (x1 + x2) + carry in
+      let carry2 = sumInit / 10 in
+      let dig = (mod sumInit 10) in carry2, carry2 :: dig; [[...]]
+==============================
+File "1179.ml", line 24, characters 16-30:
+Try replacing
+    (mod sumInit 10)
+with
+    (mod sumInit 10); [[...]]
+of type
+    'a
+within context
+    let (carry, acc) = a in
+      let (x1, x2) = x in
+      let sumInit = (x1 + x2) + carry in
+      let carry2 = sumInit / 10 in
+      let dig = (mod sumInit 10); [[...]] in carry2, carry2 :: dig
+==============================

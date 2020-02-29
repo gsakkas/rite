@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "2336.ml", line 7, characters 27-42:
+This expression has type 'a list -> bool but is here used with type bool
+Relevant code: (List.mem seen)
+------------------------------------------------------------------
+File "2336.ml", line 7, characters 42-42:
+Try replacing
+    (List.mem seen)
+with
+    (List.mem seen [[...]])
+of type
+    bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (not (List.mem seen [[...]])) then h :: seen
+                                   else
+                                   seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "2336.ml", line 7, characters 41-41:
+Try replacing
+    (List.mem seen)
+with
+    (List.mem [[...]] seen)
+of type
+    bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (not (List.mem [[...]] seen)) then h :: seen
+                                   else
+                                   seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================
+File "2336.ml", line 7, characters 23-26:
+Try replacing
+    not
+with
+    not; [[...]]
+of type
+    ('b list list -> bool) -> bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if ((not; [[...]]) (List.mem seen)) then h :: seen
+                                   else
+                                   seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================

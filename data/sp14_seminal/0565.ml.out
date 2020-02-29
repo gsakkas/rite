@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0565.ml", line 34, characters 41-44:
+This expression is not a function, it cannot be applied
+Relevant code: "+"
+------------------------------------------------------------------
+File "0565.ml", line 34, characters 41-44:
+Try replacing
+    "+"
+with
+    "+"; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    (exprToString e1) ^
+      ("+" ^ ((exprToString e2) ^ ((exprToString "+"; [[...]] e3) ^ ")")))
+==============================

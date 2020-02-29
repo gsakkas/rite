@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1678.ml", line 13, characters 23-24:
+This expression has type int but is here used with type int list
+Relevant code: n
+------------------------------------------------------------------
+File "1678.ml", line 12, characters 7-57:
+Try replacing
+    let n = (digitsOfInt n) in (digitalRoot n)
+with
+    let n = [[...]] in (digitalRoot n)
+of type
+    int
+within context
+    let rec digitalRoot n =
+    (if (n >= 10) then (let n = [[...]] in (digitalRoot n)) else n)
+    ;; 
+==============================

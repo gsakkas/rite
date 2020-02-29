@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "0220.ml", line 8, characters 28-41:
+This expression has type (('a -> 'a) * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((fu f b), b)
+------------------------------------------------------------------
+File "0220.ml", line 8, characters 21-27:
+Try replacing
+    wwhile
+with
+    <
+of type
+    (('c -> 'c) * bool) * 'c -> (('c -> 'c) * bool) * 'c -> bool
+within context
+    let fixpoint (f, b) = (< ((fu f b), b)) ;; 
+==============================
+File "0220.ml", line 8, characters 30-32:
+Try replacing
+    fu
+with
+    wwhile
+of type
+    (('d -> 'd -> 'd * bool) -> ('d -> 'd -> 'd * bool) * bool) *
+    ('d -> 'd -> 'd * bool) -> 'd -> 'd -> 'd * bool
+within context
+    let fixpoint (f, b) = (wwhile ((wwhile f b), b)) ;; 
+==============================

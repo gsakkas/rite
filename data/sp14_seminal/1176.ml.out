@@ -1,0 +1,91 @@
+------------------------------------------------------------------
+File "1176.ml", line 25, characters 21-23:
+This pattern matches values of type 'a list
+but is here used to match values of type int * 'b
+Relevant code: []
+------------------------------------------------------------------
+Triaged the following locations:
+File "1176.ml", line 25, characters 27-40:
+File "1176.ml", line 25, characters 51-69:
+And modified the following location:
+File "1176.ml", line 25, characters 12-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'c list
+within context
+    let (x1, x2) = x in
+      let sumInit = (x1 + x2) + carry in
+      let carry2 = sumInit / 10 in
+      let dig = (mod sumInit 10) in (match (a; [[...]]) with 
+                                     | [] -> [[...other program...]]
+                                     | h :: t -> [[...other program...]])
+==============================
+Triaged the following locations:
+File "1176.ml", line 25, characters 27-40:
+File "1176.ml", line 25, characters 51-69:
+And modified the following location:
+File "1176.ml", line 25, characters 12-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    acc
+The actual replacement has type
+    'd list
+within context
+    let (x1, x2) = x in
+      let sumInit = (x1 + x2) + carry in
+      let carry2 = sumInit / 10 in let dig = (mod sumInit 10) in (match acc with 
+                                                                  | [] ->
+                                                                    [[...other program...]]
+                                                                  | h :: t ->
+                                                                    [[...other program...]])
+==============================
+Triaged the following locations:
+File "1176.ml", line 25, characters 27-40:
+File "1176.ml", line 25, characters 43-47:
+File "1176.ml", line 25, characters 51-69:
+And modified the following location:
+File "1176.ml", line 25, characters 21-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    int * 'e
+within context
+    let (x1, x2) = x in
+      let sumInit = (x1 + x2) + carry in
+      let carry2 = sumInit / 10 in let dig = (mod sumInit 10) in (match a with 
+                                                                  | _ ->
+                                                                    [[...other program...]]
+                                                                  |
+                                                                    [[...other pattern...]]
+                                                                    ->
+                                                                    [[...other program...]])
+==============================
+Triaged the following locations:
+File "1176.ml", line 25, characters 21-23:
+File "1176.ml", line 25, characters 27-40:
+File "1176.ml", line 25, characters 51-69:
+And modified the following location:
+File "1176.ml", line 25, characters 43-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    int * 'f
+within context
+    let (x1, x2) = x in
+      let sumInit = (x1 + x2) + carry in
+      let carry2 = sumInit / 10 in let dig = (mod sumInit 10) in (match a with 
+                                                                  |
+                                                                    [[...other pattern...]]
+                                                                    ->
+                                                                    [[...other program...]]
+                                                                  | _ ->
+                                                                    [[...other program...]])
+==============================

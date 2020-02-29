@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "1820.ml", line 18, characters 28-29:
+This expression is not a function, it cannot be applied
+Relevant code: 1
+------------------------------------------------------------------
+Triaged the following locations:
+File "1820.ml", line 18, characters 13-14:
+And modified the following location:
+File "1820.ml", line 18, characters 28-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    =
+If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    int -> int
+within context
+    (if n < 10 then counter else
+      (let myList = (digits n) in
+          let num = (sumList myList) in
+          let counter = 0 in
+          (counter =; [[...]]
+                (counter + ((1; [[...]]) num)) + (additivePersistence num))))
+==============================
+Triaged the following locations:
+File "1820.ml", line 18, characters 13-14:
+And modified the following location:
+File "1820.ml", line 18, characters 30-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    =
+If you ignore other surrounding code, try replacing
+    (1 num)
+with
+    1
+The actual replacement has type
+    int
+within context
+    (if n < 10 then counter else
+      (let myList = (digits n) in
+          let num = (sumList myList) in
+          let counter = 0 in
+          (counter =; [[...]] (counter + 1) + (additivePersistence num))))
+==============================

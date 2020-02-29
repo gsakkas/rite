@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0052.ml", line 2, characters 65-66:
+This expression has type ('a -> 'b) -> 'a -> 'b but is here used with type
+  ('a -> 'b) -> 'a -> 'a -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "0052.ml", line 2, characters 20-23:
+Try replacing
+    fun a x -> (a x)
+with
+    fun x a -> (a x)
+of type
+    'c -> ('c -> 'd) -> 'd
+within context
+    let pipe fs = let f x a = (a x) in let base = () in (List.fold_left f base  fs)
+    ;; 
+==============================

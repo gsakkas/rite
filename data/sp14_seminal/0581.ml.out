@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "0581.ml", line 9, characters 55-65:
+This expression has type (float * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((y x), b)
+------------------------------------------------------------------
+File "0581.ml", line 9, characters 56-64:
+Try replacing
+    (y x), b
+with
+    b, (y x)
+of type
+    (float * bool -> (float * bool) * bool) * (float * bool)
+within context
+    let fixpoint (f, b) =
+    (wwhile (let y x = let xx = (f x) in xx, xx != x in b, (y x)))
+    ;; 
+==============================
+File "0581.ml", line 9, characters 16-51:
+Try replacing
+    fun x -> (let xx = (f x) in xx, xx != x)
+with
+    fun _ x -> (let xx = (f x) in xx, xx != x)
+of type
+    'c -> 'd -> 'd * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile (let y _ x = let xx = (f x) in xx, xx != x in (y x), b))
+    ;; 
+==============================
+File "0581.ml", line 9, characters 16-51:
+Try replacing
+    fun x -> (let xx = (f x) in xx, xx != x)
+with
+    fun x _ -> (let xx = (f x) in xx, xx != x)
+of type
+    float -> 'e -> float * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile (let y x _ = let xx = (f x) in xx, xx != x in (y x), b))
+    ;; 
+==============================
+File "0581.ml", line 9, characters 2-8:
+Try replacing
+    wwhile
+with
+    !=
+of type
+    (float * bool) * 'f -> (float * bool) * 'f -> bool
+within context
+    let fixpoint (f, b) = (!= (let y x = let xx = (f x) in xx, xx != x in (y x), b))
+    ;; 
+==============================

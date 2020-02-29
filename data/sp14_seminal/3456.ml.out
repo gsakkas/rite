@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "3456.ml", line 15, characters 5-37:
+This expression has type unit but is here used with type int
+Relevant code: (print_string "going into then")
+------------------------------------------------------------------
+File "3456.ml", line 15, characters 38-39:
+Try replacing
+    /
+with
+    >
+of type
+    unit -> unit -> bool
+within context
+    let rec additivePersistence n =
+    (if (sumList (digitsOfInt n)) > 9 then
+      ((print_string "going into then") > (print_newline ());
+        1 :: x; (additivePersistence (sumList (digitsOfInt n))))
+      else
+      (1 :: x; (sumList x)))
+    ;; 
+==============================

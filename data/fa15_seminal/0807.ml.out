@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0807.ml", line 10, characters 48-55:
+This expression has type int list -> int but is here used with type int
+Relevant code: sumList
+------------------------------------------------------------------
+File "0807.ml", line 10, characters 43-47:
+Try replacing
+    loop
+with
+    loop; [[...]]
+of type
+    (int list -> int) -> int list -> int
+within context
+    fun x y -> (if x = 0 then y else ((loop; [[...]]) sumList (digitsOfInt x)) + y)
+==============================

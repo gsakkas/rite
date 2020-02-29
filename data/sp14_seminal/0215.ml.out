@@ -1,0 +1,34 @@
+------------------------------------------------------------------
+File "0215.ml", line 18, characters 32-33:
+This expression has type int but is here used with type expr
+Relevant code: y
+------------------------------------------------------------------
+File "0215.ml", line 18, characters 9-33:
+Try replacing
+    let y = (rand (2, 6)) in y
+with
+    let y = (rand (2, 6)) in y; [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 ->
+                                     (if (rand (0, 1)) = 0 then (buildX ()) else
+                                         (buildY ()))
+                                   | _ -> (let y = (rand (2, 6)) in y; [[...]])) ;; 
+==============================
+File "0215.ml", line 17, characters 9-59:
+Try replacing
+    (if (rand (0, 1)) = 0 then (buildX ()) else (buildY ()))
+with
+    (if (rand (0, 1)) = 0 then (buildX ()) else (buildY ())); [[...]]
+of type
+    int
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 ->
+                                     ((if (rand (0, 1)) = 0 then (buildX ()) else
+                                           (buildY ()));
+                                         [[...]])
+                                   | _ -> (let y = (rand (2, 6)) in y)) ;; 
+==============================

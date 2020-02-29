@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0786.ml", line 5, characters 31-41:
+This expression has type int but is here used with type 'a list
+Relevant code: (n mod 10)
+------------------------------------------------------------------
+File "0786.ml", line 5, characters 24-30:
+Try replacing
+    append
+with
+    mod
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then n else (mod (mod n 10) (digitsOfInt (n / 10))))
+    ;; 
+==============================
+File "0786.ml", line 5, characters 24-30:
+Try replacing
+    append
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then n else (/ (mod n 10) (digitsOfInt (n / 10))))
+    ;; 
+==============================

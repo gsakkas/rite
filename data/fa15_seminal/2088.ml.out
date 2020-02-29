@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "2088.ml", line 9, characters 20-29:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sepConcat
+------------------------------------------------------------------
+File "2088.ml", line 9, characters 20-29:
+Try replacing
+    sepConcat
+with
+    sepConcat; [[...]]
+of type
+    string -> (('f -> int) -> 'f -> 'g) -> int -> 'g
+within context
+    let rec clone x n = ((sepConcat; [[...]]) ";" clone  ((x n) - 1)) ;; 
+==============================

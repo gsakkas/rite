@@ -1,0 +1,70 @@
+------------------------------------------------------------------
+File "3180.ml", line 25, characters 39-64:
+This expression has type int but is here used with type 'a list
+Relevant code: (((x1 + x2) + a1) mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3180.ml", line 25, characters 32-65:
+And modified the following location:
+File "3180.ml", line 25, characters 21-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a1
+with
+    a1; [[...]]
+The actual replacement has type
+    int
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            [((x1 + x2) + (a1; [[...]])) / 10], [[...other program...]])
+==============================
+Triaged the following locations:
+File "3180.ml", line 25, characters 32-65:
+And modified the following location:
+File "3180.ml", line 25, characters 21-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a1
+with
+    x1
+The actual replacement has type
+    int
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in [((x1 + x2) + x1) / 10], [[...other program...]])
+==============================
+Triaged the following locations:
+File "3180.ml", line 25, characters 32-65:
+And modified the following location:
+File "3180.ml", line 25, characters 19-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    int -> 'b -> int
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            [(x1 + x2 +; [[...]] a1) / 10], [[...other program...]])
+==============================
+Triaged the following locations:
+File "3180.ml", line 25, characters 7-30:
+And modified the following location:
+File "3180.ml", line 25, characters 33-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a2 :: (mod ((x1 + x2) + a1) 10)
+with
+    [[...]]
+The actual replacement has type
+    'c
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in let (a1, a2) = a in [[...other program...]], [[[...]]])
+==============================

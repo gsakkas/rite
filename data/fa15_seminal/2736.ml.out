@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2736.ml", line 29, characters 58-62:
+This expression has type 'a list * 'b list but is here used with type
+  int list
+Relevant code: base
+------------------------------------------------------------------
+File "2736.ml", line 29, characters 41-55:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int list -> int list) -> 'c list * 'd list -> 'e * 'f -> 'g * 'h
+within context
+    let f a x = (addHelper (a, x)) in
+      let base = [], [] in
+      let args = l1, l2 in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

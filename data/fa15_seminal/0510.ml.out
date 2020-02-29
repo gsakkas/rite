@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0510.ml", line 3, characters 67-71:
+This expression has type int but is here used with type 'a -> 'a -> 'b
+Relevant code: base
+------------------------------------------------------------------
+File "0510.ml", line 3, characters 67-71:
+Try replacing
+    base
+with
+    f
+of type
+    ('c -> 'c) -> ('c -> 'c) -> 'd -> 'c -> 'c
+within context
+    let pipe fs =
+    let f a x result n = (x (a n)) in let base = 0 in (List.fold_left f f  fs)
+    ;; 
+==============================

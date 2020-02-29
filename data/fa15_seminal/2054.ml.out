@@ -1,0 +1,72 @@
+------------------------------------------------------------------
+File "2054.ml", line 7, characters 57-58:
+This expression has type string list but is here used with type
+  string list list
+Relevant code: l
+------------------------------------------------------------------
+File "2054.ml", line 7, characters 35-49:
+Try replacing
+    List.fold_left
+with
+    sep
+of type
+    (string -> 'a list -> string) -> 'a -> 'a list -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sepConcat sep x) in
+             let base = h in let l = t in (sep f base  l)))
+==============================
+File "2054.ml", line 6, characters 23-32:
+Try replacing
+    sepConcat
+with
+    ^
+of type
+    string -> string -> string
+within context
+    let f a x = a ^ (^ sep x) in
+      let base = h in let l = t in (List.fold_left f base  l)
+==============================
+File "2054.ml", line 3, characters 8-10:
+Try replacing
+    sl
+with
+    sep
+of type
+    string list
+within context
+    let rec sepConcat sep sl = (match sep with 
+                                | [] -> ""
+                                | h :: t ->
+                                  (let f a x = a ^ (sepConcat sep x) in
+                                        let base = h in
+                                        let l = t in
+                                        (List.fold_left f base  l))) ;; 
+==============================
+File "2054.ml", line 6, characters 37-38:
+Try replacing
+    x
+with
+    t
+of type
+    string list
+within context
+    let f a x = a ^ (sepConcat sep t) in
+      let base = h in let l = t in (List.fold_left f base  l)
+==============================
+File "2054.ml", line 7, characters 50-51:
+Try replacing
+    f
+with
+    ^
+of type
+    string -> string -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sepConcat sep x) in
+             let base = h in let l = t in (List.fold_left ^ base  l)))
+==============================

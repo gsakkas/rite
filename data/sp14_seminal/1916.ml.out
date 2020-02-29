@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "1916.ml", line 31, characters 7-10:
+This expression is not a function, it cannot be applied
+Relevant code: "("
+------------------------------------------------------------------
+File "1916.ml", line 31, characters 7-10:
+Try replacing
+    "("
+with
+    "("; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+                              | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+                              | Average (e1, e2) ->
+                                "((" ^
+                                    ((exprToString e1) ^
+                                        ("+" ^ ((exprToString e2) ^ ")/2)")))
+                              | Times (e1, e2) ->
+                                (exprToString e1) ^ ("*" ^ (exprToString e2))
+                              | Thresh (e1, e2, e3, e4) ->
+                                "(" ^
+                                    ((exprToString e1) ^
+                                        ("<" ^
+                                            ((exprToString e2) ^
+                                                ("?" ^
+                                                    ((exprToString e3) ^
+                                                        (":" ^
+                                                            ((exprToString e4)
+                                                                ^ ")")))))))
+                              | Squared e -> "(" ^ ((exprToString e) ^ ")^(2)")
+                              | Flatten (e1, e2, e3) ->
+                                (exprToString "("; [[...]] e1) ^
+                                    ("/" ^
+                                        ((exprToString e2) ^
+                                            ("/" ^ ((exprToString e3) ^ ")"))))) ;; 
+==============================

@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0534.ml", line 21, characters 35-39:
+This expression has type 'a list but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+File "0534.ml", line 17, characters 10-164:
+Try replacing
+    fun (l1, l2) ->
+      (let f a x = a + x in
+          let base = [] in
+          let args = (failwith "to be implemented") in
+          let (_, res) = (List.fold_left f base  args) in res)
+with
+    [[...]]
+of type
+    'b
+==============================

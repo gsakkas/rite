@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "1221.ml", line 19, characters 71-72:
+This expression has type (int * int) list but is here used with type int list
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "1221.ml", line 20, characters 4-131:
+And modified the following location:
+File "1221.ml", line 19, characters 71-72:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    t
+with
+    t; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (x, y) :: t ->
+                                                    (x + y) / 10 ::
+                                                          (mod (x + y) 10) ::
+                                                          t;
+                                                          [[...]]) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1221.ml", line 20, characters 4-131:
+And modified the following location:
+File "1221.ml", line 19, characters 71-72:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    t
+with
+    a
+The actual replacement has type
+    int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (x, y) :: t ->
+                                                    (x + y) / 10 ::
+                                                          (mod (x + y) 10) ::
+                                                          a) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1221.ml", line 20, characters 4-131:
+And modified the following location:
+File "1221.ml", line 18, characters 4-223:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match x with 
+                 | (x, y) :: t ->
+                   (x + y) / 10 ::
+                         (mod (x + y) 10) ::
+                         t) in let base = [] in
+      let args = (List.rev ((List.combine l1 l2) @ (0, 0))) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

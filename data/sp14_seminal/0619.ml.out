@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0619.ml", line 18, characters 22-23:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "0619.ml", line 19, characters 11-17:
+And modified the following location:
+File "0619.ml", line 18, characters 9-42:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    c :: s
+If you ignore other surrounding code, try replacing
+    (List.length a) = (List.length x)
+with
+    [[...]]
+The actual replacement has type
+    bool
+within context
+    fun a
+      x ->
+        (let (x', x'') = x in
+            let (c, s) = a in
+            (if [[...]] then (c :: s; [[...]]) else
+                ((c + x') + x'') / 10, (mod ((c + x') + x'') 10) :: s))
+==============================

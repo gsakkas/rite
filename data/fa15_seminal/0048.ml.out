@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "0048.ml", line 9, characters 2-39:
+This expression has type int list but is here used with type int * int list
+Relevant code: if cout > 0 then cout :: res else res
+------------------------------------------------------------------
+File "0048.ml", line 2, characters 19-250:
+Try replacing
+    fun i l -> (let (cout, res) = (match l with 
+                                   | [] -> (0, [])
+                                   | h :: t ->
+                                     (let (cin, acc) = (mulByDigit i t) in
+                                           let sum = i * h + cin in
+                                           sum / 10,
+                                               (mod sum 10) ::
+                                                   acc)) in (if cout > 0 then
+                cout :: res
+                else
+                res))
+with
+    fun i l -> (let (cout, res) = (match l with 
+                                   | [] -> (0, [])
+                                   | h :: t ->
+                                     (let (cin, acc) = (mulByDigit i t) in
+                                           let sum = i * h + cin in
+                                           sum / 10,
+                                               (mod sum 10) ::
+                                                   acc)) in (if cout > 0 then
+                cout :: res
+                else
+                res)); [[...]]
+of type
+    int -> int list -> int * int list
+==============================

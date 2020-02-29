@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2722.ml", line 11, characters 4-90:
+This expression has type int but is here used with type
+  (int -> 'a) -> int -> int
+Relevant code: if n < 10
+    then c
+    else counter (c + 1) additivePersistence (sumList (digits n))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2722.ml", line 12, characters 9-10:
+And modified the following location:
+File "2722.ml", line 13, characters 9-16:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    c
+If you ignore other surrounding code, try replacing
+    counter
+with
+    counter; [[...]]
+The actual replacement has type
+    int -> (int -> 'b) -> int -> 'c
+within context
+    let rec additivePersistence n =
+    let rec counter c =
+      (if n < 10 then (c; [[...]]) else
+        ((counter; [[...]]) (c + 1) additivePersistence  (sumList (digits n))))
+      in
+      (counter 0 n)
+    ;; 
+==============================

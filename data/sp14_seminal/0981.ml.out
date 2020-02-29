@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "0981.ml", line 27, characters 24-31:
+This expression has type int but is here used with type int list
+Relevant code: initsum
+------------------------------------------------------------------
+File "0981.ml", line 27, characters 24-31:
+Try replacing
+    initsum
+with
+    initsum; [[...]]
+of type
+    int list
+within context
+    let (num1, num2) = x in
+      let initsum = (num1 + num2) + carry in
+      (if initsum > 9 then 1, listy @ [(mod initsum 10)] else
+          0, listy @ (initsum; [[...]]))
+==============================
+File "0981.ml", line 27, characters 22-23:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int list -> int -> int list
+within context
+    let (num1, num2) = x in
+      let initsum = (num1 + num2) + carry in
+      (if initsum > 9 then 1, listy @ [(mod initsum 10)] else
+          0, (listy @; [[...]] initsum))
+==============================
+File "0981.ml", line 24, characters 20-41:
+Try replacing
+    (num1 + num2) + carry
+with
+    (num1 + num2) + carry; [[...]]
+of type
+    'a
+within context
+    fun a
+      x ->
+        (let (carry, listy) = a in
+            let (num1, num2) = x in
+            let initsum = (num1 + num2) + carry; [[...]] in
+            (if initsum > 9 then 1, listy @ [(mod initsum 10)] else
+                0, listy @ initsum))
+==============================

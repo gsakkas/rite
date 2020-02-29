@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "0176.ml", line 3, characters 3-6:
+This expression is not a function, it cannot be applied
+Relevant code: "["
+------------------------------------------------------------------
+File "0176.ml", line 3, characters 3-6:
+Try replacing
+    "["
+with
+    "["; [[...]]
+of type
+    (string -> string -> string) ->
+    (('d -> 'e -> 'd) -> 'd -> 'e list -> 'd) ->
+    (string -> string -> string) -> string -> 'f list -> string
+within context
+    let stringOfList f l =
+    (( "["; [[...]] )
+          fun x acc -> x ^ ("; " ^ acc) List.fold_left ^ "" (List.map f l))
+      ^ "]"
+    ;; 
+==============================

@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "1133.ml", line 30, characters 9-35:
+This expression is not a function, it cannot be applied
+Relevant code: (1.0 /. (eval (e1, x, y)))
+------------------------------------------------------------------
+File "1133.ml", line 30, characters 9-35:
+Try replacing
+    (1.0 /. (eval (e1, x, y)))
+with
+    (1.0 /. (eval (e1, x, y))); [[...]]
+of type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | SquareRoot e' -> (sqrt (eval (e', x, y)))
+                              | DivideByOne (e1, e2, e3) ->
+                                (sin
+                                    (((1.0 /. (eval (e1, x, y))); [[...]])
+                                      (1.0 /. (eval (e2, x, y))) (1.0 /. (eval (e3, x, y)))))) ;; 
+==============================

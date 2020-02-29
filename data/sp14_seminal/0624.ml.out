@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "0624.ml", line 18, characters 22-23:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "0624.ml", line 19, characters 11-17:
+And modified the following location:
+File "0624.ml", line 18, characters 22-23:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    c :: s
+If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'd list
+within context
+    fun a
+      x ->
+        (let (x', x'') = x in
+            let (c, s) = a in
+            (if (List.length (a; [[...]])) = 5 then (c :: s; [[...]]) else
+                ((c + x') + x'') / 10, (mod ((c + x') + x'') 10) :: s))
+==============================
+Triaged the following locations:
+File "0624.ml", line 19, characters 11-17:
+And modified the following location:
+File "0624.ml", line 18, characters 10-21:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    c :: s
+If you ignore other surrounding code, try replacing
+    List.length
+with
+    List.length; [[...]]
+The actual replacement has type
+    int * int list -> int
+within context
+    fun a
+      x ->
+        (let (x', x'') = x in
+            let (c, s) = a in
+            (if ((List.length; [[...]]) a) = 5 then (c :: s; [[...]]) else
+                ((c + x') + x'') / 10, (mod ((c + x') + x'') 10) :: s))
+==============================

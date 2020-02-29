@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "0710.ml", line 31, characters 44-54:
+This expression has type float * float * expr but is here used with type
+  expr * float * float
+Relevant code: (x, y, e1)
+------------------------------------------------------------------
+File "0710.ml", line 31, characters 45-53:
+Try replacing
+    x, y, e1
+with
+    e1, y, x
+of type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin ((eval (e1, x, y)) *. pi))
+                              | Cosine e1 -> (cos ((eval (e1, x, y)) *. pi))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | ThreshRev (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) > (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Square e1 ->
+                                ((eval (e1, x, y)) *. (eval (e1, y, x)))) ;; 
+==============================

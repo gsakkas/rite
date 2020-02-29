@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "3284.ml", line 16, characters 54-56:
+This pattern matches values of type 'a list
+but is here used to match values of type 'b * 'c
+Relevant code: []
+------------------------------------------------------------------
+File "3284.ml", line 16, characters 54-56:
+Try replacing
+    []
+with
+    _
+of type
+    'd list * 'e list
+within context
+    let f a x = (match a with 
+                 | (list1, list2) -> (match list1, list2 with 
+                                      | _ ->
+                                        ([],
+                                              []))) in let base = [0], [0] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "2701.ml", line 6, characters 36-37:
+This expression has type 'a list but is here used with type int
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "2701.ml", line 6, characters 38-39:
+And modified the following location:
+File "2701.ml", line 6, characters 54-73:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    (digitsOfInt (additivePersistence h))
+with
+    (additivePersistence (digitsOfInt h))
+The actual replacement has type
+    'b list
+within context
+    let rec additivePersistence n = (match n with 
+                                     | [] -> []
+                                     | h :: t ->
+                                       (t +; [[...]]
+                                             (additivePersistence
+                                               (digitsOfInt h)))) ;; 
+==============================

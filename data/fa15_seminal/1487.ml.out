@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "1487.ml", line 5, characters 55-56:
+This expression is not a function, it cannot be applied
+Relevant code: f
+------------------------------------------------------------------
+Triaged the following locations:
+File "1487.ml", line 5, characters 61-62:
+And modified the following location:
+File "1487.ml", line 5, characters 55-56:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    b
+If you ignore other surrounding code, try replacing
+    f
+with
+    f; [[...]]
+The actual replacement has type
+    ('c -> 'c * bool) * 'c -> 'c -> 'c * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile (if f = true then b else ((f; [[...]]) b), (b; [[...]])))
+    ;; 
+==============================

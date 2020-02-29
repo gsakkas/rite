@@ -1,0 +1,72 @@
+------------------------------------------------------------------
+File "2773.ml", line 17, characters 19-29:
+This expression has type int -> 'a list -> 'b but is here used with type
+  'c list
+Relevant code: mulByDigit
+------------------------------------------------------------------
+File "2773.ml", line 17, characters 19-29:
+Try replacing
+    mulByDigit
+with
+    l
+of type
+    int list
+within context
+    (if i = 0 || i > 9 then [] else (match (List.rev l) with 
+                                     | [] -> []
+                                     | h :: t -> (match t with 
+                                                  | [] -> []
+                                                  | h' :: t' ->
+                                                    (if (List.length t') > 0 then
+                                                        l @
+                                                          [
+                                                              (carry h i) +
+                                                                (remainder h' i)
+                                                              ]
+                                                        else
+                                                        [(remainder h i)]))))
+==============================
+File "2773.ml", line 17, characters 19-29:
+Try replacing
+    mulByDigit
+with
+    t'
+of type
+    int list
+within context
+    (if i = 0 || i > 9 then [] else (match (List.rev l) with 
+                                     | [] -> []
+                                     | h :: t -> (match t with 
+                                                  | [] -> []
+                                                  | h' :: t' ->
+                                                    (if (List.length t') > 0 then
+                                                        t' @
+                                                          [
+                                                              (carry h i) +
+                                                                (remainder h' i)
+                                                              ]
+                                                        else
+                                                        [(remainder h i)]))))
+==============================
+File "2773.ml", line 17, characters 19-29:
+Try replacing
+    mulByDigit
+with
+    t
+of type
+    int list
+within context
+    (if i = 0 || i > 9 then [] else (match (List.rev l) with 
+                                     | [] -> []
+                                     | h :: t -> (match t with 
+                                                  | [] -> []
+                                                  | h' :: t' ->
+                                                    (if (List.length t') > 0 then
+                                                        t @
+                                                          [
+                                                              (carry h i) +
+                                                                (remainder h' i)
+                                                              ]
+                                                        else
+                                                        [(remainder h i)]))))
+==============================

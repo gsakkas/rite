@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0764.ml", line 17, characters 33-34:
+This expression has type int list -> int * int -> int list * int list
+but is here used with type int list -> int * int -> int list
+Relevant code: f
+------------------------------------------------------------------
+File "0764.ml", line 17, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int * int -> int list * int list) ->
+    (int * int) list -> ('a * 'b) list -> 'c * 'd
+within context
+    let f a x = let (x1, x2) = x in [0], x1 + x2 :: a in
+      let base = [0, 0] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

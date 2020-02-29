@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "2286.ml", line 5, characters 28-76:
+This expression has type ('a -> ('b * 'a) * bool) * ('b * 'a)
+but is here used with type ('a -> 'a * bool) * 'a
+Relevant code: ((fun x  -> let y = (f, x) in (y, (y != b))), b)
+------------------------------------------------------------------
+File "2286.ml", line 5, characters 48-54:
+Try replacing
+    f, x
+with
+    f
+of type
+    'c
+within context
+    fun (f, b) -> (wwhile ((fun x -> (let y = f in y, y != b)), b))
+==============================
+File "2286.ml", line 5, characters 21-27:
+Try replacing
+    wwhile
+with
+    !=
+of type
+    ('d -> ('e * 'd) * bool) * ('e * 'd) ->
+    ('d -> ('e * 'd) * bool) * ('e * 'd) -> bool
+within context
+    let fixpoint (f, b) = (!= ((fun x -> (let y = f, x in y, y != b)), b)) ;; 
+==============================
+File "2286.ml", line 5, characters 52-53:
+Try replacing
+    x
+with
+    !=
+of type
+    'f * ('g -> 'g -> bool)
+within context
+    (wwhile ((fun x -> (let y = f, != in y, y != b)), b))
+==============================
+File "2286.ml", line 5, characters 52-53:
+Try replacing
+    x
+with
+    not
+of type
+    'h * (bool -> bool)
+within context
+    (wwhile ((fun x -> (let y = f, not in y, y != b)), b))
+==============================
+File "2286.ml", line 5, characters 52-53:
+Try replacing
+    x
+with
+    f
+of type
+    'i * 'i
+within context
+    (wwhile ((fun x -> (let y = f, f in y, y != b)), b))
+==============================

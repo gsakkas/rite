@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "0374.ml", line 18, characters 31-42:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.length
+------------------------------------------------------------------
+File "0374.ml", line 18, characters 31-42:
+Try replacing
+    List.length
+with
+    List.length; [[...]]
+of type
+    ('g list -> 'h list -> ('g * 'h) list) -> int list * int list -> int
+within context
+    let (rem, acc) = a in
+      (if
+          (List.length acc) =
+            ((List.length; [[...]]) List.combine (padZero l1 l2)) - 1
+          then
+          (if rem = 1 then 0, [1 ; 0] @ acc else 0, acc)
+          else
+          (let (el1, el2) = x in
+              let new_sum = (rem + el1) + el2 in
+              let new_rem = (if new_sum > 9 then 1 else 0) in
+              let norm_sum = (if new_sum > 9 then new_sum - 10 else new_sum) in
+              new_rem, norm_sum :: acc))
+==============================

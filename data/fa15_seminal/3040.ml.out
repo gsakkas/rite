@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "3040.ml", line 27, characters 29-32:
+This expression is not a function, it cannot be applied
+Relevant code: [0]
+------------------------------------------------------------------
+File "3040.ml", line 27, characters 14-51:
+Try replacing
+    (bigAdd a) :: (( [0] ) (mulByDigit x l1))
+with
+    [[...]]
+of type
+    'e
+within context
+    fun l1
+      l2 ->
+        (let f a x = [[...]] in
+            let base = [] in let args = l2 in (List.fold_left f base  args))
+==============================

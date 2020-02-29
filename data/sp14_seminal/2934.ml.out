@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "2934.ml", line 21, characters 52-53:
+This expression has type (int * int) list but is here used with type int list
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "2934.ml", line 20, characters 12-148:
+And modified the following location:
+File "2934.ml", line 19, characters 10-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (f, g) :: t
+with
+    _
+The actual replacement has type
+    'a
+within context
+    fun a x -> (let carry = (match a with 
+                             | (f, g) -> f) in let digit = (match x with 
+                                                            | _ ->
+                                                              [[...other program...]]) in digit)
+==============================
+Triaged the following locations:
+File "2934.ml", line 20, characters 12-148:
+And modified the following location:
+File "2934.ml", line 18, characters 14-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    ('b * 'c) list
+within context
+    fun a x -> (let carry = (match a with 
+                             | (f, g) -> f) in let digit = (match (x; [[...]]) with 
+                                                            | (f, g) :: t ->
+                                                              [[...other program...]]) in digit)
+==============================

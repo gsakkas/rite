@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "0860.ml", line 10, characters 2-6:
+This expression is not a function, it cannot be applied
+Relevant code: this
+------------------------------------------------------------------
+File "0860.ml", line 10, characters 2-6:
+Try replacing
+    this
+with
+    this; [[...]]
+of type
+    ('d list -> 'd list) -> int -> int list
+within context
+    let rec digitsOfInt n = let this = (match n with 
+                                        | 0 -> []
+                                        | n ->
+                                          (if n < 0 then [] else
+                                              (mod n 10) ::
+                                                  (digitsOfInt
+                                                    (n /
+                                                        10)))) in ((this; [[...]])
+          listReverse n) ;; 
+==============================
+File "0860.ml", line 7, characters 4-100:
+Try replacing
+    (match n with 
+     | 0 -> []
+     | n -> (if n < 0 then [] else (mod n 10) :: (digitsOfInt (n / 10))))
+with
+    (match n with 
+     | 0 -> []
+     | n -> (if n < 0 then [] else (mod n 10) :: (digitsOfInt (n / 10)))); [[...]]
+of type
+    'g
+==============================

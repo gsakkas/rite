@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2960.ml", line 32, characters 44-47:
+This expression has type int but is here used with type int list
+Relevant code: res
+------------------------------------------------------------------
+File "2960.ml", line 32, characters 28-29:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int list -> int list -> int list
+within context
+    fun x ->
+      (let (place, res) = a in
+          (if (place <= 0) then place + 1, (res +; [[...]] (mulByDigit x res)) else
+              place + 1, (mulByDigit ((x * 10) * place) res)))
+==============================

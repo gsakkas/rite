@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "1545.ml", line 4, characters 49-50:
+This expression has type int -> int -> int but is here used with type int
+Relevant code: f
+------------------------------------------------------------------
+Triaged the following locations:
+File "1545.ml", line 4, characters 51-52:
+And modified the following location:
+File "1545.ml", line 4, characters 54-55:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    int -> 'a
+within context
+    fun xs -> (let f a x = a + x * x in let base = (match xs with 
+                                                    | [] -> 0
+                                                    | hd :: tl ->
+                                                      (f -; [[...]]
+                                                            ((1; [[...]])
+                                                              hd))) in (List.fold_left
+              f base  xs))
+==============================
+Triaged the following locations:
+File "1545.ml", line 4, characters 51-52:
+And modified the following location:
+File "1545.ml", line 4, characters 56-58:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    (1 hd)
+with
+    1
+The actual replacement has type
+    int
+within context
+    fun xs -> (let f a x = a + x * x in let base = (match xs with 
+                                                    | [] -> 0
+                                                    | hd :: tl ->
+                                                      (f
+                                                            -; [[...]]
+                                                            1)) in (List.fold_left
+              f base  xs))
+==============================

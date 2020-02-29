@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "1933.ml", line 8, characters 67-68:
+This expression has type 'a but is here used with type 'a * bool
+Relevant code: b
+------------------------------------------------------------------
+File "1933.ml", line 8, characters 58-59:
+Try replacing
+    b
+with
+    !=
+of type
+    'b -> 'b -> bool
+within context
+    (if b != (f b) then (let f b = b, true in (wwhile (f, (f !=)))) else b)
+==============================
+File "1933.ml", line 8, characters 58-59:
+Try replacing
+    b
+with
+    f
+of type
+    'c -> 'c * bool
+within context
+    (if b != (f b) then (let f b = b, true in (wwhile (f, (f f)))) else b)
+==============================
+File "1933.ml", line 8, characters 58-59:
+Try replacing
+    b
+with
+    wwhile
+of type
+    ('d -> 'd * bool) * 'd -> 'd
+within context
+    (if b != (f b) then (let f b = b, true in (wwhile (f, (f wwhile)))) else b)
+==============================

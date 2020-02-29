@@ -1,0 +1,61 @@
+------------------------------------------------------------------
+File "2402.ml", line 21, characters 35-39:
+This expression has type int * 'a list but is here used with type int list
+Relevant code: base
+------------------------------------------------------------------
+File "2402.ml", line 21, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> 'c * 'd -> int * 'b list
+within context
+    let f a x = let carry = (fst x) + (snd x) in (match a with 
+                                                  | h :: t ->
+                                                    (h + carry) / 10 ::
+                                                          (mod (h + carry) 10) :: t
+                                                  | _ ->
+                                                    [carry / 10 ; (mod carry 10)
+                                                          ]) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2402.ml", line 21, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list -> int * int -> int list) ->
+    int * 'e list -> ('f * 'g) list -> 'h * 'i
+within context
+    let f a x = let carry = (fst x) + (snd x) in (match a with 
+                                                  | h :: t ->
+                                                    (h + carry) / 10 ::
+                                                          (mod (h + carry) 10) :: t
+                                                  | _ ->
+                                                    [carry / 10 ; (mod carry 10)
+                                                          ]) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2402.ml", line 14, characters 10-177:
+Try replacing
+    fun a x -> (let carry = (fst x) + (snd x) in (match a with 
+                                                  | h :: t ->
+                                                    (h + carry) / 10 ::
+                                                          (mod (h + carry) 10) :: t
+                                                  | _ ->
+                                                    [carry / 10 ; (mod carry 10)]))
+with
+    fun a x -> (let carry = (fst x) + (snd x) in (match a with 
+                                                  | h :: t ->
+                                                    (h + carry) / 10 ::
+                                                          (mod (h + carry) 10) :: t
+                                                  | _ ->
+                                                    [carry / 10 ; (mod carry 10)
+                                                          ])); [[...]]
+of type
+    'j
+==============================

@@ -1,0 +1,76 @@
+------------------------------------------------------------------
+File "1946.ml", line 11, characters 58-64:
+This expression has type (('a -> 'a) -> ('a -> 'a) * bool) * int
+but is here used with type (('a -> 'a) -> ('a -> 'a) * bool) * ('a -> 'a)
+Relevant code: (f, x)
+------------------------------------------------------------------
+File "1946.ml", line 11, characters 21-64:
+Try replacing
+    let f x = f, (f b) = b in (wwhile (f, x))
+with
+    (wwhile (f, x))
+of type
+    int
+within context
+    let fixpoint (f, b) = (wwhile (f, x)) ;; 
+==============================
+File "1946.ml", line 11, characters 51-57:
+Try replacing
+    wwhile
+with
+    f
+of type
+    ('b -> ('c -> 'c) * bool) * int -> ('c -> 'c) * bool
+within context
+    let fixpoint (f, b) = let f x = f, (f b) = b in (f (f, x)) ;; 
+==============================
+File "1946.ml", line 11, characters 51-57:
+Try replacing
+    wwhile
+with
+    <
+of type
+    ('d -> ('e -> 'e) * bool) * int -> ('d -> ('e -> 'e) * bool) * int -> bool
+within context
+    let fixpoint (f, b) = let f x = f, (f b) = b in (< (f, x)) ;; 
+==============================
+File "1946.ml", line 11, characters 51-57:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('f -> ('g -> 'g) * bool) * int -> ('f -> ('g -> 'g) * bool) * int -> bool
+within context
+    let fixpoint (f, b) = let f x = f, (f b) = b in (= (f, x)) ;; 
+==============================
+File "1946.ml", line 11, characters 32-33:
+Try replacing
+    f
+with
+    x
+of type
+    'h * bool
+within context
+    let fixpoint (f, b) = let f x = x, (f b) = b in (wwhile (f, x)) ;; 
+==============================
+File "1946.ml", line 11, characters 32-33:
+Try replacing
+    f
+with
+    b
+of type
+    int * bool
+within context
+    let fixpoint (f, b) = let f x = b, (f b) = b in (wwhile (f, x)) ;; 
+==============================
+File "1946.ml", line 11, characters 59-60:
+Try replacing
+    f
+with
+    b
+of type
+    (int -> int * bool) * int
+within context
+    let fixpoint (f, b) = let f x = f, (f b) = b in (wwhile (b, x)) ;; 
+==============================

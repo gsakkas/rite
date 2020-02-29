@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "0373.ml", line 45, characters 18-20:
+This expression has type float but is here used with type expr
+Relevant code: 0.
+------------------------------------------------------------------
+File "0373.ml", line 35, characters 10-457:
+Try replacing
+    (match r with 
+     | 3 -> (buildAverage ((build (rand, d - 1)), (build (rand, d - 1))))
+     | 4 -> (buildTimes ((build (rand, d - 1)), (build (rand, d - 1))))
+     | 5 ->
+       (buildThresh
+           ((build (rand, d - 1)),
+               (build (rand, d - 1)), (build (rand, d - 1)), (build (rand, d - 1))))
+     | 6 -> 0.
+     | 7 -> 0.)
+with
+    [[...]]
+of type
+    expr
+==============================

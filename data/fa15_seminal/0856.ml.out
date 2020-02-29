@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "0856.ml", line 34, characters 28-43:
+This expression has type int list * int list but is here used with type
+  'a list
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "0856.ml", line 34, characters 19-27:
+Try replacing
+    (add (List.rev (padZero l1 l2)))
+with
+    (List.rev (add (padZero l1 l2)))
+of type
+    int list
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x =
+        let (fst, sec) = x in
+          let (fst', sec') =
+          (if fst + sec > 9 then (fst + sec) - 10, 1 else fst + sec, 0)
+          in
+          let (carry, digits) = a in
+          let (carry', digits') =
+          (if carry + fst' > 9 then 1, digits @ [fst' - 9] else
+            (if sec' = 1 then 1, digits @ [fst' + carry] else
+              0, digits @ [fst' + carry]))
+          in
+          carry', digits'
+        in
+        let base = 0, [] in
+        let args = (List.rev (List.combine l1 l2)) @ [0, 0] in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (List.rev (add (padZero l1 l2))))
+    ;; 
+==============================

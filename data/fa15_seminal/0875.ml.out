@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "0875.ml", line 9, characters 32-50:
+This expression has type (string -> string list -> string) * 'a
+but is here used with type 'b -> 'c
+Relevant code: (sepConcat, (f l))
+------------------------------------------------------------------
+File "0875.ml", line 9, characters 32-50:
+Try replacing
+    (List.map (sepConcat, (f l)))
+with
+    (List.map sepConcat (f l))
+of type
+    (string list -> string) list
+within context
+    let stringOfList f l = (List.map sepConcat (f l)) ;; 
+==============================
+File "0875.ml", line 9, characters 23-31:
+Try replacing
+    List.map
+with
+    f
+of type
+    (string -> string list -> string) * 'd -> 'd
+within context
+    let stringOfList f l = (f (sepConcat, (f l))) ;; 
+==============================
+File "0875.ml", line 9, characters 23-31:
+Try replacing
+    List.map
+with
+    l
+of type
+    (string -> string list -> string) * 'e -> 'f
+within context
+    let stringOfList f l = (l (sepConcat, (f l))) ;; 
+==============================

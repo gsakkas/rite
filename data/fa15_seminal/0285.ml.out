@@ -1,0 +1,56 @@
+------------------------------------------------------------------
+File "0285.ml", line 8, characters 42-43:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "0285.ml", line 9, characters 7-49:
+And modified the following location:
+File "0285.ml", line 8, characters 44-45:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int -> 'b list -> int list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (cloneHelper 0 (-1 * diff - 1)  (0 @; [[...]] l1)) else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0285.ml", line 9, characters 7-49:
+And modified the following location:
+File "0285.ml", line 8, characters 42-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    int list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (cloneHelper 0 (-1 * diff - 1)  ((0; [[...]]) @ l1)) else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0285.ml", line 8, characters 7-49:
+And modified the following location:
+File "0285.ml", line 9, characters 45-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    (int list -> int list) -> 'c list -> unit
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then [[...other program...]] else
+          (if diff > 0 then ((cloneHelper 0 diff) @; [[...]] l2)))
+    ;; 
+==============================

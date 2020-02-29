@@ -1,0 +1,72 @@
+------------------------------------------------------------------
+File "3180.ml", line 3, characters 60-61:
+This expression has type ('a -> 'b) -> 'c -> ('c -> 'a) -> 'b
+but is here used with type ('a -> 'b) -> 'c -> 'a -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "3180.ml", line 3, characters 10-13:
+Try replacing
+    fun x f -> (a (f x))
+with
+    fun f x -> (a (f x))
+of type
+    ('d -> 'e) -> 'd -> 'f
+within context
+    let pipe fs =
+    let f a f x = (a (f x)) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "3180.ml", line 3, characters 10-13:
+Try replacing
+    fun a x f -> (a (f x))
+with
+    fun a f x -> (a (f x))
+of type
+    ('g -> 'h) -> ('i -> 'g) -> 'i -> 'h
+within context
+    let pipe fs =
+    let f a f x = (a (f x)) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "3180.ml", line 3, characters 45-59:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('j -> 'j) -> 'k -> ('k -> 'j) -> 'j) ->
+    ('j -> 'j) -> 'k -> ('k -> 'j) -> 'j
+within context
+    let pipe fs = let f a x f = (a (f x)) in let base x = x in (base f base  fs) ;; 
+==============================
+File "3180.ml", line 3, characters 45-59:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    (('l -> 'm) -> 'n -> ('n -> 'l) -> 'm) ->
+    ('o -> 'o) -> (('o -> 'o) -> 'l -> 'm) -> 'n -> ('n -> 'l) -> 'm
+within context
+    let pipe fs = let f a x f = (a (f x)) in let base x = x in (f f base  fs) ;; 
+==============================
+File "3180.ml", line 3, characters 19-20:
+Try replacing
+    f
+with
+    a
+of type
+    'p -> 'p
+within context
+    fun a x f -> (a (a x))
+==============================
+File "3180.ml", line 3, characters 19-20:
+Try replacing
+    f
+with
+    List.fold_left
+of type
+    ('q -> 'r -> 'q) -> 'q -> 'r list -> 'q
+within context
+    fun a x f -> (a (List.fold_left x))
+==============================

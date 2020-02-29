@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2477.ml", line 32, characters 48-68:
+This expression has type int but is here used with type int list
+Relevant code: ((h + b) + c) mod 10
+------------------------------------------------------------------
+File "2477.ml", line 32, characters 26-46:
+Try replacing
+    [((h + b) + c) / 10]
+with
+    [((h + b) + c) / 10]; [[...]]
+of type
+    int
+within context
+    (match sum with 
+     | [] ->
+       (if (carry + b) + c < 10 then 0, [carry ; (carry + b) + c] else
+           carry + 1, [carry + 1 ; (mod ((carry + b) + c) 10)])
+     | h :: t ->
+       (if (b + c) + h < 10 then 0, [0] @ ([(b + c) + h] @ t) else
+           carry + 1, [[((h + b) + c) / 10]; [[...]] ; (mod ((h + b) + c) 10)] @ t))
+==============================

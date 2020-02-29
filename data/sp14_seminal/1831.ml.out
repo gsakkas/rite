@@ -1,0 +1,83 @@
+------------------------------------------------------------------
+File "1831.ml", line 5, characters 61-67:
+This expression has type 'a list -> 'a list -> 'a list
+but is here used with type 'b list
+Relevant code: append
+------------------------------------------------------------------
+Triaged the following locations:
+File "1831.ml", line 5, characters 49-60:
+And modified the following location:
+File "1831.ml", line 5, characters 69-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    listReverse
+If you ignore other surrounding code, try replacing
+    t
+with
+    append
+The actual replacement has type
+    'c list -> 'c list -> 'c list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: [] -> l
+                             | h :: t ->
+                               ((listReverse; [[...]]) append (append [h]))) ;; 
+==============================
+Triaged the following locations:
+File "1831.ml", line 5, characters 49-60:
+And modified the following location:
+File "1831.ml", line 5, characters 69-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    listReverse
+If you ignore other surrounding code, try replacing
+    t
+with
+    listReverse
+The actual replacement has type
+    'd list -> 'd list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: [] -> l
+                             | h :: t ->
+                               ((listReverse; [[...]])
+                                   append (listReverse [h]))) ;; 
+==============================
+Triaged the following locations:
+File "1831.ml", line 5, characters 49-60:
+And modified the following location:
+File "1831.ml", line 5, characters 69-70:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    listReverse
+If you ignore other surrounding code, try replacing
+    t
+with
+    t; [[...]]
+The actual replacement has type
+    'e list -> 'f
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: [] -> l
+                             | h :: t ->
+                               ((listReverse; [[...]])
+                                   append ((t; [[...]]) [h]))) ;; 
+==============================
+Triaged the following locations:
+File "1831.ml", line 5, characters 49-60:
+And modified the following location:
+File "1831.ml", line 5, characters 71-74:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    listReverse
+If you ignore other surrounding code, try replacing
+    (t [h])
+with
+    t
+The actual replacement has type
+    'g list
+within context
+    let rec listReverse l = (match l with 
+                             | [] -> []
+                             | h :: [] -> l
+                             | h :: t -> ((listReverse; [[...]]) append t)) ;; 
+==============================

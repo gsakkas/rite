@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2376.ml", line 9, characters 30-60:
+This expression has type string but is here used with type string list
+Relevant code: (sepConcat ";" (List.map f l))
+------------------------------------------------------------------
+File "2376.ml", line 9, characters 23-60:
+Try replacing
+    "[" :: (sepConcat ";" (List.map f l))
+with
+    "[", (sepConcat ";" (List.map f l))
+of type
+    string * string
+within context
+    let stringOfList f l = "[", (sepConcat ";" (List.map f l)) ;; 
+==============================

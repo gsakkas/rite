@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "0917.ml", line 17, characters 40-44:
+This expression has type 'a list -> ('b * 'a) list but is here used with type
+  'c list
+Relevant code: args
+------------------------------------------------------------------
+File "0917.ml", line 17, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('d -> 'e -> 'f) -> 'g -> ('h list -> ('i * 'h) list) -> 'j * 'k
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemeneted") in
+      let args = (List.combine l1) in let (_, res) = (f f base  args) in res
+==============================
+File "0917.ml", line 17, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    ('l -> 'm -> 'n) -> 'o -> ('p list -> ('q * 'p) list) -> 'r * 's
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemeneted") in
+      let args = (List.combine l1) in let (_, res) = (base f base  args) in res
+==============================
+File "0917.ml", line 16, characters 15-27:
+Try replacing
+    List.combine
+with
+    base
+of type
+    't -> 'u
+within context
+    fun (l1, l2) ->
+      (let f a x = (failwith "to be implemented") in
+          let base = (failwith "to be implemeneted") in
+          let args = (base l1) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "0917.ml", line 17, characters 40-44:
+Try replacing
+    args
+with
+    base
+of type
+    'v list
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemeneted") in
+      let args = (List.combine l1) in
+      let (_, res) = (List.fold_left f base  base) in res
+==============================

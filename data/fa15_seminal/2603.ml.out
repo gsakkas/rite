@@ -1,0 +1,64 @@
+------------------------------------------------------------------
+File "2603.ml", line 5, characters 23-25:
+This pattern matches values of type 'a list
+but is here used to match values of type int
+Relevant code: []
+------------------------------------------------------------------
+Triaged the following locations:
+File "2603.ml", line 5, characters 29-31:
+File "2603.ml", line 5, characters 42-61:
+And modified the following location:
+File "2603.ml", line 5, characters 14-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    n
+with
+    n; [[...]]
+The actual replacement has type
+    'b list
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else (match (n; [[...]]) with 
+                                                    | [] -> [[...other program...]]
+                                                    | h :: t ->
+                                                      [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2603.ml", line 5, characters 29-31:
+File "2603.ml", line 5, characters 34-38:
+File "2603.ml", line 5, characters 42-61:
+And modified the following location:
+File "2603.ml", line 5, characters 23-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    int
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else (match n with 
+                                                    | _ -> [[...other program...]]
+                                                    |
+                                                      [[...other pattern...]]
+                                                      ->
+                                                      [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2603.ml", line 5, characters 23-25:
+File "2603.ml", line 5, characters 29-31:
+File "2603.ml", line 5, characters 42-61:
+And modified the following location:
+File "2603.ml", line 5, characters 34-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    int
+within context
+    let rec digitsOfInt n = (if n < 0 then [] else (match n with 
+                                                    |
+                                                      [[...other pattern...]]
+                                                      ->
+                                                      [[...other program...]]
+                                                    | _ ->
+                                                      [[...other program...]])) ;; 
+==============================

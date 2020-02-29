@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "1127.ml", line 21, characters 25-59:
+This expression has type int but is here used with type int list
+Relevant code: ((((fst x) + (snd x)) + a) mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1127.ml", line 22, characters 15-61:
+And modified the following location:
+File "1127.ml", line 21, characters 25-59:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod (((fst x) + (snd x)) + a) 10)
+with
+    (mod (((fst x) + (snd x)) + a) 10); [[...]]
+The actual replacement has type
+    int list
+within context
+    let f a x = (match a with 
+                 | (a, b) ->
+                   (if ((fst x) + (snd x)) + a > 9 then
+                       1, a :: (mod (((fst x) + (snd x)) + a) 10); [[...]]
+                       else
+                       [[...other program...]])
+                 | _ ->
+                   (if (fst x) + (snd x) > 9 then 1, [(mod ((fst x) + (snd x)) 10)]
+                       else
+                       0,
+                         [(mod ((fst x) + (snd x)) 10)
+                             ])) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "1127.ml", line 21, characters 15-61:
+And modified the following location:
+File "1127.ml", line 22, characters 25-59:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mod (((fst x) + (snd x)) + a) 10)
+with
+    (mod (((fst x) + (snd x)) + a) 10); [[...]]
+The actual replacement has type
+    int list
+within context
+    let f a x = (match a with 
+                 | (a, b) ->
+                   (if ((fst x) + (snd x)) + a > 9 then [[...other program...]] else
+                       0, a :: (mod (((fst x) + (snd x)) + a) 10); [[...]])
+                 | _ ->
+                   (if (fst x) + (snd x) > 9 then 1, [(mod ((fst x) + (snd x)) 10)]
+                       else
+                       0,
+                         [(mod ((fst x) + (snd x)) 10)
+                             ])) in let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

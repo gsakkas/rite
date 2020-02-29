@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "2972.ml", line 8, characters 50-51:
+This expression has type 'a but is here used with type 'a list
+Relevant code: h
+------------------------------------------------------------------
+File "2972.ml", line 8, characters 43-44:
+Try replacing
+    t
+with
+    h
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = x ^ a in
+             let base = (if ((List.length t) <> 0) then "" else sep) in
+             let l = (if ((List.length t) <> 0) then h else h) in
+             (List.fold_left f base  l)))
+==============================
+File "2972.ml", line 8, characters 50-51:
+Try replacing
+    h
+with
+    t
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = x ^ a in
+             let base = (if ((List.length t) <> 0) then "" else sep) in
+             let l = (if ((List.length t) <> 0) then t else t) in
+             (List.fold_left f base  l)))
+==============================

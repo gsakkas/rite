@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "0364.ml", line 23, characters 11-22:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: buildCosine
+------------------------------------------------------------------
+File "0364.ml", line 23, characters 11-22:
+Try replacing
+    buildCosine
+with
+    buildCosine; [[...]]
+of type
+    ((int * int -> int) * int -> unit -> expr) ->
+    (int * int -> int) * int -> unit -> expr
+within context
+    fun (rand, depth) -> (let r = (rand (0, depth)) in (match depth with 
+                                                        | 0 ->
+                                                          (if (mod r 2) = 0 then
+                                                              buildX
+                                                              else
+                                                              buildY)
+                                                        | d ->
+                                                          (if r = 0 then
+                                                              ((buildCosine;
+                                                                  [[...]])
+                                                                build (rand, d - 1))
+                                                              else
+                                                              (build
+                                                                (rand, d - 1)))))
+==============================

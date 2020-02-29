@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0882.ml", line 13, characters 18-40:
+This expression has type 'a * string but is here used with type 'b -> 'c
+Relevant code: (f, (sepConcat ";" l))
+------------------------------------------------------------------
+File "0882.ml", line 13, characters 9-17:
+Try replacing
+    List.map
+with
+    List.map; [[...]]
+of type
+    'd * string -> string
+within context
+    let stringOfList f l = (match l with 
+                            | [] -> "[]"
+                            | x :: [] -> "[" ^ (x ^ "]")
+                            | l -> ((List.map; [[...]]) (f, (sepConcat ";" l)))) ;; 
+==============================

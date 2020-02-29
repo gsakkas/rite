@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "0245.ml", line 9, characters 19-26:
+This expression has type 'a list * 'b but is here used with type
+  unit * unit list
+Relevant code: ([], l)
+------------------------------------------------------------------
+File "0245.ml", line 8, characters 33-38:
+Try replacing
+    seen'
+with
+    t
+of type
+    unit list * unit list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem h t) then h) in
+             let rest' = t in (helper (t, rest'))))
+==============================
+File "0245.ml", line 8, characters 33-38:
+Try replacing
+    seen'
+with
+    l
+of type
+    unit list * unit list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem h t) then h) in
+             let rest' = t in (helper (l, rest'))))
+==============================
+File "0245.ml", line 8, characters 33-38:
+Try replacing
+    seen'
+with
+    rest'
+of type
+    unit list * unit list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem h t) then h) in
+             let rest' = t in (helper (rest', rest'))))
+==============================
+File "0245.ml", line 8, characters 33-38:
+Try replacing
+    seen'
+with
+    seen
+of type
+    'c * unit list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (if (List.mem h t) then h) in
+             let rest' = t in (helper (seen, rest'))))
+==============================

@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "1225.ml", line 23, characters 48-54:
+This expression has type int * int but is here used with type ('a * 'b) list
+Relevant code: (0, 0)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1225.ml", line 24, characters 4-51:
+And modified the following location:
+File "1225.ml", line 23, characters 48-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0, 0
+with
+    0, 0; [[...]]
+The actual replacement has type
+    ('c * 'd) list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (w, y) :: t ->
+                                      (w + y) / 10 :: (mod (w + y) 10) :: a
+                                    | _ ->
+                                      a) in let base = [] in
+        let args = (List.rev ((List.combine l1 l2) @ (0, 0; [[...]]))) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1225.ml", line 24, characters 4-51:
+And modified the following location:
+File "1225.ml", line 23, characters 46-47:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    ('e * 'f) list -> int * int -> 'g list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (w, y) :: t ->
+                                      (w + y) / 10 :: (mod (w + y) 10) :: a
+                                    | _ ->
+                                      a) in let base = [] in
+        let args = (List.rev ((List.combine l1 l2) @; [[...]] 0, 0)) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1225.ml", line 24, characters 4-51:
+And modified the following location:
+File "1225.ml", line 23, characters 4-110:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (List.rev ((List.combine l1 l2) @ (0, 0))) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'h
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (w, y) :: t ->
+                                      (w + y) / 10 :: (mod (w + y) 10) :: a
+                                    | _ ->
+                                      a) in let base = [] in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================

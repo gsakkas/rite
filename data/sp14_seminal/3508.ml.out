@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "3508.ml", line 6, characters 30-37:
+This expression is not a function, it cannot be applied
+Relevant code: (not f)
+------------------------------------------------------------------
+File "3508.ml", line 6, characters 31-34:
+Try replacing
+    not
+with
+    wwhile
+of type
+    (('e -> 'e -> 'e * bool) -> ('e -> 'e -> 'e * bool) * bool) *
+    ('e -> 'e -> 'e * bool) -> 'e -> 'e -> 'e * bool
+within context
+    fun (f, b) -> (wwhile (((wwhile f) b), b))
+==============================

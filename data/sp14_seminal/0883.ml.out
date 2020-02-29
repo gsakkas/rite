@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0883.ml", line 3, characters 18-26:
+This expression has type 'a list but is here used with type string
+Relevant code: (2 :: x)
+------------------------------------------------------------------
+File "0883.ml", line 3, characters 16-17:
+Try replacing
+    ^
+with
+    ^; [[...]]
+of type
+    'b -> int list -> 'c
+within context
+    fun xs ->
+      (let f a x = (a ^; [[...]] 2 :: x) in
+          let base = 0 in (List.fold_left f base  xs))
+==============================

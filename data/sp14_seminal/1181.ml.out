@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1181.ml", line 9, characters 33-60:
+This expression has type int list but is here used with type unit
+Relevant code: clone (length1 - length2) 0
+------------------------------------------------------------------
+File "1181.ml", line 9, characters 7-60:
+Try replacing
+    (if length2 < length1 then (clone (length1 - length2) 0))
+with
+    [[...]]
+of type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let length1 = (List.fold_left (fun acc x -> acc + 1) 0  l1) in
+            let length2 = (List.fold_left (fun acc x -> acc + 1) 0  l2) in
+            (if length1 < length2 then (clone (length2 - length1) 0) else [[...]]))
+==============================

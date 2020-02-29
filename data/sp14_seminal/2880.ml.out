@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "2880.ml", line 19, characters 23-63:
+This expression has type float but is here used with type int
+Relevant code: ((eval (e1, x, y)) *. (eval (e2, x, y)))
+------------------------------------------------------------------
+File "2880.ml", line 19, characters 64-65:
+Try replacing
+    /
+with
+    /; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) *. (eval (e2, x, y)))
+                                      /; [[...]] 2)) ;; 
+==============================
+Triaged the following locations:
+File "2880.ml", line 17, characters 15-44:
+File "2880.ml", line 18, characters 17-46:
+And modified the following location:
+File "2880.ml", line 19, characters 42-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) *.; [[...]] (eval (e2, x, y)))
+                                    / 2) ;; 
+==============================
+Triaged the following locations:
+File "2880.ml", line 17, characters 15-44:
+File "2880.ml", line 18, characters 17-46:
+And modified the following location:
+File "2880.ml", line 19, characters 42-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    /
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> [[...other program...]]
+                              | Cosine e1 -> [[...other program...]]
+                              | Average (e1, e2) ->
+                                ((eval (e1, x, y)) / (eval (e2, x, y))) / 2) ;; 
+==============================

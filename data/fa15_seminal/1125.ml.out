@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1125.ml", line 22, characters 63-64:
+This expression has type int list but is here used with type int
+Relevant code: t
+------------------------------------------------------------------
+File "1125.ml", line 22, characters 63-64:
+Try replacing
+    t
+with
+    a
+of type
+    int
+within context
+    (if ((fst x) + (snd x)) + a > 9 then
+      1, a :: (mod (((fst x) + (snd x)) + a) 10) :: t
+      else
+      0, a :: (mod (((fst x) + (snd x)) + a) 10) :: a :: t)
+==============================

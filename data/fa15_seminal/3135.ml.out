@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "3135.ml", line 35, characters 11-17:
+This expression has type float but is here used with type int
+Relevant code: (-1.0)
+------------------------------------------------------------------
+File "3135.ml", line 35, characters 18-19:
+Try replacing
+    /
+with
+    /; [[...]]
+of type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e1 -> (sin (pi *. (eval (e1, x, y))))
+                              | Cosine e1 -> (cos (pi *. (eval (e1, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | OneOver e ->
+                                (if (eval (e, x, y)) > 1.0 then
+                                    (1.0 /. (eval (e, x, y)))
+                                    else
+                                    (1.0 /. 3.0))
+                              | OneOverAvg (e1, e2, e3) ->
+                                (if
+                                    (((eval (e1, x, y)) +. (eval (e2, x, y)))
+                                          +. (eval (e3, x, y)))
+                                      > 1.0
+                                    then
+                                    (1.0 /.
+                                        (((eval (e1, x, y)) +. (eval (e2, x, y)))
+                                            +. (eval (e3, x, y))))
+                                    else
+                                    (-1.0 /; [[...]] 3.0))) ;; 
+==============================

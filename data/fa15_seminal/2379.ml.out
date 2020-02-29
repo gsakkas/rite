@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "2379.ml", line 25, characters 12-22:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: matchHeads
+------------------------------------------------------------------
+File "2379.ml", line 25, characters 12-22:
+Try replacing
+    matchHeads
+with
+    =
+of type
+    char list -> char list -> bool
+within context
+    let palindrome w = (match (explode w) with 
+                        | [] -> true
+                        | h :: t ->
+                          (=
+                              (listReverse (explode w)) (listReverse (explode w)))) ;; 
+==============================

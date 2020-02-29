@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2891.ml", line 15, characters 14-20:
+This expression is not a function, it cannot be applied
+Relevant code: "pi* "
+------------------------------------------------------------------
+File "2891.ml", line 15, characters 14-20:
+Try replacing
+    "pi* "
+with
+    "pi* "; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> "x"
+                              | VarY -> "y"
+                              | Sine s -> (exprToString "pi* "; [[...]] s)) ;; 
+==============================

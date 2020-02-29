@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "1896.ml", line 9, characters 4-98:
+This expression has type int list * int list but is here used with type unit
+Relevant code: ((List.append (clone 0 (lenl1 - lenl2)) l1),
+      (List.append (clone 0 (lenl1 - lenl2)) l2))
+------------------------------------------------------------------
+File "1896.ml", line 9, characters 4-98:
+Try replacing
+    (List.append (clone 0 (lenl1 - lenl2)) l1),
+      (List.append (clone 0 (lenl1 - lenl2)) l2)
+with
+    (List.append (clone 0 (lenl1 - lenl2)) l1),
+      (List.append (clone 0 (lenl1 - lenl2)) l2);
+    [[...]]
+of type
+    unit
+within context
+    fun l1
+      l2 ->
+        (let lenl1 = (List.length l1) in
+            let lenl2 = (List.length l2) in
+            (if lenl1 < lenl2 then
+                ((List.append (clone 0 (lenl1 - lenl2)) l1),
+                    (List.append (clone 0 (lenl1 - lenl2)) l2);
+                  [[...]])))
+==============================

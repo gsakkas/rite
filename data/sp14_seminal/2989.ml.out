@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "2989.ml", line 3, characters 43-50:
+This expression has type 'a list -> 'a list but is here used with type
+  'b list
+Relevant code: List.tl
+------------------------------------------------------------------
+File "2989.ml", line 3, characters 43-50:
+Try replacing
+    (listReverse List.tl l)
+with
+    (listReverse l)
+of type
+    'c list
+within context
+    let rec listReverse l =
+    (if (List.length l) > 0 then (listReverse l) @ [(List.hd l)] else [])
+    ;; 
+==============================
+File "2989.ml", line 3, characters 31-50:
+Try replacing
+    (listReverse List.tl l)
+with
+    (listReverse (List.tl l))
+of type
+    'd list
+within context
+    let rec listReverse l =
+    (if (List.length l) > 0 then (listReverse (List.tl l)) @ [(List.hd l)] else [])
+    ;; 
+==============================

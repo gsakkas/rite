@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "3110.ml", line 7, characters 23-26:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: not
+------------------------------------------------------------------
+File "3110.ml", line 7, characters 23-26:
+Try replacing
+    not
+with
+    not; [[...]]
+of type
+    ('o -> 'o list -> bool) -> 'p * 'p list -> bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if ((not; [[...]]) List.mem (h, seen)) then
+                                   h :: seen
+                                   else
+                                   seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================

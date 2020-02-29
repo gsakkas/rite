@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "2555.ml", line 7, characters 35-37:
+This expression has type 'a list but is here used with type string
+Relevant code: l1
+------------------------------------------------------------------
+Triaged the following locations:
+File "2555.ml", line 8, characters 7-56:
+And modified the following location:
+File "2555.ml", line 7, characters 35-50:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1 ^ (pad ^ l2)
+with
+    [[...]]
+The actual replacement has type
+    'b
+within context
+    let padZero l1 l2 =
+    let sizDif = (List.length l1) - (List.length l2) in
+      (if sizDif > 0 then (let pad = (clone 0 sizDif) in [[...]]) else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "2555.ml", line 7, characters 7-50:
+And modified the following location:
+File "2555.ml", line 8, characters 40-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (pad ^ l1) ^ l2
+with
+    [[...]]
+The actual replacement has type
+    'c
+within context
+    let padZero l1 l2 =
+    let sizDif = (List.length l1) - (List.length l2) in
+      (if sizDif > 0 then [[...other program...]] else
+          (let pad = (clone 0 (( ~- ) sizDif)) in [[...]]))
+    ;; 
+==============================

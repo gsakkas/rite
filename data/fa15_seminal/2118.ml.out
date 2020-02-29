@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "2118.ml", line 9, characters 42-45:
+This expression is not a function, it cannot be applied
+Relevant code: ";"
+------------------------------------------------------------------
+Triaged the following locations:
+File "2118.ml", line 9, characters 31-40:
+And modified the following location:
+File "2118.ml", line 9, characters 42-45:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sepConcat
+If you ignore other surrounding code, try replacing
+    ";"
+with
+    ";"; [[...]]
+The actual replacement has type
+    'a list -> 'b
+within context
+    fun f
+      l -> "[" ^ (((sepConcat; [[...]]) (( ";"; [[...]] ) (List.map f l))) ^ "]")
+==============================
+Triaged the following locations:
+File "2118.ml", line 9, characters 31-40:
+And modified the following location:
+File "2118.ml", line 9, characters 46-60:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sepConcat
+If you ignore other surrounding code, try replacing
+    (( ";" ) (List.map f l))
+with
+    ";"
+The actual replacement has type
+    string
+within context
+    fun f l -> "[" ^ (((sepConcat; [[...]]) ";") ^ "]")
+==============================

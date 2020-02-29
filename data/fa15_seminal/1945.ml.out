@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "1945.ml", line 23, characters 52-55:
+This expression has type int list but is here used with type int
+Relevant code: res
+------------------------------------------------------------------
+File "1945.ml", line 23, characters 56-57:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int list -> int -> 'a
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (carry, res) = a in
+        ((x1 + x2) + carry) / 10, (mod ((x1 + x2) + carry) 10) :: res
+      in
+      let base = 0, [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (carry, res) = (List.fold_left f base  args) in (res +; [[...]] carry)
+==============================

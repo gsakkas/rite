@@ -1,0 +1,83 @@
+------------------------------------------------------------------
+File "2463.ml", line 3, characters 64-65:
+This expression has type ('a -> 'b) -> 'c -> 'a -> 'a -> 'b
+but is here used with type ('a -> 'b) -> 'c -> 'a -> 'b
+Relevant code: f
+------------------------------------------------------------------
+File "2463.ml", line 3, characters 8-11:
+Try replacing
+    fun a x combine c -> (a c)
+with
+    fun x a combine c -> (a c)
+of type
+    'd -> ('e -> 'f) -> 'g -> 'e -> 'f
+within context
+    let pipe fs =
+    let f x a combine c = (a c) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2463.ml", line 3, characters 49-65:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left (f base fs))
+of type
+    'h -> 'h list -> 'h
+within context
+    let pipe fs =
+    let f a x combine c = (a c) in let base x = x in (List.fold_left (f base fs))
+    ;; 
+==============================
+File "2463.ml", line 3, characters 49-63:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    (('i -> 'j) -> 'k -> 'l -> 'i -> 'j) ->
+    ('m -> 'm) -> 'n -> ('i -> 'j) -> 'k -> 'l -> 'i -> 'j
+within context
+    let pipe fs = let f a x combine c = (a c) in let base x = x in (f f base  fs)
+    ;; 
+==============================
+File "2463.ml", line 3, characters 49-63:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('o -> 'o) -> 'p -> 'q -> 'o -> 'o) -> ('o -> 'o) -> 'p -> 'q -> 'o -> 'o
+within context
+    let pipe fs = let f a x combine c = (a c) in let base x = x in (base f base  fs)
+    ;; 
+==============================
+File "2463.ml", line 3, characters 24-25:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('r -> 's -> 'r) -> 'r -> 's list -> 'r
+within context
+    fun a x combine c -> (List.fold_left c)
+==============================
+File "2463.ml", line 3, characters 24-25:
+Try replacing
+    a
+with
+    x
+of type
+    't -> 'u
+within context
+    fun a x combine c -> (x c)
+==============================
+File "2463.ml", line 3, characters 24-25:
+Try replacing
+    a
+with
+    combine
+of type
+    'v -> 'w
+within context
+    fun a x combine c -> (combine c)
+==============================

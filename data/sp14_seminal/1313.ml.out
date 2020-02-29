@@ -1,0 +1,64 @@
+------------------------------------------------------------------
+File "1313.ml", line 6, characters 40-58:
+This expression has type int * 'a but is here used with type 'b list
+Relevant code: ((pos + 1), total)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1313.ml", line 7, characters 2-121:
+And modified the following location:
+File "1313.ml", line 6, characters 40-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    pos + 1, total
+with
+    pos + 1, total; [[...]]
+The actual replacement has type
+    'c list
+within context
+    let bigMul l1 l2 =
+    let f a x = let (l1', l2') = x in let (pos, total) = a in (match l2' with 
+                                                               | [] -> []
+                                                               | h :: t ->
+                                                                 (pos + 1, total;
+                                                                     [[...]])) in [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "1313.ml", line 7, characters 2-121:
+And modified the following location:
+File "1313.ml", line 6, characters 27-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    []; [[...]]
+The actual replacement has type
+    int * 'd
+within context
+    let bigMul l1 l2 =
+    let f a x = let (l1', l2') = x in let (pos, total) = a in (match l2' with 
+                                                               | [] -> ([]; [[...]])
+                                                               | h :: t ->
+                                                                 (pos + 1,
+                                                                       total)) in [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "1313.ml", line 7, characters 2-121:
+And modified the following location:
+File "1313.ml", line 3, characters 2-249:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = let (l1', l2') = x in let (pos, total) = a in (match l2' with 
+                                                               | [] -> []
+                                                               | h :: t ->
+                                                                 (pos + 1,
+                                                                       total)) in let
+      base
+      =
+      0, [0]
+      in
+      let args = (List.rev l1), (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'e
+==============================

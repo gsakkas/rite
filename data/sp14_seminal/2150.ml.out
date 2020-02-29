@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "2150.ml", line 5, characters 28-58:
+This expression has type unit * unit but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: ((f (if (f b) = b then b)), b)
+------------------------------------------------------------------
+File "2150.ml", line 5, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    unit * unit -> unit * unit -> bool
+within context
+    let fixpoint (f, b) = (= ((f (if (f b) = b then b)), b)) ;; 
+==============================

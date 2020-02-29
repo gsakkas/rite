@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "3019.ml", line 3, characters 60-64:
+This expression has type int but is here used with type int -> int
+Relevant code: base
+------------------------------------------------------------------
+File "3019.ml", line 3, characters 19-20:
+Try replacing
+    ( + ) (x a)
+with
+    (x (( + ) a))
+of type
+    'a
+within context
+    let pipe fs =
+    let f a x = (x (( + ) a)) in let base = 0 in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "3019.ml", line 3, characters 14-17:
+Try replacing
+    +
+with
+    x
+of type
+    'b -> 'b
+within context
+    fun fs ->
+      (let f a x = (( x ) (x a)) in let base = 0 in (List.fold_left f base  fs))
+==============================
+File "3019.ml", line 3, characters 58-59:
+Try replacing
+    f
+with
+    +
+of type
+    int -> int -> int
+within context
+    let pipe fs =
+    let f a x = ( + ) (x a) in let base = 0 in (List.fold_left + base  fs)
+    ;; 
+==============================

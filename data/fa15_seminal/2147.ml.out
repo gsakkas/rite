@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "2147.ml", line 30, characters 9-10:
+This pattern matches values of type int
+but is here used to match values of type int * int -> int
+Relevant code: 0
+------------------------------------------------------------------
+File "2147.ml", line 27, characters 18-24:
+Try replacing
+    (rand (0, 1))
+with
+    rand
+of type
+    int
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 ->
+                                     (if rand = 1 then (buildX ()) else (buildY ()))
+                                   | depth -> (match rand with 
+                                               | 0 ->
+                                                 (buildSine
+                                                     (build (rand, depth - 1)))
+                                               | 1 ->
+                                                 (buildCosine
+                                                     (build (rand, depth - 1)))
+                                               | 2 ->
+                                                 (buildAverage
+                                                     ((build (rand, depth - 1)),
+                                                         (build (rand, depth - 1))))
+                                               | 3 ->
+                                                 (buildTimes
+                                                     ((build (rand, depth - 1)),
+                                                         (build (rand, depth - 1))))
+                                               | 4 ->
+                                                 (buildThresh
+                                                     ((build (rand, depth - 1)),
+                                                         (build (rand, depth - 1)),
+                                                         (build (rand, depth - 1)),
+                                                         (build
+                                                           (rand,
+                                                               depth - 1)))))) ;; 
+==============================

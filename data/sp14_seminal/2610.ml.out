@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "2610.ml", line 2, characters 41-42:
+This expression has type 'a list but is here used with type 'a
+Relevant code: x
+------------------------------------------------------------------
+File "2610.ml", line 2, characters 41-42:
+Try replacing
+    x
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun x n -> (if n > 0 then (clone [-] (n - 1)) else [])
+==============================
+File "2610.ml", line 2, characters 41-42:
+Try replacing
+    x
+with
+    n
+of type
+    int
+within context
+    fun x n -> (if n > 0 then (clone [n] (n - 1)) else [])
+==============================
+File "2610.ml", line 2, characters 41-42:
+Try replacing
+    x
+with
+    >
+of type
+    'b -> 'b -> bool
+within context
+    fun x n -> (if n > 0 then (clone [>] (n - 1)) else [])
+==============================

@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+File "2751.ml", line 6, characters 35-36:
+This expression has type int but is here used with type 'a list -> int
+Relevant code: 2
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "2751.ml", line 6, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    2
+with
+    2; [[...]]
+The actual replacement has type
+    'b list -> int
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (if List.length = (2; [[...]]) then a ^ x else [[...]]) in
+             let base = "" in let l = sl in (List.fold_left f base  l)))
+==============================
+Triaged the following locations:
+And modified the following location:
+File "2751.ml", line 6, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    =
+with
+    =; [[...]]
+The actual replacement has type
+    ('c list -> int) -> int -> bool
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (if (List.length =; [[...]] 2) then a ^ x else [[...]]) in
+             let base = "" in let l = sl in (List.fold_left f base  l)))
+==============================
+Triaged the following locations:
+And modified the following location:
+File "2751.ml", line 6, characters 21-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.length
+with
+    List.length; [[...]]
+The actual replacement has type
+    int
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (if (List.length; [[...]]) = 2 then a ^ x else [[...]]) in
+             let base = "" in let l = sl in (List.fold_left f base  l)))
+==============================
+Triaged the following locations:
+And modified the following location:
+File "2751.ml", line 6, characters 21-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.length
+with
+    sep
+The actual replacement has type
+    int
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (if sep = 2 then a ^ x else [[...]]) in
+             let base = "" in let l = sl in (List.fold_left f base  l)))
+==============================

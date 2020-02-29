@@ -1,0 +1,103 @@
+------------------------------------------------------------------
+File "3282.ml", line 21, characters 35-39:
+This expression has type 'a list * 'b list but is here used with type
+  int * int list
+Relevant code: base
+------------------------------------------------------------------
+File "3282.ml", line 21, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'c list * 'd list -> 'e * 'f -> 'c list * 'd list
+within context
+    let f a x = (match a with 
+                 | (list1, list2) -> (match x with 
+                                      | (h1, h2) ->
+                                        ((h1 + h2) / 10,
+                                              (mod (h1 + h2) 10) ::
+                                                  list2))) in let base = [], [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "3282.ml", line 21, characters 35-39:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    int * int list
+within context
+    let f a x = (match a with 
+                 | (list1, list2) -> (match x with 
+                                      | (h1, h2) ->
+                                        ((h1 + h2) / 10,
+                                              (mod (h1 + h2) 10) ::
+                                                  list2))) in let base = [], [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f (base; [[...]])  args) in res
+==============================
+File "3282.ml", line 19, characters 15-23:
+Try replacing
+    [], []
+with
+    [], []; [[...]]
+of type
+    'g
+within context
+    fun l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                               | (list1, list2) -> (match x with 
+                                                                    | (h1, h2) ->
+                                                                      ((h1 + h2)
+                                                                              / 10
+                                                                            ,
+                                                                            (mod
+                                                                                  (h1
+                                                                                      +
+                                                                                      h2)
+                                                                                  10)
+                                                                                ::
+                                                                                list2))) in let
+            base
+            =
+            [], []; [[...]]
+            in
+            let args = (List.combine l1 l2) in
+            let (_, res) = (List.fold_left f base  args) in
+            res in (removeZero (add (padZero l1 l2))))
+==============================
+File "3282.ml", line 21, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('h * int list -> int * int -> int * int list) ->
+    'i list * 'j list -> ('k * 'l) list -> 'm * 'n
+within context
+    let f a x = (match a with 
+                 | (list1, list2) -> (match x with 
+                                      | (h1, h2) ->
+                                        ((h1 + h2) / 10,
+                                              (mod (h1 + h2) 10) ::
+                                                  list2))) in let base = [], [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "3282.ml", line 14, characters 10-158:
+Try replacing
+    fun a x -> (match a with 
+                | (list1, list2) -> (match x with 
+                                     | (h1, h2) ->
+                                       ((h1 + h2) / 10,
+                                             (mod (h1 + h2) 10) :: list2)))
+with
+    fun a x -> (match a with 
+                | (list1, list2) -> (match x with 
+                                     | (h1, h2) ->
+                                       ((h1 + h2) / 10,
+                                             (mod (h1 + h2) 10) :: list2))); [[...]]
+of type
+    'o
+==============================

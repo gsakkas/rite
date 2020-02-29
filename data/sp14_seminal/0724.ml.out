@@ -1,0 +1,75 @@
+------------------------------------------------------------------
+File "0724.ml", line 30, characters 67-68:
+This expression has type int but is here used with type float
+Relevant code: 1
+------------------------------------------------------------------
+File "0724.ml", line 30, characters 67-68:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                      | Cosine expr -> (cos (pi *. (eval (expr, x, y))))
+                      | Average (expr, expr1) ->
+                        (((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2.)
+                      | Times (expr, expr1) ->
+                        ((eval (expr, x, y)) *. (eval (expr1, x, y)))
+                      | Squa expr ->
+                        (let res = (eval (expr, x, y)) in
+                              (res /. ((abs_float res) +. 1.0)))
+                      | Nom (expr, expr1, expr2) ->
+                        (let (r1, r2, r3) =
+                              (eval (expr, x, y)),
+                                (eval (expr1, x, y)), (eval (expr2, x, y))
+                              in
+                              (((r1 +. r2) +. r3) /.
+                                    ((((abs_float r1) +. (abs_float r2))
+                                            +. (abs_float r3))
+                                        +. 1; [[...]])))
+                      | Thresh (expr, expr1, expr2, expr3) ->
+                        (if (eval (expr, x, y)) < (eval (expr1, x, y)) then
+                            (eval (expr2, x, y))
+                            else
+                            (eval (expr3, x, y))))
+==============================
+File "0724.ml", line 30, characters 64-66:
+Try replacing
+    +.
+with
+    +.; [[...]]
+of type
+    float -> int -> float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                      | Cosine expr -> (cos (pi *. (eval (expr, x, y))))
+                      | Average (expr, expr1) ->
+                        (((eval (expr, x, y)) +. (eval (expr1, x, y))) /. 2.)
+                      | Times (expr, expr1) ->
+                        ((eval (expr, x, y)) *. (eval (expr1, x, y)))
+                      | Squa expr ->
+                        (let res = (eval (expr, x, y)) in
+                              (res /. ((abs_float res) +. 1.0)))
+                      | Nom (expr, expr1, expr2) ->
+                        (let (r1, r2, r3) =
+                              (eval (expr, x, y)),
+                                (eval (expr1, x, y)), (eval (expr2, x, y))
+                              in
+                              (((r1 +. r2) +. r3) /.
+                                    ((((abs_float r1) +. (abs_float r2))
+                                            +. (abs_float r3))
+                                        +.; [[...]] 1)))
+                      | Thresh (expr, expr1, expr2, expr3) ->
+                        (if (eval (expr, x, y)) < (eval (expr1, x, y)) then
+                            (eval (expr2, x, y))
+                            else
+                            (eval (expr3, x, y))))
+==============================

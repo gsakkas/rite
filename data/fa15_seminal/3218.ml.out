@@ -1,0 +1,71 @@
+------------------------------------------------------------------
+File "3218.ml", line 10, characters 64-66:
+This expression has type int list list but is here used with type int list
+Relevant code: t2
+------------------------------------------------------------------
+Triaged the following locations:
+File "3218.ml", line 10, characters 30-40:
+And modified the following location:
+File "3218.ml", line 10, characters 44-61:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    [h2 + (mod h 10)]
+with
+    [h2 + (mod h 10)]; [[...]]
+The actual replacement has type
+    int list list
+within context
+    let h2 :: [] :: t2 = t in (match t with 
+                               | [] -> [h]
+                               | _ ->
+                                 [(h * i) / 10] @
+                                     [
+                                         ((mulByDigit; [[...]])
+                                           i (([h2 + (mod h 10)]; [[...]]) @ t2))
+                                         ])
+==============================
+Triaged the following locations:
+File "3218.ml", line 10, characters 30-40:
+And modified the following location:
+File "3218.ml", line 10, characters 62-63:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int list -> int list list -> 'a
+within context
+    let h2 :: [] :: t2 = t in (match t with 
+                               | [] -> [h]
+                               | _ ->
+                                 [(h * i) / 10] @
+                                     [
+                                         ((mulByDigit; [[...]])
+                                           i ([h2 + (mod h 10)] @; [[...]] t2))
+                                         ])
+==============================
+Triaged the following locations:
+File "3218.ml", line 10, characters 30-40:
+And modified the following location:
+File "3218.ml", line 10, characters 64-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    mulByDigit
+If you ignore other surrounding code, try replacing
+    t2
+with
+    t2; [[...]]
+The actual replacement has type
+    int list
+within context
+    let h2 :: [] :: t2 = t in (match t with 
+                               | [] -> [h]
+                               | _ ->
+                                 [(h * i) / 10] @
+                                     [
+                                         ((mulByDigit; [[...]])
+                                           i ([h2 + (mod h 10)] @ (t2; [[...]])))
+                                         ])
+==============================

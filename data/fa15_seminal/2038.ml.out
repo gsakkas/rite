@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "2038.ml", line 25, characters 76-77:
+This expression has type int but is here used with type int list
+Relevant code: 0
+------------------------------------------------------------------
+File "2038.ml", line 25, characters 39-45:
+Try replacing
+    bigAdd
+with
+    +
+of type
+    int -> int -> int
+within context
+    let rec mulByDigit i l = (if i > 0 then (+ l (mulByDigit (i - 1) l)) else 0) ;; 
+==============================
+File "2038.ml", line 25, characters 39-45:
+Try replacing
+    bigAdd
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec mulByDigit i l = (if i > 0 then (/ l (mulByDigit (i - 1) l)) else 0) ;; 
+==============================
+File "2038.ml", line 25, characters 39-45:
+Try replacing
+    bigAdd
+with
+    -
+of type
+    int -> int -> int
+within context
+    let rec mulByDigit i l = (if i > 0 then (- l (mulByDigit (i - 1) l)) else 0) ;; 
+==============================

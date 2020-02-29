@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "0911.ml", line 20, characters 57-59:
+This expression has type 'a -> 'b but is here used with type int list
+Relevant code: l1
+------------------------------------------------------------------
+File "0911.ml", line 20, characters 49-56:
+Try replacing
+    padZero
+with
+    <
+of type
+    (bool -> int list * int list) -> (bool -> int list * int list) -> bool
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (l1e, l2e) ->
+                                      (let num = l1e + l2e in
+                                            num,
+                                                [7
+                                                    ])) in let base = 0, [] in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add ((if l1 > l2 then l1 else l2) (< l1 l2))))
+==============================
+File "0911.ml", line 20, characters 49-56:
+Try replacing
+    padZero
+with
+    =
+of type
+    (bool -> int list * int list) -> (bool -> int list * int list) -> bool
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (l1e, l2e) ->
+                                      (let num = l1e + l2e in
+                                            num,
+                                                [7
+                                                    ])) in let base = 0, [] in
+        let args = (List.combine l1 l2) in
+        let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add ((if l1 > l2 then l1 else l2) (= l1 l2))))
+==============================

@@ -1,0 +1,117 @@
+------------------------------------------------------------------
+File "2759.ml", line 11, characters 11-18:
+This expression has type int but is here used with type 'a list
+Relevant code: (h * i)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2759.ml", line 11, characters 11-37:
+And modified the following location:
+File "2759.ml", line 12, characters 12-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    remainder
+with
+    remainder; [[...]]
+The actual replacement has type
+    'b -> int list -> 'c list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                (if (List.length t) = 0 then [[...other program...]]
+                                    else
+                                    ((remainder; [[...]]) h y)
+                                      @ (mulByDigit i t))) ;; 
+==============================
+Triaged the following locations:
+File "2759.ml", line 11, characters 11-37:
+And modified the following location:
+File "2759.ml", line 12, characters 12-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    remainder
+with
+    @
+The actual replacement has type
+    int list -> int list -> int list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                (if (List.length t) = 0 then [[...other program...]]
+                                    else
+                                    (@ h y) @ (mulByDigit i t))) ;; 
+==============================
+Triaged the following locations:
+File "2759.ml", line 11, characters 11-37:
+And modified the following location:
+File "2759.ml", line 12, characters 12-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    remainder
+with
+    i
+The actual replacement has type
+    'd -> int list -> 'e list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                (if (List.length t) = 0 then [[...other program...]]
+                                    else
+                                    (i h y) @ (mulByDigit i t))) ;; 
+==============================
+Triaged the following locations:
+File "2759.ml", line 12, characters 11-45:
+And modified the following location:
+File "2759.ml", line 11, characters 19-20:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int -> 'f list -> 'f list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                (if (List.length t) = 0 then
+                                    (h * i @; [[...]] (mulByDigit i t))
+                                    else
+                                    [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2759.ml", line 12, characters 11-45:
+And modified the following location:
+File "2759.ml", line 11, characters 14-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    @
+The actual replacement has type
+    'g list -> 'g list -> 'g list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                (if (List.length t) = 0 then
+                                    (h @ i) @ (mulByDigit i t)
+                                    else
+                                    [[...other program...]])) ;; 
+==============================
+Triaged the following locations:
+File "2759.ml", line 12, characters 11-45:
+And modified the following location:
+File "2759.ml", line 11, characters 11-18:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h * i
+with
+    h * i; [[...]]
+The actual replacement has type
+    'h list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                (if (List.length t) = 0 then
+                                    (h * i; [[...]]) @ (mulByDigit i t)
+                                    else
+                                    [[...other program...]])) ;; 
+==============================

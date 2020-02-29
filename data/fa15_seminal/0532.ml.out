@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "0532.ml", line 9, characters 12-16:
+This pattern matches values of type bool
+but is here used to match values of type ('a * 'b) list -> bool
+Relevant code: true
+------------------------------------------------------------------
+File "0532.ml", line 8, characters 25-34:
+Try replacing
+    (List.mem (h, seen))
+with
+    (List.mem h seen)
+of type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' = (match (List.mem h seen) with 
+                                                   | true -> seen @ [h]
+                                                   | false ->
+                                                     seen) in let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================

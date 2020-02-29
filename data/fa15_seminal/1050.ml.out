@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1050.ml", line 8, characters 39-70:
+This expression has type int but is here used with type int list
+Relevant code: ((x mod 10) + (mulByDigit i t))
+------------------------------------------------------------------
+File "1050.ml", line 8, characters 51-52:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int -> int list -> int list
+within context
+    let x = h * i in (match x with 
+                      | x ->
+                        when (x >= 10) ->
+                            x / 10 :: ((mod x 10) +; [[...]] (mulByDigit i t))
+                      | _ -> x :: (mulByDigit i t))
+==============================

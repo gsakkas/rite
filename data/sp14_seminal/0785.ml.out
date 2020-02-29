@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0785.ml", line 28, characters 53-57:
+This expression has type 'a * 'b * 'c -> 'd but is here used with type expr
+Relevant code: eval
+------------------------------------------------------------------
+File "0785.ml", line 28, characters 40-52:
+Try replacing
+    exprToString
+with
+    exprToString; [[...]]
+of type
+    ('e * 'f * 'g -> string) -> float
+within context
+    let rec eval (e, x, y) = (string_of_float ((exprToString; [[...]]) eval)) ;; 
+==============================

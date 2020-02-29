@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2748.ml", line 2, characters 20-71:
+This expression has type 'a list but is here used with type 'a
+Relevant code: match n with | 0 -> x | _ -> (clone x (n - 1)) :: x
+------------------------------------------------------------------
+File "2748.ml", line 2, characters 16-71:
+Try replacing
+    fun n -> (match n with 
+              | 0 -> x
+              | _ -> (clone x (n - 1)) :: x)
+with
+    fun n -> (match n with 
+              | 0 -> x
+              | _ -> (clone x (n - 1)) :: x); [[...]]
+of type
+    int -> 'b
+==============================

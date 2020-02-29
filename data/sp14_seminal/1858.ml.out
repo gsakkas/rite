@@ -1,0 +1,140 @@
+------------------------------------------------------------------
+File "1858.ml", line 38, characters 11-96:
+This expression has type expr * expr * expr but is here used with type
+  expr * expr
+Relevant code: (first_forced, (build (rand, (depth - 1))),
+             (build (rand, (depth - 1))))
+------------------------------------------------------------------
+File "1858.ml", line 38, characters 11-96:
+Try replacing
+    first_forced, (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    first_forced, (build (rand, depth - 1))
+of type
+    expr * expr
+within context
+    (if (depth <= 0) then
+      (let bin_rand = (rand (1, 2)) in
+          (if bin_rand = 1 then (buildX ()) else (buildY ())))
+      else
+      (let exp_rand = (rand (1, 5)) in
+          let first_forced = (build (rand, depth - 1)) in (match exp_rand with 
+                                                           | 1 ->
+                                                             (buildSine
+                                                                 first_forced)
+                                                           | 2 ->
+                                                             (buildCosine
+                                                                 first_forced)
+                                                           | 3 ->
+                                                             (buildAverage
+                                                                 (first_forced,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))))
+                                                           | 4 ->
+                                                             (buildTimes
+                                                                 (first_forced,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))))
+                                                           | 5 ->
+                                                             (buildAverage
+                                                                 (first_forced,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             -
+                                                                             1)))))))
+==============================
+File "1858.ml", line 38, characters 11-96:
+Try replacing
+    first_forced, (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)), (build (rand, depth - 1))
+of type
+    expr * expr
+within context
+    (if (depth <= 0) then
+      (let bin_rand = (rand (1, 2)) in
+          (if bin_rand = 1 then (buildX ()) else (buildY ())))
+      else
+      (let exp_rand = (rand (1, 5)) in
+          let first_forced = (build (rand, depth - 1)) in (match exp_rand with 
+                                                           | 1 ->
+                                                             (buildSine
+                                                                 first_forced)
+                                                           | 2 ->
+                                                             (buildCosine
+                                                                 first_forced)
+                                                           | 3 ->
+                                                             (buildAverage
+                                                                 (first_forced,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))))
+                                                           | 4 ->
+                                                             (buildTimes
+                                                                 (first_forced,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))))
+                                                           | 5 ->
+                                                             (buildAverage
+                                                                 ((build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             -
+                                                                             1)))))))
+==============================
+File "1858.ml", line 38, characters 11-96:
+Try replacing
+    first_forced, (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    first_forced, (build (rand, depth - 1))
+of type
+    expr * expr
+within context
+    (if (depth <= 0) then
+      (let bin_rand = (rand (1, 2)) in
+          (if bin_rand = 1 then (buildX ()) else (buildY ())))
+      else
+      (let exp_rand = (rand (1, 5)) in
+          let first_forced = (build (rand, depth - 1)) in (match exp_rand with 
+                                                           | 1 ->
+                                                             (buildSine
+                                                                 first_forced)
+                                                           | 2 ->
+                                                             (buildCosine
+                                                                 first_forced)
+                                                           | 3 ->
+                                                             (buildAverage
+                                                                 (first_forced,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))))
+                                                           | 4 ->
+                                                             (buildTimes
+                                                                 (first_forced,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))))
+                                                           | 5 ->
+                                                             (buildAverage
+                                                                 (first_forced,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             -
+                                                                             1)))))))
+==============================

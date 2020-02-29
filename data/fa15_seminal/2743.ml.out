@@ -1,0 +1,212 @@
+------------------------------------------------------------------
+File "2743.ml", line 39, characters 65-69:
+This expression has type 'a list but is here used with type int * int list
+Relevant code: base
+------------------------------------------------------------------
+File "2743.ml", line 39, characters 63-64:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'b list -> 'c * 'd -> 'b list
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (x1, x2) -> (match a with 
+                                                 | (car, cur) -> (match cur with 
+                                                                  | [] ->
+                                                                    (if
+                                                                        (car + x1)
+                                                                            + x2
+                                                                          > 10
+                                                                        then
+                                                                        car + 1,
+                                                                          [car + 1]
+                                                                            @
+                                                                            [
+                                                                                ((remain
+                                                                                        car)
+                                                                                      +
+                                                                                      x1)
+                                                                                  +
+                                                                                  x2
+                                                                                ]
+                                                                        else
+                                                                        0,
+                                                                          [car] @
+                                                                            [
+                                                                                (car
+                                                                                      +
+                                                                                      x1)
+                                                                                  +
+                                                                                  x2
+                                                                                ])
+                                                                  | h :: t ->
+                                                                    (if
+                                                                        (x1 + x2)
+                                                                            + h
+                                                                          < 10
+                                                                        then
+                                                                        0,
+                                                                          [0] @
+                                                                            ([
+                                                                                    (x1
+                                                                                          +
+                                                                                          x2)
+                                                                                      +
+                                                                                      h
+                                                                                    ]
+                                                                                @ t)
+                                                                        else
+                                                                        car + 1,
+                                                                          [
+                                                                                ((carry
+                                                                                        h)
+                                                                                      +
+                                                                                      x1)
+                                                                                  +
+                                                                                  x2
+                                                                                ]
+                                                                            @
+                                                                            ([
+                                                                                    ((remain
+                                                                                            h)
+                                                                                          +
+                                                                                          x1)
+                                                                                      +
+                                                                                      x2
+                                                                                    ]
+                                                                                @
+                                                                                t))))) in let
+          base
+          =
+          []
+          in
+          let args = (List.rev (List.combine l1 l2)) in
+          (List.fold_left (f; [[...]]) base  args))
+==============================
+File "2743.ml", line 39, characters 48-62:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> int * int -> int * int list) ->
+    'e list -> ('f * 'g) list -> 'h
+within context
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (x1, x2) -> (match a with 
+                                                 | (car, cur) -> (match cur with 
+                                                                  | [] ->
+                                                                    (if
+                                                                        (car + x1)
+                                                                            + x2
+                                                                          > 10
+                                                                        then
+                                                                        car + 1,
+                                                                          [car + 1]
+                                                                            @
+                                                                            [
+                                                                                ((remain
+                                                                                        car)
+                                                                                      +
+                                                                                      x1)
+                                                                                  +
+                                                                                  x2
+                                                                                ]
+                                                                        else
+                                                                        0,
+                                                                          [car] @
+                                                                            [
+                                                                                (car
+                                                                                      +
+                                                                                      x1)
+                                                                                  +
+                                                                                  x2
+                                                                                ])
+                                                                  | h :: t ->
+                                                                    (if
+                                                                        (x1 + x2)
+                                                                            + h
+                                                                          < 10
+                                                                        then
+                                                                        0,
+                                                                          [0] @
+                                                                            ([
+                                                                                    (x1
+                                                                                          +
+                                                                                          x2)
+                                                                                      +
+                                                                                      h
+                                                                                    ]
+                                                                                @ t)
+                                                                        else
+                                                                        car + 1,
+                                                                          [
+                                                                                ((carry
+                                                                                        h)
+                                                                                      +
+                                                                                      x1)
+                                                                                  +
+                                                                                  x2
+                                                                                ]
+                                                                            @
+                                                                            ([
+                                                                                    ((remain
+                                                                                            h)
+                                                                                          +
+                                                                                          x1)
+                                                                                      +
+                                                                                      x2
+                                                                                    ]
+                                                                                @
+                                                                                t))))) in let
+          base
+          =
+          []
+          in
+          let args = (List.rev (List.combine l1 l2)) in
+          ((List.fold_left; [[...]]) f base  args))
+==============================
+File "2743.ml", line 20, characters 10-665:
+Try replacing
+    fun a x -> (match x with 
+                | (x1, x2) -> (match a with 
+                               | (car, cur) -> (match cur with 
+                                                | [] ->
+                                                  (if (car + x1) + x2 > 10 then
+                                                      car + 1,
+                                                        [car + 1] @
+                                                          [((remain car) + x1) + x2]
+                                                      else
+                                                      0, [car] @ [(car + x1) + x2])
+                                                | h :: t ->
+                                                  (if (x1 + x2) + h < 10 then
+                                                      0, [0] @ ([(x1 + x2) + h] @ t)
+                                                      else
+                                                      car + 1,
+                                                        [((carry h) + x1) + x2] @
+                                                          ([((remain h) + x1) + x2]
+                                                              @ t)))))
+with
+    fun a x -> (match x with 
+                | (x1, x2) -> (match a with 
+                               | (car, cur) -> (match cur with 
+                                                | [] ->
+                                                  (if (car + x1) + x2 > 10 then
+                                                      car + 1,
+                                                        [car + 1] @
+                                                          [((remain car) + x1) + x2]
+                                                      else
+                                                      0, [car] @ [(car + x1) + x2])
+                                                | h :: t ->
+                                                  (if (x1 + x2) + h < 10 then
+                                                      0, [0] @ ([(x1 + x2) + h] @ t)
+                                                      else
+                                                      car + 1,
+                                                        [((carry h) + x1) + x2] @
+                                                          ([((remain h) + x1) + x2]
+                                                              @ t))))); [[...]]
+of type
+    'i
+==============================

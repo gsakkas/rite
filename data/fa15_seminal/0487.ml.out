@@ -1,0 +1,96 @@
+------------------------------------------------------------------
+File "0487.ml", line 18, characters 28-43:
+This expression has type int list * int list but is here used with type
+  'a list
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0487.ml", line 19, characters 4-51:
+And modified the following location:
+File "0487.ml", line 18, characters 29-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    padZero
+with
+    @
+The actual replacement has type
+    'b list -> 'b list -> 'b list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) ->
+                                      x1 + x2 ::
+                                            a) in let base = [], [] in
+        let args = (List.combine (@ l1 l2)) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0487.ml", line 19, characters 4-51:
+And modified the following location:
+File "0487.ml", line 18, characters 28-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (padZero l1 l2)
+with
+    (padZero l1 l2); [[...]]
+The actual replacement has type
+    'c list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) ->
+                                      x1 + x2 ::
+                                            a) in let base = [], [] in
+        let args = (List.combine ((padZero l1 l2); [[...]])) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0487.ml", line 19, characters 4-51:
+And modified the following location:
+File "0487.ml", line 18, characters 15-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    List.combine; [[...]]
+The actual replacement has type
+    int list * int list -> 'd
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) ->
+                                      x1 + x2 ::
+                                            a) in let base = [], [] in
+        let args = ((List.combine; [[...]]) (padZero l1 l2)) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0487.ml", line 19, characters 4-51:
+And modified the following location:
+File "0487.ml", line 18, characters 15-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.combine
+with
+    clone
+The actual replacement has type
+    int list * int list -> int -> (int list * int list) list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) ->
+                                      x1 + x2 ::
+                                            a) in let base = [], [] in
+        let args = (clone (padZero l1 l2)) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0487.ml", line 19, characters 4-51:
+And modified the following location:
+File "0487.ml", line 18, characters 4-98:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (List.combine (padZero l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'e
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) ->
+                                      x1 + x2 ::
+                                            a) in let base = [], [] in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================

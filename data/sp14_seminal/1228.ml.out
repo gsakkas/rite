@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1228.ml", line 23, characters 49-55:
+This expression has type int * int but is here used with type
+  ('a * 'b) list list
+Relevant code: (0, 0)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1228.ml", line 18, characters 10-109:
+File "1228.ml", line 22, characters 15-17:
+File "1228.ml", line 23, characters 15-56:
+File "1228.ml", line 24, characters 18-44:
+File "1228.ml", line 24, characters 48-51:
+And modified the following location:
+File "1228.ml", line 17, characters 13-263:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun l2 -> (let f a x = (match x with 
+                            | (w, y) :: t -> (w + y) / 10 :: (mod (w + y) 10) :: a
+                            | _ ->
+                              a) in let base = [] in
+          let args = (List.rev (List.combine l1 l2) :: 0 :: 0) in
+          let (_, res) = (List.fold_left f base  args) in res)
+with
+    fun l2 ->
+      (let f = [[...other program...]] in
+          let base = [[...other program...]] in
+          let args = [[...other program...]] in
+          let (_, res) = [[...other program...]] in [[...other program...]]);
+    [[...]]
+The actual replacement has type
+    'c
+==============================

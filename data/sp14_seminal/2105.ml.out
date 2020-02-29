@@ -1,0 +1,101 @@
+------------------------------------------------------------------
+File "2105.ml", line 27, characters 20-24:
+This expression has type expr but is here used with type expr * expr
+Relevant code: VarX
+------------------------------------------------------------------
+File "2105.ml", line 27, characters 9-19:
+Try replacing
+    buildTimes
+with
+    buildSine
+of type
+    expr -> expr
+within context
+    let rec build (rand, depth) = (match (rand (1, 7)) with 
+                                   | _ -> (buildSine VarX)
+                                   | 1 -> (buildX ())
+                                   | 2 -> (buildY ())
+                                   | 3 ->
+                                     (buildSine
+                                         (if depth = 0 then (buildX ()) else
+                                           (build (rand, depth - 1))))
+                                   | 4 ->
+                                     (buildCosine
+                                         (if depth = 0 then (buildY ()) else
+                                           (build (rand, depth - 1))))
+                                   | 5 ->
+                                     (buildAverage
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))
+                                   | 6 ->
+                                     (buildTimes
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))
+                                   | 7 ->
+                                     (buildThresh
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))) ;; 
+==============================
+File "2105.ml", line 27, characters 9-19:
+Try replacing
+    buildTimes
+with
+    buildCosine
+of type
+    expr -> expr
+within context
+    let rec build (rand, depth) = (match (rand (1, 7)) with 
+                                   | _ -> (buildCosine VarX)
+                                   | 1 -> (buildX ())
+                                   | 2 -> (buildY ())
+                                   | 3 ->
+                                     (buildSine
+                                         (if depth = 0 then (buildX ()) else
+                                           (build (rand, depth - 1))))
+                                   | 4 ->
+                                     (buildCosine
+                                         (if depth = 0 then (buildY ()) else
+                                           (build (rand, depth - 1))))
+                                   | 5 ->
+                                     (buildAverage
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))
+                                   | 6 ->
+                                     (buildTimes
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))
+                                   | 7 ->
+                                     (buildThresh
+                                         ((if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildX ()) else
+                                               (build (rand, depth - 1)))
+                                             ,
+                                             (if depth = 0 then (buildY ()) else
+                                               (build (rand, depth - 1)))))) ;; 
+==============================

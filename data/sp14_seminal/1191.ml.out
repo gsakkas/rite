@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "1191.ml", line 13, characters 35-42:
+This expression has type int list -> int but is here used with type int
+Relevant code: sumList
+------------------------------------------------------------------
+File "1191.ml", line 13, characters 26-61:
+Try replacing
+    (if n < 10 then i else (aPHelper sumList (digits n)  (i + 1)))
+with
+    (if n < 10 then i)
+of type
+    unit
+within context
+    let rec additivePersistence n = let rec aPHelper n i = (if n < 10 then i) in n
+    ;; 
+==============================
+File "1191.ml", line 12, characters 2-93:
+Try replacing
+    let rec aPHelper n i =
+      (if n < 10 then i else (aPHelper sumList (digits n)  (i + 1)))
+      in
+      n
+with
+    n
+of type
+    'a
+==============================

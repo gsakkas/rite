@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1143.ml", line 50, characters 25-34:
+This expression has type int but is here used with type 'a list
+Relevant code: (sum + r)
+------------------------------------------------------------------
+File "1143.ml", line 50, characters 15-24:
+Try replacing
+    carryFunc
+with
+    carryFunc; [[...]]
+of type
+    int -> int
+within context
+    (match a with 
+     | (r, v) ->
+       (let sum = (intListToInt (mulByDigit (intListToInt l1) [s])) in
+             (if sum + r > 9 then
+                 ((carryFunc; [[...]]) (sum + r)), (mod (sum + r) 10) :: v
+                 else
+                 0, (mod (sum + r) 10) :: v)))
+==============================

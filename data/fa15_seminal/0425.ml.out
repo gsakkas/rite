@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "0425.ml", line 7, characters 56-65:
+This expression has type (int -> int * int) * 'a but is here used with type
+  (int -> int * bool) * int
+Relevant code: (funt, b)
+------------------------------------------------------------------
+File "0425.ml", line 7, characters 57-64:
+Try replacing
+    funt, b
+with
+    b, funt
+of type
+    (('b -> int * 'b) -> ('b -> int * 'b) * bool) * ('b -> int * 'b)
+within context
+    let fixpoint (f, b) =
+    let funt b = (if (f b) then 1, b else 1, b) in (wwhile (b, funt))
+    ;; 
+==============================
+File "0425.ml", line 7, characters 49-55:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('c -> int * 'c) * 'd -> ('c -> int * 'c) * 'd -> bool
+within context
+    let fixpoint (f, b) =
+    let funt b = (if (f b) then 1, b else 1, b) in (= (funt, b))
+    ;; 
+==============================

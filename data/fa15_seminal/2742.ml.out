@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "2742.ml", line 29, characters 70-74:
+This expression has type ('a * 'b) list but is here used with type
+  int list list
+Relevant code: args
+------------------------------------------------------------------
+File "2742.ml", line 29, characters 70-74:
+Try replacing
+    args
+with
+    base
+of type
+    int list list
+within context
+    fun (l1, l2) ->
+      (let f a x = (addHelper (a, x)) in
+          let base = [] in
+          let args = (List.rev (List.combine l1 l2)) in
+          (List.fold_left f base  base))
+==============================
+File "2742.ml", line 27, characters 30-31:
+Try replacing
+    x
+with
+    a
+of type
+    int list * int list
+within context
+    let f a x = (addHelper (a, a)) in
+      let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in (List.fold_left f base  args)
+==============================

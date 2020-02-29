@@ -1,0 +1,113 @@
+------------------------------------------------------------------
+File "2765.ml", line 12, characters 63-64:
+This expression has type int list but is here used with type int
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "2765.ml", line 12, characters 50-65:
+And modified the following location:
+File "2765.ml", line 12, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    'a list -> int -> 'a
+within context
+    fun i l -> (if (i <= 0) then [] else (match (List.rev l) with 
+                                          | [] -> []
+                                          | h :: t ->
+                                            [
+                                                    ((mulByDigit i t)
+                                                        +; [[...]] (carry h i))
+                                                    ]
+                                                @ [[...other program...]]))
+==============================
+Triaged the following locations:
+File "2765.ml", line 12, characters 15-47:
+And modified the following location:
+File "2765.ml", line 12, characters 51-60:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    remainder
+with
+    remainder; [[...]]
+The actual replacement has type
+    int -> 'b list -> 'c
+within context
+    fun i l -> (if (i <= 0) then [] else (match (List.rev l) with 
+                                          | [] -> []
+                                          | h :: t ->
+                                            [[...other program...]] @
+                                                [((remainder; [[...]]) i t)]))
+==============================
+Triaged the following locations:
+File "2765.ml", line 12, characters 15-47:
+And modified the following location:
+File "2765.ml", line 12, characters 63-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    t
+with
+    h
+The actual replacement has type
+    int
+within context
+    fun i l -> (if (i <= 0) then [] else (match (List.rev l) with 
+                                          | [] -> []
+                                          | h :: t ->
+                                            [[...other program...]] @
+                                                [(remainder i h)]))
+==============================
+Triaged the following locations:
+File "2765.ml", line 12, characters 15-47:
+And modified the following location:
+File "2765.ml", line 12, characters 63-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    t
+with
+    i
+The actual replacement has type
+    int
+within context
+    fun i l -> (if (i <= 0) then [] else (match (List.rev l) with 
+                                          | [] -> []
+                                          | h :: t ->
+                                            [[...other program...]] @
+                                                [(remainder i i)]))
+==============================
+Triaged the following locations:
+File "2765.ml", line 12, characters 15-47:
+And modified the following location:
+File "2765.ml", line 12, characters 63-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    t
+with
+    t; [[...]]
+The actual replacement has type
+    int
+within context
+    fun i l -> (if (i <= 0) then [] else (match (List.rev l) with 
+                                          | [] -> []
+                                          | h :: t ->
+                                            [[...other program...]] @
+                                                [(remainder i (t; [[...]]))]))
+==============================
+Triaged the following locations:
+File "2765.ml", line 12, characters 50-65:
+And modified the following location:
+File "2765.ml", line 12, characters 16-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (mulByDigit i t)
+with
+    (mulByDigit i t); [[...]]
+The actual replacement has type
+    int
+within context
+    fun i l -> (if (i <= 0) then [] else (match (List.rev l) with 
+                                          | [] -> []
+                                          | h :: t ->
+                                            [
+                                                    ((mulByDigit i t); [[...]])
+                                                      + (carry h i)
+                                                    ]
+                                                @ [[...other program...]]))
+==============================

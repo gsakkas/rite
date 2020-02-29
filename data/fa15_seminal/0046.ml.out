@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0046.ml", line 3, characters 26-77:
+This expression has type (int -> 'a) list but is here used with type 'a
+Relevant code: if n <= 0 then [] else (helper x) :: (acc (n' - 1))
+------------------------------------------------------------------
+File "0046.ml", line 3, characters 49-77:
+Try replacing
+    (helper x) :: (acc (n' - 1))
+with
+    [[...]]
+of type
+    'b list
+within context
+    fun n ->
+      (let rec helper acc n' = (if (n <= 0) then [] else [[...]]) in
+          (helper [x] (n - 1)))
+==============================

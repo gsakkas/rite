@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1750.ml", line 26, characters 40-44:
+This expression has type int * int but is here used with type int list
+Relevant code: args
+------------------------------------------------------------------
+File "1750.ml", line 26, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int -> int -> int) -> int -> int * int -> 'a * 'b
+within context
+    let f a x = a + x in
+      let base = 0 in
+      let args =
+      let combo = (List.combine (List.rev l1) (List.rev l2)) in (match combo with 
+                                                                 | (i, j) :: t ->
+                                                                   (if i + j > 9
+                                                                       then
+                                                                       1,
+                                                                         (i + j)
+                                                                           - 10
+                                                                       else
+                                                                       0, i + j)
+                                                                 | [] -> (0, 0))
+      in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

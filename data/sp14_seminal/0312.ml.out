@@ -1,0 +1,92 @@
+------------------------------------------------------------------
+File "0312.ml", line 29, characters 16-17:
+This expression is not a function, it cannot be applied
+Relevant code: 0
+------------------------------------------------------------------
+Triaged the following locations:
+File "0312.ml", line 29, characters 4-169:
+And modified the following location:
+File "0312.ml", line 35, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    int -> 'e
+within context
+    let rec build (rand, depth) =
+    let e = (build (rand, depth - 1)) in
+      (if depth > 1 then [[...other program...]] else
+          (match (rand ((0; [[...]]) 1)) with 
+           | 0 -> (buildX ())
+           | 1 -> (buildY ())))
+    ;; 
+==============================
+Triaged the following locations:
+File "0312.ml", line 29, characters 4-169:
+And modified the following location:
+File "0312.ml", line 35, characters 22-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (0 1)
+with
+    0
+The actual replacement has type
+    int
+within context
+    let rec build (rand, depth) =
+    let e = (build (rand, depth - 1)) in
+      (if depth > 1 then [[...other program...]] else (match (rand 0) with 
+                                                       | 0 -> (buildX ())
+                                                       | 1 -> (buildY ())))
+    ;; 
+==============================
+Triaged the following locations:
+File "0312.ml", line 35, characters 7-64:
+And modified the following location:
+File "0312.ml", line 29, characters 18-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (0 4)
+with
+    0
+The actual replacement has type
+    int
+within context
+    let rec build (rand, depth) =
+    let e = (build (rand, depth - 1)) in (if depth > 1 then (match (rand 0) with 
+                                                             | 0 -> (buildSine e)
+                                                             | 1 -> (buildCosine e)
+                                                             | 2 ->
+                                                               (buildAverage (e, e))
+                                                             | 3 ->
+                                                               (buildTimes (e, e))
+                                                             | 4 ->
+                                                               (buildThresh
+                                                                   (e,
+                                                                       e,
+                                                                       e,
+                                                                       e))) else [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "0312.ml", line 35, characters 7-64:
+And modified the following location:
+File "0312.ml", line 29, characters 16-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0
+with
+    0; [[...]]
+The actual replacement has type
+    int -> 'a
+within context
+    let rec build (rand, depth) =
+    let e = (build (rand, depth - 1)) in
+      (if depth > 1 then (match (rand ((0; [[...]]) 4)) with 
+                          | 0 -> (buildSine e)
+                          | 1 -> (buildCosine e)
+                          | 2 -> (buildAverage (e, e))
+                          | 3 -> (buildTimes (e, e))
+                          | 4 ->
+                            (buildThresh
+                                (e, e, e, e))) else [[...other program...]])
+    ;; 
+==============================

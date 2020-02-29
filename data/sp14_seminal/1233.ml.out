@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1233.ml", line 20, characters 49-55:
+This expression has type int * int but is here used with type
+  ('a * 'b) list list
+Relevant code: (0, 0)
+------------------------------------------------------------------
+File "1233.ml", line 20, characters 49-55:
+Try replacing
+    0, 0
+with
+    0, 0; [[...]]
+of type
+    ('c * 'd) list list
+within context
+    let f a x = (failwith "TBD") in
+      let base = (failwith "TBD") in
+      let args = (List.rev (List.combine l1 l2) :: 0, 0; [[...]]) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

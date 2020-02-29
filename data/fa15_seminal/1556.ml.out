@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1556.ml", line 3, characters 55-56:
+This expression has type 'a but is here used with type 'a * ('b * bool)
+Relevant code: f
+------------------------------------------------------------------
+File "1556.ml", line 3, characters 48-54:
+Try replacing
+    wwhile
+with
+    wwhile; [[...]]
+of type
+    'c -> 'd -> 'd
+within context
+    let rec wwhile (f, b) = (match f, b with 
+                             | (f, (h1, h2)) ->
+                               (if h2 then ((wwhile; [[...]]) f h1) else h1)) ;; 
+==============================

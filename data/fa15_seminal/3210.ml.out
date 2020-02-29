@@ -1,0 +1,112 @@
+------------------------------------------------------------------
+File "3210.ml", line 43, characters 47-48:
+This expression is not a function, it cannot be applied
+Relevant code: m
+------------------------------------------------------------------
+Triaged the following locations:
+File "3210.ml", line 43, characters 39-45:
+And modified the following location:
+File "3210.ml", line 43, characters 47-48:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    m
+with
+    m; [[...]]
+The actual replacement has type
+    'e -> 'f
+within context
+    fun x ->
+      (let (c, a') = a in
+          let m = (mulByDigit x l2) in
+          let s = ((bigAdd; [[...]]) ((m; [[...]]) a')) in c + 1, s)
+==============================
+Triaged the following locations:
+File "3210.ml", line 43, characters 39-45:
+And modified the following location:
+File "3210.ml", line 43, characters 47-48:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    m
+with
+    <
+The actual replacement has type
+    'd -> 'd -> bool
+within context
+    fun x ->
+      (let (c, a') = a in
+          let m = (mulByDigit x l2) in
+          let s = ((bigAdd; [[...]]) (< a')) in c + 1, s)
+==============================
+Triaged the following locations:
+File "3210.ml", line 43, characters 39-45:
+And modified the following location:
+File "3210.ml", line 43, characters 47-48:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    m
+with
+    =
+The actual replacement has type
+    'c -> 'c -> bool
+within context
+    fun x ->
+      (let (c, a') = a in
+          let m = (mulByDigit x l2) in
+          let s = ((bigAdd; [[...]]) (= a')) in c + 1, s)
+==============================
+Triaged the following locations:
+File "3210.ml", line 43, characters 39-45:
+And modified the following location:
+File "3210.ml", line 43, characters 47-48:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    m
+with
+    >
+The actual replacement has type
+    'b -> 'b -> bool
+within context
+    fun x ->
+      (let (c, a') = a in
+          let m = (mulByDigit x l2) in
+          let s = ((bigAdd; [[...]]) (> a')) in c + 1, s)
+==============================
+Triaged the following locations:
+File "3210.ml", line 43, characters 39-45:
+And modified the following location:
+File "3210.ml", line 43, characters 47-48:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    m
+with
+    @
+The actual replacement has type
+    'a list -> 'a list -> 'a list
+within context
+    fun x ->
+      (let (c, a') = a in
+          let m = (mulByDigit x l2) in
+          let s = ((bigAdd; [[...]]) (@ a')) in c + 1, s)
+==============================
+Triaged the following locations:
+File "3210.ml", line 43, characters 39-45:
+And modified the following location:
+File "3210.ml", line 43, characters 49-51:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    bigAdd
+If you ignore other surrounding code, try replacing
+    (m a')
+with
+    m
+The actual replacement has type
+    int list
+within context
+    fun x ->
+      (let (c, a') = a in
+          let m = (mulByDigit x l2) in let s = ((bigAdd; [[...]]) m) in c + 1, s)
+==============================

@@ -1,0 +1,37 @@
+------------------------------------------------------------------
+File "3293.ml", line 16, characters 54-55:
+This expression has type 'a list * 'b list but is here used with type 'c list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "3293.ml", line 16, characters 58-67:
+And modified the following location:
+File "3293.ml", line 16, characters 54-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'd list
+within context
+    fun a x -> (match x with 
+                | (v1, v2) -> (match a with 
+                               | ([], []) ->
+                                 (v1 :: a; [[...]], [[...other program...]])))
+==============================
+Triaged the following locations:
+File "3293.ml", line 16, characters 47-56:
+And modified the following location:
+File "3293.ml", line 16, characters 65-66:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'e list
+within context
+    fun a x -> (match x with 
+                | (v1, v2) -> (match a with 
+                               | ([], []) ->
+                                 ([[...other program...]], v2 :: a; [[...]])))
+==============================

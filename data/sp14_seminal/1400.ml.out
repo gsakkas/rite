@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "1400.ml", line 7, characters 54-58:
+This expression has type 'a list but is here used with type string
+Relevant code: base
+------------------------------------------------------------------
+File "1400.ml", line 7, characters 54-58:
+Try replacing
+    base
+with
+    h
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h ^ (sep ^ a) in
+             let base = [] in let l = sl in (List.fold_left f h  l)))
+==============================
+File "1400.ml", line 7, characters 54-58:
+Try replacing
+    base
+with
+    sep
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h ^ (sep ^ a) in
+             let base = [] in let l = sl in (List.fold_left f sep  l)))
+==============================

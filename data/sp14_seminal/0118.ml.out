@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "0118.ml", line 11, characters 5-11:
+This expression has type ('a -> ('a -> 'a * 'b) * bool) * 'c
+but is here used with type ('a -> 'a * bool) * 'a
+Relevant code: (g, b)
+------------------------------------------------------------------
+File "0118.ml", line 11, characters 6-10:
+Try replacing
+    g, b
+with
+    b, g
+of type
+    (('d -> ('d -> 'd * 'e) * bool) -> ('d -> ('d -> 'd * 'e) * bool) * bool) *
+    ('d -> ('d -> 'd * 'e) * bool)
+within context
+    let fixpoint (f, b) =
+    (wwhile (let g b = let helper = (f b) in (match helper with 
+                                              | (x, y) ->
+                                                (if x = b then f, false else
+                                                    f, true)) in b, g))
+    ;; 
+==============================
+File "0118.ml", line 7, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('f -> ('f -> 'f * 'g) * bool) * 'h ->
+    ('f -> ('f -> 'f * 'g) * bool) * 'h -> bool
+within context
+    let fixpoint (f, b) = (= (let g b = let helper = (f b) in (match helper with 
+                                                               | (x, y) ->
+                                                                 (if x = b then
+                                                                     f, false
+                                                                     else
+                                                                     f,
+                                                                       true)) in g,
+              b)) ;; 
+==============================
+File "0118.ml", line 11, characters 6-7:
+Try replacing
+    g
+with
+    f
+of type
+    ('i -> 'i * bool) * 'i
+within context
+    let fixpoint (f, b) =
+    (wwhile (let g b = let helper = (f b) in (match helper with 
+                                              | (x, y) ->
+                                                (if x = b then f, false else
+                                                    f, true)) in f, b))
+    ;; 
+==============================

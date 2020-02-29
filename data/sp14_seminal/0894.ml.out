@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "0894.ml", line 16, characters 35-61:
+This expression has type 'a list but is here used with type 'b * 'c
+Relevant code: List.fold_left f base args
+------------------------------------------------------------------
+File "0894.ml", line 16, characters 56-56:
+Try replacing
+    (List.fold_left f base  args)
+with
+    (List.fold_left f [[...]]  base  args)
+of type
+    'd * 'e
+within context
+    fun (l1, l2) ->
+      (let f a x = x in
+          let base = [] in
+          let args = [] in
+          let (_, res) = (List.fold_left f [[...]]  base  args) in res)
+==============================
+File "0894.ml", line 15, characters 15-17:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    'f
+within context
+    fun l2 ->
+      (let add (l1, l2) =
+          let f a x = x in
+            let base = []; [[...]] in
+            let args = [] in let (_, res) = (List.fold_left f base  args) in res
+          in
+          (removeZero (add (padZero l1 l2))))
+==============================

@@ -1,0 +1,252 @@
+------------------------------------------------------------------
+File "3052.ml", line 50, characters 26-45:
+This expression has type (int * int -> int) * int but is here used with type
+  expr
+Relevant code: (rand, (depth - 1))
+------------------------------------------------------------------
+Triaged the following locations:
+File "3052.ml", line 50, characters 14-45:
+And modified the following location:
+File "3052.ml", line 51, characters 14-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildSine
+with
+    build
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    fun (rand, depth) ->
+      (if depth < 1 then (let base = (rand (0, 2)) in (match base with 
+                                                       | 0 -> (buildX ())
+                                                       | 1 -> (buildY ())
+                                                       | _ ->
+                                                         (if base < 0 then
+                                                             (buildX ())
+                                                             else
+                                                             (buildY
+                                                               ())))) else (let
+            recurse
+            =
+            (rand (0, 5))
+            in
+            (match recurse with 
+             | 0 -> (buildSine (build (rand, depth - 1)))
+             | 1 -> (buildCosine (build (rand, depth - 1)))
+             | 2 ->
+               (buildAverage ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 3 ->
+               (buildTimes ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 4 ->
+               (buildThresh
+                   ((build (rand, depth - 1)),
+                       (build (rand, depth - 1)),
+                       (build (rand, depth - 1)), (build (rand, depth - 1))))
+             | _ ->
+               (if recurse > 2 then [[...other program...]] else
+                   (build (rand, depth - 1))))))
+==============================
+Triaged the following locations:
+File "3052.ml", line 50, characters 14-45:
+And modified the following location:
+File "3052.ml", line 51, characters 14-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildSine
+with
+    buildSine; [[...]]
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    fun (rand, depth) ->
+      (if depth < 1 then (let base = (rand (0, 2)) in (match base with 
+                                                       | 0 -> (buildX ())
+                                                       | 1 -> (buildY ())
+                                                       | _ ->
+                                                         (if base < 0 then
+                                                             (buildX ())
+                                                             else
+                                                             (buildY
+                                                               ())))) else (let
+            recurse
+            =
+            (rand (0, 5))
+            in
+            (match recurse with 
+             | 0 -> (buildSine (build (rand, depth - 1)))
+             | 1 -> (buildCosine (build (rand, depth - 1)))
+             | 2 ->
+               (buildAverage ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 3 ->
+               (buildTimes ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 4 ->
+               (buildThresh
+                   ((build (rand, depth - 1)),
+                       (build (rand, depth - 1)),
+                       (build (rand, depth - 1)), (build (rand, depth - 1))))
+             | _ ->
+               (if recurse > 2 then [[...other program...]] else
+                   ((buildSine; [[...]]) (rand, depth - 1))))))
+==============================
+Triaged the following locations:
+File "3052.ml", line 51, characters 14-43:
+And modified the following location:
+File "3052.ml", line 50, characters 26-45:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand, depth - 1
+with
+    rand, depth - 1; [[...]]
+The actual replacement has type
+    expr
+within context
+    fun (rand, depth) ->
+      (if depth < 1 then (let base = (rand (0, 2)) in (match base with 
+                                                       | 0 -> (buildX ())
+                                                       | 1 -> (buildY ())
+                                                       | _ ->
+                                                         (if base < 0 then
+                                                             (buildX ())
+                                                             else
+                                                             (buildY
+                                                               ())))) else (let
+            recurse
+            =
+            (rand (0, 5))
+            in
+            (match recurse with 
+             | 0 -> (buildSine (build (rand, depth - 1)))
+             | 1 -> (buildCosine (build (rand, depth - 1)))
+             | 2 ->
+               (buildAverage ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 3 ->
+               (buildTimes ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 4 ->
+               (buildThresh
+                   ((build (rand, depth - 1)),
+                       (build (rand, depth - 1)),
+                       (build (rand, depth - 1)), (build (rand, depth - 1))))
+             | _ ->
+               (if recurse > 2 then (buildCosine (rand, depth - 1; [[...]])) else
+                   [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "3052.ml", line 51, characters 14-43:
+And modified the following location:
+File "3052.ml", line 50, characters 14-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildCosine
+with
+    build
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    fun (rand, depth) ->
+      (if depth < 1 then (let base = (rand (0, 2)) in (match base with 
+                                                       | 0 -> (buildX ())
+                                                       | 1 -> (buildY ())
+                                                       | _ ->
+                                                         (if base < 0 then
+                                                             (buildX ())
+                                                             else
+                                                             (buildY
+                                                               ())))) else (let
+            recurse
+            =
+            (rand (0, 5))
+            in
+            (match recurse with 
+             | 0 -> (buildSine (build (rand, depth - 1)))
+             | 1 -> (buildCosine (build (rand, depth - 1)))
+             | 2 ->
+               (buildAverage ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 3 ->
+               (buildTimes ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 4 ->
+               (buildThresh
+                   ((build (rand, depth - 1)),
+                       (build (rand, depth - 1)),
+                       (build (rand, depth - 1)), (build (rand, depth - 1))))
+             | _ ->
+               (if recurse > 2 then (build (rand, depth - 1)) else
+                   [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "3052.ml", line 51, characters 14-43:
+And modified the following location:
+File "3052.ml", line 50, characters 14-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildCosine
+with
+    buildCosine; [[...]]
+The actual replacement has type
+    (int * int -> int) * int -> expr
+within context
+    fun (rand, depth) ->
+      (if depth < 1 then (let base = (rand (0, 2)) in (match base with 
+                                                       | 0 -> (buildX ())
+                                                       | 1 -> (buildY ())
+                                                       | _ ->
+                                                         (if base < 0 then
+                                                             (buildX ())
+                                                             else
+                                                             (buildY
+                                                               ())))) else (let
+            recurse
+            =
+            (rand (0, 5))
+            in
+            (match recurse with 
+             | 0 -> (buildSine (build (rand, depth - 1)))
+             | 1 -> (buildCosine (build (rand, depth - 1)))
+             | 2 ->
+               (buildAverage ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 3 ->
+               (buildTimes ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 4 ->
+               (buildThresh
+                   ((build (rand, depth - 1)),
+                       (build (rand, depth - 1)),
+                       (build (rand, depth - 1)), (build (rand, depth - 1))))
+             | _ ->
+               (if recurse > 2 then ((buildCosine; [[...]]) (rand, depth - 1)) else
+                   [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "3052.ml", line 50, characters 14-45:
+And modified the following location:
+File "3052.ml", line 51, characters 24-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    rand, depth - 1
+with
+    rand, depth - 1; [[...]]
+The actual replacement has type
+    expr
+within context
+    fun (rand, depth) ->
+      (if depth < 1 then (let base = (rand (0, 2)) in (match base with 
+                                                       | 0 -> (buildX ())
+                                                       | 1 -> (buildY ())
+                                                       | _ ->
+                                                         (if base < 0 then
+                                                             (buildX ())
+                                                             else
+                                                             (buildY
+                                                               ())))) else (let
+            recurse
+            =
+            (rand (0, 5))
+            in
+            (match recurse with 
+             | 0 -> (buildSine (build (rand, depth - 1)))
+             | 1 -> (buildCosine (build (rand, depth - 1)))
+             | 2 ->
+               (buildAverage ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 3 ->
+               (buildTimes ((build (rand, depth - 1)), (build (rand, depth - 1))))
+             | 4 ->
+               (buildThresh
+                   ((build (rand, depth - 1)),
+                       (build (rand, depth - 1)),
+                       (build (rand, depth - 1)), (build (rand, depth - 1))))
+             | _ ->
+               (if recurse > 2 then [[...other program...]] else
+                   (buildSine (rand, depth - 1; [[...]]))))))
+==============================

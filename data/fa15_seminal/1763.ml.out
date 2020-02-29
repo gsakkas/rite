@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "1763.ml", line 24, characters 29-35:
+This expression has type expr but is here used with type expr * float * float
+Relevant code: a_less
+------------------------------------------------------------------
+Triaged the following locations:
+File "1763.ml", line 24, characters 49-70:
+And modified the following location:
+File "1763.ml", line 24, characters 22-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval a_less), x, y
+with
+    [[...]]
+The actual replacement has type
+    float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine a -> (sin (pi *. (eval (a, x, y))))
+                      | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                      | Average (a, b) ->
+                        (((eval (a, x, y)) +. (eval (b, x, y))) *. 0.5)
+                      | Times (a, b) -> ((eval (a, x, y)) /. (eval (b, x, y)))
+                      | Thresh (a, b, a_less, b_less) ->
+                        (let x1 = (eval (a, x, y)) in
+                              let x2 = (eval (b, x, y)) in
+                              (if x1 < x2 then [[...]] else
+                                  [[...other program...]])))
+==============================
+Triaged the following locations:
+File "1763.ml", line 24, characters 22-43:
+And modified the following location:
+File "1763.ml", line 24, characters 49-70:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval b_less), x, y
+with
+    [[...]]
+The actual replacement has type
+    float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine a -> (sin (pi *. (eval (a, x, y))))
+                      | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                      | Average (a, b) ->
+                        (((eval (a, x, y)) +. (eval (b, x, y))) *. 0.5)
+                      | Times (a, b) -> ((eval (a, x, y)) /. (eval (b, x, y)))
+                      | Thresh (a, b, a_less, b_less) ->
+                        (let x1 = (eval (a, x, y)) in
+                              let x2 = (eval (b, x, y)) in
+                              (if x1 < x2 then [[...other program...]] else
+                                  [[...]])))
+==============================

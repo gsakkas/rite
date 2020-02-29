@@ -1,0 +1,90 @@
+------------------------------------------------------------------
+File "0953.ml", line 9, characters 58-71:
+This expression is not a function, it cannot be applied
+Relevant code: ((f t) ^ "]")
+------------------------------------------------------------------
+Triaged the following locations:
+File "0953.ml", line 9, characters 38-46:
+And modified the following location:
+File "0953.ml", line 9, characters 60-61:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.map
+If you ignore other surrounding code, try replacing
+    (f t) ^ "]"
+with
+    (f (t ^ "]"))
+The actual replacement has type
+    'b -> 'c
+within context
+    let stringOfList f l =
+    (sepConcat ";" ((List.map; [[...]]) (fun t -> ((f (t ^ "]")) l))))
+    ;; 
+==============================
+Triaged the following locations:
+File "0953.ml", line 9, characters 38-46:
+And modified the following location:
+File "0953.ml", line 9, characters 59-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.map
+If you ignore other surrounding code, try replacing
+    (f t) ^ "]"
+with
+    ( ^ ) ((f t) "]")
+The actual replacement has type
+    string -> string
+within context
+    let stringOfList f l =
+    (sepConcat ";" ((List.map; [[...]]) (fun t -> ((( ^ ) ((f t) "]")) l))))
+    ;; 
+==============================
+Triaged the following locations:
+File "0953.ml", line 9, characters 38-46:
+And modified the following location:
+File "0953.ml", line 9, characters 65-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.map
+If you ignore other surrounding code, try replacing
+    ^
+with
+    f
+The actual replacement has type
+    (string -> 'g -> 'h) -> string -> 'g -> 'h
+within context
+    let stringOfList f l =
+    (sepConcat ";" ((List.map; [[...]]) (fun t -> (((f t) f "]") l))))
+    ;; 
+==============================
+Triaged the following locations:
+File "0953.ml", line 9, characters 38-46:
+And modified the following location:
+File "0953.ml", line 9, characters 65-66:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.map
+If you ignore other surrounding code, try replacing
+    ^
+with
+    t
+The actual replacement has type
+    'd -> string -> 'e -> 'f
+within context
+    let stringOfList f l =
+    (sepConcat ";" ((List.map; [[...]]) (fun t -> (((f t) t "]") l))))
+    ;; 
+==============================
+Triaged the following locations:
+File "0953.ml", line 9, characters 38-46:
+And modified the following location:
+File "0953.ml", line 9, characters 72-73:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.map
+If you ignore other surrounding code, try replacing
+    (((f t) ^ "]") l)
+with
+    (f t) ^ "]"
+The actual replacement has type
+    string
+within context
+    let stringOfList f l =
+    (sepConcat ";" ((List.map; [[...]]) (fun t -> (f t) ^ "]")))
+    ;; 
+==============================

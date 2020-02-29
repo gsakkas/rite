@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "3576.ml", line 7, characters 56-60:
+This expression has type string -> string but is here used with type string
+Relevant code: base
+------------------------------------------------------------------
+File "3576.ml", line 7, characters 56-60:
+Try replacing
+    base
+with
+    h
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sep ^ x) in
+             let base = ( ^ ) h in let l = t in (List.fold_left f h  l)))
+==============================
+File "3576.ml", line 7, characters 56-60:
+Try replacing
+    base
+with
+    sep
+of type
+    string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ (sep ^ x) in
+             let base = ( ^ ) h in let l = t in (List.fold_left f sep  l)))
+==============================

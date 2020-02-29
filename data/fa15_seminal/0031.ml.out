@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0031.ml", line 3, characters 2-69:
+This expression has type 'a list list but is here used with type 'a
+Relevant code: match n < 0 with | true  -> [] | false  -> [[digitsOfInt (n / 10)]]
+------------------------------------------------------------------
+File "0031.ml", line 3, characters 47-58:
+Try replacing
+    digitsOfInt
+with
+    /
+of type
+    int -> int -> int
+within context
+    fun n -> (match n < 0 with 
+              | true -> []
+              | false -> [[(/ (n / 10))]])
+==============================
+File "0031.ml", line 3, characters 47-58:
+Try replacing
+    digitsOfInt
+with
+    <
+of type
+    int -> int -> bool
+within context
+    fun n -> (match n < 0 with 
+              | true -> []
+              | false -> [[(< (n / 10))]])
+==============================

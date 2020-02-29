@@ -1,0 +1,58 @@
+------------------------------------------------------------------
+File "2830.ml", line 4, characters 9-15:
+This expression has type ('a -> 'a * bool) * 'b but is here used with type
+  'a * bool
+Relevant code: (f, b)
+------------------------------------------------------------------
+File "2830.ml", line 4, characters 2-8:
+Try replacing
+    helper
+with
+    wwhile
+of type
+    ('c -> 'c * bool) * 'd -> 'e
+within context
+    let rec wwhile (f, b) =
+    let rec helper (b', c') = (if c' = true then (helper (f b')) else b') in
+      (wwhile (f, b))
+    ;; 
+==============================
+File "2830.ml", line 4, characters 2-8:
+Try replacing
+    helper
+with
+    =
+of type
+    ('f -> 'f * bool) * 'g -> ('f -> 'f * bool) * 'g -> bool
+within context
+    let rec wwhile (f, b) =
+    let rec helper (b', c') = (if c' = true then (helper (f b')) else b') in
+      (= (f, b))
+    ;; 
+==============================
+File "2830.ml", line 4, characters 10-11:
+Try replacing
+    f
+with
+    =
+of type
+    ('h -> 'h -> bool) * bool
+within context
+    let rec wwhile (f, b) =
+    let rec helper (b', c') = (if c' = true then (helper (f b')) else b') in
+      (helper (=, b))
+    ;; 
+==============================
+File "2830.ml", line 4, characters 10-11:
+Try replacing
+    f
+with
+    b
+of type
+    bool * bool
+within context
+    let rec wwhile (f, b) =
+    let rec helper (b', c') = (if c' = true then (helper (f b')) else b') in
+      (helper (b, b))
+    ;; 
+==============================

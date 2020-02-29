@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "2778.ml", line 8, characters 7-36:
+This expression has type 'a list * int list but is here used with type
+  'b list
+Relevant code: (l1, (clone 0 (len1 - len2)))
+------------------------------------------------------------------
+File "2778.ml", line 8, characters 37-38:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    int list * int list -> 'c list -> int list * 'c list
+within context
+    fun l2 ->
+      (let len1 = (List.length l1) in
+          let len2 = (List.length l2) in
+          (if len1 > len2 then (l1, (clone 0 (len1 - len2)) @; [[...]] l2) else
+              (clone 0 (len2 - len1)) @ l1, l2))
+==============================

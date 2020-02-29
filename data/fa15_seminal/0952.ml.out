@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0952.ml", line 10, characters 57-60:
+This expression has type string but is here used with type 'a list
+Relevant code: "]"
+------------------------------------------------------------------
+File "0952.ml", line 10, characters 52-60:
+Try replacing
+    g :: "]"
+with
+    [[...]]
+of type
+    string
+within context
+    fun l -> (sepConcat ";" (List.map (fun t -> (let g = (f t) in [[...]])) l))
+==============================

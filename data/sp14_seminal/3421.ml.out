@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "3421.ml", line 9, characters 47-55:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.map
+------------------------------------------------------------------
+File "3421.ml", line 9, characters 58-60:
+Try replacing
+    (List.map f ""  l)
+with
+    (List.map f l)
+of type
+    string list
+within context
+    fun f l -> "[" ^ ((sepConcat "; " (List.map f l)) ^ "]")
+==============================

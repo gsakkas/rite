@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2644.ml", line 37, characters 18-32:
+This expression has type int list -> int list but is here used with type int
+Relevant code: (bigAdd total)
+------------------------------------------------------------------
+File "2644.ml", line 37, characters 33-34:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    (int list -> int list) -> int list -> int list
+within context
+    fun x ->
+      (let (pow, total) = a in
+          pow + 1, ((bigAdd total) +; [[...]] (mulByDigit x l2)) @ (listZeros pow))
+==============================

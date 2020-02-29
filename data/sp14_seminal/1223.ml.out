@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "1223.ml", line 20, characters 58-59:
+This expression has type (int * int) list but is here used with type int list
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "1223.ml", line 22, characters 4-131:
+And modified the following location:
+File "1223.ml", line 20, characters 20-59:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (w + y) / 10 :: (mod (w + y) 10) :: t
+with
+    [[...]]
+The actual replacement has type
+    ('a * 'b) list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match a with 
+                                                  | (w, y) :: t -> [[...]]
+                                                  | _ ->
+                                                    a) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1223.ml", line 22, characters 4-131:
+And modified the following location:
+File "1223.ml", line 18, characters 4-244:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = (match a with 
+                 | (w, y) :: t -> (w + y) / 10 :: (mod (w + y) 10) :: t
+                 | _ ->
+                   a) in let base = [] in
+      let args = (List.rev ((List.combine l1 l2) @ (0, 0))) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'c
+==============================

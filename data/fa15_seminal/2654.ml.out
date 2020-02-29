@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "2654.ml", line 48, characters 24-40:
+This expression has type expr * expr but is here used with type expr
+Relevant code: (build1, build2)
+------------------------------------------------------------------
+File "2654.ml", line 48, characters 12-23:
+Try replacing
+    buildArctan
+with
+    buildAverage
+of type
+    expr * expr -> expr
+within context
+    let build2 = (build (rand, depth - 1)) in
+      let build3 = (build (rand, depth - 1)) in
+      let build4 = (build (rand, depth - 1)) in (match result with 
+                                                 | 0 -> (buildSine build1)
+                                                 | 1 -> (buildCosine build1)
+                                                 | 2 ->
+                                                   (buildAverage (build1, build2))
+                                                 | 3 ->
+                                                   (buildTimes (build1, build2))
+                                                 | 4 ->
+                                                   (buildThresh
+                                                       (build1,
+                                                           build2, build3, build4))
+                                                 | 5 ->
+                                                   (buildAverage (build1, build2))
+                                                 | 6 ->
+                                                   (buildStrange
+                                                       (build1, build2, build3)))
+==============================

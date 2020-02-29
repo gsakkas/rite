@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "1772.ml", line 13, characters 27-33:
+This expression has type 'a list list * 'a list but is here used with type
+  'b list
+Relevant code: (t, h)
+------------------------------------------------------------------
+File "1772.ml", line 13, characters 27-33:
+Try replacing
+    (filter (t, h))
+with
+    (filter t h)
+of type
+    'c list list
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' = seen @ h in
+                                           let rest' = (filter t h) in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================

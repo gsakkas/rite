@@ -1,0 +1,68 @@
+------------------------------------------------------------------
+File "0548.ml", line 4, characters 58-60:
+This expression has type 'a but is here used with type 'a list
+Relevant code: fs
+------------------------------------------------------------------
+File "0548.ml", line 3, characters 10-27:
+Try replacing
+    fun x -> function | [] -> x | h :: fs' -> (h x)
+with
+    fun [] x -> x
+of type
+    'b list -> 'c -> 'c
+within context
+    let pipe fs =
+    let f a [] x = x in let base [] = fs in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "0548.ml", line 3, characters 10-27:
+Try replacing
+    fun a x -> function | [] -> x | h :: fs' -> (h x)
+with
+    fun a [] x -> x
+of type
+    'd -> 'e list -> 'f -> 'f
+within context
+    let pipe fs =
+    let f a [] x = x in let base [] = fs in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "0548.ml", line 4, characters 53-57:
+Try replacing
+    base
+with
+    f
+of type
+    (('g -> ('g -> 'g) list -> 'g) -> 'g -> ('g -> 'g) list -> 'g) list ->
+    'g -> ('g -> 'g) list -> 'g
+within context
+    let pipe fs =
+    let f a x = function | [] -> x | h :: fs' -> (h x) in
+      let base [] = fs in (List.fold_left f f  fs)
+    ;; 
+==============================
+File "0548.ml", line 4, characters 30-32:
+Try replacing
+    fs
+with
+    f
+of type
+    'h -> 'i -> ('i -> 'i) list -> 'i
+within context
+    let pipe fs =
+    let f a x = function | [] -> x | h :: fs' -> (h x) in
+      let base [] = f in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "0548.ml", line 3, characters 31-32:
+Try replacing
+    x
+with
+    fs
+of type
+    'j list
+within context
+    fun fs ->
+      (let f a x = function | [] -> fs | h :: fs' -> (h x) in
+          let base [] = fs in (List.fold_left f base  fs))
+==============================

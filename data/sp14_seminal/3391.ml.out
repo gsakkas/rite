@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3391.ml", line 3, characters 65-69:
+This expression has type 'a -> 'a but is here used with type 'b list
+Relevant code: base
+------------------------------------------------------------------
+File "3391.ml", line 3, characters 14-24:
+Try replacing
+    (List.map x a)
+with
+    (List.map (x a))
+of type
+    'c list -> 'd list
+within context
+    let pipe fs =
+    let f a x = (List.map (x a)) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================

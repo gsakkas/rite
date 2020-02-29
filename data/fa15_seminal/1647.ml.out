@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "1647.ml", line 7, characters 23-33:
+This expression has type 'a list -> bool but is here used with type bool
+Relevant code: List.mem h
+------------------------------------------------------------------
+File "1647.ml", line 7, characters 33-33:
+Try replacing
+    (List.mem h)
+with
+    (List.mem h [[...]])
+of type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if (List.mem h [[...]]) then seen else
+                                             h :: seen)
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================
+File "1647.ml", line 7, characters 33-33:
+Try replacing
+    (List.mem h)
+with
+    (List.mem [[...]] h)
+of type
+    bool
+within context
+    let rec helper (seen, rest) = (match rest with 
+                                   | [] -> seen
+                                   | h :: t ->
+                                     (let seen' =
+                                           (if (List.mem [[...]] h) then seen else
+                                             h :: seen)
+                                           in
+                                           let rest' = t in
+                                           (helper
+                                               (seen',
+                                                   rest')))) in (List.rev
+          (helper ([], l)))
+==============================

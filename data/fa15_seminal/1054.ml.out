@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "1054.ml", line 28, characters 31-73:
+This expression has type int list but is here used with type int
+Relevant code: bigAdd (bigAdd l l) (mulByDigit (i - 1) l)
+------------------------------------------------------------------
+File "1054.ml", line 28, characters 22-23:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    int list
+within context
+    let rec mulByDigit i l = (match i with 
+                              | 0 -> (0; [[...]])
+                              | _ ->
+                                (bigAdd (bigAdd l l) (mulByDigit (i - 1) l))) ;; 
+==============================
+File "1054.ml", line 28, characters 31-37:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    int list -> int -> int
+within context
+    let rec mulByDigit i l = (match i with 
+                              | 0 -> 0
+                              | _ ->
+                                ((bigAdd; [[...]])
+                                    (bigAdd l l) (mulByDigit (i - 1) l))) ;; 
+==============================

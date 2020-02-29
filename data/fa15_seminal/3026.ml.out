@@ -1,0 +1,130 @@
+------------------------------------------------------------------
+File "3026.ml", line 14, characters 53-54:
+This expression has type 'a * 'b but is here used with type int
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "3026.ml", line 15, characters 4-113:
+And modified the following location:
+File "3026.ml", line 14, characters 55-56:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    'c * 'd -> int -> int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (num1, num2) = x in
+                let (p, q) = a in 0, ((a *; [[...]] 10) + num1) + num2
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "3026.ml", line 15, characters 4-113:
+And modified the following location:
+File "3026.ml", line 14, characters 53-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (num1, num2) = x in
+                let (p, q) = a in 0, ((a; [[...]]) * 10 + num1) + num2
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "3026.ml", line 15, characters 4-113:
+And modified the following location:
+File "3026.ml", line 14, characters 46-77:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    0, (a * 10 + num1) + num2
+with
+    0
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (num1, num2) = x in let (p, q) = a in 0 in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "3026.ml", line 15, characters 4-113:
+And modified the following location:
+File "3026.ml", line 14, characters 41-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'e * 'f
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (num1, num2) = x in
+                let (p, q) = a; [[...]] in 0, (a * 10 + num1) + num2
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "3026.ml", line 15, characters 4-113:
+And modified the following location:
+File "3026.ml", line 14, characters 33-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    p, q
+with
+    _
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let (num1, num2) = x in let _ = a in 0, (a * 10 + num1) + num2
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "3026.ml", line 15, characters 4-113:
+And modified the following location:
+File "3026.ml", line 14, characters 29-77:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let (p, q) = a in 0, (a * 10 + num1) + num2
+with
+    0, (a * 10 + num1) + num2
+The actual replacement has type
+    int * int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x = let (num1, num2) = x in 0, (a * 10 + num1) + num2 in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================

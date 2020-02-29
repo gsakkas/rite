@@ -1,0 +1,122 @@
+------------------------------------------------------------------
+File "1013.ml", line 4, characters 33-38:
+This pattern matches values of type bool
+but is here used to match values of type 'a list
+Relevant code: false
+------------------------------------------------------------------
+Triaged the following locations:
+File "1013.ml", line 4, characters 43-44:
+File "1013.ml", line 4, characters 56-69:
+And modified the following location:
+File "1013.ml", line 4, characters 24-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    t
+with
+    t; [[...]]
+The actual replacement has type
+    bool
+within context
+    let rec wwhile (f, b) =
+    let x = (wwhile (f, b)) in let h :: t = x in (match (t; [[...]]) with 
+                                                  | false -> [[...other program...]]
+                                                  | true -> [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1013.ml", line 4, characters 43-44:
+File "1013.ml", line 4, characters 56-69:
+And modified the following location:
+File "1013.ml", line 4, characters 24-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    t
+with
+    b
+The actual replacement has type
+    bool
+within context
+    let rec wwhile (f, b) =
+    let x = (wwhile (f, b)) in let h :: t = x in (match b with 
+                                                  | false -> [[...other program...]]
+                                                  | true -> [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1013.ml", line 4, characters 43-44:
+File "1013.ml", line 4, characters 56-69:
+And modified the following location:
+File "1013.ml", line 4, characters 24-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    t
+with
+    f
+The actual replacement has type
+    bool
+within context
+    let rec wwhile (f, b) =
+    let x = (wwhile (f, b)) in let h :: t = x in (match f with 
+                                                  | false -> [[...other program...]]
+                                                  | true -> [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1013.ml", line 4, characters 43-44:
+File "1013.ml", line 4, characters 56-69:
+And modified the following location:
+File "1013.ml", line 4, characters 24-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    t
+with
+    h
+The actual replacement has type
+    bool
+within context
+    let rec wwhile (f, b) =
+    let x = (wwhile (f, b)) in let h :: t = x in (match h with 
+                                                  | false -> [[...other program...]]
+                                                  | true -> [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1013.ml", line 4, characters 43-44:
+File "1013.ml", line 4, characters 47-51:
+File "1013.ml", line 4, characters 56-69:
+And modified the following location:
+File "1013.ml", line 4, characters 33-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    false
+with
+    _
+The actual replacement has type
+    'b list
+within context
+    let rec wwhile (f, b) =
+    let x = (wwhile (f, b)) in let h :: t = x in (match t with 
+                                                  | _ -> [[...other program...]]
+                                                  |
+                                                    [[...other pattern...]]
+                                                    ->
+                                                    [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1013.ml", line 4, characters 33-38:
+File "1013.ml", line 4, characters 43-44:
+File "1013.ml", line 4, characters 56-69:
+And modified the following location:
+File "1013.ml", line 4, characters 47-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    true
+with
+    _
+The actual replacement has type
+    'c list
+within context
+    let rec wwhile (f, b) =
+    let x = (wwhile (f, b)) in let h :: t = x in (match t with 
+                                                  |
+                                                    [[...other pattern...]]
+                                                    ->
+                                                    [[...other program...]]
+                                                  | _ -> [[...other program...]])
+    ;; 
+==============================

@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "3259.ml", line 8, characters 34-40:
+This expression has type 'a list but is here used with type unit
+Relevant code: x :: a
+------------------------------------------------------------------
+Triaged the following locations:
+And modified the following location:
+File "3259.ml", line 8, characters 34-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x :: a
+with
+    [[...]]
+The actual replacement has type
+    'b
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (if x = "a" then [[...]] else [[...]]) in
+             let base = sep in let l = t in (List.fold_left f base  l)))
+==============================

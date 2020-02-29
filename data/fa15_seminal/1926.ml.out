@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1926.ml", line 3, characters 33-46:
+This expression has type unit but is here used with type int
+Relevant code: (print_int n)
+------------------------------------------------------------------
+File "1926.ml", line 3, characters 34-43:
+Try replacing
+    (print_int n) / 10
+with
+    (print_int (n / 10))
+of type
+    unit
+within context
+    let rec digitsOfInt n =
+    (if n < 0 then (print_int 0) else (print_int (n / 10))); (digitsOfInt (n / 10))
+    ;; 
+==============================

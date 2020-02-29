@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1307.ml", line 7, characters 26-37:
+This expression has type 'a list but is here used with type unit
+Relevant code: [clone 0 2]
+------------------------------------------------------------------
+File "1307.ml", line 7, characters 26-37:
+Try replacing
+    [(clone 0 2)]
+with
+    [(clone 0 2)]; [[...]]
+of type
+    unit
+within context
+    fun l1
+      l2 ->
+        (let difference1 = (List.length l1) - (List.length l2) in
+            let difference2 = (List.length l2) - (List.length l1) in
+            (if difference1 > 0 then ([(clone 0 2)]; [[...]])))
+==============================

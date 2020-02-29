@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2106.ml", line 10, characters 9-17:
+This expression has type 'a list * 'b list but is here used with type
+  int list
+Relevant code: (l1, l2)
+------------------------------------------------------------------
+File "2106.ml", line 10, characters 9-17:
+Try replacing
+    l1, l2
+with
+    l1, l2; [[...]]
+of type
+    int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then
+      (let n = (List.length l2) - (List.length l1) in (clone 0 n))
+      else
+      (if (List.length l2) < (List.length l1) then
+        (let n = (List.length l1) - (List.length l2) in (clone 0 n))
+        else
+        (l1, l2; [[...]])))
+    ;; 
+==============================

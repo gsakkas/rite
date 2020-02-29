@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "1471.ml", line 30, characters 49-54:
+This expression has type int but is here used with type int list
+Relevant code: digit
+------------------------------------------------------------------
+File "1471.ml", line 30, characters 49-54:
+Try replacing
+    digit
+with
+    digit; [[...]]
+of type
+    int list
+within context
+    let new_carry = ((prevcarry + addend_a) + addend_b) / 10 in
+      let digit = (mod ((prevcarry + addend_a) + addend_b) 10) in (match a with 
+                                                                   | (x, []) ->
+                                                                     (new_carry,
+                                                                           new_carry
+                                                                               ::
+                                                                               digit;
+                                                                               [[...]])
+                                                                   |
+                                                                     (x,
+                                                                         c
+                                                                           :: d
+                                                                           :: y)
+                                                                     ->
+                                                                     (new_carry,
+                                                                           new_carry
+                                                                               ::
+                                                                               digit
+                                                                               ::
+                                                                               d ::
+                                                                               y))
+==============================
+File "1471.ml", line 28, characters 22-64:
+Try replacing
+    (mod ((prevcarry + addend_a) + addend_b) 10)
+with
+    (mod ((prevcarry + addend_a) + addend_b) 10); [[...]]
+of type
+    'a
+within context
+    fun x -> (match x with 
+              | (addend_a, addend_b) -> (let prevcarry = (match a with 
+                                                          | (x, y) ->
+                                                            x) in let new_carry =
+                      ((prevcarry + addend_a) + addend_b) / 10
+                      in
+                      let digit =
+                      (mod ((prevcarry + addend_a) + addend_b) 10); [[...]]
+                      in
+                      (match a with 
+                       | (x, []) -> (new_carry, new_carry :: digit)
+                       | (x, c :: d :: y) ->
+                         (new_carry, new_carry :: digit :: d :: y))))
+==============================

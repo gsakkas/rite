@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "0390.ml", line 30, characters 24-36:
+This expression has type expr -> string but is here used with type string
+Relevant code: exprToString
+------------------------------------------------------------------
+File "0390.ml", line 30, characters 24-36:
+Try replacing
+    exprToString
+with
+    exprToString; [[...]]
+of type
+    string
+within context
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+     | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+     | Average (x, y) ->
+       "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+     | Times (x, y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+     | Thresh (x, y, z, s) ->
+       "(" ^
+           ((exprToString x) ^
+               ("<" ^
+                   ((exprToString y) ^
+                       ("?" ^
+                           ((exprToString z) ^ (":" ^ ((exprToString s) ^ ")")))))))
+     | Trip (x, y, z) ->
+       "((" ^
+           ((exprToString x) ^
+               ("%30.0)" ^
+                   ((exprToString; [[...]]) ^ ("%" ^ ((exprToString z) ^ ")"))))))
+==============================
+File "0390.ml", line 30, characters 37-38:
+Try replacing
+    ^
+with
+    ^; [[...]]
+of type
+    (expr -> string) -> string -> string
+within context
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine x -> "sin(pi*" ^ ((exprToString x) ^ ")")
+     | Cosine x -> "cos(pi*" ^ ((exprToString x) ^ ")")
+     | Average (x, y) ->
+       "((" ^ ((exprToString x) ^ ("+" ^ ((exprToString y) ^ ")/2)")))
+     | Times (x, y) -> (exprToString x) ^ ("*" ^ (exprToString y))
+     | Thresh (x, y, z, s) ->
+       "(" ^
+           ((exprToString x) ^
+               ("<" ^
+                   ((exprToString y) ^
+                       ("?" ^
+                           ((exprToString z) ^ (":" ^ ((exprToString s) ^ ")")))))))
+     | Trip (x, y, z) ->
+       "((" ^
+           ((exprToString x) ^
+               ("%30.0)" ^
+                   (exprToString ^; [[...]] "%" ^ ((exprToString z) ^ ")")))))
+==============================

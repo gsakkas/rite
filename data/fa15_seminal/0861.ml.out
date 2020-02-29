@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0861.ml", line 8, characters 23-47:
+This expression has type int list * 'a list but is here used with type unit
+Relevant code: (((clone 0 n) @ l1), l2)
+------------------------------------------------------------------
+File "0861.ml", line 8, characters 9-47:
+Try replacing
+    (if n < 0 then (clone 0 n) @ l1, l2)
+with
+    [[...]]
+of type
+    'b list * 'c list
+within context
+    let padZero l1 l2 = (match (List.length l1) - (List.length l2) with 
+                         | 0 -> (l1, l2)
+                         | n -> [[...]]) ;; 
+==============================

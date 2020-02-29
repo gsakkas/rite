@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "3134.ml", line 26, characters 33-34:
+This expression has type 'a -> 'b * 'a list -> 'b * 'a list
+but is here used with type 'a -> 'b * 'a list -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "3134.ml", line 23, characters 48-49:
+Try replacing
+    a
+with
+    c
+of type
+    'c
+within context
+    fun a x -> (match x with 
+                | (c, d :: t) -> (c, c :: t))
+==============================
+File "3134.ml", line 23, characters 48-49:
+Try replacing
+    a
+with
+    d
+of type
+    'd
+within context
+    fun a x -> (match x with 
+                | (c, d :: t) -> (c, d :: t))
+==============================

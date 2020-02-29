@@ -1,0 +1,80 @@
+------------------------------------------------------------------
+File "1993.ml", line 7, characters 71-72:
+This expression has type int list but is here used with type string list
+Relevant code: l
+------------------------------------------------------------------
+File "1993.ml", line 6, characters 10-11:
+Try replacing
+    f
+with
+    _
+of type
+    string -> string -> string
+within context
+    let stringOfList f l = (match l with 
+                            | [] -> ""
+                            | h :: t ->
+                              (let _ a x = a ^ x in
+                                    let base = (string_of_int h) in
+                                    let l = t in (List.fold_left f base  l))) ;; 
+==============================
+File "1993.ml", line 6, characters 6-99:
+Try replacing
+    let f a x = a ^ x in
+      let base = (string_of_int h) in let l = t in (List.fold_left f base  l)
+with
+    let base = (string_of_int h) in let l = t in (List.fold_left f base  l)
+of type
+    string
+within context
+    let stringOfList f l = (match l with 
+                            | [] -> ""
+                            | h :: t ->
+                              (let base = (string_of_int h) in
+                                    let l = t in (List.fold_left f base  l))) ;; 
+==============================
+File "1993.ml", line 6, characters 20-21:
+Try replacing
+    ^
+with
+    f
+of type
+    string -> int -> string
+within context
+    (match l with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (a f x) in
+             let base = (string_of_int h) in
+             let l = t in (List.fold_left f base  l)))
+==============================
+File "1993.ml", line 6, characters 22-23:
+Try replacing
+    x
+with
+    a
+of type
+    string
+within context
+    (match l with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ a in
+             let base = (string_of_int h) in
+             let l = t in (List.fold_left f base  l)))
+==============================
+File "1993.ml", line 6, characters 22-23:
+Try replacing
+    x
+with
+    f
+of type
+    string
+within context
+    (match l with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = a ^ f in
+             let base = (string_of_int h) in
+             let l = t in (List.fold_left f base  l)))
+==============================

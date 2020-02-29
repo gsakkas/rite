@@ -1,0 +1,81 @@
+------------------------------------------------------------------
+File "0083.ml", line 18, characters 52-56:
+This expression has type int but is here used with type int list
+Relevant code: base
+------------------------------------------------------------------
+Triaged the following locations:
+File "0083.ml", line 18, characters 4-68:
+And modified the following location:
+File "0083.ml", line 17, characters 40-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    'a -> 'b -> 'c
+within context
+    fun l2 ->
+      (let add (l1, l2) = let f a x = (mod x 10) :: a in let base = ((match l1 with 
+                                                                      | h ->
+                                                                        h) +;
+                [[...]]
+                (match l2 with 
+                 | h ->
+                   h)) in [[...other program...]] in (removeZero
+              (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0083.ml", line 18, characters 4-68:
+And modified the following location:
+File "0083.ml", line 17, characters 40-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    <
+The actual replacement has type
+    'd -> 'd -> bool
+within context
+    fun l2 ->
+      (let add (l1, l2) = let f a x = (mod x 10) :: a in let base = (match l1 with 
+                                                                     | h ->
+                                                                       h) <
+              (match l2 with 
+               | h ->
+                 h) in [[...other program...]] in (removeZero
+              (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0083.ml", line 18, characters 4-68:
+And modified the following location:
+File "0083.ml", line 17, characters 40-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    @
+The actual replacement has type
+    'e list -> 'e list -> 'e list
+within context
+    fun l2 ->
+      (let add (l1, l2) = let f a x = (mod x 10) :: a in let base = (match l1 with 
+                                                                     | h ->
+                                                                       h) @
+              (match l2 with 
+               | h ->
+                 h) in [[...other program...]] in (removeZero
+              (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0083.ml", line 18, characters 4-68:
+And modified the following location:
+File "0083.ml", line 17, characters 4-138:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let base = (match l1 with 
+                | h -> h) + (match l2 with 
+                             | h ->
+                               h) in let args = [] in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'f
+==============================

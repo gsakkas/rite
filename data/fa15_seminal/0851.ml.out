@@ -1,0 +1,93 @@
+------------------------------------------------------------------
+File "0851.ml", line 25, characters 27-39:
+This expression has type int * int but is here used with type 'a list
+Relevant code: (fst', sec')
+------------------------------------------------------------------
+Triaged the following locations:
+File "0851.ml", line 25, characters 13-41:
+And modified the following location:
+File "0851.ml", line 26, characters 25-26:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    'b -> int * int -> 'c
+within context
+    let (fst, sec) = x in
+      let (fst', sec') =
+      (if fst + sec > 9 then (fst + sec) - 10, 1 else fst + sec, 0)
+      in
+      let (carry, digits) = a in
+      let (carry', digits') =
+      (if sec' = 1 then [[...other program...]] else
+        0, (digits @; [[...]] fst', sec'))
+      in
+      carry', digits'
+==============================
+Triaged the following locations:
+File "0851.ml", line 26, characters 13-41:
+And modified the following location:
+File "0851.ml", line 25, characters 27-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fst', sec'
+with
+    fst', sec'; [[...]]
+The actual replacement has type
+    'd list
+within context
+    let (fst, sec) = x in
+      let (fst', sec') =
+      (if fst + sec > 9 then (fst + sec) - 10, 1 else fst + sec, 0)
+      in
+      let (carry, digits) = a in
+      let (carry', digits') =
+      (if sec' = 1 then 1, digits @ (fst', sec'; [[...]]) else
+        [[...other program...]])
+      in
+      carry', digits'
+==============================
+Triaged the following locations:
+File "0851.ml", line 26, characters 13-41:
+And modified the following location:
+File "0851.ml", line 25, characters 25-26:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    'e -> int * int -> 'f
+within context
+    let (fst, sec) = x in
+      let (fst', sec') =
+      (if fst + sec > 9 then (fst + sec) - 10, 1 else fst + sec, 0)
+      in
+      let (carry, digits) = a in
+      let (carry', digits') =
+      (if sec' = 1 then 1, (digits @; [[...]] fst', sec') else
+        [[...other program...]])
+      in
+      carry', digits'
+==============================
+Triaged the following locations:
+File "0851.ml", line 25, characters 13-41:
+And modified the following location:
+File "0851.ml", line 26, characters 27-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fst', sec'
+with
+    fst', sec'; [[...]]
+The actual replacement has type
+    'g list
+within context
+    let (fst, sec) = x in
+      let (fst', sec') =
+      (if fst + sec > 9 then (fst + sec) - 10, 1 else fst + sec, 0)
+      in
+      let (carry, digits) = a in
+      let (carry', digits') =
+      (if sec' = 1 then [[...other program...]] else
+        0, digits @ (fst', sec'; [[...]]))
+      in
+      carry', digits'
+==============================

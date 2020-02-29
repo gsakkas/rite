@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2734.ml", line 6, characters 16-18:
+This expression has type 'a list but is here used with type int
+Relevant code: l1
+------------------------------------------------------------------
+File "2734.ml", line 6, characters 19-20:
+Try replacing
+    *
+with
+    *; [[...]]
+of type
+    'b list -> int list -> string
+within context
+    fun l1
+      l2 ->
+        (let a = (List.length l1) - (List.length l2) in
+            (if a > 0 then (l1 *; [[...]] (clone 0 a)) else "bye"))
+==============================

@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "1588.ml", line 17, characters 20-21:
+This expression has type expr but is here used with type float
+Relevant code: e
+------------------------------------------------------------------
+File "1588.ml", line 14, characters 2-350:
+Try replacing
+    (match e with 
+     | VarX -> x
+     | VarY -> y
+     | Sine e -> (pi *. e)
+     | Cosine e -> (pi *. e)
+     | Average (e1, e2) -> (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+     | Times (e1, e2) -> ((eval (e1, x, y)) *. (eval (e2, x, y)))
+     | Thresh (e1, e2, e3, e4) ->
+       (if (eval (e1, x, y)) < (eval (e2, x, y)) then (eval (e3, x, y)) else
+           (eval (e4, x, y))))
+with
+    [[...]]
+of type
+    'a
+==============================

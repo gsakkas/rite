@@ -1,0 +1,56 @@
+------------------------------------------------------------------
+File "2301.ml", line 17, characters 4-13:
+The constructor Average expects 2 argument(s),
+but is here applied to 1 argument(s)
+Relevant code: Average e
+------------------------------------------------------------------
+Triaged the following locations:
+File "2301.ml", line 13, characters 13-16:
+File "2301.ml", line 14, characters 13-16:
+File "2301.ml", line 15, characters 14-42:
+File "2301.ml", line 16, characters 16-44:
+File "2301.ml", line 17, characters 4-13:
+File "2301.ml", line 17, characters 17-74:
+File "2301.ml", line 18, characters 15-48:
+And modified the following location:
+File "2301.ml", line 18, characters 10-11:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine e -> [[...other program...]]
+                              | Cosine e -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              | Times _ -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2301.ml", line 13, characters 13-16:
+File "2301.ml", line 14, characters 13-16:
+File "2301.ml", line 15, characters 14-42:
+File "2301.ml", line 16, characters 16-44:
+File "2301.ml", line 17, characters 17-74:
+File "2301.ml", line 18, characters 4-11:
+File "2301.ml", line 18, characters 15-48:
+And modified the following location:
+File "2301.ml", line 17, characters 12-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    e
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec exprToString e = (match e with 
+                              | VarX -> [[...other program...]]
+                              | VarY -> [[...other program...]]
+                              | Sine e -> [[...other program...]]
+                              | Cosine e -> [[...other program...]]
+                              | Average _ -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]) ;; 
+==============================

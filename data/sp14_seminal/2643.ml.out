@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "2643.ml", line 30, characters 30-52:
+This expression has type float * int but is here used with type float
+Relevant code: ((eval (e', x, y)), 1)
+------------------------------------------------------------------
+File "2643.ml", line 30, characters 20-29:
+Try replacing
+    factorial
+with
+    factorial; [[...]]
+of type
+    float * int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, a_less, b_less) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (a_less, x, y))
+                                    else
+                                    (eval (b_less, x, y)))
+                              | Factorial e' ->
+                                ((factorial; [[...]]) ((eval (e', x, y)), 1))
+                              | Sum3 (e1, e2, e3) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y)))
+                                      +. (eval (e3, x, y)))) ;; 
+==============================
+Triaged the following locations:
+File "2643.ml", line 22, characters 15-44:
+File "2643.ml", line 23, characters 17-46:
+File "2643.ml", line 24, characters 23-70:
+File "2643.ml", line 25, characters 21-59:
+File "2643.ml", line 27, characters 6-106:
+File "2643.ml", line 32, characters 6-67:
+And modified the following location:
+File "2643.ml", line 30, characters 30-52:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (e', x, y)), 1
+with
+    (eval (e', x, y)), 1; [[...]]
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> [[...other program...]]
+                              | Cosine e' -> [[...other program...]]
+                              | Average (e1, e2) -> [[...other program...]]
+                              | Times (e1, e2) -> [[...other program...]]
+                              | Thresh (a, b, a_less, b_less) ->
+                                [[...other program...]]
+                              | Factorial e' ->
+                                (factorial ((eval (e', x, y)), 1; [[...]]))
+                              | Sum3 (e1, e2, e3) -> [[...other program...]]) ;; 
+==============================

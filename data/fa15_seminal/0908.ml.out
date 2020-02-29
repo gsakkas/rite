@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "0908.ml", line 20, characters 19-34:
+This expression is not a function, it cannot be applied
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "0908.ml", line 20, characters 19-34:
+Try replacing
+    (padZero l1 l2)
+with
+    (padZero l1 l2); [[...]]
+of type
+    int list -> 'j list * 'k list
+within context
+    fun l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                               | (l1e, l2e) ->
+                                                 (1,
+                                                       [7
+                                                           ])) in let base = 0, []
+            in
+            let args = (List.combine l1 l2) in
+            let (_, res) = (List.fold_left f base  args) in
+            res in (removeZero
+              (add (((padZero l1 l2); [[...]]) (if l1 > l2 then l1 else l2)))))
+==============================

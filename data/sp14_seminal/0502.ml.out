@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "0502.ml", line 27, characters 33-34:
+This expression has type int * int list -> int * int -> int list * int list
+but is here used with type int * int list -> int * int -> int * int list
+Relevant code: f
+------------------------------------------------------------------
+File "0502.ml", line 27, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int list * int list -> 'a * 'b -> int list * int list
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (carry, res) = a in
+        let tens = (x1 + x2) + carry / 10 in
+        let ones = (x1 + x2) + (mod carry 10) in [tens], tens :: ones :: res
+      in
+      let base = [0], [0] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0502.ml", line 27, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> int * int -> int list * int list) ->
+    int list * int list -> ('c * 'd) list -> 'e * 'f
+within context
+    let f a x =
+      let (x1, x2) = x in
+        let (carry, res) = a in
+        let tens = (x1 + x2) + carry / 10 in
+        let ones = (x1 + x2) + (mod carry 10) in [tens], tens :: ones :: res
+      in
+      let base = [0], [0] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0502.ml", line 19, characters 10-199:
+Try replacing
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (carry, res) = a in
+            let tens = (x1 + x2) + carry / 10 in
+            let ones = (x1 + x2) + (mod carry 10) in [tens], tens :: ones :: res)
+with
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (carry, res) = a in
+            let tens = (x1 + x2) + carry / 10 in
+            let ones = (x1 + x2) + (mod carry 10) in [tens], tens :: ones :: res);
+    [[...]]
+of type
+    'g
+==============================

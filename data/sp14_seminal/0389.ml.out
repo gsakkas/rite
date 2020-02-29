@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0389.ml", line 12, characters 27-52:
+This expression has type char list but is here used with type string list
+Relevant code: (listReverse (explode w))
+------------------------------------------------------------------
+File "0389.ml", line 12, characters 27-52:
+Try replacing
+    (listReverse (explode w))
+with
+    (listReverse (explode w)); [[...]]
+of type
+    string list
+within context
+    let palindrome w = (concat ((listReverse (explode w)); [[...]])) == w ;; 
+==============================
+File "0389.ml", line 12, characters 20-26:
+Try replacing
+    concat
+with
+    concat; [[...]]
+of type
+    char list -> string
+within context
+    let palindrome w = ((concat; [[...]]) (listReverse (explode w))) == w ;; 
+==============================

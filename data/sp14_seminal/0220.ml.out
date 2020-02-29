@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "0220.ml", line 18, characters 31-36:
+This expression has type bool but is here used with type expr
+Relevant code: y = 2
+------------------------------------------------------------------
+File "0220.ml", line 18, characters 7-37:
+Try replacing
+    let y = (rand (2, 6)) in y = 2
+with
+    let y = (rand (2, 6)) in y = 2; [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then (if (rand (0, 1)) = 0 then (buildX ()) else (buildY ())) else
+      (let y = (rand (2, 6)) in y = 2; [[...]]))
+    ;; 
+==============================
+File "0220.ml", line 17, characters 7-59:
+Try replacing
+    (if (rand (0, 1)) = 0 then (buildX ()) else (buildY ()))
+with
+    (if (rand (0, 1)) = 0 then (buildX ()) else (buildY ())); [[...]]
+of type
+    bool
+within context
+    let rec build (rand, depth) =
+    (if depth = 0 then
+      ((if (rand (0, 1)) = 0 then (buildX ()) else (buildY ())); [[...]])
+      else
+      (let y = (rand (2, 6)) in y = 2))
+    ;; 
+==============================

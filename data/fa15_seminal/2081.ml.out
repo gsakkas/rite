@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2081.ml", line 14, characters 30-31:
+This expression has type 'a list but is here used with type string
+Relevant code: w
+------------------------------------------------------------------
+File "2081.ml", line 14, characters 30-31:
+Try replacing
+    w
+with
+    h
+of type
+    string
+within context
+    let palindrome w = (match w with 
+                        | [] -> true
+                        | h :: t ->
+                          (let separated = (explode h) in
+                                let reversed = (listReverse separated) in
+                                (if separated == reversed then true else
+                                    false))) ;; 
+==============================

@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "1994.ml", line 20, characters 30-53:
+This expression has type ('a list -> ('b * 'a) list) * 'c
+but is here used with type 'd list
+Relevant code: ((List.combine l1), l2)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1994.ml", line 21, characters 4-51:
+And modified the following location:
+File "1994.ml", line 20, characters 30-53:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.combine l1), l2
+with
+    (List.combine l1), l2; [[...]]
+The actual replacement has type
+    'e list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (m, n) ->
+                                      m + n ::
+                                            a) in let base = [] in
+        let args = (match (List.rev ((List.combine l1), l2; [[...]])) with 
+                    | h :: t ->
+                      h) in [[...other program...]] in (removeZero
+          (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1994.ml", line 21, characters 4-51:
+And modified the following location:
+File "1994.ml", line 20, characters 21-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    ('f list -> ('g * 'f) list) * 'h -> 'i list
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (m, n) ->
+                                      m + n ::
+                                            a) in let base = [] in
+        let args = (match ((List.rev; [[...]]) ((List.combine l1), l2)) with 
+                    | h :: t ->
+                      h) in [[...other program...]] in (removeZero
+          (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "1994.ml", line 21, characters 4-51:
+And modified the following location:
+File "1994.ml", line 20, characters 4-125:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (match (List.rev ((List.combine l1), l2)) with 
+                | h :: t ->
+                  h) in let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'j
+==============================

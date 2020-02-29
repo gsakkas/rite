@@ -1,0 +1,58 @@
+------------------------------------------------------------------
+File "2447.ml", line 25, characters 23-25:
+This pattern matches values of type 'a list
+but is here used to match values of type int
+Relevant code: []
+------------------------------------------------------------------
+Triaged the following locations:
+File "2447.ml", line 25, characters 29-55:
+File "2447.ml", line 25, characters 63-73:
+And modified the following location:
+File "2447.ml", line 25, characters 23-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    int list * 'b list
+within context
+    let (a1, a2) = a in let test = (match a1 with 
+                                    | [] -> 0
+                                    | h :: t ->
+                                      h) in let sum = (l1x + l2x) + test in
+      let terms = (match 2 with 
+                   | _ -> [[...other program...]]
+                   | _ -> [[...other program...]]) in sum / 10 :: a1, terms :: a2
+==============================
+Triaged the following locations:
+File "2447.ml", line 25, characters 29-55:
+File "2447.ml", line 25, characters 63-73:
+And modified the following location:
+File "2447.ml", line 25, characters 14-15:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    2
+with
+    2; [[...]]
+The actual replacement has type
+    'c list
+within context
+    let (a1, a2) = a in let test = (match a1 with 
+                                    | [] -> 0
+                                    | h :: t ->
+                                      h) in let sum = (l1x + l2x) + test in
+      let terms = (match (2; [[...]]) with 
+                   | [] -> [[...other program...]]
+                   | _ -> [[...other program...]]) in sum / 10 :: a1, terms :: a2
+==============================
+File "2447.ml", line 25, characters 23-55:
+Try replacing
+    (match 2 with 
+     | [] -> sum / 10 :: (mod sum 10)
+     | _ -> (mod sum 10))
+with
+    (match 2 with 
+     | _ -> [[...]]
+     | _ -> (mod sum 10))
+of type
+    int
+==============================

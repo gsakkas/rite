@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1232.ml", line 2, characters 57-68:
+This expression has type int but is here used with type int -> int
+Relevant code: ((x n) - 1)
+------------------------------------------------------------------
+File "1232.ml", line 2, characters 68-68:
+Try replacing
+    (clone ((x n) - 1))
+with
+    (clone [[...]] ((x n) - 1))
+of type
+    (int -> int) list list
+within context
+    let rec clone x n =
+    (if (n <= 0) then [] else [x] :: (clone [[...]] ((x n) - 1)))
+    ;; 
+==============================

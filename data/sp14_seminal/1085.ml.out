@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "1085.ml", line 10, characters 20-40:
+This expression is not a function, it cannot be applied
+Relevant code: (clone 0 (abs diff))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1085.ml", line 11, characters 7-55:
+And modified the following location:
+File "1085.ml", line 10, characters 41-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ((clone 0 (abs diff)) l1)
+with
+    (clone 0 (abs diff))
+The actual replacement has type
+    int list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (List.append (clone 0 (abs diff))) else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1085.ml", line 11, characters 7-55:
+And modified the following location:
+File "1085.ml", line 10, characters 20-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 (abs diff))
+with
+    (clone 0 (abs diff)); [[...]]
+The actual replacement has type
+    'g list -> 'h list
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then (List.append (((clone 0 (abs diff)); [[...]]) l1)) else
+          [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1085.ml", line 10, characters 7-44:
+And modified the following location:
+File "1085.ml", line 11, characters 24-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.append ((clone 0 diff) l2))
+with
+    [[...]]
+The actual replacement has type
+    unit
+within context
+    let padZero l1 l2 =
+    let diff = (List.length l1) - (List.length l2) in
+      (if diff < 0 then [[...other program...]] else (if diff > 0 then [[...]]))
+    ;; 
+==============================

@@ -1,0 +1,125 @@
+------------------------------------------------------------------
+File "1801.ml", line 17, characters 35-38:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: abs
+------------------------------------------------------------------
+Triaged the following locations:
+File "1801.ml", line 17, characters 14-33:
+And modified the following location:
+File "1801.ml", line 17, characters 35-38:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    additivePersAndRoot
+If you ignore other surrounding code, try replacing
+    abs
+with
+    abs; [[...]]
+The actual replacement has type
+    'a -> int -> 'b
+within context
+    let rec additivePersistence n =
+    let (l, r) = ((additivePersAndRoot; [[...]]) ((abs; [[...]]) n 0)) in l
+    ;; 
+==============================
+Triaged the following locations:
+File "1801.ml", line 17, characters 14-33:
+And modified the following location:
+File "1801.ml", line 17, characters 35-38:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    additivePersAndRoot
+If you ignore other surrounding code, try replacing
+    abs
+with
+    +
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec additivePersistence n =
+    let (l, r) = ((additivePersAndRoot; [[...]]) (+ n 0)) in l
+    ;; 
+==============================
+Triaged the following locations:
+File "1801.ml", line 17, characters 14-33:
+And modified the following location:
+File "1801.ml", line 17, characters 35-38:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    additivePersAndRoot
+If you ignore other surrounding code, try replacing
+    abs
+with
+    /
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec additivePersistence n =
+    let (l, r) = ((additivePersAndRoot; [[...]]) (/ n 0)) in l
+    ;; 
+==============================
+Triaged the following locations:
+File "1801.ml", line 17, characters 14-33:
+And modified the following location:
+File "1801.ml", line 17, characters 35-38:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    additivePersAndRoot
+If you ignore other surrounding code, try replacing
+    abs
+with
+    <
+The actual replacement has type
+    int -> int -> bool
+within context
+    let rec additivePersistence n =
+    let (l, r) = ((additivePersAndRoot; [[...]]) (< n 0)) in l
+    ;; 
+==============================
+Triaged the following locations:
+File "1801.ml", line 17, characters 14-33:
+And modified the following location:
+File "1801.ml", line 17, characters 35-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    additivePersAndRoot
+If you ignore other surrounding code, try replacing
+    (abs n 0)
+with
+    (abs (n 0))
+The actual replacement has type
+    int
+within context
+    let rec additivePersistence n =
+    let (l, r) = ((additivePersAndRoot; [[...]]) (abs (n 0))) in l
+    ;; 
+==============================
+Triaged the following locations:
+File "1801.ml", line 17, characters 14-33:
+And modified the following location:
+File "1801.ml", line 17, characters 39-40:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    additivePersAndRoot
+If you ignore other surrounding code, try replacing
+    (abs n 0)
+with
+    (abs 0)
+The actual replacement has type
+    int
+within context
+    let rec additivePersistence n =
+    let (l, r) = ((additivePersAndRoot; [[...]]) (abs 0)) in l
+    ;; 
+==============================
+Triaged the following locations:
+File "1801.ml", line 17, characters 14-33:
+And modified the following location:
+File "1801.ml", line 17, characters 41-42:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    additivePersAndRoot
+If you ignore other surrounding code, try replacing
+    (abs n 0)
+with
+    (abs n)
+The actual replacement has type
+    int
+within context
+    let rec additivePersistence n =
+    let (l, r) = ((additivePersAndRoot; [[...]]) (abs n)) in l
+    ;; 
+==============================

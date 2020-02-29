@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "3318.ml", line 8, characters 6-7:
+This expression has type 'a list but is here used with type
+  ('a list -> 'b) list
+Relevant code: t
+------------------------------------------------------------------
+File "3318.ml", line 6, characters 7-38:
+Try replacing
+    (mulByDigit m) :: t
+with
+    [[...]]
+of type
+    int
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: m :: t ->
+                                [
+                                      [[...]] ;
+                                      (h * i) / 10 + (mod (m * i) 10) ;
+                                      (mod (h * i) 10)
+                                      ]) ;; 
+==============================

@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "3366.ml", line 9, characters 6-89:
+This expression has type int but is here used with type 'a list
+Relevant code: sqsum
+        ((mulByDigit i (List.rev (List.map (fun x  -> x * 10) t))) @ [h * i])
+------------------------------------------------------------------
+File "3366.ml", line 9, characters 6-89:
+Try replacing
+    (sqsum ((mulByDigit i (List.rev (List.map (fun x -> x * 10) t))) @ [h * i]))
+with
+    (sqsum ((mulByDigit i (List.rev (List.map (fun x -> x * 10) t))) @ [h * i]));
+    [[...]]
+of type
+    int list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                ((sqsum
+                                      ((mulByDigit
+                                            i
+                                            (List.rev
+                                              (List.map (fun x -> x * 10) t)))
+                                          @ [h * i]));
+                                    [[...]])) ;; 
+==============================

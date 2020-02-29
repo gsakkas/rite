@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2981.ml", line 5, characters 19-23:
+This expression has type 'a list but is here used with type 'b -> 'c -> 'd
+Relevant code: base
+------------------------------------------------------------------
+File "2981.ml", line 5, characters 2-16:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('e list -> int -> 'e list) ->
+    'f list -> 'g -> ('e list -> int -> 'e list) -> 'e list -> 'h
+within context
+    fun f
+      l ->
+        (let fx a b = (List.append a [(f b)]) in
+            let base = [] in
+            ((List.fold_left; [[...]])
+                f base  l  f  (f (f (f (f (f (f base 1) 2) 3) 4) 5) 6)))
+==============================

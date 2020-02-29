@@ -1,0 +1,64 @@
+------------------------------------------------------------------
+File "0382.ml", line 27, characters 7-23:
+This expression has type float but is here used with type int
+Relevant code: (eval (t, x, y))
+------------------------------------------------------------------
+Triaged the following locations:
+File "0382.ml", line 27, characters 6-33:
+And modified the following location:
+File "0382.ml", line 27, characters 55-58:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    mod
+with
+    mod; [[...]]
+The actual replacement has type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Average (t, s) ->
+                                (((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0)
+                              | Times (t, s) ->
+                                ((eval (t, x, y)) *. (eval (s, x, y)))
+                              | Thresh (t, r, s, q) ->
+                                (if (eval (t, x, y)) < (eval (r, x, y)) then
+                                    (eval (s, x, y))
+                                    else
+                                    (eval (q, x, y)))
+                              | Trip (t, r, s) ->
+                                ([[...other program...]] +.
+                                      ((mod; [[...]])
+                                        (eval (r, x, y)) (eval (s, x, y))))) ;; 
+==============================
+Triaged the following locations:
+File "0382.ml", line 27, characters 37-76:
+And modified the following location:
+File "0382.ml", line 27, characters 24-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    mod
+with
+    mod; [[...]]
+The actual replacement has type
+    float -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Average (t, s) ->
+                                (((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0)
+                              | Times (t, s) ->
+                                ((eval (t, x, y)) *. (eval (s, x, y)))
+                              | Thresh (t, r, s, q) ->
+                                (if (eval (t, x, y)) < (eval (r, x, y)) then
+                                    (eval (s, x, y))
+                                    else
+                                    (eval (q, x, y)))
+                              | Trip (t, r, s) ->
+                                (((mod; [[...]]) (eval (t, x, y)) 30.0)
+                                      +. [[...other program...]])) ;; 
+==============================

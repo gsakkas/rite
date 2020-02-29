@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "2091.ml", line 2, characters 42-57:
+This expression has type int but is here used with type 'a list
+Relevant code: (clone x n) - 1
+------------------------------------------------------------------
+File "2091.ml", line 2, characters 54-55:
+Try replacing
+    -
+with
+    x
+of type
+    'b list -> int -> 'b list
+within context
+    let rec clone x n = (if n = 0 then [] else ((clone x n) x 1)) ;; 
+==============================
+File "2091.ml", line 2, characters 54-55:
+Try replacing
+    -
+with
+    clone
+of type
+    'c list -> int -> 'c list
+within context
+    let rec clone x n = (if n = 0 then [] else ((clone x n) clone 1)) ;; 
+==============================

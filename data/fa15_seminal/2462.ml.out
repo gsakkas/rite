@@ -1,0 +1,181 @@
+------------------------------------------------------------------
+File "2462.ml", line 3, characters 70-74:
+This expression has type 'a -> 'a but is here used with type 'a -> 'a -> 'b
+Relevant code: base
+------------------------------------------------------------------
+File "2462.ml", line 3, characters 44-49:
+Try replacing
+    fun x -> x
+with
+    fun x _ -> x
+of type
+    'c -> 'd -> 'c
+within context
+    let pipe fs =
+    let f a x combine c = (x (a c)) in
+      let base x _ = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2462.ml", line 3, characters 44-49:
+Try replacing
+    fun x -> x
+with
+    fun _ x -> x
+of type
+    'e -> 'f -> 'f
+within context
+    let pipe fs =
+    let f a x combine c = (x (a c)) in
+      let base _ x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2462.ml", line 3, characters 12-21:
+Try replacing
+    fun x combine c -> (x (a c))
+with
+    fun x c combine -> (x (a c))
+of type
+    ('g -> 'h) -> 'i -> 'j -> 'h
+within context
+    let pipe fs =
+    let f a x c combine = (x (a c)) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2462.ml", line 3, characters 12-21:
+Try replacing
+    fun combine c -> (x (a c))
+with
+    fun c combine -> (x (a c))
+of type
+    'k -> 'l -> 'm
+within context
+    let pipe fs =
+    let f a x c combine = (x (a c)) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2462.ml", line 3, characters 12-21:
+Try replacing
+    fun a x combine c -> (x (a c))
+with
+    fun a x c combine -> (x (a c))
+of type
+    ('n -> 'o) -> ('o -> 'p) -> 'n -> 'q -> 'p
+within context
+    let pipe fs =
+    let f a x c combine = (x (a c)) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2462.ml", line 3, characters 8-19:
+Try replacing
+    fun a x combine c -> (x (a c))
+with
+    fun combine x a c -> (x (a c))
+of type
+    'r -> ('s -> 't) -> ('u -> 's) -> 'u -> 't
+within context
+    let pipe fs =
+    let f combine x a c = (x (a c)) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2462.ml", line 3, characters 53-69:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left (f base fs))
+of type
+    'v -> 'w list -> 'v
+within context
+    let pipe fs =
+    let f a x combine c = (x (a c)) in
+      let base x = x in (List.fold_left (f base fs))
+    ;; 
+==============================
+File "2462.ml", line 3, characters 53-67:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('x -> 'x) -> ('x -> 'y) -> 'z -> 'x -> 'y) ->
+    ('x -> 'x) -> ('x -> 'y) -> 'z -> 'x -> 'y
+within context
+    let pipe fs =
+    let f a x combine c = (x (a c)) in let base x = x in (base f base  fs)
+    ;; 
+==============================
+File "2462.ml", line 3, characters 53-67:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    (('a1 -> 'b1) -> ('b1 -> 'c1) -> 'd1 -> 'a1 -> 'c1) ->
+    ((('b1 -> 'c1) -> 'd1 -> 'a1 -> 'c1) -> ('b1 -> 'c1) -> 'd1 -> 'a1 -> 'c1) ->
+    'e1 -> ('a1 -> 'b1) -> ('b1 -> 'c1) -> 'd1 -> 'a1 -> 'c1
+within context
+    let pipe fs =
+    let f a x combine c = (x (a c)) in let base x = x in (f f base  fs)
+    ;; 
+==============================
+File "2462.ml", line 3, characters 70-74:
+Try replacing
+    base
+with
+    f
+of type
+    ('f1 -> 'f1) -> ('f1 -> 'f1) -> 'g1 -> 'f1 -> 'f1
+within context
+    let pipe fs =
+    let f a x combine c = (x (a c)) in let base x = x in (List.fold_left f f  fs)
+    ;; 
+==============================
+File "2462.ml", line 3, characters 27-28:
+Try replacing
+    a
+with
+    x
+of type
+    'h1 -> 'h1
+within context
+    fun x combine c -> (x (x c))
+==============================
+File "2462.ml", line 3, characters 27-28:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('i1 -> 'j1 -> 'i1) -> 'i1 -> 'j1 list -> 'i1
+within context
+    fun x combine c -> (x (List.fold_left c))
+==============================
+File "2462.ml", line 3, characters 27-28:
+Try replacing
+    a
+with
+    combine
+of type
+    'k1 -> 'l1
+within context
+    fun x combine c -> (x (combine c))
+==============================
+File "2462.ml", line 3, characters 29-30:
+Try replacing
+    c
+with
+    combine
+of type
+    'm1
+within context
+    fun x combine c -> (x (a combine))
+==============================
+File "2462.ml", line 3, characters 29-30:
+Try replacing
+    c
+with
+    List.fold_left
+of type
+    ('n1 -> 'o1 -> 'n1) -> 'n1 -> 'o1 list -> 'n1
+within context
+    fun x combine c -> (x (a List.fold_left))
+==============================

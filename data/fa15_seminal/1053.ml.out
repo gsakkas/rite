@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "1053.ml", line 28, characters 31-43:
+This expression has type int list but is here used with type int
+Relevant code: (bigAdd l l)
+------------------------------------------------------------------
+File "1053.ml", line 28, characters 32-38:
+Try replacing
+    bigAdd
+with
+    -
+of type
+    int -> int -> int
+within context
+    fun i l -> (match i with 
+                | 0 -> 0
+                | _ -> (- l l) + (mulByDigit (i - 1) l))
+==============================
+File "1053.ml", line 28, characters 32-38:
+Try replacing
+    bigAdd
+with
+    +
+of type
+    int -> int -> int
+within context
+    fun i l -> (match i with 
+                | 0 -> 0
+                | _ -> (+ l l) + (mulByDigit (i - 1) l))
+==============================
+File "1053.ml", line 28, characters 32-38:
+Try replacing
+    bigAdd
+with
+    /
+of type
+    int -> int -> int
+within context
+    fun i l -> (match i with 
+                | 0 -> 0
+                | _ -> (/ l l) + (mulByDigit (i - 1) l))
+==============================

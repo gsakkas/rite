@@ -1,0 +1,6 @@
+------------------------------------------------------------------
+File "1319.ml", line 28, characters 44-45:
+This expression has type 'a -> 'b but is here used with type 'a
+Relevant code: l
+------------------------------------------------------------------
+<pre>Couldn't find repairs.</pre>

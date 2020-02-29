@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "0490.ml", line 18, characters 28-35:
+This expression has type int list -> int list -> int list * int list
+but is here used with type 'a list
+Relevant code: padZero
+------------------------------------------------------------------
+Triaged the following locations:
+File "0490.ml", line 19, characters 4-51:
+And modified the following location:
+File "0490.ml", line 18, characters 15-43:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (List.combine padZero (l1 l2))
+with
+    [[...]]
+The actual replacement has type
+    'b
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) ->
+                                      x1 + x2 ::
+                                            a) in let base = [], [] in
+        let args = [[...]] in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "0490.ml", line 19, characters 4-51:
+And modified the following location:
+File "0490.ml", line 18, characters 4-98:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (List.combine padZero (l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'c
+within context
+    let add (l1, l2) = let f a x = (match x with 
+                                    | (x1, x2) ->
+                                      x1 + x2 ::
+                                            a) in let base = [], [] in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================

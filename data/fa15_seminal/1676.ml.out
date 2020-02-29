@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1676.ml", line 8, characters 48-61:
+This expression has type int list but is here used with type unit
+Relevant code: digitsOfInt n
+------------------------------------------------------------------
+File "1676.ml", line 8, characters 48-61:
+Try replacing
+    (digitsOfInt n)
+with
+    (digitsOfInt n); [[...]]
+of type
+    unit
+within context
+    let rec additivePersistence n = (if (n >= 10) then ((digitsOfInt n); [[...]]))
+    ;; 
+==============================

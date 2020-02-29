@@ -1,0 +1,97 @@
+------------------------------------------------------------------
+File "1293.ml", line 17, characters 31-32:
+This expression has type expr but is here used with type expr * 'a * 'a
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "1293.ml", line 18, characters 16-36:
+File "1293.ml", line 19, characters 21-47:
+File "1293.ml", line 20, characters 19-39:
+File "1293.ml", line 21, characters 24-70:
+And modified the following location:
+File "1293.ml", line 17, characters 31-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a; [[...]]))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1293.ml", line 18, characters 16-36:
+File "1293.ml", line 19, characters 21-47:
+File "1293.ml", line 20, characters 19-39:
+File "1293.ml", line 21, characters 24-70:
+And modified the following location:
+File "1293.ml", line 17, characters 26-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. ((eval; [[...]]) a)))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1293.ml", line 17, characters 14-34:
+File "1293.ml", line 19, characters 21-47:
+File "1293.ml", line 20, characters 19-39:
+File "1293.ml", line 21, characters 24-70:
+And modified the following location:
+File "1293.ml", line 18, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> (cos (pi *. (eval (a; [[...]]))))
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1293.ml", line 17, characters 14-34:
+File "1293.ml", line 19, characters 21-47:
+File "1293.ml", line 20, characters 19-39:
+File "1293.ml", line 21, characters 24-70:
+And modified the following location:
+File "1293.ml", line 18, characters 28-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> (cos (pi *. ((eval; [[...]]) a)))
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]) ;; 
+==============================

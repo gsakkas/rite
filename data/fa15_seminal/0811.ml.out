@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0811.ml", line 10, characters 53-64:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: digitsOfInt
+------------------------------------------------------------------
+File "0811.ml", line 10, characters 65-69:
+Try replacing
+    (digitsOfInt loop x)
+with
+    (digitsOfInt x)
+of type
+    int list
+within context
+    fun x y -> (if x < 10 then y else (sumList (digitsOfInt x)) + y)
+==============================

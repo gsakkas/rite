@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "1795.ml", line 9, characters 31-40:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sepConcat
+------------------------------------------------------------------
+File "1795.ml", line 9, characters 48-49:
+Try replacing
+    (sepConcat "; " f  l)
+with
+    (sepConcat "; " f)
+of type
+    string
+within context
+    let stringOfList f l = "[" ^ ((sepConcat "; " f) ^ "]") ;; 
+==============================
+File "1795.ml", line 9, characters 46-47:
+Try replacing
+    (sepConcat "; " f  l)
+with
+    (sepConcat "; " l)
+of type
+    string
+within context
+    let stringOfList f l = "[" ^ ((sepConcat "; " l) ^ "]") ;; 
+==============================
+File "1795.ml", line 9, characters 41-45:
+Try replacing
+    (sepConcat "; " f  l)
+with
+    (sepConcat f l)
+of type
+    string
+within context
+    let stringOfList f l = "[" ^ ((sepConcat f l) ^ "]") ;; 
+==============================

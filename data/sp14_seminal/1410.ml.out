@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "1410.ml", line 8, characters 46-72:
+This expression has type int but is here used with type int -> int -> int
+Relevant code: r_digitalRoot n (n mod 10)
+------------------------------------------------------------------
+File "1410.ml", line 8, characters 25-38:
+Try replacing
+    r_digitalRoot
+with
+    n
+of type
+    int
+within context
+    let rec digitalRoot n =
+    (if n = 0 then 0 else
+      (let rec r_digitalRoot n m =
+          (if (n <= 9) then n else (r_digitalRoot (n / 10) ((mod n 10) + m)))
+          in
+          (match n with 
+           | 0 -> n
+           | _ -> (r_digitalRoot n (mod n 10)))))
+    ;; 
+==============================

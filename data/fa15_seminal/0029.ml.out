@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "0029.ml", line 7, characters 41-75:
+This expression has type 'a list but is here used with type int
+Relevant code: quotient :: (digitsOfInt quotient)
+------------------------------------------------------------------
+File "0029.ml", line 7, characters 27-35:
+Try replacing
+    (mod n 10)
+with
+    (mod n 10); [[...]]
+of type
+    int list
+within context
+    let rec digitsOfInt n = (match n < 0 with 
+                             | true -> []
+                             | false ->
+                               (let quotient = n / 10 in
+                                     (if quotient = 0 then ((mod n 10); [[...]])
+                                         else
+                                         quotient :: (digitsOfInt quotient)))) ;; 
+==============================

@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1744.ml", line 6, characters 63-77:
+This expression has type 'a list * 'a list list but is here used with type
+  'a * 'a list list
+Relevant code: (seen', rest')
+------------------------------------------------------------------
+File "1744.ml", line 6, characters 64-69:
+Try replacing
+    seen'
+with
+    seen
+of type
+    'b * 'b list list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t -> (let seen' = seen :: h in let rest' = t in (helper (seen, rest'))))
+==============================

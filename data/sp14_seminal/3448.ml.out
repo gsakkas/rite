@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "3448.ml", line 13, characters 7-19:
+This expression has type 'a list but is here used with type bool
+Relevant code: (1 :: count)
+------------------------------------------------------------------
+File "3448.ml", line 13, characters 20-21:
+Try replacing
+    &
+with
+    &; [[...]]
+of type
+    int list -> int -> int
+within context
+    let rec additivePersistence n =
+    let count = [0] in
+      (if (sumList (digitsOfInt n)) > 9 then
+          (1 :: count &; [[...]] (additivePersistence (sumList (digitsOfInt n))))
+          else
+          (sumList count))
+    ;; 
+==============================

@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1564.ml", line 14, characters 47-70:
+This expression has type int but is here used with type unit
+Relevant code: sumList (digitsOfInt n)
+------------------------------------------------------------------
+File "1564.ml", line 14, characters 47-70:
+Try replacing
+    (sumList (digitsOfInt n))
+with
+    (sumList (digitsOfInt n)); [[...]]
+of type
+    unit
+within context
+    let rec additivePersistence n =
+    (if n > 10 then ((sumList (digitsOfInt n)); [[...]]))
+    ;; 
+==============================

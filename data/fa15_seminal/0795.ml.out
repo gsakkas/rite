@@ -1,0 +1,80 @@
+------------------------------------------------------------------
+File "0795.ml", line 5, characters 34-45:
+This expression has type int -> 'a but is here used with type 'b list
+Relevant code: digitsOfInt
+------------------------------------------------------------------
+Triaged the following locations:
+File "0795.ml", line 5, characters 26-48:
+File "0795.ml", line 5, characters 49-50:
+And modified the following location:
+File "0795.ml", line 5, characters 52-54:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /
+If you ignore other surrounding code, try replacing
+    10
+with
+    10; [[...]]
+The actual replacement has type
+    int list -> 'c
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [n] else
+      ([[...other program...]] /; [[...]] ((10; [[...]]) [n])))
+    ;; 
+==============================
+Triaged the following locations:
+File "0795.ml", line 5, characters 26-48:
+File "0795.ml", line 5, characters 49-50:
+And modified the following location:
+File "0795.ml", line 5, characters 55-58:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /
+If you ignore other surrounding code, try replacing
+    (10 [n])
+with
+    10
+The actual replacement has type
+    int
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [n] else ([[...other program...]] /; [[...]] 10))
+    ;; 
+==============================
+Triaged the following locations:
+File "0795.ml", line 5, characters 49-50:
+File "0795.ml", line 5, characters 51-59:
+And modified the following location:
+File "0795.ml", line 5, characters 27-33:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /
+If you ignore other surrounding code, try replacing
+    append
+with
+    append; [[...]]
+The actual replacement has type
+    (int -> int list) -> int -> 'd
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [n] else
+      (((append; [[...]]) digitsOfInt n) /; [[...]] [[...other program...]]))
+    ;; 
+==============================
+Triaged the following locations:
+File "0795.ml", line 5, characters 49-50:
+File "0795.ml", line 5, characters 51-59:
+And modified the following location:
+File "0795.ml", line 5, characters 27-45:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /
+If you ignore other surrounding code, try replacing
+    (append digitsOfInt n)
+with
+    (append (digitsOfInt n))
+The actual replacement has type
+    int list -> int list
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [n] else
+      ((append (digitsOfInt n)) /; [[...]] [[...other program...]]))
+    ;; 
+==============================

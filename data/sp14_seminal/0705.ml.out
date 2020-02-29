@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "0705.ml", line 9, characters 23-31:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.map
+------------------------------------------------------------------
+File "0705.ml", line 9, characters 49-50:
+Try replacing
+    (List.map (sepConcat "; ") l  l)
+with
+    (List.map (sepConcat "; ") l)
+of type
+    string list
+within context
+    let stringOfList f l = (List.map (sepConcat "; ") l) ;; 
+==============================
+File "0705.ml", line 9, characters 51-52:
+Try replacing
+    (List.map (sepConcat "; ") l  l)
+with
+    (List.map (sepConcat "; ") l)
+of type
+    string list
+within context
+    let stringOfList f l = (List.map (sepConcat "; ") l) ;; 
+==============================
+File "0705.ml", line 9, characters 23-31:
+Try replacing
+    List.map
+with
+    f
+of type
+    (string list -> string) -> 'h -> 'h -> 'i
+within context
+    let stringOfList f l = (f (sepConcat "; ") l  l) ;; 
+==============================

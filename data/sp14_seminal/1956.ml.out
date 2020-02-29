@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1956.ml", line 8, characters 62-76:
+This expression has type 'a list list * 'a list list
+but is here used with type 'a * 'a list list
+Relevant code: (seen', rest')
+------------------------------------------------------------------
+File "1956.ml", line 7, characters 8-109:
+Try replacing
+    (if (not (List.mem seen h)) then
+      (let seen' = h :: rest in let rest' = t in (helper (seen', rest'))))
+with
+    [[...]]
+of type
+    'b
+within context
+    let removeDuplicates l = let rec helper (seen, rest) = (match rest with 
+                                                            | [] -> seen
+                                                            | h :: t ->
+                                                              [[...]]) in (List.rev
+          (helper ([], l))) ;; 
+==============================

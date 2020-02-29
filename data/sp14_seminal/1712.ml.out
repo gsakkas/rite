@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1712.ml", line 2, characters 65-67:
+This expression has type 'a but is here used with type 'a * bool
+Relevant code: b'
+------------------------------------------------------------------
+File "1712.ml", line 2, characters 55-56:
+Try replacing
+    f
+with
+    b
+of type
+    'b -> 'b
+within context
+    let rec wwhile (f, b) = let (b', c') = (f b) in (if c' then (b b') else b') ;; 
+==============================

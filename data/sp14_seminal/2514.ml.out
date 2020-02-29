@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "2514.ml", line 7, characters 53-74:
+This expression has type (int * bool) * int but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: ((xx, (xx < 100)), b)
+------------------------------------------------------------------
+File "2514.ml", line 7, characters 21-27:
+Try replacing
+    wwhile
+with
+    =
+of type
+    (int * bool) * int -> (int * bool) * int -> bool
+within context
+    let fixpoint (f, b) = (= (let xx = (b * b) * b in (xx, xx < 100), b)) ;; 
+==============================
+File "2514.ml", line 7, characters 21-27:
+Try replacing
+    wwhile
+with
+    <
+of type
+    (int * bool) * int -> (int * bool) * int -> bool
+within context
+    let fixpoint (f, b) = (< (let xx = (b * b) * b in (xx, xx < 100), b)) ;; 
+==============================
+File "2514.ml", line 7, characters 21-27:
+Try replacing
+    wwhile
+with
+    f
+of type
+    (int * bool) * int -> 'b
+within context
+    let fixpoint (f, b) = (f (let xx = (b * b) * b in (xx, xx < 100), b)) ;; 
+==============================

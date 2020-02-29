@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2895.ml", line 12, characters 2-95:
+This expression has type string but is here used with type string -> string
+Relevant code: match e with
+  | VarX  -> "x"
+  | VarY  -> "y"
+  | Sine s -> "sin(pi*" ^ (exprToString s ")")
+------------------------------------------------------------------
+File "2895.ml", line 11, characters 21-120:
+Try replacing
+    fun e -> (match e with 
+              | VarX -> "x"
+              | VarY -> "y"
+              | Sine s -> "sin(pi*" ^ (exprToString s ")"))
+with
+    fun e _ -> (match e with 
+                | VarX -> "x"
+                | VarY -> "y"
+                | Sine s -> "sin(pi*" ^ (exprToString s ")"))
+of type
+    expr -> string -> string
+==============================

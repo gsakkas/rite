@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0101.ml", line 9, characters 30-42:
+This expression has type int list but is here used with type int
+Relevant code: (clone 0 s1)
+------------------------------------------------------------------
+File "0101.ml", line 9, characters 43-44:
+Try replacing
+    -
+with
+    -; [[...]]
+of type
+    int list -> int -> 'a list
+within context
+    (if s1 < s2 then (clone 0 (s2 - s1)) @ l1, l2 else
+      (if s2 < s1 then l1, ((clone 0 s1) -; [[...]] s2) @ l2 else l1, l2))
+==============================

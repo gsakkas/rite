@@ -1,0 +1,58 @@
+------------------------------------------------------------------
+File "0916.ml", line 16, characters 29-37:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: (l1, l2)
+------------------------------------------------------------------
+File "0916.ml", line 16, characters 29-37:
+Try replacing
+    (List.combine (l1, l2))
+with
+    (List.combine l1 l2)
+of type
+    ('d * 'e) list
+within context
+    fun (l1, l2) ->
+      (let f a x = (failwith "to be implemented") in
+          let base = (failwith "to be implemeneted") in
+          let args = [(List.combine l1 l2)] in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================
+File "0916.ml", line 16, characters 16-28:
+Try replacing
+    List.combine
+with
+    base
+of type
+    'f * 'g -> 'h
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemeneted") in
+      let args = [(base (l1, l2))] in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "0916.ml", line 16, characters 16-28:
+Try replacing
+    List.combine
+with
+    clone
+of type
+    'i * 'j -> int -> ('i * 'j) list
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemeneted") in
+      let args = [(clone (l1, l2))] in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+File "0916.ml", line 16, characters 16-28:
+Try replacing
+    List.combine
+with
+    =
+of type
+    'k * 'l -> 'k * 'l -> bool
+within context
+    let f a x = (failwith "to be implemented") in
+      let base = (failwith "to be implemeneted") in
+      let args = [(= (l1, l2))] in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

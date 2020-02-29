@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0985.ml", line 7, characters 37-43:
+This expression has type 'a * 'b but is here used with type 'c -> 'd
+Relevant code: (f, b)
+------------------------------------------------------------------
+File "0985.ml", line 7, characters 37-43:
+Try replacing
+    f, b
+with
+    f, b; [[...]]
+of type
+    'e -> 'e
+within context
+    let fixpoint (f, b) = (wwhile ((helper (f, b; [[...]])), b)) ;; 
+==============================
+File "0985.ml", line 7, characters 30-36:
+Try replacing
+    helper
+with
+    helper; [[...]]
+of type
+    'f * 'g -> 'g -> 'g * bool
+within context
+    let fixpoint (f, b) = (wwhile (((helper; [[...]]) (f, b)), b)) ;; 
+==============================

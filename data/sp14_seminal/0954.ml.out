@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "0954.ml", line 5, characters 58-59:
+This expression has type int but is here used with type int list
+Relevant code: n
+------------------------------------------------------------------
+File "0954.ml", line 5, characters 58-59:
+Try replacing
+    n
+with
+    n; [[...]]
+of type
+    int list
+within context
+    fun n ->
+      (if n < 10 then 0 else 1 + (additivePersistence (sumList (n; [[...]]))))
+==============================
+File "0954.ml", line 5, characters 50-57:
+Try replacing
+    sumList
+with
+    sumList; [[...]]
+of type
+    int -> int
+within context
+    fun n ->
+      (if n < 10 then 0 else 1 + (additivePersistence ((sumList; [[...]]) n)))
+==============================

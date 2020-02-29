@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0727.ml", line 43, characters 31-51:
+This expression is not a function, it cannot be applied
+Relevant code: (exprToString expr3)
+------------------------------------------------------------------
+File "0727.ml", line 43, characters 52-55:
+Try replacing
+    ((exprToString expr3) ")")
+with
+    (exprToString expr3)
+of type
+    string
+within context
+    "<" ^
+      ((exprToString expr1) ^
+          ("?" ^ ((exprToString expr2) ^ (":" ^ (exprToString expr3)))))
+==============================

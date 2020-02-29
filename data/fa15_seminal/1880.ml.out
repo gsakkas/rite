@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1880.ml", line 16, characters 40-77:
+This expression has type expr but is here used with type unit -> expr
+Relevant code: buildSine (build (rand, (depth - 1)))
+------------------------------------------------------------------
+File "1880.ml", line 16, characters 26-32:
+Try replacing
+    buildX
+with
+    buildX; [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 -> (buildX; [[...]])
+                                   | n -> (buildSine (build (rand, depth - 1)))) ;; 
+==============================
+File "1880.ml", line 16, characters 40-49:
+Try replacing
+    buildSine
+with
+    buildSine; [[...]]
+of type
+    (unit -> expr) -> unit -> expr
+within context
+    let rec build (rand, depth) = (match depth with 
+                                   | 0 -> buildX
+                                   | n ->
+                                     ((buildSine; [[...]])
+                                         (build (rand, depth - 1)))) ;; 
+==============================

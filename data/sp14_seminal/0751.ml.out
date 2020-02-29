@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "0751.ml", line 9, characters 2-10:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+File "0751.ml", line 9, characters 2-17:
+Try replacing
+    (List.rev helper ([], l))
+with
+    (List.rev (helper ([], l)))
+of type
+    'l list
+within context
+    let removeDuplicates l = let rec helper (seen, rest) = (match rest with 
+                                                            | [] -> seen
+                                                            | h :: t ->
+                                                              (let seen' =
+                                                                    (if
+                                                                      (List.mem
+                                                                        h seen)
+                                                                      then
+                                                                      seen
+                                                                      else
+                                                                      h :: seen)
+                                                                    in
+                                                                    let rest' = t in
+                                                                    (helper
+                                                                        (seen',
+                                                                            rest')))) in (List.rev
+          (helper ([], l))) ;; 
+==============================

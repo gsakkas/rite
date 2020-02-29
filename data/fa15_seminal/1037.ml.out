@@ -1,0 +1,46 @@
+------------------------------------------------------------------
+File "1037.ml", line 38, characters 59-63:
+This expression has type int * 'a list but is here used with type int list
+Relevant code: base
+------------------------------------------------------------------
+File "1037.ml", line 38, characters 57-58:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'b list -> int -> int * 'b list
+within context
+    let f a x = (multHelper (List.rev l1) l2  0) in
+      let base = 0, [] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "1037.ml", line 38, characters 42-56:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('c -> 'd -> int list) -> int * 'e list -> int list -> 'f * 'g
+within context
+    let f a x = (multHelper (List.rev l1) l2  0) in
+      let base = 0, [] in
+      let args = (List.rev l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "1037.ml", line 36, characters 8-43:
+Try replacing
+    fun a x -> (multHelper (List.rev l1) l2  0)
+with
+    fun a x -> (multHelper (List.rev l1) l2  0); [[...]]
+of type
+    'h
+within context
+    let bigMul l1 l2 =
+    let f = fun a x -> (multHelper (List.rev l1) l2  0); [[...]] in
+      let base = 0, [] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+    ;; 
+==============================

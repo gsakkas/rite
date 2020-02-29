@@ -1,0 +1,118 @@
+------------------------------------------------------------------
+File "1999.ml", line 34, characters 18-19:
+This expression has type int but is here used with type float
+Relevant code: 1
+------------------------------------------------------------------
+File "1999.ml", line 34, characters 18-19:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    float
+within context
+    (match e with 
+     | VarX -> x
+     | VarY -> y
+     | Sine n -> (sin (pi *. (eval (n, x, y))))
+     | Cosine n -> (cos (pi *. (eval (n, x, y))))
+     | Average (m, n) -> (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+     | Times (m, n) -> ((eval (m, x, y)) *. (eval (n, x, y)))
+     | Thresh (m, n, o, p) ->
+       (if (eval (m, x, y)) < (eval (n, x, y)) then (eval (o, x, y)) else
+           (eval (p, x, y)))
+     | Power (m, n) ->
+       (let d = (eval (n, x, y)) in
+             (if d > 1.0 then (eval (m, x, y)) else
+                 (eval (m, x, y)) ** (eval (n, x, y))))
+     | Log n ->
+       (let d = (eval (n, x, y)) in
+             (if (not (d = (1; [[...]]))) then (log (eval (n, x, y))) else
+                 (log 1.0))))
+==============================
+File "1999.ml", line 34, characters 14-15:
+Try replacing
+    d
+with
+    d; [[...]]
+of type
+    int
+within context
+    (match e with 
+     | VarX -> x
+     | VarY -> y
+     | Sine n -> (sin (pi *. (eval (n, x, y))))
+     | Cosine n -> (cos (pi *. (eval (n, x, y))))
+     | Average (m, n) -> (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+     | Times (m, n) -> ((eval (m, x, y)) *. (eval (n, x, y)))
+     | Thresh (m, n, o, p) ->
+       (if (eval (m, x, y)) < (eval (n, x, y)) then (eval (o, x, y)) else
+           (eval (p, x, y)))
+     | Power (m, n) ->
+       (let d = (eval (n, x, y)) in
+             (if d > 1.0 then (eval (m, x, y)) else
+                 (eval (m, x, y)) ** (eval (n, x, y))))
+     | Log n ->
+       (let d = (eval (n, x, y)) in
+             (if (not ((d; [[...]]) = 1)) then (log (eval (n, x, y))) else
+                 (log 1.0))))
+==============================
+File "1999.ml", line 34, characters 16-17:
+Try replacing
+    =
+with
+    =; [[...]]
+of type
+    float -> int -> bool
+within context
+    (match e with 
+     | VarX -> x
+     | VarY -> y
+     | Sine n -> (sin (pi *. (eval (n, x, y))))
+     | Cosine n -> (cos (pi *. (eval (n, x, y))))
+     | Average (m, n) -> (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+     | Times (m, n) -> ((eval (m, x, y)) *. (eval (n, x, y)))
+     | Thresh (m, n, o, p) ->
+       (if (eval (m, x, y)) < (eval (n, x, y)) then (eval (o, x, y)) else
+           (eval (p, x, y)))
+     | Power (m, n) ->
+       (let d = (eval (n, x, y)) in
+             (if d > 1.0 then (eval (m, x, y)) else
+                 (eval (m, x, y)) ** (eval (n, x, y))))
+     | Log n ->
+       (let d = (eval (n, x, y)) in
+             (if (not (d =; [[...]] 1)) then (log (eval (n, x, y))) else
+                 (log 1.0))))
+==============================
+File "1999.ml", line 33, characters 14-28:
+Try replacing
+    (eval (n, x, y))
+with
+    (eval (n, x, y)); [[...]]
+of type
+    'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine n -> (sin (pi *. (eval (n, x, y))))
+                              | Cosine n -> (cos (pi *. (eval (n, x, y))))
+                              | Average (m, n) ->
+                                (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+                              | Times (m, n) ->
+                                ((eval (m, x, y)) *. (eval (n, x, y)))
+                              | Thresh (m, n, o, p) ->
+                                (if (eval (m, x, y)) < (eval (n, x, y)) then
+                                    (eval (o, x, y))
+                                    else
+                                    (eval (p, x, y)))
+                              | Power (m, n) ->
+                                (let d = (eval (n, x, y)) in
+                                      (if d > 1.0 then (eval (m, x, y)) else
+                                          (eval (m, x, y)) ** (eval (n, x, y))))
+                              | Log n ->
+                                (let d = (eval (n, x, y)); [[...]] in
+                                      (if (not (d = 1)) then (log (eval (n, x, y)))
+                                          else
+                                          (log 1.0)))) ;; 
+==============================

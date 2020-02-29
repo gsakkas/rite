@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "0137.ml", line 20, characters 33-34:
+This expression has type int * int -> int * int list -> int * int list
+but is here used with type int * int -> int * int list -> int * int
+Relevant code: f
+------------------------------------------------------------------
+File "0137.ml", line 13, characters 10-13:
+Try replacing
+    fun a
+      x ->
+        (let (carry, num) = x in
+            let (l1', l2') = a in
+            let addit = (l1' + l2') + carry in addit / 10, (mod addit 10) :: num)
+with
+    fun x
+      a ->
+        (let (carry, num) = x in
+            let (l1', l2') = a in
+            let addit = (l1' + l2') + carry in addit / 10, (mod addit 10) :: num)
+of type
+    int * int list -> int * int -> int * int list
+==============================

@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "1609.ml", line 6, characters 9-60:
+This expression has type ('a * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((let (x,y) = f b in (x, ((x > b) || (x < b)))), b)
+------------------------------------------------------------------
+File "1609.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    <
+of type
+    ('c * bool) * 'c -> ('c * bool) * 'c -> bool
+within context
+    let fixpoint (f, b) = (< ((let (x, y) = (f b) in x, x > b || x < b), b)) ;; 
+==============================
+File "1609.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    >
+of type
+    ('d * bool) * 'd -> ('d * bool) * 'd -> bool
+within context
+    let fixpoint (f, b) = (> ((let (x, y) = (f b) in x, x > b || x < b), b)) ;; 
+==============================

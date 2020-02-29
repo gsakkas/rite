@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1336.ml", line 18, characters 4-77:
+This expression has type expr but is here used with type unit
+Relevant code: match rand (0, 1) with | 0 -> buildX () | 1 -> buildY () | _ -> buildX ()
+------------------------------------------------------------------
+File "1336.ml", line 18, characters 4-77:
+Try replacing
+    (match (rand (0, 1)) with 
+     | 0 -> (buildX ())
+     | 1 -> (buildY ())
+     | _ -> (buildX ()))
+with
+    (match (rand (0, 1)) with 
+     | 0 -> (buildX ())
+     | 1 -> (buildY ())
+     | _ -> (buildX ())); [[...]]
+of type
+    unit
+==============================

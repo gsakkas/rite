@@ -1,0 +1,96 @@
+------------------------------------------------------------------
+File "0400.ml", line 7, characters 64-73:
+This expression has type ('a -> 'a * bool) * (('a -> 'a * bool) -> 'b)
+but is here used with type ('a -> 'a * bool) * 'a
+Relevant code: (funt, f)
+------------------------------------------------------------------
+File "0400.ml", line 7, characters 65-72:
+Try replacing
+    funt, f
+with
+    f, funt
+of type
+    ('c -> 'c * bool) * 'c
+within context
+    let fixpoint (f, b) = let funt = let res = (f b) in (match b with 
+                                                         | res ->
+                                                           b) in (wwhile
+          (f, funt)) ;; 
+==============================
+File "0400.ml", line 7, characters 13-53:
+Try replacing
+    let res = (f b) in (match b with 
+                        | res -> b)
+with
+    (match b with 
+     | res -> b)
+of type
+    'd -> 'd * bool
+within context
+    let fixpoint (f, b) = let funt = (match b with 
+                                      | res -> b) in (wwhile (funt, f)) ;; 
+==============================
+File "0400.ml", line 7, characters 57-63:
+Try replacing
+    wwhile
+with
+    =
+of type
+    'e * ('e -> 'f) -> 'e * ('e -> 'f) -> bool
+within context
+    let fixpoint (f, b) = let funt = let res = (f b) in (match b with 
+                                                         | res ->
+                                                           b) in (= (funt, f)) ;; 
+==============================
+File "0400.ml", line 7, characters 23-24:
+Try replacing
+    f
+with
+    =
+of type
+    ('g -> 'g * bool) -> ('g -> 'g * bool) -> bool
+within context
+    let fixpoint (f, b) = let funt = let res = (= b) in (match b with 
+                                                         | res ->
+                                                           b) in (wwhile
+          (funt, f)) ;; 
+==============================
+File "0400.ml", line 7, characters 25-26:
+Try replacing
+    b
+with
+    =
+of type
+    'h -> 'h -> bool
+within context
+    let fixpoint (f, b) = let funt = let res = (f =) in (match b with 
+                                                         | res ->
+                                                           b) in (wwhile
+          (funt, f)) ;; 
+==============================
+File "0400.ml", line 7, characters 25-26:
+Try replacing
+    b
+with
+    wwhile
+of type
+    ('i -> 'i * bool) * 'i -> 'i
+within context
+    let fixpoint (f, b) = let funt = let res = (f wwhile) in (match b with 
+                                                              | res ->
+                                                                b) in (wwhile
+          (funt, f)) ;; 
+==============================
+File "0400.ml", line 7, characters 71-72:
+Try replacing
+    f
+with
+    =
+of type
+    (('j -> 'j -> bool) -> ('j -> 'j -> bool) * bool) * ('j -> 'j -> bool)
+within context
+    let fixpoint (f, b) = let funt = let res = (f b) in (match b with 
+                                                         | res ->
+                                                           b) in (wwhile
+          (funt, =)) ;; 
+==============================

@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1040.ml", line 9, characters 42-55:
+This expression has type string list -> string but is here used with type
+  'a list
+Relevant code: (sepConcat l)
+------------------------------------------------------------------
+File "1040.ml", line 9, characters 31-39:
+Try replacing
+    List.map
+with
+    List.map; [[...]]
+of type
+    'b -> (string list -> string) -> string
+within context
+    fun f l -> "[" ^ (((List.map; [[...]]) f (sepConcat l)) ^ "]")
+==============================

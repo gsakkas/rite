@@ -1,0 +1,77 @@
+------------------------------------------------------------------
+File "1888.ml", line 34, characters 11-12:
+This expression has type int but is here used with type float
+Relevant code: 1
+------------------------------------------------------------------
+File "1888.ml", line 34, characters 11-12:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Power (a, b) ->
+                                (if x < 1.0 && x > -1.0 || y < 1.0 && y > -1.0 then
+                                    0.5
+                                    else
+                                    (eval (a, x, y)) ** (eval (b, x, y)))
+                              | TowerInv (a, b, c) ->
+                                (if x < 1.0 && x > -1.0 || y < 1.0 && y > -1.0 then
+                                    0.5
+                                    else
+                                    (1; [[...]] /.
+                                        (eval (a, x, y)) **
+                                          ((eval (b, x, y))
+                                              ** (eval (c, x, y)))))) ;; 
+==============================
+File "1888.ml", line 34, characters 13-15:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    int -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, x, y)))
+                              | Power (a, b) ->
+                                (if x < 1.0 && x > -1.0 || y < 1.0 && y > -1.0 then
+                                    0.5
+                                    else
+                                    (eval (a, x, y)) ** (eval (b, x, y)))
+                              | TowerInv (a, b, c) ->
+                                (if x < 1.0 && x > -1.0 || y < 1.0 && y > -1.0 then
+                                    0.5
+                                    else
+                                    (1 /.; [[...]]
+                                        (eval (a, x, y)) **
+                                          ((eval (b, x, y))
+                                              ** (eval (c, x, y)))))) ;; 
+==============================

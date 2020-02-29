@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2077.ml", line 28, characters 32-42:
+This expression has type expr * expr -> expr but is here used with type expr
+Relevant code: buildTimes
+------------------------------------------------------------------
+File "2077.ml", line 26, characters 2-341:
+Try replacing
+    (match e with 
+     | Thresh (a, b, c, d) ->
+       (let a = (buildThresh (a, b, c, d)) in (exprToString a))
+     | Times (a, b) -> (exprToString buildTimes (a, b))
+     | Average (a, b) -> (exprToString buildAverage (a, b))
+     | Cosine a -> (exprToString buildCosine a)
+     | Sine a -> (exprToString buildSine a)
+     | VarY -> (exprToString buildY)
+     | VarX -> (exprToString buildX))
+with
+    [[...]]
+of type
+    'a
+==============================

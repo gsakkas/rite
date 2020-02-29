@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "3036.ml", line 7, characters 64-65:
+This expression has type string -> string but is here used with type
+  (string -> string) list
+Relevant code: l
+------------------------------------------------------------------
+File "3036.ml", line 7, characters 31-34:
+Try replacing
+    ^
+with
+    h
+of type
+    'a -> (string -> string) list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (x a) in
+             let base = "" in let l = (( h ) sep) in (List.fold_left f base  l)))
+==============================
+File "3036.ml", line 7, characters 64-65:
+Try replacing
+    l
+with
+    h
+of type
+    (string -> string) list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (x a) in
+             let base = "" in let l = ( ^ ) sep in (List.fold_left f base  h)))
+==============================
+File "3036.ml", line 7, characters 64-65:
+Try replacing
+    l
+with
+    t
+of type
+    (string -> string) list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (x a) in
+             let base = "" in let l = ( ^ ) sep in (List.fold_left f base  t)))
+==============================
+File "3036.ml", line 7, characters 64-65:
+Try replacing
+    l
+with
+    sl
+of type
+    (string -> string) list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (x a) in
+             let base = "" in let l = ( ^ ) sep in (List.fold_left f base  sl)))
+==============================

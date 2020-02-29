@@ -1,0 +1,93 @@
+------------------------------------------------------------------
+File "2542.ml", line 24, characters 13-34:
+This expression has type int but is here used with type int list
+Relevant code: (add (padZero l1 l2))
+------------------------------------------------------------------
+File "2542.ml", line 24, characters 2-12:
+Try replacing
+    removeZero
+with
+    +
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x =
+        let (x1, x2) = x in
+          let (a1, a2) = a in
+          (if x1 + x2 > 10 then 1, ((x1 + x2) + a1) - 10 else 0, (x1 + x2) + a1)
+        in
+        let base = 0, 0 in
+        let args = (List.rev (List.combine l1 l2)) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (+ (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2542.ml", line 24, characters 2-12:
+Try replacing
+    removeZero
+with
+    >
+of type
+    int -> int -> bool
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x =
+        let (x1, x2) = x in
+          let (a1, a2) = a in
+          (if x1 + x2 > 10 then 1, ((x1 + x2) + a1) - 10 else 0, (x1 + x2) + a1)
+        in
+        let base = 0, 0 in
+        let args = (List.rev (List.combine l1 l2)) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (> (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2542.ml", line 24, characters 2-12:
+Try replacing
+    removeZero
+with
+    -
+of type
+    int -> int -> int
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x =
+        let (x1, x2) = x in
+          let (a1, a2) = a in
+          (if x1 + x2 > 10 then 1, ((x1 + x2) + a1) - 10 else 0, (x1 + x2) + a1)
+        in
+        let base = 0, 0 in
+        let args = (List.rev (List.combine l1 l2)) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (- (add (padZero l1 l2)))
+    ;; 
+==============================
+File "2542.ml", line 24, characters 2-12:
+Try replacing
+    removeZero
+with
+    clone
+of type
+    int -> int -> int list
+within context
+    let bigAdd l1 l2 =
+    let add (l1, l2) =
+      let f a x =
+        let (x1, x2) = x in
+          let (a1, a2) = a in
+          (if x1 + x2 > 10 then 1, ((x1 + x2) + a1) - 10 else 0, (x1 + x2) + a1)
+        in
+        let base = 0, 0 in
+        let args = (List.rev (List.combine l1 l2)) in
+        let (_, res) = (List.fold_left f base  args) in res
+      in
+      (clone (add (padZero l1 l2)))
+    ;; 
+==============================

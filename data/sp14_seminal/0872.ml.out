@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0872.ml", line 25, characters 29-30:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "0872.ml", line 25, characters 15-69:
+Try replacing
+    (List.combine 0) :: ((List.rev l1) 0) :: (List.rev l2)
+with
+    [[...]]
+of type
+    'b
+within context
+    let add (l1, l2) =
+      let f a x =
+        let (x1, x2) = x in
+          let (a1, a2) = a in
+          let xx = (x1 + x2) + a1 in
+          (if xx > 9 then 1, xx - 10 :: a2 else 0, xx :: a2)
+        in
+        let base = 0, [] in
+        let args = [[...]] in let (_, res) = (List.fold_left f base  args) in res
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

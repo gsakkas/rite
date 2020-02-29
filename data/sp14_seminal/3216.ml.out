@@ -1,0 +1,248 @@
+------------------------------------------------------------------
+File "3216.ml", line 28, characters 4-516:
+This expression has type expr but is here used with type unit
+Relevant code: match case with
+    | 0 -> VarX
+    | 1 -> buildY ()
+    | 2 -> buildSine (build (rand, (depth - 1)))
+    | 3 -> buildCosine (build (rand, (depth - 1)))
+    | 4 ->
+        buildAverage
+          ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+    | 5 ->
+        buildTimes ((build (rand, (depth - 1))), (build (rand, (depth - 1))))
+    | 6 ->
+        buildThresh
+          ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+            (build (rand, (depth - 1))), (build (rand, (depth - 1))))
+------------------------------------------------------------------
+Triaged the following locations:
+File "3216.ml", line 29, characters 11-15:
+File "3216.ml", line 30, characters 11-20:
+File "3216.ml", line 31, characters 11-48:
+File "3216.ml", line 32, characters 11-50:
+File "3216.ml", line 34, characters 8-89:
+File "3216.ml", line 37, characters 8-77:
+And modified the following location:
+File "3216.ml", line 39, characters 8-19:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildY ())
+
+    VarX
+If you ignore other surrounding code, try replacing
+    buildThresh
+with
+    buildThresh; [[...]]
+The actual replacement has type
+    unit * unit * unit * unit -> unit
+within context
+    fun (rand, depth) ->
+      (let case = (rand (0, 6)) in
+          (if depth = 0 then (let case = (rand (0, 1)) in (match case with 
+                                                           | 0 -> (VarX; [[...]])
+                                                           | 1 ->
+                                                             ((buildY ()); [[...]])
+                                                           | 2 ->
+                                                             [[...other program...]]
+                                                           | 3 ->
+                                                             [[...other program...]]
+                                                           | 4 ->
+                                                             [[...other program...]]
+                                                           | 5 ->
+                                                             [[...other program...]]
+                                                           | 6 ->
+                                                             ((buildThresh; [[...]])
+                                                                 ((build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             -
+                                                                             1))))))))
+==============================
+Triaged the following locations:
+File "3216.ml", line 29, characters 11-15:
+File "3216.ml", line 30, characters 11-20:
+File "3216.ml", line 31, characters 11-48:
+File "3216.ml", line 32, characters 11-50:
+File "3216.ml", line 34, characters 8-89:
+File "3216.ml", line 39, characters 8-158:
+And modified the following location:
+File "3216.ml", line 37, characters 8-18:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildY ())
+
+    VarX
+If you ignore other surrounding code, try replacing
+    buildTimes
+with
+    buildTimes; [[...]]
+The actual replacement has type
+    unit * unit -> unit
+within context
+    fun (rand, depth) ->
+      (let case = (rand (0, 6)) in
+          (if depth = 0 then (let case = (rand (0, 1)) in (match case with 
+                                                           | 0 -> (VarX; [[...]])
+                                                           | 1 ->
+                                                             ((buildY ()); [[...]])
+                                                           | 2 ->
+                                                             [[...other program...]]
+                                                           | 3 ->
+                                                             [[...other program...]]
+                                                           | 4 ->
+                                                             [[...other program...]]
+                                                           | 5 ->
+                                                             ((buildTimes; [[...]])
+                                                                 ((build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))))
+                                                           | 6 ->
+                                                             [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "3216.ml", line 29, characters 11-15:
+File "3216.ml", line 30, characters 11-20:
+File "3216.ml", line 32, characters 11-50:
+File "3216.ml", line 34, characters 8-89:
+File "3216.ml", line 37, characters 8-77:
+File "3216.ml", line 39, characters 8-158:
+And modified the following location:
+File "3216.ml", line 31, characters 11-20:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildY ())
+
+    VarX
+If you ignore other surrounding code, try replacing
+    buildSine
+with
+    buildSine; [[...]]
+The actual replacement has type
+    unit -> unit
+within context
+    fun (rand, depth) ->
+      (let case = (rand (0, 6)) in
+          (if depth = 0 then (let case = (rand (0, 1)) in (match case with 
+                                                           | 0 -> (VarX; [[...]])
+                                                           | 1 ->
+                                                             ((buildY ()); [[...]])
+                                                           | 2 ->
+                                                             ((buildSine; [[...]])
+                                                                 (build
+                                                                   (rand,
+                                                                       depth - 1)))
+                                                           | 3 ->
+                                                             [[...other program...]]
+                                                           | 4 ->
+                                                             [[...other program...]]
+                                                           | 5 ->
+                                                             [[...other program...]]
+                                                           | 6 ->
+                                                             [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "3216.ml", line 29, characters 11-15:
+File "3216.ml", line 30, characters 11-20:
+File "3216.ml", line 31, characters 11-48:
+File "3216.ml", line 32, characters 11-50:
+File "3216.ml", line 37, characters 8-77:
+File "3216.ml", line 39, characters 8-158:
+And modified the following location:
+File "3216.ml", line 34, characters 8-20:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildY ())
+
+    VarX
+If you ignore other surrounding code, try replacing
+    buildAverage
+with
+    buildAverage; [[...]]
+The actual replacement has type
+    unit * unit -> unit
+within context
+    fun (rand, depth) ->
+      (let case = (rand (0, 6)) in
+          (if depth = 0 then (let case = (rand (0, 1)) in (match case with 
+                                                           | 0 -> (VarX; [[...]])
+                                                           | 1 ->
+                                                             ((buildY ()); [[...]])
+                                                           | 2 ->
+                                                             [[...other program...]]
+                                                           | 3 ->
+                                                             [[...other program...]]
+                                                           | 4 ->
+                                                             ((buildAverage;
+                                                                   [[...]])
+                                                                 ((build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))
+                                                                     ,
+                                                                     (build
+                                                                       (rand,
+                                                                           depth
+                                                                             - 1))))
+                                                           | 5 ->
+                                                             [[...other program...]]
+                                                           | 6 ->
+                                                             [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "3216.ml", line 29, characters 11-15:
+File "3216.ml", line 30, characters 11-20:
+File "3216.ml", line 31, characters 11-48:
+File "3216.ml", line 34, characters 8-89:
+File "3216.ml", line 37, characters 8-77:
+File "3216.ml", line 39, characters 8-158:
+And modified the following location:
+File "3216.ml", line 32, characters 11-22:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    (buildY ())
+
+    VarX
+If you ignore other surrounding code, try replacing
+    buildCosine
+with
+    buildCosine; [[...]]
+The actual replacement has type
+    unit -> unit
+within context
+    fun (rand, depth) ->
+      (let case = (rand (0, 6)) in
+          (if depth = 0 then (let case = (rand (0, 1)) in (match case with 
+                                                           | 0 -> (VarX; [[...]])
+                                                           | 1 ->
+                                                             ((buildY ()); [[...]])
+                                                           | 2 ->
+                                                             [[...other program...]]
+                                                           | 3 ->
+                                                             ((buildCosine; [[...]])
+                                                                 (build
+                                                                   (rand,
+                                                                       depth - 1)))
+                                                           | 4 ->
+                                                             [[...other program...]]
+                                                           | 5 ->
+                                                             [[...other program...]]
+                                                           | 6 ->
+                                                             [[...other program...]]))))
+==============================

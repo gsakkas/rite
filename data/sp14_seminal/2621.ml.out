@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "2621.ml", line 2, characters 44-45:
+This expression is not a function, it cannot be applied
+Relevant code: 0
+------------------------------------------------------------------
+File "2621.ml", line 2, characters 46-49:
+Try replacing
+    (0 +)
+with
+    0
+of type
+    int
+within context
+    let pipe fs = let f a x = (x a) in let base = 0 in (List.fold_left f base  fs)
+    ;; 
+==============================

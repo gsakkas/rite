@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0644.ml", line 3, characters 32-33:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "0644.ml", line 3, characters 14-29:
+Try replacing
+    List.fold_right
+with
+    List.fold_right; [[...]]
+of type
+    'b -> int -> 'c -> 'd
+within context
+    fun fs ->
+      (let f a x = ((List.fold_right; [[...]]) a 0  x) in
+          let base = 0 in (List.fold_left f base  fs))
+==============================

@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "0436.ml", line 15, characters 19-42:
+This expression has type int but is here used with type float
+Relevant code: (2 * (eval (e1, x, y)))
+------------------------------------------------------------------
+File "0436.ml", line 15, characters 22-23:
+Try replacing
+    *
+with
+    x
+of type
+    int -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> 1.0
+                              | VarY -> 1.0
+                              | Sine e1 -> (sin (2 x (eval (e1, x, y))))) ;; 
+==============================
+File "0436.ml", line 15, characters 22-23:
+Try replacing
+    *
+with
+    y
+of type
+    int -> float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> 1.0
+                              | VarY -> 1.0
+                              | Sine e1 -> (sin (2 y (eval (e1, x, y))))) ;; 
+==============================

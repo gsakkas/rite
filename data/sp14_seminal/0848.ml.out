@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "0848.ml", line 11, characters 24-31:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sumList
+------------------------------------------------------------------
+File "0848.ml", line 11, characters 32-43:
+Try replacing
+    (sumList digitsOfInt n)
+with
+    (sumList n)
+of type
+    int
+within context
+    let rec digitalRoot n = (sumList n) ;; 
+==============================
+File "0848.ml", line 11, characters 24-43:
+Try replacing
+    (sumList digitsOfInt n)
+with
+    (sumList (digitsOfInt n))
+of type
+    int
+within context
+    let rec digitalRoot n = (sumList (digitsOfInt n)) ;; 
+==============================
+File "0848.ml", line 11, characters 24-31:
+Try replacing
+    sumList
+with
+    <
+of type
+    (int -> int list) -> (int -> int list) -> bool
+within context
+    let rec digitalRoot n = (< digitsOfInt n) ;; 
+==============================

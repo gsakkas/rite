@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1184.ml", line 7, characters 51-52:
+This expression has type (string list -> string) -> 'a -> string
+but is here used with type
+  (string list -> string) -> 'a -> string list -> string
+Relevant code: f
+------------------------------------------------------------------
+File "1184.ml", line 7, characters 51-52:
+Try replacing
+    f
+with
+    ^
+of type
+    string -> string -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = h ^ (sep ^ (a t)) in
+             let base = h in let l = sl in (List.fold_left ^ base  l)))
+==============================

@@ -1,0 +1,71 @@
+------------------------------------------------------------------
+File "0240.ml", line 8, characters 19-26:
+This expression has type 'a list * 'b but is here used with type
+  bool * 'c list
+Relevant code: ([], l)
+------------------------------------------------------------------
+File "0240.ml", line 7, characters 61-66:
+Try replacing
+    seen'
+with
+    rest'
+of type
+    'd list * 'd list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (List.mem h t) in let rest' = t in (helper (rest', rest'))))
+==============================
+File "0240.ml", line 7, characters 61-66:
+Try replacing
+    seen'
+with
+    t
+of type
+    'e list * 'e list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (List.mem h t) in let rest' = t in (helper (t, rest'))))
+==============================
+File "0240.ml", line 7, characters 61-66:
+Try replacing
+    seen'
+with
+    h
+of type
+    'f * 'f list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (List.mem h t) in let rest' = t in (helper (h, rest'))))
+==============================
+File "0240.ml", line 7, characters 61-66:
+Try replacing
+    seen'
+with
+    seen
+of type
+    'g * 'h list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (List.mem h t) in let rest' = t in (helper (seen, rest'))))
+==============================
+File "0240.ml", line 7, characters 61-66:
+Try replacing
+    seen'
+with
+    l
+of type
+    'i list * 'j list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = (List.mem h t) in let rest' = t in (helper (l, rest'))))
+==============================

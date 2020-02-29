@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "1378.ml", line 25, characters 17-112:
+This expression has type int * int list but is here used with type int list
+Relevant code: ((((add1 + add2) + carry) / 10),
+                   ((((add1 + add2) + carry) mod 10) :: rest))
+------------------------------------------------------------------
+File "1378.ml", line 23, characters 20-33:
+Try replacing
+    carry :: rest
+with
+    carry, rest
+of type
+    int * int list
+within context
+    fun a x -> (match a with 
+                | (carry, rest) -> (match x with 
+                                    | (add1, add2) ->
+                                      (if
+                                          (or
+                                            ((List.length rest) = (List.length l1))
+                                            ((List.length rest) = (List.length l2)))
+                                          then
+                                          carry, rest
+                                          else
+                                          ((add1 + add2) + carry) / 10,
+                                            (mod ((add1 + add2) + carry) 10) ::
+                                                rest)))
+==============================

@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2167.ml", line 7, characters 24-41:
+This expression has type bool but is here used with type 'a ref
+Relevant code: (List.mem h seen)
+------------------------------------------------------------------
+File "2167.ml", line 7, characters 23-24:
+Try replacing
+    !
+with
+    h
+of type
+    bool -> bool
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (( h ) (List.mem h seen)) then h :: seen else
+                                   seen)
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================

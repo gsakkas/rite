@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1710.ml", line 5, characters 9-69:
+This expression should not be a function, the expected type is
+('a -> 'a * bool) * 'a
+Relevant code: (fun x  -> if x = b then (b, false) else (((f x), true), b))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1710.ml", line 5, characters 20-68:
+And modified the following location:
+File "1710.ml", line 5, characters 9-69:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun x -> (if x = b then b, false else ((f x), true), b)
+with
+    fun x -> [[...other program...]]; [[...]]
+The actual replacement has type
+    ('b -> 'b * bool) * 'b
+within context
+    let fixpoint (f, b) = (wwhile (fun x -> [[...other program...]]; [[...]])) ;; 
+==============================

@@ -1,0 +1,414 @@
+------------------------------------------------------------------
+File "2583.ml", line 27, characters 24-25:
+This expression has type expr but is here used with type float
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 19-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    pi
+with
+    pi
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 26-40:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (a, x, y))
+with
+    (eval ((a, x, y)))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval ((a, x, y)))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 32-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    e
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (e, x, y))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 32-33:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, y, y))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 35-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, x))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 38-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    y
+with
+    y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 32-36:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a, x, y
+with
+    a, x, y
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 35-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a, x, y
+with
+    a, y, x
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, y, x))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 26-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval
+The actual replacement has type
+    expr * float * float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 19, characters 14-17:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sin
+with
+    sin
+The actual replacement has type
+    float -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. (eval (a, x, y))))
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 19, characters 14-42:
+File "2583.ml", line 20, characters 16-44:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 26, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    b
+The actual replacement has type
+    expr * expr * expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> [[...other program...]]
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) ->
+                                (if (eval (a, x, y)) < (eval (b, x, y)) then
+                                    (eval (c, x, y))
+                                    else
+                                    (eval (d, b, y)))
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 19, characters 14-42:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 20, characters 21-23:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    pi
+with
+    pi
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> (cos (pi *. (eval (a, x, y))))
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2583.ml", line 19, characters 14-42:
+File "2583.ml", line 21, characters 21-66:
+File "2583.ml", line 22, characters 19-55:
+File "2583.ml", line 24, characters 6-96:
+File "2583.ml", line 27, characters 22-50:
+File "2583.ml", line 28, characters 24-45:
+And modified the following location:
+File "2583.ml", line 20, characters 28-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (eval (a, x, y))
+with
+    (eval ((a, x, y)))
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> (cos (pi *. (eval ((a, x, y)))))
+                              | Average (a, b) -> [[...other program...]]
+                              | Times (a, b) -> [[...other program...]]
+                              | Thresh (a, b, c, d) -> [[...other program...]]
+                              | SquareAv (a, b) -> [[...other program...]]
+                              | MultHalf (a, b, c) -> [[...other program...]]) ;; 
+==============================

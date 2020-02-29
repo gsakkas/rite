@@ -1,0 +1,48 @@
+------------------------------------------------------------------
+File "2529.ml", line 20, characters 29-37:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+Triaged the following locations:
+File "2529.ml", line 21, characters 4-51:
+And modified the following location:
+File "2529.ml", line 20, characters 29-37:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    'i -> ('j list -> 'j list) -> 'k -> 'l list
+within context
+    let add (l1, l2) = let f a x = (match a with 
+                                    | [] -> []
+                                    | h :: t ->
+                                      (let (j, k) = x in
+                                            (if j + k > 10 then 1 :: h else
+                                                0 ::
+                                                    h))) in let base = 0, 0 in
+        let args = (List.combine ((List.rev; [[...]]) l1 List.rev  l2)) in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================
+Triaged the following locations:
+File "2529.ml", line 21, characters 4-51:
+And modified the following location:
+File "2529.ml", line 20, characters 4-108:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (List.combine (List.rev l1 List.rev  l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'o
+within context
+    let add (l1, l2) = let f a x = (match a with 
+                                    | [] -> []
+                                    | h :: t ->
+                                      (let (j, k) = x in
+                                            (if j + k > 10 then 1 :: h else
+                                                0 ::
+                                                    h))) in let base = 0, 0 in
+        [[...other program...]] in (removeZero (add (padZero l1 l2)))
+==============================

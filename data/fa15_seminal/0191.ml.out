@@ -1,0 +1,56 @@
+------------------------------------------------------------------
+File "0191.ml", line 4, characters 4-14:
+This pattern matches values of type ('a * 'b) list
+but is here used to match values of type 'c * 'd * 'e
+Relevant code: (ki,vi)::t
+------------------------------------------------------------------
+File "0191.ml", line 3, characters 8-17:
+Try replacing
+    d, k, l
+with
+    d, k, l; [[...]]
+of type
+    ('f * 'g) list
+within context
+    let rec assoc (d, k, l) = (match (d, k, l; [[...]]) with 
+                               | (ki, vi) :: t ->
+                                 (if k = ki then vi else (assoc (d, k, t)))
+                               | [] -> d) ;; 
+==============================
+Triaged the following locations:
+File "0191.ml", line 4, characters 18-56:
+File "0191.ml", line 5, characters 4-6:
+File "0191.ml", line 5, characters 10-11:
+And modified the following location:
+File "0191.ml", line 4, characters 4-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (ki, vi) :: t
+with
+    _
+The actual replacement has type
+    'h * 'i * 'j
+within context
+    let rec assoc (d, k, l) = (match d, k, l with 
+                               | _ -> [[...other program...]]
+                               |
+                                 [[...other pattern...]]
+                                 ->
+                                 [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "0191.ml", line 4, characters 4-14:
+File "0191.ml", line 4, characters 18-56:
+File "0191.ml", line 5, characters 10-11:
+And modified the following location:
+File "0191.ml", line 5, characters 4-6:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    'k * 'l * 'm
+within context
+    let rec assoc (d, k, l) = (match d, k, l with 
+                               |[[...other pattern...]]->[[...other program...]]
+                               | _ -> [[...other program...]]) ;; 
+==============================

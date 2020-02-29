@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "0447.ml", line 7, characters 64-71:
+This expression has type (int -> int * bool) * bool
+but is here used with type (int -> int * bool) * int
+Relevant code: (gs, b)
+------------------------------------------------------------------
+File "0447.ml", line 7, characters 13-53:
+Try replacing
+    let isFPoint = (f x) - x < 0 in x, b
+with
+    x, b
+of type
+    'a * bool
+within context
+    let fixpoint (f, b) = let gs x = x, b in (wwhile (gs, b)) ;; 
+==============================
+File "0447.ml", line 7, characters 57-63:
+Try replacing
+    wwhile
+with
+    <
+of type
+    (int -> int * 'b) * 'b -> (int -> int * 'b) * 'b -> bool
+within context
+    let fixpoint (f, b) =
+    let gs x = let isFPoint = (f x) - x < 0 in x, b in (< (gs, b))
+    ;; 
+==============================
+File "0447.ml", line 7, characters 57-63:
+Try replacing
+    wwhile
+with
+    =
+of type
+    (int -> int * 'c) * 'c -> (int -> int * 'c) * 'c -> bool
+within context
+    let fixpoint (f, b) =
+    let gs x = let isFPoint = (f x) - x < 0 in x, b in (= (gs, b))
+    ;; 
+==============================

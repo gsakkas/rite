@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2961.ml", line 5, characters 41-45:
+This expression has type int -> int but is here used with type int
+Relevant code: help
+------------------------------------------------------------------
+File "2961.ml", line 5, characters 21-45:
+Try replacing
+    (additivePersistence help n)
+with
+    (additivePersistence (help n))
+of type
+    int
+within context
+    let rec additivePersistence n =
+    (if n > 0 then 1 + (additivePersistence (help n)) else 0)
+    ;; 
+==============================

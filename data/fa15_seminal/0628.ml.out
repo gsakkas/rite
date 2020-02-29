@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0628.ml", line 3, characters 34-45:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.append
+------------------------------------------------------------------
+File "0628.ml", line 3, characters 34-45:
+Try replacing
+    List.append
+with
+    List.append; [[...]]
+of type
+    ('j -> int -> 'j list) -> 'j -> int -> 'k list -> 'j list
+within context
+    let rec clone x n = (match n with 
+                         | 1 -> [x]
+                         | n' -> ((List.append; [[...]]) clone x  (n - 1)  [])) ;; 
+==============================

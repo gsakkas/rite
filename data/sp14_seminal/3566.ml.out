@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "3566.ml", line 22, characters 25-39:
+This expression has type 'a -> 'b but is here used with type int
+Relevant code: (mulByDigit i)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3566.ml", line 22, characters 40-41:
+And modified the following location:
+File "3566.ml", line 22, characters 43-44:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    1
+with
+    1; [[...]]
+The actual replacement has type
+    (int list -> int list -> int list) -> 'c -> 'c -> 'd
+within context
+    let rec mulByDigit i l = ((mulByDigit i) -; [[...]] ((1; [[...]]) bigAdd l  l))
+    ;; 
+==============================

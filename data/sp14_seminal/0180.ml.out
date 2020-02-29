@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "0180.ml", line 51, characters 40-54:
+This expression has type 'a -> int list but is here used with type int
+Relevant code: (mulByDigit i)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0180.ml", line 51, characters 55-56:
+And modified the following location:
+File "0180.ml", line 51, characters 58-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    2
+with
+    2; [[...]]
+The actual replacement has type
+    int list -> 'b
+within context
+    fun l ->
+      (if i = 0 then [] else
+        (if i = 1 then l else
+          (bigAdd
+            (mulByDigit (i - 2) l) ((mulByDigit i) -; [[...]] ((2; [[...]]) l)))))
+==============================
+Triaged the following locations:
+File "0180.ml", line 51, characters 55-56:
+And modified the following location:
+File "0180.ml", line 51, characters 60-61:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    (2 l)
+with
+    2
+The actual replacement has type
+    int
+within context
+    fun l ->
+      (if i = 0 then [] else
+        (if i = 1 then l else
+          (bigAdd (mulByDigit (i - 2) l) ((mulByDigit i) -; [[...]] 2))))
+==============================

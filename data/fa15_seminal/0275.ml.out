@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "0275.ml", line 7, characters 36-63:
+This expression has type 'a list but is here used with type int
+Relevant code: (((h * i) + c) mod 10) :: t
+------------------------------------------------------------------
+File "0275.ml", line 7, characters 24-25:
+Try replacing
+    c
+with
+    a
+of type
+    int list
+within context
+    let f a x = let c = (cout (i, x)) in (match a with 
+                                          | _ -> a
+                                          | h :: t ->
+                                            (mod (h * i + c) 10) ::
+                                                  t) in let base = [] in
+      let args = (List.rev l) in let res = (List.fold_left f base  args) in res
+==============================
+File "0275.ml", line 7, characters 24-25:
+Try replacing
+    c
+with
+    l
+of type
+    int list
+within context
+    let f a x = let c = (cout (i, x)) in (match a with 
+                                          | _ -> l
+                                          | h :: t ->
+                                            (mod (h * i + c) 10) ::
+                                                  t) in let base = [] in
+      let args = (List.rev l) in let res = (List.fold_left f base  args) in res
+==============================

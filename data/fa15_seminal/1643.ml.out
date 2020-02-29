@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1643.ml", line 9, characters 39-45:
+This expression has type 'a * 'b but is here used with type
+  ('c -> 'd) * 'c * 'e
+Relevant code: (f, b)
+------------------------------------------------------------------
+File "1643.ml", line 9, characters 30-38:
+Try replacing
+    fpHelper
+with
+    fpHelper; [[...]]
+of type
+    'f * 'g -> 'g -> 'g * bool
+within context
+    let fixpoint (f, b) = (wwhile (((fpHelper; [[...]]) (f, b)), b)) ;; 
+==============================

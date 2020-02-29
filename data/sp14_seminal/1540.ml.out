@@ -1,0 +1,85 @@
+------------------------------------------------------------------
+File "1540.ml", line 4, characters 36-40:
+This expression has type 'a list but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+File "1540.ml", line 4, characters 34-35:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'b list -> int -> 'b list
+within context
+    let sqsum xs = let f a x = (match xs with 
+                                | [] -> a
+                                | hd :: tl ->
+                                  a +
+                                      hd
+                                        *
+                                        hd) in let base = [] in
+      (List.fold_left (f; [[...]]) base  xs) ;; 
+==============================
+File "1540.ml", line 4, characters 13-15:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    'c
+within context
+    let sqsum xs = let f a x = (match xs with 
+                                | [] -> a
+                                | hd :: tl ->
+                                  a +
+                                      hd
+                                        *
+                                        hd) in let base = []; [[...]] in
+      (List.fold_left f base  xs) ;; 
+==============================
+File "1540.ml", line 4, characters 36-40:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    int
+within context
+    let sqsum xs = let f a x = (match xs with 
+                                | [] -> a
+                                | hd :: tl ->
+                                  a +
+                                      hd
+                                        *
+                                        hd) in let base = [] in
+      (List.fold_left f (base; [[...]])  xs) ;; 
+==============================
+File "1540.ml", line 4, characters 19-33:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int -> 'd -> int) -> 'e list -> int list -> 'f
+within context
+    let sqsum xs = let f a x = (match xs with 
+                                | [] -> a
+                                | hd :: tl ->
+                                  a +
+                                      hd
+                                        *
+                                        hd) in let base = [] in
+      ((List.fold_left; [[...]]) f base  xs) ;; 
+==============================
+File "1540.ml", line 3, characters 8-63:
+Try replacing
+    fun a x -> (match xs with 
+                | [] -> a
+                | hd :: tl -> a + hd * hd)
+with
+    fun a x -> (match xs with 
+                | [] -> a
+                | hd :: tl -> a + hd * hd); [[...]]
+of type
+    'g
+==============================

@@ -1,0 +1,57 @@
+------------------------------------------------------------------
+File "0385.ml", line 27, characters 27-29:
+This expression has type int but is here used with type float
+Relevant code: 30
+------------------------------------------------------------------
+File "0385.ml", line 27, characters 27-29:
+Try replacing
+    30
+with
+    30; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Average (t, s) ->
+                                (((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0)
+                              | Times (t, s) ->
+                                ((eval (t, x, y)) *. (eval (s, x, y)))
+                              | Thresh (t, r, s, q) ->
+                                (if (eval (t, x, y)) < (eval (r, x, y)) then
+                                    (eval (s, x, y))
+                                    else
+                                    (eval (q, x, y)))
+                              | Trip (t, r, s) ->
+                                (((eval (t, x, y)) /. 30; [[...]]) +.
+                                      ((eval (r, x, y)) /. (eval (s, x, y))))) ;; 
+==============================
+File "0385.ml", line 27, characters 24-26:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Average (t, s) ->
+                                (((eval (t, x, y)) +. (eval (s, x, y))) /. 2.0)
+                              | Times (t, s) ->
+                                ((eval (t, x, y)) *. (eval (s, x, y)))
+                              | Thresh (t, r, s, q) ->
+                                (if (eval (t, x, y)) < (eval (r, x, y)) then
+                                    (eval (s, x, y))
+                                    else
+                                    (eval (q, x, y)))
+                              | Trip (t, r, s) ->
+                                (((eval (t, x, y)) /.; [[...]] 30) +.
+                                      ((eval (r, x, y)) /. (eval (s, x, y))))) ;; 
+==============================

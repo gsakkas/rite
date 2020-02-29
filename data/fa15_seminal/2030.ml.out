@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "2030.ml", line 18, characters 44-63:
+This expression has type int * int but is here used with type int list
+Relevant code: ((y + z), (w / 10))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2030.ml", line 18, characters 27-28:
+And modified the following location:
+File "2030.ml", line 18, characters 44-63:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    y + z, w / 10
+with
+    y + z, w / 10; [[...]]
+The actual replacement has type
+    int list
+within context
+    let f a x = (match a, x with 
+                 | ((w, b), (y, z)) ->
+                   (b @; [[...]]
+                         (mod w 10) ::
+                             y + z, w / 10;
+                             [[...]])) in let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "2030.ml", line 18, characters 27-28:
+And modified the following location:
+File "2030.ml", line 18, characters 29-64:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    (mod w 10) :: y + z :: w / 10
+with
+    (mod w 10), (y + z, w / 10)
+The actual replacement has type
+    int * (int * int)
+within context
+    let f a x = (match a, x with 
+                 | ((w, b), (y, z)) ->
+                   (b @; [[...]]
+                         (mod w 10),
+                           (y + z,
+                               w /
+                                 10))) in let base = 0, [] in
+      let args = (List.combine l1 l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "2724.ml", line 19, characters 8-60:
+This expression has type int list but is here used with type int
+Relevant code: if x < 10 then [x] else [intlist (x / 10); x mod 10]
+------------------------------------------------------------------
+Triaged the following locations:
+File "2724.ml", line 20, characters 6-180:
+And modified the following location:
+File "2724.ml", line 18, characters 22-86:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fun x -> (if x < 10 then [x] else [(intlist (x / 10)) ; (mod x 10)])
+with
+    fun x -> (if x < 10 then [x] else [(intlist (x / 10)) ; (mod x 10)]); [[...]]
+The actual replacement has type
+    int -> int
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let rec intlist =
+            fun x -> (if x < 10 then [x] else [(intlist (x / 10)) ; (mod x 10)]);
+            [[...]]
+            in
+            [[...other program...]]
+          in
+          let base = [] in
+          let args = (List.combine l1 l2) in
+          let res = (List.fold_left f base  args) in res)
+==============================
+Triaged the following locations:
+File "2724.ml", line 20, characters 6-180:
+And modified the following location:
+File "2724.ml", line 18, characters 6-270:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let rec intlist x = (if x < 10 then [x] else [(intlist (x / 10)) ; (mod x 10)])
+      in
+      (match x with 
+       | (z, y) -> (match a with 
+                    | h -> (let sum = (h + z) + y in (intlist sum))
+                    | h :: t -> (let sum = (h + z) + y in (intlist sum) :: t)))
+with
+    [[...other program...]]
+The actual replacement has type
+    'a
+==============================

@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "1029.ml", line 23, characters 15-43:
+This expression has type 'a list -> ('b * 'a) list but is here used with type
+  'c list
+Relevant code: (List.combine (List.rev l1))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1029.ml", line 23, characters 44-45:
+And modified the following location:
+File "1029.ml", line 23, characters 46-69:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    (0 (List.rev l2)) @ 0
+with
+    [[...]]
+The actual replacement has type
+    'd
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (y, z) = a in
+            let (r, s) = x in let m = (r + s) + y in m / 10, (mod m 10) :: z
+          in
+          let base = 0, [] in
+          let args = ((List.combine (List.rev l1)) @; [[...]] [[...]]) in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2180.ml", line 3, characters 64-68:
+This expression has type 'a -> 'a but is here used with type int
+Relevant code: base
+------------------------------------------------------------------
+File "2180.ml", line 3, characters 14-17:
+Try replacing
+    a + x * x
+with
+    ( + ) (a (x * x))
+of type
+    int -> int
+within context
+    let sqsum xs =
+    let f a x = ( + ) (a (x * x)) in let base x = x in (List.fold_left f base  xs)
+    ;; 
+==============================

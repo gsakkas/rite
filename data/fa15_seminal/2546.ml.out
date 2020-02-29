@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "2546.ml", line 5, characters 12-45:
+This expression has type int but is here used with type 'a list
+Relevant code: ((10 * h) * i) + (mulByDigit i t)
+------------------------------------------------------------------
+File "2546.ml", line 5, characters 27-28:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int -> 'b list -> 'b list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t ->
+                                ((10 * h) * i +; [[...]] (mulByDigit i t))) ;; 
+==============================
+File "2546.ml", line 4, characters 10-12:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> ([]; [[...]])
+                              | h :: t -> (10 * h) * i + (mulByDigit i t)) ;; 
+==============================

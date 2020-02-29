@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1735.ml", line 3, characters 39-61:
+This expression has type int but is here used with type int list
+Relevant code: ((digitsOfInt n) / 10)
+------------------------------------------------------------------
+File "1735.ml", line 3, characters 41-52:
+Try replacing
+    (digitsOfInt n) / 10
+with
+    (digitsOfInt (n / 10))
+of type
+    int list
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [] else (mod n 10) :: (digitsOfInt (n / 10)))
+    ;; 
+==============================

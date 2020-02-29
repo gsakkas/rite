@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "1587.ml", line 11, characters 21-46:
+This expression is not a function, it cannot be applied
+Relevant code: (sumList (digitsOfInt n))
+------------------------------------------------------------------
+Triaged the following locations:
+File "1587.ml", line 11, characters 9-19:
+And modified the following location:
+File "1587.ml", line 11, characters 21-46:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    recCounter
+If you ignore other surrounding code, try replacing
+    (sumList (digitsOfInt n))
+with
+    (sumList (digitsOfInt n)); [[...]]
+The actual replacement has type
+    int -> 'c
+within context
+    let rec recCounter n count =
+      (if n < 10 then count else
+        ((recCounter; [[...]]) (((sumList (digitsOfInt n)); [[...]]) (count + 1))))
+      in
+      (recCounter n 0)
+==============================
+Triaged the following locations:
+File "1587.ml", line 11, characters 9-19:
+And modified the following location:
+File "1587.ml", line 11, characters 47-58:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    recCounter
+If you ignore other surrounding code, try replacing
+    ((sumList (digitsOfInt n)) (count + 1))
+with
+    (sumList (digitsOfInt n))
+The actual replacement has type
+    int
+within context
+    let rec recCounter n count =
+      (if n < 10 then count else ((recCounter; [[...]]) (sumList (digitsOfInt n))))
+      in
+      (recCounter n 0)
+==============================

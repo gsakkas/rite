@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1770.ml", line 21, characters 52-74:
+This expression has type int but is here used with type 'a list
+Relevant code: (((i + j) + s) mod 10)
+------------------------------------------------------------------
+File "1770.ml", line 21, characters 46-75:
+Try replacing
+    t :: (mod ((i + j) + s) 10)
+with
+    [[...]]
+of type
+    int * 'b
+within context
+    fun a x -> (let (i, j) = x in let (s, t) = a in ((i + j) + s) / 10, [[...]])
+==============================

@@ -1,0 +1,81 @@
+------------------------------------------------------------------
+File "3016.ml", line 12, characters 33-59:
+This expression has type int list * int but is here used with type 'a list
+Relevant code: ((clone 0 (- diff)), len1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3016.ml", line 12, characters 7-18:
+And modified the following location:
+File "3016.ml", line 12, characters 21-32:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    List.append
+with
+    List.append; [[...]]
+The actual replacement has type
+    int list * int -> 'b
+within context
+    let len1 = (List.length l1) in
+      let len2 = (List.length l2) in
+      let diff = len1 - len2 in
+      (if diff < 0 then
+          ((List.append; [[...]])
+            (((List.append; [[...]]) ((clone 0 (( ~- ) diff)), len1)), len2)))
+==============================
+Triaged the following locations:
+File "3016.ml", line 12, characters 7-18:
+And modified the following location:
+File "3016.ml", line 12, characters 21-32:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    List.append
+with
+    <
+The actual replacement has type
+    int list * int -> int list * int -> bool
+within context
+    let len1 = (List.length l1) in
+      let len2 = (List.length l2) in
+      let diff = len1 - len2 in
+      (if diff < 0 then
+          ((List.append; [[...]]) ((< ((clone 0 (( ~- ) diff)), len1)), len2)))
+==============================
+Triaged the following locations:
+File "3016.ml", line 12, characters 7-18:
+And modified the following location:
+File "3016.ml", line 12, characters 33-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    (clone 0 (( ~- ) diff)), len1
+with
+    (clone 0 (( ~- ) diff)), len1; [[...]]
+The actual replacement has type
+    'c list
+within context
+    let len1 = (List.length l1) in
+      let len2 = (List.length l2) in
+      let diff = len1 - len2 in
+      (if diff < 0 then
+          ((List.append; [[...]])
+            ((List.append ((clone 0 (( ~- ) diff)), len1; [[...]])), len2)))
+==============================
+Triaged the following locations:
+File "3016.ml", line 12, characters 7-18:
+And modified the following location:
+File "3016.ml", line 12, characters 19-67:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.append
+If you ignore other surrounding code, try replacing
+    (List.append ((clone 0 (( ~- ) diff)), len1)), len2
+with
+    len2
+The actual replacement has type
+    int
+within context
+    let len1 = (List.length l1) in
+      let len2 = (List.length l2) in
+      let diff = len1 - len2 in (if diff < 0 then ((List.append; [[...]]) (len2)))
+==============================

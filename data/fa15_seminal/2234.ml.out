@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "2234.ml", line 21, characters 17-73:
+This expression has type int * int list but is here used with type int * int
+Relevant code: if x < 10 then (0, (x :: l)) else (1, ((x mod 10) :: l))
+------------------------------------------------------------------
+File "2234.ml", line 20, characters 18-60:
+Try replacing
+    (if x < 10 then 0, x else 1, (mod x 10))
+with
+    (if x < 10 then 0, x else 1, (mod x 10)); [[...]]
+of type
+    int * int list
+within context
+    fun (l1, l2) -> (let f a x = (match a with 
+                                  | (0, []) ->
+                                    ((if x < 10 then 0, x else 1, (mod x 10));
+                                        [[...]])
+                                  | (0, l) ->
+                                    (if x < 10 then 0, x :: l else
+                                        1, (mod x 10) :: l)
+                                  | (1, l) ->
+                                    (if x + 1 < 10 then 0, x + 1 :: l else
+                                        1,
+                                          x + (mod 1 10) ::
+                                              l)) in let base = 0, [] in
+          let args =
+          let combine (a, b) = a + b in
+            (List.map combine (List.rev (List.combine l1 l2)))
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

@@ -1,0 +1,73 @@
+------------------------------------------------------------------
+File "1441.ml", line 17, characters 25-29:
+This expression has type expr but is here used with type float
+Relevant code: VarX
+------------------------------------------------------------------
+Triaged the following locations:
+File "1441.ml", line 18, characters 16-32:
+And modified the following location:
+File "1441.ml", line 17, characters 25-29:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    VarX
+with
+    VarX; [[...]]
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *. VarX; [[...]]))
+                              | Cosine a -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1441.ml", line 18, characters 16-32:
+And modified the following location:
+File "1441.ml", line 17, characters 22-24:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    float -> expr -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> (sin (pi *.; [[...]] VarX))
+                              | Cosine a -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1441.ml", line 17, characters 14-30:
+And modified the following location:
+File "1441.ml", line 18, characters 24-26:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    float -> expr -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> (cos (pi *.; [[...]] VarY))) ;; 
+==============================
+Triaged the following locations:
+File "1441.ml", line 17, characters 14-30:
+And modified the following location:
+File "1441.ml", line 18, characters 27-31:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    VarY
+with
+    VarY; [[...]]
+The actual replacement has type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine a -> [[...other program...]]
+                              | Cosine a -> (cos (pi *. VarY; [[...]]))) ;; 
+==============================

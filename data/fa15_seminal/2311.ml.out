@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2311.ml", line 24, characters 42-45:
+This expression is not a function, it cannot be applied
+Relevant code: "*"
+------------------------------------------------------------------
+File "2311.ml", line 24, characters 42-45:
+Try replacing
+    "*"
+with
+    "*"; [[...]]
+of type
+    (expr -> string) -> expr -> string
+within context
+    "*" ^
+      ((exprToString x) ^
+          ("*" ^ ((exprToString y) ^ (exprToString "*"; [[...]] z))))
+==============================

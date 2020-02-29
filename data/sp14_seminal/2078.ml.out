@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2078.ml", line 32, characters 26-32:
+This expression has type unit -> expr but is here used with type expr
+Relevant code: buildY
+------------------------------------------------------------------
+File "2078.ml", line 26, characters 2-403:
+Try replacing
+    (match e with 
+     | Thresh (a, b, c, d) ->
+       (let e' = (buildThresh (a, b, c, d)) in (exprToString e'))
+     | Times (a, b) -> (let e' = (buildTimes (a, b)) in (exprToString e'))
+     | Average (a, b) -> (let e' = (buildAverage (a, b)) in (exprToString e'))
+     | Cosine a -> (let e' = (buildCosine a) in (exprToString e'))
+     | Sine a -> (let e' = (buildSine a) in (exprToString e'))
+     | VarY -> (exprToString buildY)
+     | VarX -> (exprToString buildX))
+with
+    [[...]]
+of type
+    'a
+==============================

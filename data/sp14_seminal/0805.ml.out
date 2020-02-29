@@ -1,0 +1,103 @@
+------------------------------------------------------------------
+File "0805.ml", line 27, characters 30-31:
+This expression has type expr but is here used with type expr * float * float
+Relevant code: e
+------------------------------------------------------------------
+Triaged the following locations:
+File "0805.ml", line 27, characters 20-23:
+And modified the following location:
+File "0805.ml", line 27, characters 25-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    abs
+If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr -> 'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Sqrt e ->
+                                (sqrt ((abs; [[...]]) ((eval; [[...]]) e)))
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0805.ml", line 27, characters 20-23:
+And modified the following location:
+File "0805.ml", line 27, characters 25-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    abs
+If you ignore other surrounding code, try replacing
+    eval
+with
+    <
+The actual replacement has type
+    expr -> expr -> bool
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Sqrt e -> (sqrt ((abs; [[...]]) (< e)))
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================
+Triaged the following locations:
+File "0805.ml", line 27, characters 20-23:
+And modified the following location:
+File "0805.ml", line 27, characters 30-31:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    abs
+If you ignore other surrounding code, try replacing
+    e
+with
+    e; [[...]]
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Sqrt e ->
+                                (sqrt ((abs; [[...]]) (eval (e; [[...]]))))
+                              | _ ->
+                                (failwith
+                                    "we are seriously writing a lisp compiler god save us all")) ;; 
+==============================

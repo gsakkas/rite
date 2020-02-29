@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0098.ml", line 2, characters 45-49:
+This pattern matches values of type 'a list
+but is here used to match values of type int
+Relevant code: h::t
+------------------------------------------------------------------
+File "0098.ml", line 2, characters 45-49:
+Try replacing
+    h :: t
+with
+    _
+of type
+    int -> 'b list
+within context
+    let rec clone x n = (match n with 
+                         | 0 -> []
+                         | _ -> x :: (clone x (n - 1))) ;; 
+==============================

@@ -1,0 +1,119 @@
+------------------------------------------------------------------
+File "1386.ml", line 31, characters 40-41:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+Triaged the following locations:
+File "1386.ml", line 31, characters 46-54:
+And modified the following location:
+File "1386.ml", line 31, characters 40-41:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    2
+with
+    2; [[...]]
+The actual replacement has type
+    float
+within context
+    (match e with 
+     | VarX -> x
+     | VarY -> y
+     | Sine sine -> (sin (pi *. (eval (sine, x, y))))
+     | Cosine cosine -> (cos (pi *. (eval (cosine, x, y))))
+     | Average (e1, e2) -> (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+     | Times (t1, t2) -> ((eval (t1, x, y)) *. (eval (t2, x, y)))
+     | Thresh (th1, th2, th3, th4) ->
+       (if (eval (th1, x, y)) < (eval (th2, x, y)) then (eval (th3, x, y)) else
+           (eval (th4, x, y)))
+     | Circ (circ1, circ2) ->
+       (sqrt (abs_float (1.0 -. (eval (circ1, x, y)) ** 2.0)))
+     | Oscillate m4 ->
+       (let x = (eval (m4, x, y)) in
+             (x /.
+                   (sqrt
+                     ((eval (m4, x, y)) ** (2; [[...]])
+                         +. [[...other program...]])))))
+==============================
+Triaged the following locations:
+File "1386.ml", line 31, characters 46-54:
+And modified the following location:
+File "1386.ml", line 31, characters 37-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    **
+with
+    **; [[...]]
+The actual replacement has type
+    float -> int -> float
+within context
+    (match e with 
+     | VarX -> x
+     | VarY -> y
+     | Sine sine -> (sin (pi *. (eval (sine, x, y))))
+     | Cosine cosine -> (cos (pi *. (eval (cosine, x, y))))
+     | Average (e1, e2) -> (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+     | Times (t1, t2) -> ((eval (t1, x, y)) *. (eval (t2, x, y)))
+     | Thresh (th1, th2, th3, th4) ->
+       (if (eval (th1, x, y)) < (eval (th2, x, y)) then (eval (th3, x, y)) else
+           (eval (th4, x, y)))
+     | Circ (circ1, circ2) ->
+       (sqrt (abs_float (1.0 -. (eval (circ1, x, y)) ** 2.0)))
+     | Oscillate m4 ->
+       (let x = (eval (m4, x, y)) in
+             (x /.
+                   (sqrt
+                     (((eval (m4, x, y)) **; [[...]] 2)
+                         +. [[...other program...]])))))
+==============================
+Triaged the following locations:
+File "1386.ml", line 31, characters 18-42:
+And modified the following location:
+File "1386.ml", line 31, characters 49-51:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    **
+with
+    **; [[...]]
+The actual replacement has type
+    float -> int -> float
+within context
+    (match e with 
+     | VarX -> x
+     | VarY -> y
+     | Sine sine -> (sin (pi *. (eval (sine, x, y))))
+     | Cosine cosine -> (cos (pi *. (eval (cosine, x, y))))
+     | Average (e1, e2) -> (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+     | Times (t1, t2) -> ((eval (t1, x, y)) *. (eval (t2, x, y)))
+     | Thresh (th1, th2, th3, th4) ->
+       (if (eval (th1, x, y)) < (eval (th2, x, y)) then (eval (th3, x, y)) else
+           (eval (th4, x, y)))
+     | Circ (circ1, circ2) ->
+       (sqrt (abs_float (1.0 -. (eval (circ1, x, y)) ** 2.0)))
+     | Oscillate m4 ->
+       (let x = (eval (m4, x, y)) in
+             (x /. (sqrt ([[...other program...]] +. (x **; [[...]] 2))))))
+==============================
+Triaged the following locations:
+File "1386.ml", line 31, characters 18-42:
+And modified the following location:
+File "1386.ml", line 31, characters 52-53:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    2
+with
+    2; [[...]]
+The actual replacement has type
+    float
+within context
+    (match e with 
+     | VarX -> x
+     | VarY -> y
+     | Sine sine -> (sin (pi *. (eval (sine, x, y))))
+     | Cosine cosine -> (cos (pi *. (eval (cosine, x, y))))
+     | Average (e1, e2) -> (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+     | Times (t1, t2) -> ((eval (t1, x, y)) *. (eval (t2, x, y)))
+     | Thresh (th1, th2, th3, th4) ->
+       (if (eval (th1, x, y)) < (eval (th2, x, y)) then (eval (th3, x, y)) else
+           (eval (th4, x, y)))
+     | Circ (circ1, circ2) ->
+       (sqrt (abs_float (1.0 -. (eval (circ1, x, y)) ** 2.0)))
+     | Oscillate m4 ->
+       (let x = (eval (m4, x, y)) in
+             (x /. (sqrt ([[...other program...]] +. x ** (2; [[...]]))))))
+==============================

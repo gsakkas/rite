@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "0372.ml", line 21, characters 25-26:
+This expression has type 'a list but is here used with type 'b * 'c
+Relevant code: x
+------------------------------------------------------------------
+File "0372.ml", line 18, characters 9-10:
+Try replacing
+    x
+with
+    x; [[...]]
+of type
+    'd list
+within context
+    fun a
+      x ->
+        (let (rem, acc) = a in
+            (if (x; [[...]]) = [] then (if rem = 1 then 0, 1 :: acc else 0, acc)
+                else
+                (let (el1, el2) = x in
+                    let new_sum = (rem + el1) + el2 in
+                    let new_rem = (if new_sum > 9 then 1 else 0) in
+                    let norm_sum = (if new_sum > 9 then new_sum - 10 else new_sum)
+                    in
+                    new_rem, norm_sum :: acc)))
+==============================
+File "0372.ml", line 18, characters 13-15:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int * int
+within context
+    fun a
+      x ->
+        (let (rem, acc) = a in
+            (if x = ([]; [[...]]) then (if rem = 1 then 0, 1 :: acc else 0, acc)
+                else
+                (let (el1, el2) = x in
+                    let new_sum = (rem + el1) + el2 in
+                    let new_rem = (if new_sum > 9 then 1 else 0) in
+                    let norm_sum = (if new_sum > 9 then new_sum - 10 else new_sum)
+                    in
+                    new_rem, norm_sum :: acc)))
+==============================
+File "0372.ml", line 18, characters 11-12:
+Try replacing
+    =
+with
+    =; [[...]]
+of type
+    int * int -> 'e list -> bool
+within context
+    fun a
+      x ->
+        (let (rem, acc) = a in
+            (if (x =; [[...]] []) then (if rem = 1 then 0, 1 :: acc else 0, acc)
+                else
+                (let (el1, el2) = x in
+                    let new_sum = (rem + el1) + el2 in
+                    let new_rem = (if new_sum > 9 then 1 else 0) in
+                    let norm_sum = (if new_sum > 9 then new_sum - 10 else new_sum)
+                    in
+                    new_rem, norm_sum :: acc)))
+==============================

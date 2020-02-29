@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2834.ml", line 26, characters 39-70:
+This expression has type int list but is here used with type unit
+Relevant code: bigAdd l (mulByDigit (i - 1) l)
+------------------------------------------------------------------
+File "2834.ml", line 26, characters 39-45:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    'a -> unit -> unit
+within context
+    let rec mulByDigit i l =
+    (if i > 0 then ((bigAdd; [[...]]) l (mulByDigit (i - 1) l)))
+    ;; 
+==============================

@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2017.ml", line 21, characters 15-23:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+File "2017.ml", line 21, characters 15-36:
+Try replacing
+    (List.rev List.combine l1  l2)
+with
+    (List.rev (List.combine l1 l2))
+of type
+    (int * int) list
+within context
+    let add (l1, l2) =
+      let f a (x, y) = (x + y) / 10 :: a in
+        let base = [] in
+        let args = (List.rev (List.combine l1 l2)) in
+        let res = (List.fold_left f base  args) in (List.rev res)
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

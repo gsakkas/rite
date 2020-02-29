@@ -1,0 +1,137 @@
+------------------------------------------------------------------
+File "2007.ml", line 29, characters 13-14:
+This expression has type int but is here used with type float
+Relevant code: 0
+------------------------------------------------------------------
+File "2007.ml", line 29, characters 9-10:
+Try replacing
+    d
+with
+    d; [[...]]
+of type
+    int
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine n -> (sin (pi *. (eval (n, x, y))))
+                      | Cosine n -> (cos (pi *. (eval (n, x, y))))
+                      | Average (m, n) ->
+                        (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+                      | Times (m, n) -> ((eval (m, x, y)) *. (eval (n, x, y)))
+                      | Thresh (m, n, o, p) ->
+                        (if (eval (m, x, y)) < (eval (n, x, y)) then
+                            (eval (o, x, y))
+                            else
+                            (eval (p, x, y)))
+                      | Power (m, n) ->
+                        (let d = (eval (n, x, y)) in
+                              (if (d; [[...]]) < 0 then
+                                  (eval (m, x, y)) ** (d *. -1.0)
+                                  else
+                                  (eval (m, x, y)) ** d))
+                      | Op (m, n, o) ->
+                        ((sqrt
+                                (((eval (m, x, y)) +. (eval (n, x, y)))
+                                    +. (eval (o, x, y))))
+                              /. 3.0))
+==============================
+File "2007.ml", line 29, characters 13-14:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine n -> (sin (pi *. (eval (n, x, y))))
+                      | Cosine n -> (cos (pi *. (eval (n, x, y))))
+                      | Average (m, n) ->
+                        (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+                      | Times (m, n) -> ((eval (m, x, y)) *. (eval (n, x, y)))
+                      | Thresh (m, n, o, p) ->
+                        (if (eval (m, x, y)) < (eval (n, x, y)) then
+                            (eval (o, x, y))
+                            else
+                            (eval (p, x, y)))
+                      | Power (m, n) ->
+                        (let d = (eval (n, x, y)) in
+                              (if d < (0; [[...]]) then
+                                  (eval (m, x, y)) ** (d *. -1.0)
+                                  else
+                                  (eval (m, x, y)) ** d))
+                      | Op (m, n, o) ->
+                        ((sqrt
+                                (((eval (m, x, y)) +. (eval (n, x, y)))
+                                    +. (eval (o, x, y))))
+                              /. 3.0))
+==============================
+File "2007.ml", line 29, characters 11-12:
+Try replacing
+    <
+with
+    <; [[...]]
+of type
+    float -> int -> bool
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine n -> (sin (pi *. (eval (n, x, y))))
+                      | Cosine n -> (cos (pi *. (eval (n, x, y))))
+                      | Average (m, n) ->
+                        (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+                      | Times (m, n) -> ((eval (m, x, y)) *. (eval (n, x, y)))
+                      | Thresh (m, n, o, p) ->
+                        (if (eval (m, x, y)) < (eval (n, x, y)) then
+                            (eval (o, x, y))
+                            else
+                            (eval (p, x, y)))
+                      | Power (m, n) ->
+                        (let d = (eval (n, x, y)) in
+                              (if (d <; [[...]] 0) then
+                                  (eval (m, x, y)) ** (d *. -1.0)
+                                  else
+                                  (eval (m, x, y)) ** d))
+                      | Op (m, n, o) ->
+                        ((sqrt
+                                (((eval (m, x, y)) +. (eval (n, x, y)))
+                                    +. (eval (o, x, y))))
+                              /. 3.0))
+==============================
+File "2007.ml", line 28, characters 14-28:
+Try replacing
+    (eval (n, x, y))
+with
+    (eval (n, x, y)); [[...]]
+of type
+    'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine n -> (sin (pi *. (eval (n, x, y))))
+                              | Cosine n -> (cos (pi *. (eval (n, x, y))))
+                              | Average (m, n) ->
+                                (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+                              | Times (m, n) ->
+                                ((eval (m, x, y)) *. (eval (n, x, y)))
+                              | Thresh (m, n, o, p) ->
+                                (if (eval (m, x, y)) < (eval (n, x, y)) then
+                                    (eval (o, x, y))
+                                    else
+                                    (eval (p, x, y)))
+                              | Power (m, n) ->
+                                (let d = (eval (n, x, y)); [[...]] in
+                                      (if d < 0 then (eval (m, x, y)) ** (d *. -1.0)
+                                          else
+                                          (eval (m, x, y)) ** d))
+                              | Op (m, n, o) ->
+                                ((sqrt
+                                        (((eval (m, x, y)) +. (eval (n, x, y)))
+                                            +. (eval (o, x, y))))
+                                      /. 3.0)) ;; 
+==============================

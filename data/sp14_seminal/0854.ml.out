@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "0854.ml", line 4, characters 2-83:
+This expression has type int list but is here used with type int
+Relevant code: match n with
+  | 0 -> 0 :: ns
+  | n -> (digitsOfInt (n / 10)) :: (n mod 10) :: ns
+------------------------------------------------------------------
+File "0854.ml", line 2, characters 20-124:
+Try replacing
+    fun n -> (let ns = [] in (match n with 
+                              | 0 -> 0 :: ns
+                              | n -> (digitsOfInt (n / 10)) :: (mod n 10) :: ns))
+with
+    fun n -> (let ns = [] in (match n with 
+                              | 0 -> 0 :: ns
+                              | n ->
+                                (digitsOfInt (n / 10)) ::
+                                      (mod n 10) :: ns)); [[...]]
+of type
+    int -> int
+==============================

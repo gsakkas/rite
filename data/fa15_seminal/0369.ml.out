@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "0369.ml", line 22, characters 6-96:
+This expression has type expr but is here used with type unit -> expr
+Relevant code: if r = 0
+      then buildSine (build (rand, (depth - 1)))
+      else build (rand, (d - 1))
+------------------------------------------------------------------
+File "0369.ml", line 23, characters 11-20:
+Try replacing
+    buildSine
+with
+    buildSine; [[...]]
+of type
+    (unit -> expr) -> unit -> expr
+within context
+    fun (rand, depth) -> (let r = (rand (0, depth)) in (match depth with 
+                                                        | 0 ->
+                                                          (if (mod r 2) = 0 then
+                                                              buildX
+                                                              else
+                                                              buildY)
+                                                        | d ->
+                                                          (if r = 0 then
+                                                              ((buildSine; [[...]])
+                                                                (build
+                                                                  (rand,
+                                                                      depth - 1)))
+                                                              else
+                                                              (build
+                                                                (rand, d - 1)))))
+==============================
+File "0369.ml", line 20, characters 9-49:
+Try replacing
+    (if (mod r 2) = 0 then buildX else buildY)
+with
+    (if (mod r 2) = 0 then buildX else buildY); [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) = let r = (rand (0, depth)) in (match depth with 
+                                                                | 0 ->
+                                                                  ((if (mod r 2) = 0
+                                                                        then
+                                                                        buildX
+                                                                        else
+                                                                        buildY);
+                                                                      [[...]])
+                                                                | d ->
+                                                                  (if r = 0 then
+                                                                      (buildSine
+                                                                        (build
+                                                                          (rand,
+                                                                              depth
+                                                                                -
+                                                                                1)))
+                                                                      else
+                                                                      (build
+                                                                        (rand,
+                                                                            d
+                                                                              -
+                                                                              1)))) ;; 
+==============================

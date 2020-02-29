@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "0596.ml", line 18, characters 10-12:
+This expression has type 'a list but is here used with type int
+Relevant code: t1
+------------------------------------------------------------------
+Triaged the following locations:
+File "0596.ml", line 18, characters 28-49:
+File "0596.ml", line 18, characters 55-69:
+And modified the following location:
+File "0596.ml", line 18, characters 13-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    'b list -> 'c list -> int
+within context
+    fun a
+      x ->
+        (let t1 = (List.tl l1) in
+            let t2 = (List.tl l2) in
+            (if (t1 +; [[...]] t2) > 9 then [[...other program...]] else
+                [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0596.ml", line 18, characters 9-22:
+File "0596.ml", line 18, characters 28-49:
+And modified the following location:
+File "0596.ml", line 18, characters 63-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    'd list -> 'e list -> 'f
+within context
+    fun a
+      x ->
+        (let t1 = (List.tl l1) in
+            let t2 = (List.tl l2) in
+            (if [[...other program...]] then [[...other program...]] else
+                0, [(t1 +; [[...]] t2)]))
+==============================
+Triaged the following locations:
+File "0596.ml", line 18, characters 9-22:
+File "0596.ml", line 18, characters 55-69:
+And modified the following location:
+File "0596.ml", line 18, characters 37-38:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    +
+with
+    +; [[...]]
+The actual replacement has type
+    'g list -> 'h list -> int
+within context
+    fun a
+      x ->
+        (let t1 = (List.tl l1) in
+            let t2 = (List.tl l2) in
+            (if [[...other program...]] then 1, [(t1 +; [[...]] t2) - 10] else
+                [[...other program...]]))
+==============================

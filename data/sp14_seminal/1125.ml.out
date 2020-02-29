@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "1125.ml", line 15, characters 32-34:
+This expression has type expr but is here used with type expr * 'a * 'b
+Relevant code: e'
+------------------------------------------------------------------
+File "1125.ml", line 13, characters 13-180:
+Try replacing
+    fun (e, x, y) -> (match e with 
+                      | Sine e' -> (sin (pi *. (eval e')))
+                      | Cosine e' -> (cos (pi *. (eval e')))
+                      | Average (x', y') -> ((x +. y) /. 2.0)
+                      | Times (x', y') -> (x *. y))
+with
+    fun (e, x, y) -> (match e with 
+                      | Sine e' -> (sin (pi *. (eval e')))
+                      | Cosine e' -> (cos (pi *. (eval e')))
+                      | Average (x', y') -> ((x +. y) /. 2.0)
+                      | Times (x', y') -> (x *. y)); [[...]]
+of type
+    expr -> float
+==============================

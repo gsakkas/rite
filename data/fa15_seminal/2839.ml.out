@@ -1,0 +1,110 @@
+------------------------------------------------------------------
+File "2839.ml", line 2, characters 70-74:
+This expression has type ('a -> 'b) -> 'a -> 'b but is here used with type
+  ('a -> 'b) -> 'b
+Relevant code: base
+------------------------------------------------------------------
+File "2839.ml", line 2, characters 44-49:
+Try replacing
+    fun f -> f
+with
+    fun _ f -> f
+of type
+    'c -> 'd -> 'd
+within context
+    let pipe fs =
+    let f a x a = (a x) in let base _ f = f in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2839.ml", line 2, characters 24-31:
+Try replacing
+    fun a -> (a x)
+with
+    fun _ a -> (a x)
+of type
+    'e -> ('f -> 'g) -> 'g
+within context
+    let pipe fs =
+    let f a x _ a = (a x) in let base f = f in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2839.ml", line 2, characters 24-31:
+Try replacing
+    fun a -> (a x)
+with
+    fun a _ -> (a x)
+of type
+    ('h -> 'i) -> 'j -> 'i
+within context
+    let pipe fs =
+    let f a x a _ = (a x) in let base f = f in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2839.ml", line 2, characters 53-67:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('k -> 'k) -> 'l -> ('l -> 'm) -> 'm) ->
+    ('k -> 'k) -> 'l -> ('l -> 'm) -> 'm
+within context
+    let pipe fs = let f a x a = (a x) in let base f = f in (base f base  fs) ;; 
+==============================
+File "2839.ml", line 2, characters 53-67:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('n -> 'o -> ('o -> 'p) -> 'p) -> ('q -> 'q) -> (('q -> 'q) -> 'r) -> 'r
+within context
+    let pipe fs = let f a x a = (a x) in let base f = f in (f f base  fs) ;; 
+==============================
+File "2839.ml", line 2, characters 70-74:
+Try replacing
+    base
+with
+    f
+of type
+    ('s -> 't -> ('t -> 'u) -> 'u) -> 't -> ('t -> 'u) -> 'u
+within context
+    let pipe fs = let f a x a = (a x) in let base f = f in (List.fold_left f f  fs)
+    ;; 
+==============================
+File "2839.ml", line 2, characters 28-29:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('v -> 'w -> 'v) -> 'v -> 'w list -> 'v
+within context
+    let f a x a = (List.fold_left x) in
+      let base f = f in (List.fold_left f base  fs)
+==============================
+File "2839.ml", line 2, characters 48-49:
+Try replacing
+    f
+with
+    fs
+of type
+    'x list
+within context
+    let pipe fs =
+    let f a x a = (a x) in let base f = fs in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2839.ml", line 2, characters 48-49:
+Try replacing
+    f
+with
+    List.fold_left
+of type
+    ('y -> 'z -> 'y) -> 'y -> 'z list -> 'y
+within context
+    let pipe fs =
+    let f a x a = (a x) in
+      let base f = List.fold_left in (List.fold_left f base  fs)
+    ;; 
+==============================

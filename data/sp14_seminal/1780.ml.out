@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1780.ml", line 12, characters 49-60:
+This expression has type 'a list -> int but is here used with type int
+Relevant code: List.length
+------------------------------------------------------------------
+File "1780.ml", line 12, characters 49-60:
+Try replacing
+    List.length + 1
+with
+    ( + ) 1
+of type
+    int -> int
+within context
+    let base = 0, [] in
+      let args = (List.combine (List.rev 0 :: l1) (clone i ((( + ) 1) l))) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

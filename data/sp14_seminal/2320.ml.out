@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2320.ml", line 25, characters 52-56:
+This expression has type int but is here used with type int list
+Relevant code: asd2
+------------------------------------------------------------------
+File "2320.ml", line 25, characters 39-46:
+Try replacing
+    padZero
+with
+    padZero; [[...]]
+of type
+    int list -> int -> int list
+within context
+    let asd = x / h in
+      let asd2 = (x + h) - asd * 10 in
+      let asd3 = asd :: t in asd3, ((padZero; [[...]]) asd3 asd2)
+==============================

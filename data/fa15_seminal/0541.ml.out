@@ -1,0 +1,216 @@
+------------------------------------------------------------------
+File "0541.ml", line 38, characters 18-33:
+This expression has type int list but is here used with type
+  int list * int list
+Relevant code: (padZero l1 l2)
+------------------------------------------------------------------
+File "0541.ml", line 38, characters 18-33:
+Try replacing
+    (padZero l1 l2)
+with
+    (padZero l1 l2); [[...]]
+of type
+    int list * int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (c, d) -> (match a with 
+                                                               | (n, listSum) ->
+                                                                 (match listSum with
+                                                                  
+                                                                  | [] ->
+                                                                    (if
+                                                                        (n + c) + d
+                                                                          < 10
+                                                                        then
+                                                                        0,
+                                                                          [
+                                                                              n ;
+                                                                              (n
+                                                                                    +
+                                                                                    c)
+                                                                                + d
+                                                                              ]
+                                                                        else
+                                                                        n + 1,
+                                                                          [
+                                                                              n + 1
+                                                                              ;
+                                                                              (mod
+                                                                                ((n
+                                                                                        +
+                                                                                        c)
+                                                                                    +
+                                                                                    d) 10)
+                                                                              ])
+                                                                  | h :: t ->
+                                                                    (if
+                                                                        (n + c) + d
+                                                                          < 10
+                                                                        then
+                                                                        0,
+                                                                          [
+                                                                                0 ;
+                                                                                (c
+                                                                                      +
+                                                                                      d)
+                                                                                  +
+                                                                                  h
+                                                                                ]
+                                                                            @ t
+                                                                        else
+                                                                        n + 1,
+                                                                          ((h + c)
+                                                                                    +
+                                                                                    d)
+                                                                                / 10
+                                                                              ::
+                                                                              (mod
+                                                                                ((h
+                                                                                        +
+                                                                                        c)
+                                                                                    +
+                                                                                    d) 10)
+                                                                              ::
+                                                                              t)))) in let
+              base
+              =
+              0, []
+              in
+              let args = (List.rev (List.combine l1 l2)) in
+              let (_, res) = (List.fold_left f base  args) in
+              res in (removeZero (add ((padZero l1 l2); [[...]]))))
+==============================
+File "0541.ml", line 38, characters 14-17:
+Try replacing
+    add
+with
+    add; [[...]]
+of type
+    int list -> int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = (match x with 
+                                                  | (c, d) -> (match a with 
+                                                               | (n, listSum) ->
+                                                                 (match listSum with
+                                                                  
+                                                                  | [] ->
+                                                                    (if
+                                                                        (n + c) + d
+                                                                          < 10
+                                                                        then
+                                                                        0,
+                                                                          [
+                                                                              n ;
+                                                                              (n
+                                                                                    +
+                                                                                    c)
+                                                                                + d
+                                                                              ]
+                                                                        else
+                                                                        n + 1,
+                                                                          [
+                                                                              n + 1
+                                                                              ;
+                                                                              (mod
+                                                                                ((n
+                                                                                        +
+                                                                                        c)
+                                                                                    +
+                                                                                    d) 10)
+                                                                              ])
+                                                                  | h :: t ->
+                                                                    (if
+                                                                        (n + c) + d
+                                                                          < 10
+                                                                        then
+                                                                        0,
+                                                                          [
+                                                                                0 ;
+                                                                                (c
+                                                                                      +
+                                                                                      d)
+                                                                                  +
+                                                                                  h
+                                                                                ]
+                                                                            @ t
+                                                                        else
+                                                                        n + 1,
+                                                                          ((h + c)
+                                                                                    +
+                                                                                    d)
+                                                                                / 10
+                                                                              ::
+                                                                              (mod
+                                                                                ((h
+                                                                                        +
+                                                                                        c)
+                                                                                    +
+                                                                                    d) 10)
+                                                                              ::
+                                                                              t)))) in let
+              base
+              =
+              0, []
+              in
+              let args = (List.rev (List.combine l1 l2)) in
+              let (_, res) = (List.fold_left f base  args) in
+              res in (removeZero ((add; [[...]]) (padZero l1 l2))))
+==============================
+File "0541.ml", line 18, characters 10-725:
+Try replacing
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (c, d) -> (match a with 
+                                               | (n, listSum) ->
+                                                 (match listSum with 
+                                                  | [] ->
+                                                    (if (n + c) + d < 10 then
+                                                        0, [n ; (n + c) + d]
+                                                        else
+                                                        n + 1,
+                                                          [
+                                                              n + 1 ;
+                                                              (mod ((n + c) + d) 10)
+                                                              ])
+                                                  | h :: t ->
+                                                    (if (n + c) + d < 10 then
+                                                        0, [0 ; (c + d) + h] @ t
+                                                        else
+                                                        n + 1,
+                                                          ((h + c) + d) / 10 ::
+                                                              (mod ((h + c) + d) 10)
+                                                              ::
+                                                              t)))) in let base =
+          0, []
+          in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+with
+    fun (l1, l2) -> (let f a x = (match x with 
+                                  | (c, d) -> (match a with 
+                                               | (n, listSum) ->
+                                                 (match listSum with 
+                                                  | [] ->
+                                                    (if (n + c) + d < 10 then
+                                                        0, [n ; (n + c) + d]
+                                                        else
+                                                        n + 1,
+                                                          [
+                                                              n + 1 ;
+                                                              (mod ((n + c) + d) 10)
+                                                              ])
+                                                  | h :: t ->
+                                                    (if (n + c) + d < 10 then
+                                                        0, [0 ; (c + d) + h] @ t
+                                                        else
+                                                        n + 1,
+                                                          ((h + c) + d) / 10 ::
+                                                              (mod ((h + c) + d) 10)
+                                                              ::
+                                                              t)))) in let base =
+          0, []
+          in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res); [[...]]
+of type
+    'a
+==============================

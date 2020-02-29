@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "0738.ml", line 30, characters 13-17:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: eval
+------------------------------------------------------------------
+Triaged the following locations:
+File "0738.ml", line 30, characters 49-50:
+And modified the following location:
+File "0738.ml", line 30, characters 11-48:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    +
+If you ignore other surrounding code, try replacing
+    (eval (e1, x, y) eval) + (e2, x, y)
+with
+    [[...]]
+The actual replacement has type
+    'd5
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine e' -> (sin (pi *. (eval (e', x, y))))
+                              | Cosine e' -> (cos (pi *. (eval (e', x, y))))
+                              | Average (e1, e2) ->
+                                (((eval (e1, x, y)) +. (eval (e2, x, y))) /. 2.0)
+                              | Times (e1, e2) ->
+                                ((eval (e1, x, y)) *. (eval (e2, x, y)))
+                              | Thresh (e1, e2, e3, e4) ->
+                                (if (eval (e1, x, y)) < (eval (e2, x, y)) then
+                                    (eval (e3, x, y))
+                                    else
+                                    (eval (e4, x, y)))
+                              | Golden e' ->
+                                (cos
+                                    (((eval (e', x, y)) ** 2.0 -. (eval (e', x, y)))
+                                        -. 1.0))
+                              | MeanPi (e1, e2, e3) ->
+                                (sin
+                                    ([[...]] +; [[...]]
+                                        ((eval (e3, x, y)) /. pi)))) ;; 
+==============================

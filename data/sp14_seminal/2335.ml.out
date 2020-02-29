@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2335.ml", line 35, characters 13-31:
+This expression has type int list but is here used with type int
+Relevant code: (helper i l accum)
+------------------------------------------------------------------
+File "2335.ml", line 35, characters 31-31:
+Try replacing
+    (mulByDigit (helper i l  accum))
+with
+    (mulByDigit [[...]] (helper i l  accum))
+of type
+    'a
+within context
+    let rec mulByDigit i l =
+    let accum = [] in
+      let rec helper x l accum =
+      (if x != 0 then (helper (x - 1) l  (bigAdd l accum)) else accum)
+      in
+      (mulByDigit [[...]] (helper i l  accum))
+    ;; 
+==============================

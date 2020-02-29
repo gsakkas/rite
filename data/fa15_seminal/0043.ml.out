@@ -1,0 +1,25 @@
+------------------------------------------------------------------
+File "0043.ml", line 2, characters 55-67:
+This expression has type 'a * int but is here used with type 'a
+Relevant code: (x, (n - 1))
+------------------------------------------------------------------
+File "0043.ml", line 2, characters 14-17:
+Try replacing
+    fun x n -> (if (n <= 0) then [] else x :: (clone (x, n - 1)))
+with
+    fun (x, n) -> (if (n <= 0) then [] else x :: (clone (x, n - 1)))
+of type
+    'b * int -> 'b list
+within context
+    let rec clone (x, n) = (if (n <= 0) then [] else x :: (clone (x, n - 1))) ;; 
+==============================
+File "0043.ml", line 2, characters 55-67:
+Try replacing
+    (clone (x, n - 1))
+with
+    (clone x (n - 1))
+of type
+    'c list
+within context
+    let rec clone x n = (if (n <= 0) then [] else x :: (clone x (n - 1))) ;; 
+==============================

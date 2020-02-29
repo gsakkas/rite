@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "0774.ml", line 26, characters 23-73:
+This expression has type int list -> int list -> int list
+but is here used with type int
+Relevant code: if i = 1 then l else mulByDigit (i - 1) bigAdd l l
+------------------------------------------------------------------
+File "0774.ml", line 25, characters 19-98:
+Try replacing
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else (mulByDigit (i - 1) bigAdd  l  l)))
+with
+    fun i
+      l ->
+        (if i = 0 then 0 else
+          (if i = 1 then l else (mulByDigit (i - 1) bigAdd  l  l)));
+    [[...]]
+of type
+    int -> (int list -> int list -> int list) -> int -> int -> int
+==============================

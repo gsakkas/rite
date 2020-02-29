@@ -1,0 +1,132 @@
+------------------------------------------------------------------
+File "1205.ml", line 66, characters 33-37:
+This expression has type 'a list but is here used with type int * int list
+Relevant code: base
+------------------------------------------------------------------
+File "1205.ml", line 53, characters 13-15:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    'b
+within context
+    let bigMul l1 l2 = let f a x = (match a with 
+                                    | (_, z) -> (0, (bigAdd z x))
+                                    | _ ->
+                                      (0,
+                                            [])) in let base = []; [[...]] in
+      let args = let rec digitProducts acc place l1 l2 = (match l1 with 
+                                                          | [] -> acc
+                                                          | h :: t ->
+                                                            (let placeHolders =
+                                                                  let rec buildZeros
+                                                                    a places
+                                                                    =
+                                                                    (if places = 0
+                                                                      then
+                                                                      a
+                                                                      else
+                                                                      (buildZeros
+                                                                        0 :: a
+                                                                        (places
+                                                                            - 1)))
+                                                                    in
+                                                                    (buildZeros
+                                                                        [] place)
+                                                                  in
+                                                                  let a =
+                                                                  (List.append
+                                                                    (mulByDigit
+                                                                      h l2) placeHolders)
+                                                                  in
+                                                                  (digitProducts
+                                                                      a :: acc (place + 1) t
+                                                                      l2))) in (digitProducts
+            [] 0  l1  l2) in let (_, res) = (List.fold_left f base  args) in res ;; 
+==============================
+File "1205.ml", line 66, characters 33-37:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    int * int list
+within context
+    let f a x = (match a with 
+                 | (_, z) -> (0, (bigAdd z x))
+                 | _ ->
+                   (0,
+                         [])) in let base = [] in
+      let args = let rec digitProducts acc place l1 l2 = (match l1 with 
+                                                          | [] -> acc
+                                                          | h :: t ->
+                                                            (let placeHolders =
+                                                                  let rec buildZeros
+                                                                    a places
+                                                                    =
+                                                                    (if places = 0
+                                                                      then
+                                                                      a
+                                                                      else
+                                                                      (buildZeros
+                                                                        0 :: a
+                                                                        (places
+                                                                            - 1)))
+                                                                    in
+                                                                    (buildZeros
+                                                                        [] place)
+                                                                  in
+                                                                  let a =
+                                                                  (List.append
+                                                                    (mulByDigit
+                                                                      h l2) placeHolders)
+                                                                  in
+                                                                  (digitProducts
+                                                                      a :: acc (place + 1) t
+                                                                      l2))) in (digitProducts
+            [] 0 l1 l2) in let (_, res) = (List.fold_left f (base; [[...]])  args) in res
+==============================
+File "1205.ml", line 66, characters 16-30:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('c * int list -> int list -> int * int list) ->
+    'd list -> int list list -> 'e * 'f
+within context
+    let f a x = (match a with 
+                 | (_, z) -> (0, (bigAdd z x))
+                 | _ ->
+                   (0,
+                         [])) in let base = [] in
+      let args = let rec digitProducts acc place l1 l2 = (match l1 with 
+                                                          | [] -> acc
+                                                          | h :: t ->
+                                                            (let placeHolders =
+                                                                  let rec buildZeros
+                                                                    a places
+                                                                    =
+                                                                    (if places = 0
+                                                                      then
+                                                                      a
+                                                                      else
+                                                                      (buildZeros
+                                                                        0 :: a
+                                                                        (places
+                                                                            - 1)))
+                                                                    in
+                                                                    (buildZeros
+                                                                        [] place)
+                                                                  in
+                                                                  let a =
+                                                                  (List.append
+                                                                    (mulByDigit
+                                                                      h l2) placeHolders)
+                                                                  in
+                                                                  (digitProducts
+                                                                      a :: acc (place + 1) t
+                                                                      l2))) in (digitProducts
+            [] 0 l1 l2) in let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

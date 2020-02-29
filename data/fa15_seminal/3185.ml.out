@@ -1,0 +1,107 @@
+------------------------------------------------------------------
+File "3185.ml", line 29, characters 22-36:
+This expression has type int but is here used with type 'a list
+Relevant code: (x1 + x2) / 10
+------------------------------------------------------------------
+File "3185.ml", line 29, characters 8-10:
+Try replacing
+    []
+with
+    _
+of type
+    int list * int list
+within context
+    fun x ->
+      (let (x1, x2) = x in let (a1, a2) = a in let c :: c' = a1 in (match c with 
+                                                                    | _ ->
+                                                                      (a1 @
+                                                                              [
+                                                                                  (x1
+                                                                                        +
+                                                                                        x2)
+                                                                                    /
+                                                                                    10
+                                                                                  ]
+                                                                            ,
+                                                                            a2 @
+                                                                              [
+                                                                                  (mod
+                                                                                    (x1
+                                                                                        +
+                                                                                        x2)
+                                                                                    10)
+                                                                                  ])
+                                                                    | _ ->
+                                                                      (a1 @
+                                                                              [
+                                                                                  ((x1
+                                                                                            +
+                                                                                            x2)
+                                                                                        +
+                                                                                        c)
+                                                                                    /
+                                                                                    10
+                                                                                  ]
+                                                                            ,
+                                                                            a2 @
+                                                                              [
+                                                                                  (mod
+                                                                                    ((x1
+                                                                                            +
+                                                                                            x2)
+                                                                                        +
+                                                                                        c)
+                                                                                    10)
+                                                                                  ])))
+==============================
+File "3185.ml", line 28, characters 12-13:
+Try replacing
+    c
+with
+    c'
+of type
+    int list
+within context
+    fun x ->
+      (let (x1, x2) = x in let (a1, a2) = a in let c :: c' = a1 in (match c' with 
+                                                                    | [] ->
+                                                                      (a1 @
+                                                                              [
+                                                                                  (x1
+                                                                                        +
+                                                                                        x2)
+                                                                                    /
+                                                                                    10
+                                                                                  ]
+                                                                            ,
+                                                                            a2 @
+                                                                              [
+                                                                                  (mod
+                                                                                    (x1
+                                                                                        +
+                                                                                        x2)
+                                                                                    10)
+                                                                                  ])
+                                                                    | _ ->
+                                                                      (a1 @
+                                                                              [
+                                                                                  ((x1
+                                                                                            +
+                                                                                            x2)
+                                                                                        +
+                                                                                        c)
+                                                                                    /
+                                                                                    10
+                                                                                  ]
+                                                                            ,
+                                                                            a2 @
+                                                                              [
+                                                                                  (mod
+                                                                                    ((x1
+                                                                                            +
+                                                                                            x2)
+                                                                                        +
+                                                                                        c)
+                                                                                    10)
+                                                                                  ])))
+==============================

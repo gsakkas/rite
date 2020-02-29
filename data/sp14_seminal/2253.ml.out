@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "2253.ml", line 7, characters 4-88:
+This expression has type (('a -> 'a) * 'a -> 'a * bool) * 'b
+but is here used with type
+  (('a -> 'a) * 'a -> (('a -> 'a) * 'a) * bool) * (('a -> 'a) * 'a)
+Relevant code: ((fun (f,b)  -> match f b with | b -> ((f b), false) | _ -> ((f b), true)),
+      b)
+------------------------------------------------------------------
+File "2253.ml", line 7, characters 5-87:
+Try replacing
+    (fun (f, b) -> (match (f b) with 
+                    | b -> ((f b), false)
+                    | _ -> ((f b), true))), b
+with
+    b, (fun (f, b) -> (match (f b) with 
+                       | b -> ((f b), false)
+                       | _ -> ((f b), true)))
+of type
+    ((('c -> 'c) * 'c -> 'c * bool) -> (('c -> 'c) * 'c -> 'c * bool) * bool) *
+    (('c -> 'c) * 'c -> 'c * bool)
+==============================
+File "2253.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    f
+of type
+    (('d -> 'd) * 'd -> 'd * bool) * 'e -> 'f
+within context
+    let fixpoint (f, b) = (f ((fun (f, b) -> (match (f b) with 
+                                              | b -> ((f b), false)
+                                              | _ -> ((f b), true))), b)) ;; 
+==============================

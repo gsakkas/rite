@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "1265.ml", line 10, characters 4-92:
+This expression has type int list * int list but is here used with type
+  int * int
+Relevant code: if a < b
+    then (((clone 0 (b - a)) @ l1), l2)
+    else (l1, ((clone 0 (a - b)) @ l2))
+------------------------------------------------------------------
+File "1265.ml", line 8, characters 7-13:
+Try replacing
+    a, b
+with
+    a, b; [[...]]
+of type
+    int list * int list
+within context
+    fun l1
+      l2 ->
+        (let a = (List.length l1) in
+            let b = (List.length l2) in
+            (if a = b then (a, b; [[...]]) else
+                (if a < b then (clone 0 (b - a)) @ l1, l2 else
+                  l1, (clone 0 (a - b)) @ l2)))
+==============================
+File "1265.ml", line 10, characters 4-92:
+Try replacing
+    (if a < b then (clone 0 (b - a)) @ l1, l2 else l1, (clone 0 (a - b)) @ l2)
+with
+    (if a < b then (clone 0 (b - a)) @ l1, l2 else l1, (clone 0 (a - b)) @ l2);
+    [[...]]
+of type
+    int * int
+within context
+    fun l1
+      l2 ->
+        (let a = (List.length l1) in
+            let b = (List.length l2) in
+            (if a = b then a, b else
+                ((if a < b then (clone 0 (b - a)) @ l1, l2 else
+                    l1, (clone 0 (a - b)) @ l2);
+                  [[...]])))
+==============================

@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "2939.ml", line 31, characters 50-51:
+This expression has type 'a * 'b but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+File "2939.ml", line 31, characters 50-51:
+Try replacing
+    a
+with
+    a; [[...]]
+of type
+    int list
+within context
+    fun a x -> (match a with 
+                | (_, y) -> (0, (bigAdd (a; [[...]]) x)))
+==============================
+File "2939.ml", line 31, characters 43-49:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    'c * 'd -> 'e -> 'f
+within context
+    fun a x -> (match a with 
+                | (_, y) -> (0, ((bigAdd; [[...]]) a x)))
+==============================

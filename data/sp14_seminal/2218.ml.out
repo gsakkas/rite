@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "2218.ml", line 17, characters 31-32:
+This expression has type expr but is here used with type float
+Relevant code: x
+------------------------------------------------------------------
+Triaged the following locations:
+File "2218.ml", line 18, characters 16-36:
+File "2218.ml", line 19, characters 23-53:
+And modified the following location:
+File "2218.ml", line 17, characters 28-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *.
+with
+    *.; [[...]]
+The actual replacement has type
+    float -> expr -> expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x -> (sin (eval (pi *.; [[...]] x)))
+                              | Cosine x -> [[...other program...]]
+                              | Average (x1, x2) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2218.ml", line 17, characters 14-34:
+File "2218.ml", line 19, characters 23-53:
+And modified the following location:
+File "2218.ml", line 18, characters 33-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    x
+with
+    x; [[...]]
+The actual replacement has type
+    expr * float * float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x -> [[...other program...]]
+                              | Cosine x -> (cos (pi *. (eval (x; [[...]]))))
+                              | Average (x1, x2) -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2218.ml", line 17, characters 14-34:
+File "2218.ml", line 19, characters 23-53:
+And modified the following location:
+File "2218.ml", line 18, characters 28-32:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    eval
+with
+    eval; [[...]]
+The actual replacement has type
+    expr -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine x -> [[...other program...]]
+                              | Cosine x -> (cos (pi *. ((eval; [[...]]) x)))
+                              | Average (x1, x2) -> [[...other program...]]) ;; 
+==============================

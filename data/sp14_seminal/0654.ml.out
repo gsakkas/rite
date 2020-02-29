@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "0654.ml", line 32, characters 44-76:
+This expression has type int list -> int list but is here used with type
+  'a * int list
+Relevant code: bigAdd ((mulByDigit (h l1')) a')
+------------------------------------------------------------------
+File "0654.ml", line 32, characters 44-76:
+Try replacing
+    (bigAdd ((mulByDigit (h l1')) a'))
+with
+    (bigAdd ((mulByDigit (h l1')) a')); [[...]]
+of type
+    'b * int list
+within context
+    let f a x = let (l1', a') = a in (match x with 
+                                      | [] -> (l1, a')
+                                      | h :: t ->
+                                        ((bigAdd ((mulByDigit (h l1')) a'));
+                                            [[...]])) in let base = l1, [0] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

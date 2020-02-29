@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "0381.ml", line 19, characters 63-64:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+File "0381.ml", line 19, characters 63-64:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | varX -> x
+                              | varY -> y
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Average (t, s) ->
+                                (((eval (t, x, y)) +. (eval (s, x, y)))
+                                      /. 2; [[...]])) ;; 
+==============================
+File "0381.ml", line 19, characters 60-62:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | varX -> x
+                              | varY -> y
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Average (t, s) ->
+                                (((eval (t, x, y)) +. (eval (s, x, y)))
+                                      /.; [[...]] 2)) ;; 
+==============================

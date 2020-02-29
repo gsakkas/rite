@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "1781.ml", line 11, characters 8-61:
+This expression has type int * int list but is here used with type 'a list
+Relevant code: ((((i * j) + s) / 10), ((((i * j) + s) mod 10) :: t))
+------------------------------------------------------------------
+File "1781.ml", line 7, characters 11-13:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int * int list
+within context
+    fun l -> (let f a x = (match i with 
+                           | 0 -> ([]; [[...]])
+                           | _ ->
+                             (let (i, j) = x in
+                                   let (s, t) = a in
+                                   (i * j + s) / 10,
+                                       (mod (i * j + s) 10) ::
+                                           t)) in let base = 0, [] in
+          let args =
+          (List.combine (List.rev 0 :: l) (clone i ((List.length l) + 1)))
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1380.ml", line 2, characters 49-52:
+This expression has type 'a list but is here used with type int
+Relevant code: [x]
+------------------------------------------------------------------
+File "1380.ml", line 2, characters 14-60:
+Try replacing
+    fun x n -> (if (x <= 0) then [] else (clone [x] (n - 1)))
+with
+    fun x n -> (if (x <= 0) then [] else (clone [x] (n - 1))); [[...]]
+of type
+    int list -> int -> 'b list
+within context
+    let rec clone =
+    fun x n -> (if (x <= 0) then [] else (clone [x] (n - 1))); [[...]]
+    ;; 
+==============================

@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "0092.ml", line 19, characters 33-34:
+This expression has type 'a list * 'b list -> 'c -> 'd list
+but is here used with type 'a list * 'b list -> 'c -> 'a list * 'b list
+Relevant code: f
+------------------------------------------------------------------
+File "0092.ml", line 19, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'e list * 'f list -> 'g * 'h -> 'e list * 'f list
+within context
+    let f a x = (match a with 
+                 | ([], []) ->
+                   []) in let base = [], [] in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0092.ml", line 19, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('i list * 'j list -> 'k -> 'l list) ->
+    'm list * 'n list -> ('o * 'p) list -> 'q * 'r
+within context
+    let f a x = (match a with 
+                 | ([], []) ->
+                   []) in let base = [], [] in
+      let args = (List.combine (List.rev l1) (List.rev l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0092.ml", line 16, characters 10-44:
+Try replacing
+    fun a x -> (match a with 
+                | ([], []) -> [])
+with
+    fun a x -> (match a with 
+                | ([], []) -> []); [[...]]
+of type
+    's
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f = fun a x -> (match a with 
+                                                         | ([], []) ->
+                                                           []); [[...]] in let base
+              =
+              [], []
+              in
+              let args = (List.combine (List.rev l1) (List.rev l2)) in
+              let (_, res) = (List.fold_left f base  args) in
+              res in (removeZero (add (padZero l1 l2))))
+==============================

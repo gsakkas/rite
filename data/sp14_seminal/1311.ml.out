@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "1311.ml", line 9, characters 15-27:
+This expression has type int but is here used with type int * int
+Relevant code: (mul mod 10)
+------------------------------------------------------------------
+File "1311.ml", line 8, characters 48-107:
+Try replacing
+    h1 + 1, mul / 10 :: (mod mul 10) :: t2
+with
+    [[...]]
+of type
+    int * int list
+within context
+    fun a x -> (match x with 
+                | (x1, x2) -> (match a with 
+                               | (h1, h2 :: t2) ->
+                                 (let mul = (x1 * x2) * h1 + h2 in [[...]])
+                               | (_, _) -> (0, [0])))
+==============================

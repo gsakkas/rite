@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "1123.ml", line 11, characters 57-65:
+This expression has type float but is here used with type int
+Relevant code: (x +. y)
+------------------------------------------------------------------
+File "1123.ml", line 11, characters 60-62:
+Try replacing
+    +.
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Average (x', y') -> (x / y) / 2) ;; 
+==============================

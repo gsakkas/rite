@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "2865.ml", line 4, characters 2-8:
+This expression is not a function, it cannot be applied
+Relevant code: helper
+------------------------------------------------------------------
+File "2865.ml", line 4, characters 9-10:
+Try replacing
+    (helper n)
+with
+    helper
+of type
+    'g list
+within context
+    let rec clone x n = let helper = (match n with 
+                                      | 0 -> []
+                                      | _ -> x :: (clone x (n - 1))) in helper ;; 
+==============================

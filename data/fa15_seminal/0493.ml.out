@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0493.ml", line 19, characters 33-61:
+This expression has type int but is here used with type 'a list
+Relevant code: (((x1 + x2) + carry) mod 10)
+------------------------------------------------------------------
+File "0493.ml", line 19, characters 25-62:
+Try replacing
+    sum :: (mod ((x1 + x2) + carry) 10)
+with
+    [[...]]
+of type
+    int * 'b
+within context
+    fun a x -> (let (x1, x2) = x in let (carry, sum) = a in (x1 + x2) / 10, [[...]])
+==============================

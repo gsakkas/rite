@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "1770.ml", line 13, characters 34-35:
+This expression is not a function, it cannot be applied
+Relevant code: t
+------------------------------------------------------------------
+Triaged the following locations:
+File "1770.ml", line 13, characters 26-32:
+And modified the following location:
+File "1770.ml", line 13, characters 34-35:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    filter
+If you ignore other surrounding code, try replacing
+    t
+with
+    t; [[...]]
+The actual replacement has type
+    'i -> 'j
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = h in
+             let rest' = h :: ((filter; [[...]]) ((t; [[...]]) h)) in
+             (helper (seen', rest'))))
+==============================
+Triaged the following locations:
+File "1770.ml", line 13, characters 26-32:
+And modified the following location:
+File "1770.ml", line 13, characters 34-35:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    filter
+If you ignore other surrounding code, try replacing
+    t
+with
+    =
+The actual replacement has type
+    'k -> 'k -> bool
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = h in
+             let rest' = h :: ((filter; [[...]]) (= h)) in (helper (seen', rest'))))
+==============================
+Triaged the following locations:
+File "1770.ml", line 13, characters 26-32:
+And modified the following location:
+File "1770.ml", line 13, characters 36-37:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    filter
+If you ignore other surrounding code, try replacing
+    (t h)
+with
+    t
+The actual replacement has type
+    'l list
+within context
+    (match rest with 
+     | [] -> seen
+     | h :: t ->
+       (let seen' = h in
+             let rest' = h :: ((filter; [[...]]) t) in (helper (seen', rest'))))
+==============================

@@ -1,0 +1,129 @@
+------------------------------------------------------------------
+File "0100.ml", line 8, characters 17-19:
+This expression has type 'a list but is here used with type int
+Relevant code: l1
+------------------------------------------------------------------
+Triaged the following locations:
+File "0100.ml", line 8, characters 7-25:
+And modified the following location:
+File "0100.ml", line 9, characters 29-34:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    clone
+with
+    clone; [[...]]
+The actual replacement has type
+    int -> 'b list -> 'b list
+within context
+    fun l1
+      l2 ->
+        (let s1 = (List.length l1) in
+            let s2 = (List.length l2) in
+            (if s1 < s2 then [[...other program...]] else
+                (if s2 < s1 then l1, ((clone; [[...]]) 0 l2) else l1, l2)))
+==============================
+Triaged the following locations:
+File "0100.ml", line 8, characters 7-25:
+And modified the following location:
+File "0100.ml", line 9, characters 37-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l2
+with
+    l2; [[...]]
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let s1 = (List.length l1) in
+            let s2 = (List.length l2) in
+            (if s1 < s2 then [[...other program...]] else
+                (if s2 < s1 then l1, (clone 0 (l2; [[...]])) else l1, l2)))
+==============================
+Triaged the following locations:
+File "0100.ml", line 8, characters 7-25:
+And modified the following location:
+File "0100.ml", line 9, characters 37-39:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l2
+with
+    s2
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let s1 = (List.length l1) in
+            let s2 = (List.length l2) in
+            (if s1 < s2 then [[...other program...]] else
+                (if s2 < s1 then l1, (clone 0 s2) else l1, l2)))
+==============================
+Triaged the following locations:
+File "0100.ml", line 9, characters 7-55:
+And modified the following location:
+File "0100.ml", line 8, characters 17-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    l1; [[...]]
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let s1 = (List.length l1) in
+            let s2 = (List.length l2) in
+            (if s1 < s2 then (clone 0 (l1; [[...]])), l2 else
+                [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0100.ml", line 9, characters 7-55:
+And modified the following location:
+File "0100.ml", line 8, characters 17-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    l1
+with
+    s1
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let s1 = (List.length l1) in
+            let s2 = (List.length l2) in
+            (if s1 < s2 then (clone 0 s1), l2 else [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0100.ml", line 9, characters 7-55:
+And modified the following location:
+File "0100.ml", line 8, characters 15-16:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 l1)
+with
+    (clone (0, l1))
+The actual replacement has type
+    (int -> (int * 'c list) list) * 'd list
+within context
+    fun l1
+      l2 ->
+        (let s1 = (List.length l1) in
+            let s2 = (List.length l2) in
+            (if s1 < s2 then (clone (0, l1)), l2 else [[...other program...]]))
+==============================
+Triaged the following locations:
+File "0100.ml", line 9, characters 7-55:
+And modified the following location:
+File "0100.ml", line 8, characters 9-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    clone
+with
+    clone; [[...]]
+The actual replacement has type
+    int -> 'e list -> 'f
+within context
+    fun l1
+      l2 ->
+        (let s1 = (List.length l1) in
+            let s2 = (List.length l2) in
+            (if s1 < s2 then ((clone; [[...]]) 0 l1), l2 else
+                [[...other program...]]))
+==============================

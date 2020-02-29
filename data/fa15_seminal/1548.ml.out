@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "1548.ml", line 9, characters 72-73:
+This expression has type int but is here used with type ('a -> 'a) * 'a
+Relevant code: 1
+------------------------------------------------------------------
+File "1548.ml", line 9, characters 69-71:
+Try replacing
+    f'
+with
+    f'; [[...]]
+of type
+    int -> bool -> bool * bool
+within context
+    fun (f, b) ->
+      (wwhile
+        ((let f' x = (if (f x) = b then b, true else (f' x), false) in
+                ((f'; [[...]]) 1))
+            ,
+            b))
+==============================
+File "1548.ml", line 9, characters 13-65:
+Try replacing
+    fun x -> (if (f x) = b then b, true else (f' x), false)
+with
+    fun x -> (if (f x) = b then b, true else (f' x), false); [[...]]
+of type
+    'b
+within context
+    let fixpoint (f, b) =
+    (wwhile
+      ((let f' = fun x -> (if (f x) = b then b, true else (f' x), false); [[...]] in
+              (f' 1))
+          ,
+          b))
+    ;; 
+==============================

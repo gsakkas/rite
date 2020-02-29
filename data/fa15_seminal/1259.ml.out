@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "1259.ml", line 10, characters 31-33:
+This expression has type int list but is here used with type int
+Relevant code: l'
+------------------------------------------------------------------
+File "1259.ml", line 10, characters 31-33:
+Try replacing
+    l'
+with
+    h
+of type
+    int
+within context
+    (match l with 
+     | [] -> []
+     | h :: l' ->
+       (let res = (mulByDigit i l') in
+             (if (List.length res) = 0 then
+                 (if h * i > 9 then [(h * i) / 10 ; (mod (h * i) 10)] else [h * i])
+                 else
+                 (if (List.length res) = h then
+                   (if h * i > 9 then (h * i) / 10 :: (mod (h * i) 10) :: res else
+                     h * i :: res)
+                   else
+                   (match res with 
+                    | h' :: res' ->
+                      (if h * i + h' > 9 then
+                          (h * i + h') / 10 :: (mod (h * i + h') 10) :: res'
+                          else
+                          h * i + h' :: res))))))
+==============================

@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0280.ml", line 3, characters 39-75:
+This expression has type 'a list but is here used with type unit
+Relevant code: (n mod 10) :: (digitsOfInt (n / 10))
+------------------------------------------------------------------
+File "0280.ml", line 3, characters 25-75:
+Try replacing
+    (if n > 9 then (mod n 10) :: (digitsOfInt (n / 10)))
+with
+    [[...]]
+of type
+    'b list
+within context
+    let rec digitsOfInt n = (if (n <= 0) then [] else [[...]]) ;; 
+==============================

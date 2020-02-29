@@ -1,0 +1,38 @@
+
+------------------------------------------------------------------
+File "3352.ml", line 38, characters 8-62:
+This expression has type int list list but is here used with type int list
+Relevant code: match x with | [] -> [] | h::t -> [bigAdd h (adder t)]
+------------------------------------------------------------------
+File "3352.ml", line 38, characters 52-61:
+Try replacing
+    (adder t)
+with
+    (adder t); [[...]]
+of type
+    int list
+within context
+    let rec adder x = (match x with 
+                       | [] -> []
+                       | h :: t ->
+                         [(bigAdd h ((adder t); [[...]]))
+                               ]) in (adder
+          ((mulByDigit i (List.rev (List.map (fun x -> x * 10) t)))
+              @ [(helper [] (h * i))]))
+==============================
+File "3352.ml", line 38, characters 43-49:
+Try replacing
+    bigAdd
+with
+    bigAdd; [[...]]
+of type
+    'a -> 'b list -> 'b
+within context
+    let rec adder x = (match x with 
+                       | [] -> []
+                       | h :: t ->
+                         [((bigAdd; [[...]]) h (adder t))
+                               ]) in (adder
+          ((mulByDigit i (List.rev (List.map (fun x -> x * 10) t)))
+              @ [(helper [] (h * i))]))
+==============================

@@ -1,0 +1,40 @@
+------------------------------------------------------------------
+File "1969.ml", line 8, characters 4-109:
+This expression has type int list but is here used with type int list list
+Relevant code: if (List.length l1) < (List.length l2)
+    then clone 0 ((List.length l2) - (List.length l1))
+    else []
+------------------------------------------------------------------
+File "1969.ml", line 6, characters 7-66:
+Try replacing
+    (clone 0 ((List.length l1) - (List.length l2))) :: l1 :: l2
+with
+    (clone 0 ((List.length l1) - (List.length l2))) :: l1 :: l2; [[...]]
+of type
+    int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) > (List.length l2) then
+      ((clone 0 ((List.length l1) - (List.length l2))) :: l1 :: l2; [[...]])
+      else
+      (if (List.length l1) < (List.length l2) then
+        (clone 0 ((List.length l2) - (List.length l1)))
+        else
+        []))
+    ;; 
+==============================
+File "1969.ml", line 8, characters 4-109:
+Try replacing
+    (if (List.length l1) < (List.length l2) then
+      (clone 0 ((List.length l2) - (List.length l1)))
+      else
+      [])
+with
+    (if (List.length l1) < (List.length l2) then
+      (clone 0 ((List.length l2) - (List.length l1)))
+      else
+      []);
+    [[...]]
+of type
+    int list list
+==============================

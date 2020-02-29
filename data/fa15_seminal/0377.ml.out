@@ -1,0 +1,36 @@
+------------------------------------------------------------------
+File "0377.ml", line 13, characters 23-33:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: buildTimes
+------------------------------------------------------------------
+File "0377.ml", line 13, characters 36-37:
+Try replacing
+    (buildTimes x y)
+with
+    (buildTimes x)
+of type
+    expr
+within context
+    let rec eval (e, x, y) = (buildTimes x) ;; 
+==============================
+File "0377.ml", line 13, characters 34-35:
+Try replacing
+    (buildTimes x y)
+with
+    (buildTimes (x, y))
+of type
+    expr
+within context
+    let rec eval (e, x, y) = (buildTimes (x, y)) ;; 
+==============================
+File "0377.ml", line 13, characters 23-33:
+Try replacing
+    buildTimes
+with
+    e
+of type
+    'c -> 'd -> 'e
+within context
+    let rec eval (e, x, y) = (e x y) ;; 
+==============================

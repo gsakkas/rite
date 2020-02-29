@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0289.ml", line 9, characters 51-59:
+This expression has type int list * int list but is here used with type
+  int list
+Relevant code: (l1, l2)
+------------------------------------------------------------------
+File "0289.ml", line 9, characters 51-59:
+Try replacing
+    l1, l2
+with
+    l1, l2; [[...]]
+of type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let diff = (List.length l1) - (List.length l2) in
+            (if diff < 0 then (cloneHelper 0 (-1 * diff - 1)  l1) else
+                (if diff > 0 then (cloneHelper 0 diff  l2) else (l1, l2; [[...]]))))
+==============================

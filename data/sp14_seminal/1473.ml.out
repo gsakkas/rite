@@ -1,0 +1,51 @@
+------------------------------------------------------------------
+File "1473.ml", line 9, characters 30-37:
+This expression has type 'a * 'b but is here used with type 'c list
+Relevant code: (x, hd)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1473.ml", line 8, characters 14-21:
+And modified the following location:
+File "1473.ml", line 9, characters 18-29:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    x, []
+If you ignore other surrounding code, try replacing
+    List.append
+with
+    List.append; [[...]]
+The actual replacement has type
+    'd * 'e -> 'f -> 'f
+within context
+    let args = let rec argmaker x y = (match y with 
+                                       | [] -> (x, []; [[...]])
+                                       | hd :: tl ->
+                                         ((List.append; [[...]])
+                                             (x, hd)
+                                             (argmaker
+                                               x
+                                               tl))) in (argmaker
+            l1 l2) in let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "1473.ml", line 8, characters 14-21:
+And modified the following location:
+File "1473.ml", line 9, characters 30-37:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    x, []
+If you ignore other surrounding code, try replacing
+    x, hd
+with
+    x, hd; [[...]]
+The actual replacement has type
+    'g list
+within context
+    let args = let rec argmaker x y = (match y with 
+                                       | [] -> (x, []; [[...]])
+                                       | hd :: tl ->
+                                         (List.append
+                                             (x, hd; [[...]])
+                                             (argmaker
+                                               x
+                                               tl))) in (argmaker
+            l1 l2) in let (_, res) = (List.fold_left f base  args) in res
+==============================

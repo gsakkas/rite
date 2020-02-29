@@ -1,0 +1,43 @@
+------------------------------------------------------------------
+File "0922.ml", line 23, characters 25-28:
+This expression has type int but is here used with type 'a list
+Relevant code: num
+------------------------------------------------------------------
+Triaged the following locations:
+File "0922.ml", line 24, characters 20-54:
+And modified the following location:
+File "0922.ml", line 23, characters 29-30:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    @
+with
+    @; [[...]]
+The actual replacement has type
+    int -> 'b -> 'c
+within context
+    fun x -> (match x with 
+              | (l1e, l2e) -> (match a with 
+                               | (carry, list) ->
+                                 (let num = (l1e + l2e) + carry in
+                                       (if num < 10 then 0, (num @; [[...]] list)
+                                           else
+                                           [[...other program...]]))))
+==============================
+Triaged the following locations:
+File "0922.ml", line 24, characters 20-54:
+And modified the following location:
+File "0922.ml", line 23, characters 25-28:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    num
+with
+    num; [[...]]
+The actual replacement has type
+    'd list
+within context
+    fun x -> (match x with 
+              | (l1e, l2e) -> (match a with 
+                               | (carry, list) ->
+                                 (let num = (l1e + l2e) + carry in
+                                       (if num < 10 then 0, (num; [[...]]) @ list
+                                           else
+                                           [[...other program...]]))))
+==============================

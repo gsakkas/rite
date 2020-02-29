@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2607.ml", line 25, characters 15-72:
+This expression has type int * int list but is here used with type
+  'a list * int list
+Relevant code: ((((fir + sec) / 10) + b1), (((fir + sec) mod 10) :: b2))
+------------------------------------------------------------------
+File "2607.ml", line 24, characters 15-40:
+Try replacing
+    [], fir + sec :: b2
+with
+    [], fir + sec :: b2; [[...]]
+of type
+    int * int list
+within context
+    fun a x -> (let (b1, b2) = a in (match x with 
+                                     | (fir, sec) ->
+                                       (if fir + sec < 10 then
+                                           ([], fir + sec :: b2; [[...]])
+                                           else
+                                           (fir + sec) / 10 + b1,
+                                             (mod (fir + sec) 10) :: b2)))
+==============================

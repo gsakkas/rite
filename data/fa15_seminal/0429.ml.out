@@ -1,0 +1,30 @@
+------------------------------------------------------------------
+File "0429.ml", line 7, characters 26-27:
+This expression has type 'a -> 'b -> 'c but is here used with type 'a
+Relevant code: f
+------------------------------------------------------------------
+File "0429.ml", line 7, characters 26-27:
+Try replacing
+    (f f (f (f b)))
+with
+    (f (f (f b)))
+of type
+    'd
+within context
+    let fixpoint (f, b) =
+    let funt x = let xx = (f (f (f b))) in xx, (f b) = b in (wwhile (funt, (f b)))
+    ;; 
+==============================
+File "0429.ml", line 7, characters 24-27:
+Try replacing
+    (f f (f (f b)))
+with
+    (f (f (f (f b))))
+of type
+    'e
+within context
+    let fixpoint (f, b) =
+    let funt x = let xx = (f (f (f (f b)))) in xx, (f b) = b in
+      (wwhile (funt, (f b)))
+    ;; 
+==============================

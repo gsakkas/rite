@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "0720.ml", line 19, characters 36-40:
+This expression is not a function, it cannot be applied
+Relevant code: expr
+------------------------------------------------------------------
+Triaged the following locations:
+File "0720.ml", line 19, characters 70-72:
+And modified the following location:
+File "0720.ml", line 19, characters 28-69:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    /.
+If you ignore other surrounding code, try replacing
+    ((eval (expr x y)) +. (eval (expr1 x y)))
+with
+    [[...]]
+The actual replacement has type
+    'b5
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> (cos (pi *. (eval (expr, x, y))))
+                              | Average (expr, expr1) -> ([[...]] /.; [[...]] 2)
+                              | Times (expr, expr1) ->
+                                ((eval (expr, x, y)) *. (eval (expr1, x, y)))
+                              | Thresh (expr, expr1, expr2, expr3) ->
+                                (if (eval (expr, x, y)) < (eval (expr1, x, y)) then
+                                    (eval (expr2, x, y))
+                                    else
+                                    (eval (expr3, x, y)))) ;; 
+==============================

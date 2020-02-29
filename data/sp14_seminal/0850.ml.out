@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "0850.ml", line 3, characters 46-56:
+This expression has type int but is here used with type 'a list
+Relevant code: (n mod 10)
+------------------------------------------------------------------
+File "0850.ml", line 3, characters 49-52:
+Try replacing
+    (List.hd (mod n 10))
+with
+    (mod (List.hd n 10))
+of type
+    int -> int
+within context
+    let rec digitsOfInt n = let ns = [] in (match n with 
+                                            | n -> (mod (List.hd n 10)) :: ns) ;; 
+==============================
+File "0850.ml", line 3, characters 38-45:
+Try replacing
+    List.hd
+with
+    mod
+of type
+    int -> int -> int
+within context
+    fun n -> (let ns = [] in (match n with 
+                              | n -> (mod (mod n 10)) :: ns))
+==============================

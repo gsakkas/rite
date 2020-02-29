@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1798.ml", line 11, characters 42-45:
+This expression has type string but is here used with type unit
+Relevant code: "x"
+------------------------------------------------------------------
+File "1798.ml", line 11, characters 42-45:
+Try replacing
+    "x"
+with
+    "x"; [[...]]
+of type
+    unit
+within context
+    let rec exprToString e = (if e = VarX then ("x"; [[...]])) ;; 
+==============================

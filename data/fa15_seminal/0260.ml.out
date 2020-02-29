@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0260.ml", line 14, characters 25-37:
+This expression has type ('a -> string) -> 'a list -> string
+but is here used with type (('b -> 'c) -> 'b -> 'c) list
+Relevant code: stringOfList
+------------------------------------------------------------------
+File "0260.ml", line 14, characters 25-39:
+Try replacing
+    (pipe stringOfList x  n)
+with
+    (pipe x stringOfList  n)
+of type
+    'd list -> string
+within context
+    let rec clone x n = (pipe x stringOfList  n) ;; 
+==============================

@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1914.ml", line 16, characters 26-27:
+This expression has type expr but is here used with type string
+Relevant code: e
+------------------------------------------------------------------
+File "1914.ml", line 12, characters 2-290:
+Try replacing
+    (match e with 
+     | VarX -> "x"
+     | VarY -> "y"
+     | Sine e -> "sin(" ^ ((exprToString e) ^ ")")
+     | Cosine e -> "cos(" ^ (e ^ ")")
+     | Average (e1, e2) -> e1 ^ ("+" ^ (e2 ^ "/2"))
+     | Times (e1, e2) -> e1 ^ ("*" ^ e2)
+     | Thresh (e1, e2, e3, e4) -> e1 ^ ("<" ^ (e2 ^ ("?" ^ (e3 ^ (":" ^ e4))))))
+with
+    [[...]]
+of type
+    'a
+==============================

@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "1486.ml", line 5, characters 53-59:
+This expression has type bool * 'a but is here used with type 'a
+Relevant code: (f, b)
+------------------------------------------------------------------
+File "1486.ml", line 5, characters 53-59:
+Try replacing
+    f, b
+with
+    f, b; [[...]]
+of type
+    ('b -> 'b * bool) * 'b
+within context
+    let fixpoint (f, b) = (wwhile (if f = true then b else (f, b; [[...]]))) ;; 
+==============================

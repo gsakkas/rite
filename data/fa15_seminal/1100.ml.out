@@ -1,0 +1,103 @@
+------------------------------------------------------------------
+File "1100.ml", line 17, characters 21-25:
+This pattern matches values of type 'a list
+but is here used to match values of type int * 'b
+Relevant code: h::t
+------------------------------------------------------------------
+Triaged the following locations:
+File "1100.ml", line 18, characters 4-120:
+And modified the following location:
+File "1100.ml", line 17, characters 12-13:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let sum = ((fst x) + (snd x)) + (fst a) in (match (a; [[...]]) with 
+                                                          | h :: t ->
+                                                            sum / 10 ::
+                                                                  (mod sum 10) :: t)
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1100.ml", line 18, characters 4-120:
+And modified the following location:
+File "1100.ml", line 16, characters 44-44:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (fst a)
+with
+    (fst [[...]] a)
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let sum = ((fst x) + (snd x)) + (fst [[...]] a) in (match a with 
+                                                                  | h :: t ->
+                                                                    sum / 10 ::
+                                                                          (mod
+                                                                            sum 10)
+                                                                          ::
+                                                                          t)
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1100.ml", line 18, characters 4-120:
+And modified the following location:
+File "1100.ml", line 16, characters 39-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fst
+with
+    fst; [[...]]
+The actual replacement has type
+    int list -> int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x =
+              let sum = ((fst x) + (snd x)) + ((fst; [[...]]) a) in (match a with 
+                                                                     | h :: t ->
+                                                                       sum / 10 ::
+                                                                             (mod
+                                                                               sum 10)
+                                                                             ::
+                                                                             t)
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "1100.ml", line 18, characters 4-120:
+And modified the following location:
+File "1100.ml", line 15, characters 4-249:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = let sum = ((fst x) + (snd x)) + (fst a) in (match a with 
+                                                            | h :: t ->
+                                                              sum / 10 ::
+                                                                    (mod sum 10) ::
+                                                                    t) in let base =
+      []
+      in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'c
+==============================

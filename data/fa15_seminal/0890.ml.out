@@ -1,0 +1,44 @@
+------------------------------------------------------------------
+File "0890.ml", line 13, characters 9-18:
+This expression has type string -> string list -> string
+but is here used with type 'a list
+Relevant code: sepConcat
+------------------------------------------------------------------
+Triaged the following locations:
+File "0890.ml", line 13, characters 19-20:
+And modified the following location:
+File "0890.ml", line 13, characters 22-30:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    List.map
+with
+    List.map; [[...]]
+The actual replacement has type
+    'b * string list -> 'c
+within context
+    let stringOfList f l = (match l with 
+                            | [] -> "[]"
+                            | x :: [] -> "[" ^ (x ^ "]")
+                            | l ->
+                              (sepConcat @; [[...]]
+                                    ((List.map; [[...]]) (f, l)))) ;; 
+==============================
+Triaged the following locations:
+File "0890.ml", line 13, characters 19-20:
+And modified the following location:
+File "0890.ml", line 13, characters 31-37:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    @
+If you ignore other surrounding code, try replacing
+    (List.map (f, l))
+with
+    (List.map f l)
+The actual replacement has type
+    'd list
+within context
+    let stringOfList f l = (match l with 
+                            | [] -> "[]"
+                            | x :: [] -> "[" ^ (x ^ "]")
+                            | l -> (sepConcat @; [[...]] (List.map f l))) ;; 
+==============================

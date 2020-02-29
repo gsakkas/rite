@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0776.ml", line 28, characters 53-65:
+This expression has type int list but is here used with type int
+Relevant code: (bigAdd l l)
+------------------------------------------------------------------
+File "0776.ml", line 28, characters 51-52:
+Try replacing
+    +
+with
+    @
+of type
+    int list -> int list -> int list
+within context
+    fun i
+      l ->
+        (if i = 0 then [0] else
+          (if i = 1 then l else (mulByDigit (i - 1) l) @ (bigAdd l l)))
+==============================

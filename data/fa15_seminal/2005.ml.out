@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "2005.ml", line 30, characters 19-20:
+This expression has type float but is here used with type int
+Relevant code: d
+------------------------------------------------------------------
+File "2005.ml", line 30, characters 21-22:
+Try replacing
+    *
+with
+    **
+of type
+    float -> float -> float
+within context
+    let d = (((eval (m, x, y)) +. (eval (n, x, y))) +. (eval (o, x, y))) in
+      ((sqrt (sqrt (d ** d))) /. 3.0)
+==============================

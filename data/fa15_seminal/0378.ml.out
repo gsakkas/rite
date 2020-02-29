@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "0378.ml", line 17, characters 34-50:
+This expression has type (unit -> expr) * (unit -> expr)
+but is here used with type expr * expr
+Relevant code: (buildX, buildY)
+------------------------------------------------------------------
+File "0378.ml", line 17, characters 23-33:
+Try replacing
+    buildTimes
+with
+    e
+of type
+    (unit -> expr) * (unit -> expr) -> 'a
+within context
+    let rec eval (e, x, y) = (e (buildX, buildY)) ;; 
+==============================

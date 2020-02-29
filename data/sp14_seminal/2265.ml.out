@@ -1,0 +1,62 @@
+------------------------------------------------------------------
+File "2265.ml", line 15, characters 4-10:
+The constructor VarX expects 0 argument(s),
+but is here applied to 1 argument(s)
+Relevant code: VarX x
+------------------------------------------------------------------
+Triaged the following locations:
+File "2265.ml", line 15, characters 14-15:
+File "2265.ml", line 16, characters 4-10:
+File "2265.ml", line 16, characters 14-15:
+File "2265.ml", line 17, characters 14-42:
+File "2265.ml", line 18, characters 16-44:
+File "2265.ml", line 19, characters 21-66:
+File "2265.ml", line 20, characters 19-55:
+File "2265.ml", line 21, characters 28-42:
+And modified the following location:
+File "2265.ml", line 15, characters 4-10:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    VarX x
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | _ -> [[...other program...]]
+                              |[[...other pattern...]]->[[...other program...]]
+                              | Sine e -> [[...other program...]]
+                              | Cosine e -> [[...other program...]]
+                              | Average (x, y) -> [[...other program...]]
+                              | Times (x, y) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "2265.ml", line 15, characters 4-10:
+File "2265.ml", line 15, characters 14-15:
+File "2265.ml", line 16, characters 14-15:
+File "2265.ml", line 17, characters 14-42:
+File "2265.ml", line 18, characters 16-44:
+File "2265.ml", line 19, characters 21-66:
+File "2265.ml", line 20, characters 19-55:
+File "2265.ml", line 21, characters 28-42:
+And modified the following location:
+File "2265.ml", line 16, characters 4-10:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    VarY y
+with
+    _
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              |[[...other pattern...]]->[[...other program...]]
+                              | _ -> [[...other program...]]
+                              | Sine e -> [[...other program...]]
+                              | Cosine e -> [[...other program...]]
+                              | Average (x, y) -> [[...other program...]]
+                              | Times (x, y) -> [[...other program...]]
+                              | Thresh (e1, e2, e3, e4) ->
+                                [[...other program...]]) ;; 
+==============================

@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "3323.ml", line 5, characters 44-45:
+This expression has type int but is here used with type 'a list
+Relevant code: 0
+------------------------------------------------------------------
+File "3323.ml", line 5, characters 12-46:
+Try replacing
+    (mulByDigit i (List.rev t)) :: 0
+with
+    [[...]]
+of type
+    int list
+within context
+    let rec mulByDigit i l = (match (List.rev l) with 
+                              | [] -> []
+                              | h :: t -> [[...]] @ [h * i]) ;; 
+==============================

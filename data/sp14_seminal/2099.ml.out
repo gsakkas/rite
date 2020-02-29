@@ -1,0 +1,47 @@
+------------------------------------------------------------------
+File "2099.ml", line 29, characters 19-21:
+This expression has type unit but is here used with type expr
+Relevant code: ()
+------------------------------------------------------------------
+File "2099.ml", line 29, characters 9-18:
+Try replacing
+    buildSine
+with
+    buildX
+of type
+    unit -> expr
+within context
+    let rec build (rand, depth) = (match (rand (1, 7)) with 
+                                   | _ ->
+                                     (buildTimes
+                                         ((buildCosine (buildSine (buildX ()))),
+                                             (buildCosine (buildSine (buildX ())))))
+                                   | 1 -> (buildX ())
+                                   | 2 -> (buildY ())
+                                   | 3 -> (buildX ())
+                                   | 4 -> (buildSine (buildX ()))
+                                   | 5 -> (buildSine (buildX ()))
+                                   | 6 -> (buildSine (buildX ()))
+                                   | 7 -> (buildSine (buildX ()))) ;; 
+==============================
+File "2099.ml", line 29, characters 9-18:
+Try replacing
+    buildSine
+with
+    buildY
+of type
+    unit -> expr
+within context
+    let rec build (rand, depth) = (match (rand (1, 7)) with 
+                                   | _ ->
+                                     (buildTimes
+                                         ((buildCosine (buildSine (buildX ()))),
+                                             (buildCosine (buildSine (buildX ())))))
+                                   | 1 -> (buildX ())
+                                   | 2 -> (buildY ())
+                                   | 3 -> (buildY ())
+                                   | 4 -> (buildSine (buildX ()))
+                                   | 5 -> (buildSine (buildX ()))
+                                   | 6 -> (buildSine (buildX ()))
+                                   | 7 -> (buildSine (buildX ()))) ;; 
+==============================

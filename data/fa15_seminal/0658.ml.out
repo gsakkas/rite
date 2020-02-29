@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0658.ml", line 6, characters 2-62:
+This expression has type int list list but is here used with type
+  (int list list -> int list list) list
+Relevant code: if n <= 0 then [] else add (digitsOfInt (n / 10)) [n mod 10]
+------------------------------------------------------------------
+File "0658.ml", line 5, characters 20-86:
+Try replacing
+    fun n -> (if (n <= 0) then [] else (add (digitsOfInt (n / 10)) [(mod n 10)]))
+with
+    fun n -> (if (n <= 0) then [] else (add (digitsOfInt (n / 10)) [(mod n 10)]));
+    [[...]]
+of type
+    int -> (int list list -> int list list) list
+within context
+    let rec digitsOfInt =
+    fun n -> (if (n <= 0) then [] else (add (digitsOfInt (n / 10)) [(mod n 10)]));
+    [[...]]
+    ;; 
+==============================

@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0044.ml", line 44, characters 42-59:
+This expression has type int list but is here used with type int
+Relevant code: (mulByDigit x h1)
+------------------------------------------------------------------
+File "0044.ml", line 44, characters 43-53:
+Try replacing
+    mulByDigit
+with
+    +
+of type
+    int -> int -> int
+within context
+    (match a with 
+     | (h1 :: t1, r) -> (h1 :: t1, (bigAdd (+ x h1) :: t1 r))
+     | _ -> ([], []))
+==============================

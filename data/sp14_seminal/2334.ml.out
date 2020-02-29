@@ -1,0 +1,38 @@
+
+
+------------------------------------------------------------------
+File "2334.ml", line 34, characters 19-29:
+This expression has type 'a -> 'b -> 'c but is here used with type int
+Relevant code: (helper x)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2334.ml", line 35, characters 2-31:
+And modified the following location:
+File "2334.ml", line 34, characters 19-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (helper x) - (1 l (bigAdd l accum))
+with
+    [[...]]
+The actual replacement has type
+    'd
+within context
+    let rec mulByDigit i l =
+    let accum = [] in
+      let rec helper x l accum = (if x != 0 then [[...]] else accum) in
+      [[...other program...]]
+    ;; 
+==============================
+Triaged the following locations:
+File "2334.ml", line 35, characters 2-31:
+And modified the following location:
+File "2334.ml", line 33, characters 2-129:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let rec helper x l accum =
+      (if x != 0 then (helper x) - (1 l (bigAdd l accum)) else accum)
+      in
+      (mulByDigit (helper i l  accum))
+with
+    [[...other program...]]
+The actual replacement has type
+    'e
+==============================

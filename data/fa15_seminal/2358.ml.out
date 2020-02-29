@@ -1,0 +1,21 @@
+------------------------------------------------------------------
+File "2358.ml", line 7, characters 55-59:
+This expression has type 'a list but is here used with type 'a
+Relevant code: seen
+------------------------------------------------------------------
+File "2358.ml", line 7, characters 55-59:
+Try replacing
+    seen
+with
+    h
+of type
+    'b
+within context
+    fun (seen, rest) -> (match rest with 
+                         | [] -> seen
+                         | h :: t ->
+                           (let seen' =
+                                 (if (List.mem h seen) then seen else [h ; h])
+                                 in
+                                 let rest' = t in (helper (seen', rest'))))
+==============================

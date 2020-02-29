@@ -1,0 +1,91 @@
+------------------------------------------------------------------
+File "2537.ml", line 7, characters 37-39:
+This expression has type 'a but is here used with type 'a list
+Relevant code: hd
+------------------------------------------------------------------
+File "2537.ml", line 7, characters 24-32:
+Try replacing
+    List.mem
+with
+    =
+of type
+    'b list -> 'b list -> bool
+within context
+    (match rest with 
+     | [] -> seen
+     | hd :: tl ->
+       (let seen' = (if (= tl [hd]) = true then seen else hd :: seen) in
+             let rest' = tl in (helper (seen', rest'))))
+==============================
+File "2537.ml", line 7, characters 33-35:
+Try replacing
+    tl
+with
+    hd
+of type
+    'c
+within context
+    (match rest with 
+     | [] -> seen
+     | hd :: tl ->
+       (let seen' = (if (List.mem hd [hd]) = true then seen else hd :: seen) in
+             let rest' = tl in (helper (seen', rest'))))
+==============================
+File "2537.ml", line 7, characters 33-35:
+Try replacing
+    tl
+with
+    =
+of type
+    'd -> 'd -> bool
+within context
+    (match rest with 
+     | [] -> seen
+     | hd :: tl ->
+       (let seen' = (if (List.mem = [hd]) = true then seen else hd :: seen) in
+             let rest' = tl in (helper (seen', rest'))))
+==============================
+File "2537.ml", line 7, characters 37-39:
+Try replacing
+    hd
+with
+    l
+of type
+    'e list
+within context
+    let seen' = (if (List.mem tl [l]) = true then seen else hd :: seen) in
+      let rest' = tl in (helper (seen', rest'))
+==============================
+File "2537.ml", line 7, characters 37-39:
+Try replacing
+    hd
+with
+    rest
+of type
+    'f list
+within context
+    let seen' = (if (List.mem tl [rest]) = true then seen else hd :: seen) in
+      let rest' = tl in (helper (seen', rest'))
+==============================
+File "2537.ml", line 7, characters 37-39:
+Try replacing
+    hd
+with
+    seen
+of type
+    'g list
+within context
+    let seen' = (if (List.mem tl [seen]) = true then seen else hd :: seen) in
+      let rest' = tl in (helper (seen', rest'))
+==============================
+File "2537.ml", line 7, characters 37-39:
+Try replacing
+    hd
+with
+    tl
+of type
+    'h list
+within context
+    let seen' = (if (List.mem tl [tl]) = true then seen else hd :: seen) in
+      let rest' = tl in (helper (seen', rest'))
+==============================

@@ -1,0 +1,63 @@
+------------------------------------------------------------------
+File "0604.ml", line 17, characters 32-42:
+This expression is not a function, it cannot be applied
+Relevant code: (sum / 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "0604.ml", line 18, characters 4-120:
+And modified the following location:
+File "0604.ml", line 17, characters 43-55:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ((sum / 10) (mod sum 10))
+with
+    sum / 10
+The actual replacement has type
+    int
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x c = let (s, t) = x in let sum = (c + s) + t in sum / 10 :: a
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0604.ml", line 18, characters 4-120:
+And modified the following location:
+File "0604.ml", line 17, characters 32-42:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    sum / 10
+with
+    sum / 10; [[...]]
+The actual replacement has type
+    int -> 'g
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) =
+            let f a x c =
+              let (s, t) = x in
+                let sum = (c + s) + t in ((sum / 10; [[...]]) (mod sum 10)) :: a
+              in
+              [[...other program...]]
+            in
+            (removeZero (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0604.ml", line 18, characters 4-120:
+And modified the following location:
+File "0604.ml", line 15, characters 4-226:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x c =
+      let (s, t) = x in let sum = (c + s) + t in ((sum / 10) (mod sum 10)) :: a
+      in
+      let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'n
+==============================

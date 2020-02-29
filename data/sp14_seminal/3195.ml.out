@@ -1,0 +1,35 @@
+------------------------------------------------------------------
+File "3195.ml", line 6, characters 41-44:
+This expression is not a function, it cannot be applied
+Relevant code: sep
+------------------------------------------------------------------
+Triaged the following locations:
+File "3195.ml", line 6, characters 30-39:
+And modified the following location:
+File "3195.ml", line 6, characters 41-44:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sepConcat
+If you ignore other surrounding code, try replacing
+    sep
+with
+    sep; [[...]]
+The actual replacement has type
+    string list -> 'a
+within context
+    fun a x -> h ^ (sep ^ ((sepConcat; [[...]]) ((sep; [[...]]) t)))
+==============================
+Triaged the following locations:
+File "3195.ml", line 6, characters 30-39:
+And modified the following location:
+File "3195.ml", line 6, characters 45-46:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    sepConcat
+If you ignore other surrounding code, try replacing
+    (sep t)
+with
+    sep
+The actual replacement has type
+    string
+within context
+    fun a x -> h ^ (sep ^ ((sepConcat; [[...]]) sep))
+==============================

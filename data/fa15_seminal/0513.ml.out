@@ -1,0 +1,69 @@
+------------------------------------------------------------------
+File "0513.ml", line 3, characters 60-64:
+This expression has type int but is here used with type ('a -> 'a) -> 'a
+Relevant code: base
+------------------------------------------------------------------
+File "0513.ml", line 3, characters 58-59:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int -> 'b -> int
+within context
+    let pipe fs =
+    let f a x n = (n (a x)) in
+      let base = 0 in (List.fold_left (f; [[...]]) base  fs)
+    ;; 
+==============================
+File "0513.ml", line 3, characters 38-39:
+Try replacing
+    0
+with
+    0; [[...]]
+of type
+    'c
+within context
+    let pipe fs =
+    let f a x n = (n (a x)) in let base = 0; [[...]] in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "0513.ml", line 3, characters 60-64:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    ('d -> 'd) -> 'd
+within context
+    let pipe fs =
+    let f a x n = (n (a x)) in
+      let base = 0 in (List.fold_left f (base; [[...]])  fs)
+    ;; 
+==============================
+File "0513.ml", line 3, characters 43-57:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (('e -> 'f) -> 'e -> ('f -> 'g) -> 'g) -> int -> 'h -> 'i
+within context
+    let pipe fs =
+    let f a x n = (n (a x)) in
+      let base = 0 in ((List.fold_left; [[...]]) f base  fs)
+    ;; 
+==============================
+File "0513.ml", line 3, characters 8-23:
+Try replacing
+    fun a x n -> (n (a x))
+with
+    fun a x n -> (n (a x)); [[...]]
+of type
+    'j
+within context
+    let pipe fs =
+    let f = fun a x n -> (n (a x)); [[...]] in
+      let base = 0 in (List.fold_left f base  fs)
+    ;; 
+==============================

@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2419.ml", line 8, characters 28-60:
+This expression has type int but is here used with type int list
+Relevant code: ((prod / 10) + (mulByDigit i t))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2419.ml", line 9, characters 11-20:
+And modified the following location:
+File "2419.ml", line 8, characters 11-60:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    prod :: t
+If you ignore other surrounding code, try replacing
+    (mod prod 10) :: prod / 10 + (mulByDigit i t)
+with
+    [[...]]
+The actual replacement has type
+    int
+within context
+    fun i l -> (match (List.rev l) with 
+                | [] -> 0
+                | h :: t ->
+                  (let prod = h * i in
+                        (if prod > 10 then [[...]] else (prod :: t; [[...]]))))
+==============================

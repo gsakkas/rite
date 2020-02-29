@@ -1,0 +1,55 @@
+------------------------------------------------------------------
+File "1106.ml", line 19, characters 12-24:
+This expression has type int but is here used with type int list
+Relevant code: (sum mod 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1106.ml", line 18, characters 53-98:
+And modified the following location:
+File "1106.ml", line 18, characters 48-48:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (fst h)
+with
+    (fst [[...]] h)
+The actual replacement has type
+    int
+within context
+    let f a x = (match a with 
+                 | h :: t ->
+                   (let sum = ((fst x) + (snd x)) + (fst [[...]] h) in
+                         [[...other program...]])) in let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in (List.fold_left f base  args)
+==============================
+Triaged the following locations:
+File "1106.ml", line 18, characters 53-98:
+And modified the following location:
+File "1106.ml", line 18, characters 43-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    fst
+with
+    fst; [[...]]
+The actual replacement has type
+    'a -> int
+within context
+    let f a x = (match a with 
+                 | h :: t ->
+                   (let sum = ((fst x) + (snd x)) + ((fst; [[...]]) h) in
+                         [[...other program...]])) in let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in (List.fold_left f base  args)
+==============================
+Triaged the following locations:
+File "1106.ml", line 18, characters 53-98:
+And modified the following location:
+File "1106.ml", line 18, characters 10-98:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let sum = ((fst x) + (snd x)) + (fst h) in sum / 10 :: (mod sum 10) :: t
+with
+    [[...other program...]]
+The actual replacement has type
+    'b
+within context
+    let f a x = (match a with 
+                 | h :: t ->
+                   [[...other program...]]) in let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in (List.fold_left f base  args)
+==============================

@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "0725.ml", line 31, characters 25-28:
+This expression has type string but is here used with type int
+Relevant code: ")"
+------------------------------------------------------------------
+File "0725.ml", line 31, characters 29-30:
+Try replacing
+    /
+with
+    ^
+of type
+    string -> string -> string
+within context
+    res2 ^
+      ("+" ^
+          (res3 ^
+              ((")" ^ "(abs(") ^
+                  (res1 ^ (")+abs(" ^ (res2 ^ (")+abs(" ^ (res3 ^ "))"))))))))
+==============================

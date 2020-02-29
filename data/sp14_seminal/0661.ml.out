@@ -1,0 +1,99 @@
+------------------------------------------------------------------
+File "0661.ml", line 36, characters 59-63:
+This expression has type int list * int but is here used with type
+  int list * int list
+Relevant code: base
+------------------------------------------------------------------
+File "0661.ml", line 36, characters 57-58:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    'a * int -> 'b -> 'a * int
+within context
+    let f a x = let (l1', a') = a in (match x with 
+                                      | [] -> (l1', a')
+                                      | h :: t ->
+                                        (l1',
+                                              (bigAdd
+                                                (mulByDigit h l1')
+                                                a'))) in let base = l1, 0 in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "0661.ml", line 36, characters 59-63:
+Try replacing
+    base
+with
+    base; [[...]]
+of type
+    int list * int list
+within context
+    let f a x = let (l1', a') = a in (match x with 
+                                      | [] -> (l1', a')
+                                      | h :: t ->
+                                        (l1',
+                                              (bigAdd
+                                                (mulByDigit h l1')
+                                                a'))) in let base = l1, 0 in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f (base; [[...]])  args) in res
+==============================
+File "0661.ml", line 35, characters 13-20:
+Try replacing
+    l1, 0
+with
+    l1, 0; [[...]]
+of type
+    'c
+within context
+    let bigMul l1 l2 = let f a x = let (l1', a') = a in (match x with 
+                                                         | [] -> (l1', a')
+                                                         | h :: t ->
+                                                           (l1',
+                                                                 (bigAdd
+                                                                   (mulByDigit
+                                                                     h l1')
+                                                                   a'))) in let base
+      =
+      l1, 0; [[...]]
+      in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res ;; 
+==============================
+File "0661.ml", line 36, characters 42-56:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int list * int list -> int list -> int list * int list) ->
+    'd * int -> 'e list -> 'f * 'g
+within context
+    let f a x = let (l1', a') = a in (match x with 
+                                      | [] -> (l1', a')
+                                      | h :: t ->
+                                        (l1',
+                                              (bigAdd
+                                                (mulByDigit h l1')
+                                                a'))) in let base = l1, 0 in
+      let args = (List.rev l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "0661.ml", line 30, characters 8-128:
+Try replacing
+    fun a x -> (let (l1', a') = a in (match x with 
+                                      | [] -> (l1', a')
+                                      | h :: t ->
+                                        (l1', (bigAdd (mulByDigit h l1') a'))))
+with
+    fun a x -> (let (l1', a') = a in (match x with 
+                                      | [] -> (l1', a')
+                                      | h :: t ->
+                                        (l1',
+                                              (bigAdd
+                                                (mulByDigit h l1') a')))); [[...]]
+of type
+    'h
+==============================

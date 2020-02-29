@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "2285.ml", line 5, characters 68-69:
+This expression has type 'a but is here used with type 'b * 'a
+Relevant code: x
+------------------------------------------------------------------
+File "2285.ml", line 5, characters 48-54:
+Try replacing
+    f, x
+with
+    f
+of type
+    'c
+within context
+    fun (f, b) -> (wwhile ((fun x -> (let y = f in y, y != x)), b))
+==============================
+File "2285.ml", line 5, characters 52-53:
+Try replacing
+    x
+with
+    f
+of type
+    'd * 'd
+within context
+    (wwhile ((fun x -> (let y = f, f in y, y != x)), b))
+==============================
+File "2285.ml", line 5, characters 52-53:
+Try replacing
+    x
+with
+    !=
+of type
+    'e * ('f -> 'f -> bool)
+within context
+    (wwhile ((fun x -> (let y = f, != in y, y != x)), b))
+==============================
+File "2285.ml", line 5, characters 52-53:
+Try replacing
+    x
+with
+    not
+of type
+    'g * (bool -> bool)
+within context
+    (wwhile ((fun x -> (let y = f, not in y, y != x)), b))
+==============================

@@ -1,0 +1,52 @@
+------------------------------------------------------------------
+File "3235.ml", line 28, characters 15-18:
+This expression has type expr but is here used with type expr * float * float
+Relevant code: ex1
+------------------------------------------------------------------
+Triaged the following locations:
+File "3235.ml", line 28, characters 6-170:
+File "3235.ml", line 31, characters 8-9:
+And modified the following location:
+File "3235.ml", line 32, characters 8-78:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    ((((eval ex1) + (eval ex2)) + (eval ex3)) + (eval ex4)) + (eval ex5)
+with
+    [[...]]
+The actual replacement has type
+    'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine ex -> (sin (pi *. (eval (ex, x, y))))
+                              | Cosine ex -> (cos (pi *. (eval (ex, x, y))))
+                              | Average (ex1, ex2) ->
+                                (((eval (ex1, x, y)) +. (eval (ex2, x, y))) /. 2.)
+                              | Times (ex1, ex2) ->
+                                ((eval (ex1, x, y)) *. (eval (ex2, x, y)))
+                              | Thresh (ex1, ex2, ex3, ex4) ->
+                                (if (eval (ex1, x, y)) < (eval (ex2, x, y)) then
+                                    (eval (ex3, x, y))
+                                    else
+                                    (eval (ex4, x, y)))
+                              | FiboPlus (ex1, ex2, ex3, ex4, ex5) ->
+                                ([[...other program...]] *; [[...]] [[...]])) ;; 
+==============================
+Triaged the following locations:
+File "3235.ml", line 31, characters 8-9:
+File "3235.ml", line 32, characters 8-78:
+And modified the following location:
+File "3235.ml", line 28, characters 6-170:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    *
+If you ignore other surrounding code, try replacing
+    (((eval ex1) * ((eval ex1) + (eval ex2)))
+          * (((eval ex1) + (eval ex2)) + (eval ex3)))
+      * ((((eval ex1) + (eval ex2)) + (eval ex3)) + (eval ex4))
+with
+    [[...]]
+The actual replacement has type
+    'b
+==============================

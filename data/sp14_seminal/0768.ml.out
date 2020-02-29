@@ -1,0 +1,33 @@
+------------------------------------------------------------------
+File "0768.ml", line 19, characters 61-67:
+This expression has type unit -> expr but is here used with type expr
+Relevant code: buildY
+------------------------------------------------------------------
+File "0768.ml", line 19, characters 61-67:
+Try replacing
+    buildY
+with
+    buildY; [[...]]
+of type
+    expr
+within context
+    let rec build (rand, depth) =
+    let randNum = (rand (1, 2)) in
+      (if randNum = 1 then (buildSine (buildY ())) else
+          (buildCosine (buildY; [[...]])))
+    ;; 
+==============================
+File "0768.ml", line 19, characters 49-60:
+Try replacing
+    buildCosine
+with
+    buildCosine; [[...]]
+of type
+    (unit -> expr) -> expr
+within context
+    let rec build (rand, depth) =
+    let randNum = (rand (1, 2)) in
+      (if randNum = 1 then (buildSine (buildY ())) else
+          ((buildCosine; [[...]]) buildY))
+    ;; 
+==============================

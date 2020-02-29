@@ -1,0 +1,6 @@
+------------------------------------------------------------------
+File "2110.ml", line 9, characters 30-42:
+This expression has type 'a list -> 'b list but is here used with type string
+Relevant code: (List.map l)
+------------------------------------------------------------------
+<pre>Couldn't find repairs.</pre>

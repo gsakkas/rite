@@ -1,0 +1,53 @@
+------------------------------------------------------------------
+File "0721.ml", line 20, characters 55-56:
+This expression has type int but is here used with type float
+Relevant code: 2
+------------------------------------------------------------------
+File "0721.ml", line 20, characters 55-56:
+Try replacing
+    2
+with
+    2; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> (cos (pi *. (eval (expr, x, y))))
+                              | Average (expr, expr1) ->
+                                (((eval (expr, x, y)) +. (eval (expr1, x, y)))
+                                      /. 2; [[...]])
+                              | Times (expr, expr1) ->
+                                ((eval (expr, x, y)) *. (eval (expr1, x, y)))
+                              | Thresh (expr, expr1, expr2, expr3) ->
+                                (if (eval (expr, x, y)) < (eval (expr1, x, y)) then
+                                    (eval (expr2, x, y))
+                                    else
+                                    (eval (expr3, x, y)))) ;; 
+==============================
+File "0721.ml", line 20, characters 52-54:
+Try replacing
+    /.
+with
+    /.; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine expr -> (sin (pi *. (eval (expr, x, y))))
+                              | Cosine expr -> (cos (pi *. (eval (expr, x, y))))
+                              | Average (expr, expr1) ->
+                                (((eval (expr, x, y)) +. (eval (expr1, x, y)))
+                                      /.; [[...]] 2)
+                              | Times (expr, expr1) ->
+                                ((eval (expr, x, y)) *. (eval (expr1, x, y)))
+                              | Thresh (expr, expr1, expr2, expr3) ->
+                                (if (eval (expr, x, y)) < (eval (expr1, x, y)) then
+                                    (eval (expr2, x, y))
+                                    else
+                                    (eval (expr3, x, y)))) ;; 
+==============================

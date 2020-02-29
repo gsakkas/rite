@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "2696.ml", line 34, characters 40-56:
+This expression is not a function, it cannot be applied
+Relevant code: (exprToString b)
+------------------------------------------------------------------
+File "2696.ml", line 34, characters 57-60:
+Try replacing
+    ((exprToString b) ")")
+with
+    (exprToString b)
+of type
+    string
+within context
+    fun e -> (match e with 
+              | VarX -> "x"
+              | VarY -> "y"
+              | Sine a -> "sin(pi*" ^ ((exprToString a) ^ ")")
+              | Cosine a -> "cos(pi*" ^ ((exprToString a) ^ ")")
+              | Average (a, b) ->
+                "((" ^ ((exprToString a) ^ ("+" ^ ((exprToString b) ^ ")/2)")))
+              | Times (a, b) -> (exprToString a) ^ ("*" ^ (exprToString b))
+              | Thresh (a, b, c, d) ->
+                "(" ^
+                    ((exprToString a) ^
+                        ("<" ^
+                            ((exprToString b) ^
+                                ("?" ^
+                                    ((exprToString c) ^
+                                        (":" ^ ((exprToString d) ^ ")")))))))
+              | _ -> "_"
+              | Cube a ->
+                "(" ^
+                    ((exprToString a) ^
+                        ("*" ^
+                            ((exprToString a) ^ ("*" ^ ((exprToString a) ^ ")")))))
+              | Addition (a, b) ->
+                "(" ^ ((exprToString a) ^ ("+" ^ (exprToString b))))
+==============================

@@ -1,0 +1,16 @@
+------------------------------------------------------------------
+File "2835.ml", line 2, characters 31-39:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.map
+------------------------------------------------------------------
+File "2835.ml", line 2, characters 31-39:
+Try replacing
+    List.map
+with
+    List.map; [[...]]
+of type
+    'f -> string -> 'g -> string
+within context
+    fun f l -> "[" ^ (((List.map; [[...]]) f "; "  l) ^ "]")
+==============================

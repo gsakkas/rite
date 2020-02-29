@@ -1,0 +1,97 @@
+------------------------------------------------------------------
+File "2524.ml", line 8, characters 45-53:
+This expression has type bool but is here used with type
+  ('a -> 'a * bool) * 'a
+Relevant code: helper b
+------------------------------------------------------------------
+File "2524.ml", line 8, characters 2-59:
+Try replacing
+    (wwhile (let helper x = (f x) != (f b) in (helper b))), b
+with
+    b
+of type
+    'b
+within context
+    let fixpoint (f, b) = b ;; 
+==============================
+File "2524.ml", line 8, characters 4-10:
+Try replacing
+    wwhile
+with
+    !=
+of type
+    bool -> bool -> bool
+within context
+    let fixpoint (f, b) = (!= (let helper x = (f x) != (f b) in (helper b))), b ;; 
+==============================
+File "2524.ml", line 8, characters 4-10:
+Try replacing
+    wwhile
+with
+    b
+of type
+    bool -> 'c
+within context
+    let fixpoint (f, b) = (b (let helper x = (f x) != (f b) in (helper b))), b ;; 
+==============================
+File "2524.ml", line 8, characters 4-10:
+Try replacing
+    wwhile
+with
+    f
+of type
+    bool -> 'd
+within context
+    let fixpoint (f, b) = (f (let helper x = (f x) != (f b) in (helper b))), b ;; 
+==============================
+File "2524.ml", line 8, characters 4-10:
+Try replacing
+    wwhile
+with
+    =
+of type
+    bool -> bool -> bool
+within context
+    let fixpoint (f, b) = (= (let helper x = (f x) != (f b) in (helper b))), b ;; 
+==============================
+File "2524.ml", line 8, characters 45-51:
+Try replacing
+    helper
+with
+    f
+of type
+    'e -> ('f -> 'f * bool) * 'f
+within context
+    fun (f, b) -> ((wwhile (let helper x = (f x) != (f b) in (f b))), b)
+==============================
+File "2524.ml", line 8, characters 45-51:
+Try replacing
+    helper
+with
+    wwhile
+of type
+    (('g -> 'g * bool) * 'g -> (('g -> 'g * bool) * 'g) * bool) *
+    (('g -> 'g * bool) * 'g) -> ('g -> 'g * bool) * 'g
+within context
+    fun (f, b) -> ((wwhile (let helper x = (f x) != (f b) in (wwhile b))), b)
+==============================
+File "2524.ml", line 8, characters 33-35:
+Try replacing
+    !=
+with
+    b
+of type
+    'h -> 'h -> ('i -> 'i * bool) * 'i
+within context
+    (wwhile (let helper x = ((f x) b (f b)) in (helper b))), b
+==============================
+File "2524.ml", line 8, characters 33-35:
+Try replacing
+    !=
+with
+    x
+of type
+    'j -> 'j -> ('k -> 'k * bool) * 'k
+within context
+    (wwhile (let helper x = ((f x) x (f b)) in (helper b))), b
+==============================

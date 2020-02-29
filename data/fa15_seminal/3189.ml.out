@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "3189.ml", line 28, characters 13-29:
+This expression has type int but is here used with type 'a list
+Relevant code: ((x1 + x2) / 10)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3189.ml", line 30, characters 8-94:
+And modified the following location:
+File "3189.ml", line 28, characters 11-57:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    let c :: c' = a1 in a1 @ [((x1 + x2) + c) / 10], (mod ((x1 + x2) + c) 10)
+If you ignore other surrounding code, try replacing
+    (x1 + x2) / 10 @ [0], (mod (x1 + x2) 10)
+with
+    [[...]]
+The actual replacement has type
+    'b
+within context
+    fun a
+      x ->
+        (let (x1, x2) = x in
+            let (a1, a2) = a in
+            (if (List.length a1) = 0 then [[...]] else
+                (let c :: c' = a1 in
+                    a1 @ [((x1 + x2) + c) / 10], (mod ((x1 + x2) + c) 10);
+                  [[...]])))
+==============================

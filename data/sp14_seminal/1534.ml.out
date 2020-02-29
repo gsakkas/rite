@@ -1,0 +1,28 @@
+------------------------------------------------------------------
+File "1534.ml", line 3, characters 72-74:
+This expression has type int but is here used with type int list
+Relevant code: xs
+------------------------------------------------------------------
+File "1534.ml", line 3, characters 67-71:
+Try replacing
+    (List.fold_left f base  xs)
+with
+    (List.fold_left f xs)
+of type
+    int list -> int
+within context
+    let sqsum xs =
+    let f a x = a * a + x in let base = (f 4 xs) in (List.fold_left f xs)
+    ;; 
+==============================
+File "1534.ml", line 3, characters 24-25:
+Try replacing
+    x
+with
+    a
+of type
+    int
+within context
+    fun xs ->
+      (let f a x = a * a + a in let base = (f 4 xs) in (List.fold_left f base  xs))
+==============================

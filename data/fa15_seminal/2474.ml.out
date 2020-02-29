@@ -1,0 +1,101 @@
+------------------------------------------------------------------
+File "2474.ml", line 25, characters 40-44:
+This expression has type (int * int) list but is here used with type
+  (int * int) list list
+Relevant code: args
+------------------------------------------------------------------
+File "2474.ml", line 25, characters 33-34:
+Try replacing
+    f
+with
+    f; [[...]]
+of type
+    int * 'a list -> int * int -> int * 'a list
+within context
+    let f a x = (match a, x with 
+                 | ((out, sum), []) -> (0, sum)
+                 | ((out, sum), (b, c) :: l') ->
+                   (let d = (b + c) + out in
+                         (if d < 10 then 0, d :: sum else
+                             1,
+                               d - 10 ::
+                                   sum))) in let base = 0, [] in
+      let args = (List.combine (List.rev 0 :: l1) (List.rev 0 :: l2)) in
+      let (_, res) = (List.fold_left (f; [[...]]) base  args) in res
+==============================
+File "2474.ml", line 25, characters 40-44:
+Try replacing
+    args
+with
+    args; [[...]]
+of type
+    (int * int) list list
+within context
+    let f a x = (match a, x with 
+                 | ((out, sum), []) -> (0, sum)
+                 | ((out, sum), (b, c) :: l') ->
+                   (let d = (b + c) + out in
+                         (if d < 10 then 0, d :: sum else
+                             1,
+                               d - 10 ::
+                                   sum))) in let base = 0, [] in
+      let args = (List.combine (List.rev 0 :: l1) (List.rev 0 :: l2)) in
+      let (_, res) = (List.fold_left f base  (args; [[...]])) in res
+==============================
+File "2474.ml", line 25, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> (int * int) list -> int * int list) ->
+    int * 'b list -> (int * int) list -> 'c * 'd
+within context
+    let f a x = (match a, x with 
+                 | ((out, sum), []) -> (0, sum)
+                 | ((out, sum), (b, c) :: l') ->
+                   (let d = (b + c) + out in
+                         (if d < 10 then 0, d :: sum else
+                             1,
+                               d - 10 ::
+                                   sum))) in let base = 0, [] in
+      let args = (List.combine (List.rev 0 :: l1) (List.rev 0 :: l2)) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================
+File "2474.ml", line 24, characters 15-69:
+Try replacing
+    (List.combine (List.rev 0 :: l1) (List.rev 0 :: l2))
+with
+    (List.combine (List.rev 0 :: l1) (List.rev 0 :: l2)); [[...]]
+of type
+    'e
+within context
+    let add (l1, l2) = let f a x = (match a, x with 
+                                    | ((out, sum), []) -> (0, sum)
+                                    | ((out, sum), (b, c) :: l') ->
+                                      (let d = (b + c) + out in
+                                            (if d < 10 then 0, d :: sum else
+                                                1,
+                                                  d - 10 ::
+                                                      sum))) in let base = 0, [] in
+        let args = (List.combine (List.rev 0 :: l1) (List.rev 0 :: l2)); [[...]] in
+        let (_, res) = (List.fold_left f base  args) in
+        res in (removeZero (add (padZero l1 l2)))
+==============================
+File "2474.ml", line 17, characters 10-211:
+Try replacing
+    fun a x -> (match a, x with 
+                | ((out, sum), []) -> (0, sum)
+                | ((out, sum), (b, c) :: l') ->
+                  (let d = (b + c) + out in
+                        (if d < 10 then 0, d :: sum else 1, d - 10 :: sum)))
+with
+    fun a x -> (match a, x with 
+                | ((out, sum), []) -> (0, sum)
+                | ((out, sum), (b, c) :: l') ->
+                  (let d = (b + c) + out in
+                        (if d < 10 then 0, d :: sum else
+                            1, d - 10 :: sum))); [[...]]
+of type
+    'f
+==============================

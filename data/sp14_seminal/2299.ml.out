@@ -1,0 +1,39 @@
+------------------------------------------------------------------
+File "2299.ml", line 19, characters 40-59:
+This expression has type 'a list but is here used with type 'b list * 'c
+Relevant code: ((t, (h + x)) :: a)
+------------------------------------------------------------------
+Triaged the following locations:
+File "2299.ml", line 19, characters 38-39:
+And modified the following location:
+File "2299.ml", line 19, characters 57-58:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    =
+If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    (int list * int) list
+within context
+    let f a x = let (h :: t, _) = a in (a =; [[...]] t, h + x :: a; [[...]]) in
+      let base = (List.rev l1), [] in
+      let args = l2 in let (_, res) = (List.fold_left f base  args) in res
+==============================
+Triaged the following locations:
+File "2299.ml", line 19, characters 38-39:
+And modified the following location:
+File "2299.ml", line 19, characters 40-59:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    =
+If you ignore other surrounding code, try replacing
+    t, h + x :: a
+with
+    (t, h + x), a
+The actual replacement has type
+    (int list * int) * (int list * 'd)
+within context
+    let f a x = let (h :: t, _) = a in (a =; [[...]] (t, h + x), a) in
+      let base = (List.rev l1), [] in
+      let args = l2 in let (_, res) = (List.fold_left f base  args) in res
+==============================

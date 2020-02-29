@@ -1,0 +1,27 @@
+------------------------------------------------------------------
+File "0129.ml", line 24, characters 35-39:
+This expression has type int * int but is here used with type int * int list
+Relevant code: base
+------------------------------------------------------------------
+File "0129.ml", line 24, characters 18-32:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    (int * int list -> int list * int list -> int * int list) ->
+    int * int -> ('a * 'b) list -> 'c * 'd
+within context
+    let f a x = (match x with 
+                 | ([], []) ->
+                   (let (carry, num) = a in
+                         0, (if carry > 0 then carry :: num else num))
+                 | (l1, l2) ->
+                   (let (carry, num) = a in
+                         let addit = ((List.hd l1) + (List.hd l2)) + carry in
+                         (if addit > 10 then (mod addit 10) else 0),
+                             addit / 10 ::
+                                 num)) in let base = 0, 0 in
+      let args = (List.combine l1 l2) in
+      let (_, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

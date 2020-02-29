@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "0482.ml", line 5, characters 2-72:
+This expression has type 'a list but is here used with type
+  ('b list -> 'b list -> 'b list) -> int list -> 'a list
+Relevant code: if n <= 0 then [] else (let n2 = n / 10 in digitsOfInt n2 append [n2])
+------------------------------------------------------------------
+File "0482.ml", line 5, characters 2-72:
+Try replacing
+    (if (n <= 0) then [] else (let n2 = n / 10 in (digitsOfInt n2 append  [n2])))
+with
+    (if (n <= 0) then [] else (let n2 = n / 10 in (digitsOfInt n2 append  [n2])));
+    [[...]]
+of type
+    ('c list -> 'c list -> 'c list) -> int list -> 'd list
+within context
+    let rec digitsOfInt n =
+    (if (n <= 0) then [] else (let n2 = n / 10 in (digitsOfInt n2 append  [n2])));
+    [[...]]
+    ;; 
+==============================

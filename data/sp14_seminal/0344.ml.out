@@ -1,0 +1,83 @@
+------------------------------------------------------------------
+File "0344.ml", line 34, characters 29-41:
+This expression has type expr -> string but is here used with type string
+Relevant code: exprToString
+------------------------------------------------------------------
+File "0344.ml", line 34, characters 29-41:
+Try replacing
+    exprToString
+with
+    exprToString; [[...]]
+of type
+    string
+within context
+    let rec exprToString ex = (match ex with 
+                               | VarX -> "x"
+                               | VarY -> "y"
+                               | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+                               | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+                               | Average (e1, e2) ->
+                                 "((" ^
+                                     ((exprToString e1) ^
+                                         (" + " ^ ((exprToString e2) ^ ")/2)")))
+                               | Times (e1, e2) ->
+                                 (exprToString e1) ^ ("*" ^ (exprToString e2))
+                               | Thresh (e1, e2, e3, e4) ->
+                                 "(" ^
+                                     ((exprToString e1) ^
+                                         ("<" ^
+                                             ((exprToString e2) ^
+                                                 ("?" ^
+                                                     ((exprToString e3) ^
+                                                         (":" ^
+                                                             ((exprToString e4)
+                                                                 ^ ")")))))))
+                               | MyExpr1 (e1, e2, e3) ->
+                                 "(sqrt(" ^
+                                     ((exprToString e1) ^
+                                         (")*sqrt(" ^
+                                             ((exprToString e2) ^
+                                                 (")*" ^
+                                                     ((exprToString e3) ^ ")")))))
+                               | MyExpr2 e ->
+                                 "halve(" ^ ((exprToString; [[...]]) ^ ")")) ;; 
+==============================
+File "0344.ml", line 34, characters 42-43:
+Try replacing
+    ^
+with
+    ^; [[...]]
+of type
+    (expr -> string) -> string -> string
+within context
+    let rec exprToString ex = (match ex with 
+                               | VarX -> "x"
+                               | VarY -> "y"
+                               | Sine e -> "sin(pi*" ^ ((exprToString e) ^ ")")
+                               | Cosine e -> "cos(pi*" ^ ((exprToString e) ^ ")")
+                               | Average (e1, e2) ->
+                                 "((" ^
+                                     ((exprToString e1) ^
+                                         (" + " ^ ((exprToString e2) ^ ")/2)")))
+                               | Times (e1, e2) ->
+                                 (exprToString e1) ^ ("*" ^ (exprToString e2))
+                               | Thresh (e1, e2, e3, e4) ->
+                                 "(" ^
+                                     ((exprToString e1) ^
+                                         ("<" ^
+                                             ((exprToString e2) ^
+                                                 ("?" ^
+                                                     ((exprToString e3) ^
+                                                         (":" ^
+                                                             ((exprToString e4)
+                                                                 ^ ")")))))))
+                               | MyExpr1 (e1, e2, e3) ->
+                                 "(sqrt(" ^
+                                     ((exprToString e1) ^
+                                         (")*sqrt(" ^
+                                             ((exprToString e2) ^
+                                                 (")*" ^
+                                                     ((exprToString e3) ^ ")")))))
+                               | MyExpr2 e ->
+                                 "halve(" ^ (exprToString ^; [[...]] ")")) ;; 
+==============================

@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "2518.ml", line 6, characters 9-71:
+This expression has type ('a * bool) * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((let func input = ((f input), ((f input) = b)) in func b), b)
+------------------------------------------------------------------
+File "2518.ml", line 6, characters 20-56:
+Try replacing
+    fun input -> ((f input), (f input) = b)
+with
+    fun input _ -> ((f input), (f input) = b)
+of type
+    'c -> 'd -> 'c * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile ((let func input _ = (f input), (f input) = b in (func b)), b))
+    ;; 
+==============================
+File "2518.ml", line 6, characters 20-56:
+Try replacing
+    fun input -> ((f input), (f input) = b)
+with
+    fun _ input -> ((f input), (f input) = b)
+of type
+    'e -> 'f -> 'f * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile ((let func _ input = (f input), (f input) = b in (func b)), b))
+    ;; 
+==============================
+File "2518.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    ('g * bool) * 'g -> ('g * bool) * 'g -> bool
+within context
+    let fixpoint (f, b) =
+    (= ((let func input = (f input), (f input) = b in (func b)), b))
+    ;; 
+==============================

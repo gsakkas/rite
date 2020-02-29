@@ -1,0 +1,50 @@
+------------------------------------------------------------------
+File "2771.ml", line 18, characters 38-47:
+This expression has type int -> int but is here used with type int
+Relevant code: (carry i)
+------------------------------------------------------------------
+File "2771.ml", line 18, characters 46-46:
+Try replacing
+    (carry i)
+with
+    (carry [[...]] i)
+of type
+    int
+within context
+    (match t with 
+     | [] -> (if i * h > 10 then [(carry i h)] @ [(remainder i h)] else [])
+     | h' :: t' ->
+       (mulByDigit i t') @
+           ([(carry i h) + (remainder h' i)] @
+               [(remainder h i) + (carry [[...]] i)]))
+==============================
+File "2771.ml", line 18, characters 47-47:
+Try replacing
+    (carry i)
+with
+    (carry i [[...]])
+of type
+    int
+within context
+    (match t with 
+     | [] -> (if i * h > 10 then [(carry i h)] @ [(remainder i h)] else [])
+     | h' :: t' ->
+       (mulByDigit i t') @
+           ([(carry i h) + (remainder h' i)] @
+               [(remainder h i) + (carry i [[...]])]))
+==============================
+File "2771.ml", line 18, characters 36-37:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    int -> (int -> int) -> int
+within context
+    (match t with 
+     | [] -> (if i * h > 10 then [(carry i h)] @ [(remainder i h)] else [])
+     | h' :: t' ->
+       (mulByDigit i t') @
+           ([(carry i h) + (remainder h' i)] @
+               [((remainder h i) +; [[...]] (carry i))]))
+==============================

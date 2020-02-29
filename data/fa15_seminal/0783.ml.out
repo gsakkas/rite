@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "0783.ml", line 2, characters 73-74:
+This expression has type int but is here used with type 'a list
+Relevant code: n
+------------------------------------------------------------------
+File "0783.ml", line 2, characters 47-74:
+Try replacing
+    (digitsOfInt (n / 10)) :: n
+with
+    [[...]]
+of type
+    'b list
+within context
+    let rec digitsOfInt n = (if (n <= 0) then [] else [[...]]) ;; 
+==============================

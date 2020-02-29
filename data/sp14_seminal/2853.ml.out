@@ -1,0 +1,70 @@
+------------------------------------------------------------------
+File "2853.ml", line 36, characters 27-54:
+This expression has type expr * expr but is here used with type expr
+Relevant code: (build (rand, (depth - 1)))
+------------------------------------------------------------------
+File "2853.ml", line 32, characters 11-97:
+Try replacing
+    (buildAverage (build (rand, depth - 1))), (build (rand, depth - 1))
+with
+    [[...]]
+of type
+    expr
+within context
+    fun (rand, depth) -> (match depth with 
+                          | 0 ->
+                            (if (rand (0, 1)) = 1 then (buildX ()) else (buildY ()))
+                          | _ -> (let r = (rand (3, 100)) in (match r with 
+                                                              | r ->
+                                                                when r < 5 ->
+                                                                    [[...]]
+                                                              | r ->
+                                                                when r < 10 && r > 5
+                                                                    ->
+                                                                    (buildThresh
+                                                                        ((buildCosine
+                                                                              (build
+                                                                                (rand
+                                                                                    ,
+                                                                                    depth
+                                                                                      -
+                                                                                      1)))
+                                                                            ,
+                                                                            (buildCosine
+                                                                              (build
+                                                                                (rand
+                                                                                    ,
+                                                                                    depth
+                                                                                      -
+                                                                                      1)))
+                                                                            ,
+                                                                            (build
+                                                                              (rand,
+                                                                                  depth
+                                                                                    -
+                                                                                    1))
+                                                                            ,
+                                                                            (build
+                                                                              (rand,
+                                                                                  depth
+                                                                                    -
+                                                                                    1))))
+                                                              | r ->
+                                                                when
+                                                                      r < 25
+                                                                        && r > 20
+                                                                    ->
+                                                                    (buildSine
+                                                                        (build
+                                                                          (rand,
+                                                                              depth
+                                                                                -
+                                                                                1)))
+                                                              | _ ->
+                                                                (buildCosine
+                                                                    (build
+                                                                      (rand,
+                                                                          depth
+                                                                            -
+                                                                            1))))))
+==============================

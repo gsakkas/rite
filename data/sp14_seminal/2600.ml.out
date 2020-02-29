@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "2600.ml", line 21, characters 41-65:
+This expression has type 'a list * 'b list but is here used with type 'c list
+Relevant code: ((x :: one), (y :: two))
+------------------------------------------------------------------
+File "2600.ml", line 21, characters 6-18:
+Try replacing
+    List.combine
+with
+    List.combine; [[...]]
+of type
+    'd list * 'e list -> 'f
+within context
+    let f a x =
+      let y = (List.hd l2) in
+        ((List.combine; [[...]]) (let (one, two) = a in x :: one, y :: two))
+      in
+      let base = [], [] in
+      let args = l1 in let (bar, res) = (List.fold_left f base  args) in res
+==============================

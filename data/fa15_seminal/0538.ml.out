@@ -1,0 +1,46 @@
+------------------------------------------------------------------
+File "0538.ml", line 32, characters 48-75:
+This expression has type 'a list but is here used with type int
+Relevant code: (((h + c) + d) mod 10) :: t
+------------------------------------------------------------------
+File "0538.ml", line 18, characters 10-623:
+Try replacing
+    fun (l1, l2) -> (let f a x = let (c, d) = x in (match a with 
+                                                    | (n, listSum) ->
+                                                      (match listSum with 
+                                                       | [] ->
+                                                         (if (n + c) + d < 10 then
+                                                             0, [n ; (n + c) + d]
+                                                             else
+                                                             n + 1,
+                                                               [
+                                                                   n + 1 ;
+                                                                   (mod
+                                                                     ((n + c) + d) 10)
+                                                                   ])
+                                                       | h :: t ->
+                                                         (if (n + c) + d < 10 then
+                                                             0,
+                                                               [0 ; (c + d) + h] @ t
+                                                             else
+                                                             n + 1,
+                                                               [
+                                                                   ((h + c) + d)
+                                                                     / 10
+                                                                   ;
+                                                                   (mod
+                                                                         ((h + c)
+                                                                             + d) 10)
+                                                                       ::
+                                                                       t
+                                                                   ]))) in let base
+          =
+          0, []
+          in
+          let args = (List.rev (List.combine l1 l2)) in
+          let (_, res) = (List.fold_left f base  args) in res)
+with
+    [[...]]
+of type
+    'b
+==============================

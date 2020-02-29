@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "1547.ml", line 5, characters 65-66:
+This expression has type int but is here used with type int list
+Relevant code: n
+------------------------------------------------------------------
+File "1547.ml", line 5, characters 65-66:
+Try replacing
+    n
+with
+    n; [[...]]
+of type
+    int list
+within context
+    let rec digHelper n = (if n < 10 then n else (digHelper (sumList (n; [[...]]))))
+      in
+      (digHelper n)
+==============================
+File "1547.ml", line 5, characters 57-64:
+Try replacing
+    sumList
+with
+    sumList; [[...]]
+of type
+    int -> int
+within context
+    let rec digHelper n = (if n < 10 then n else (digHelper ((sumList; [[...]]) n)))
+      in
+      (digHelper n)
+==============================

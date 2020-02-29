@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "0177.ml", line 4, characters 63-65:
+This expression has type string but is here used with type string list
+Relevant code: ""
+------------------------------------------------------------------
+File "0177.ml", line 4, characters 63-88:
+Try replacing
+    (List.fold_right (fun x acc -> x ^ ("; " ^ acc)) ""  (List.map f l))
+with
+    (List.fold_right (fun x acc -> x ^ ("; " ^ acc)) (List.map f l)  "")
+of type
+    string
+within context
+    let stringOfList f l =
+    "[" ^
+      ((List.fold_right (fun x acc -> x ^ ("; " ^ acc)) (List.map f l)  "") ^ "]")
+    ;; 
+==============================

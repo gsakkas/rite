@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "2351.ml", line 6, characters 9-63:
+This expression has type bool * 'a but is here used with type
+  ('b -> 'b * bool) * 'b
+Relevant code: ((let b' = f b in if b != b' then true else false), b)
+------------------------------------------------------------------
+File "2351.ml", line 6, characters 10-62:
+Try replacing
+    (let b' = (f b) in (if b != b' then true else false)), b
+with
+    b, (let b' = (f b) in (if b != b' then true else false))
+of type
+    (bool -> bool * bool) * bool
+within context
+    let fixpoint (f, b) =
+    (wwhile (b, (let b' = (f b) in (if b != b' then true else false))))
+    ;; 
+==============================
+File "2351.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    bool * 'c -> bool * 'c -> bool
+within context
+    let fixpoint (f, b) =
+    (= ((let b' = (f b) in (if b != b' then true else false)), b))
+    ;; 
+==============================
+File "2351.ml", line 6, characters 2-8:
+Try replacing
+    wwhile
+with
+    !=
+of type
+    bool * 'd -> bool * 'd -> bool
+within context
+    let fixpoint (f, b) =
+    (!= ((let b' = (f b) in (if b != b' then true else false)), b))
+    ;; 
+==============================

@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "2768.ml", line 14, characters 39-68:
+This expression has type int list but is here used with type unit
+Relevant code: [carry i h] @ [remainder i h]
+------------------------------------------------------------------
+File "2768.ml", line 14, characters 18-68:
+Try replacing
+    (if i * h > 10 then [(carry i h)] @ [(remainder i h)])
+with
+    [[...]]
+of type
+    int list
+within context
+    fun i l -> (if i = 0 || i > 9 then [] else (match (List.rev l) with 
+                                                | [] -> []
+                                                | h :: t -> (match t with 
+                                                             | [] -> [[...]]
+                                                             | h' :: t' ->
+                                                               (mulByDigit i t') @
+                                                                   ([
+                                                                           (remainder
+                                                                               h' i)
+                                                                             +
+                                                                             (carry
+                                                                               h i)
+                                                                           ]
+                                                                       @
+                                                                       [
+                                                                           (remainder
+                                                                             h i)
+                                                                           ]))))
+==============================

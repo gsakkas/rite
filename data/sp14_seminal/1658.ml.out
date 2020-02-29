@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "1658.ml", line 8, characters 4-98:
+This expression has type (('a -> 'a * bool) * 'b) * 'b
+but is here used with type ('c -> 'c * bool) * 'c
+Relevant code: ((let whilesFun f' b' = let fOfB = f' b' in (b', (fOfB = b')) in
+      ((whilesFun f), b)), b)
+------------------------------------------------------------------
+File "1658.ml", line 7, characters 2-8:
+Try replacing
+    wwhile
+with
+    =
+of type
+    (('d -> 'd * bool) * 'e) * 'e -> (('d -> 'd * bool) * 'e) * 'e -> bool
+within context
+    let fixpoint (f, b) =
+    (=
+      ((let whilesFun f' b' = let fOfB = (f' b') in b', fOfB = b' in
+              (whilesFun f), b)
+          ,
+          b))
+    ;; 
+==============================

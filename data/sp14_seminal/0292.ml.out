@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "0292.ml", line 2, characters 24-76:
+This expression has type 'a list but is here used with type 'a
+Relevant code: match l with | [] -> [] | h::t -> [h; listReverse t]
+------------------------------------------------------------------
+File "0292.ml", line 2, characters 24-76:
+Try replacing
+    (match l with 
+     | [] -> []
+     | h :: t -> [h ; (listReverse t)])
+with
+    (match l with 
+     | [] -> []
+     | h :: t -> [h ; (listReverse t)]); [[...]]
+of type
+    'b
+==============================

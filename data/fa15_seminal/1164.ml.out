@@ -1,0 +1,59 @@
+------------------------------------------------------------------
+File "1164.ml", line 4, characters 4-6:
+This pattern matches values of type 'a list
+but is here used to match values of type 'b * 'c
+Relevant code: []
+------------------------------------------------------------------
+Triaged the following locations:
+File "1164.ml", line 4, characters 10-11:
+File "1164.ml", line 5, characters 12-53:
+And modified the following location:
+File "1164.ml", line 3, characters 8-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    k, d
+with
+    k, d; [[...]]
+The actual replacement has type
+    'd list
+within context
+    let rec assoc (d, k, l) = (match (k, d; [[...]]) with 
+                               | [] -> [[...other program...]]
+                               | h :: t -> [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1164.ml", line 4, characters 10-11:
+File "1164.ml", line 5, characters 4-8:
+File "1164.ml", line 5, characters 12-53:
+And modified the following location:
+File "1164.ml", line 4, characters 4-6:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    []
+with
+    _
+The actual replacement has type
+    'e * 'f
+within context
+    let rec assoc (d, k, l) = (match k, d with 
+                               | _ -> [[...other program...]]
+                               |
+                                 [[...other pattern...]]
+                                 ->
+                                 [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1164.ml", line 4, characters 4-6:
+File "1164.ml", line 4, characters 10-11:
+File "1164.ml", line 5, characters 12-53:
+And modified the following location:
+File "1164.ml", line 5, characters 4-8:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    h :: t
+with
+    _
+The actual replacement has type
+    'g * 'h
+within context
+    let rec assoc (d, k, l) = (match k, d with 
+                               |[[...other pattern...]]->[[...other program...]]
+                               | _ -> [[...other program...]]) ;; 
+==============================

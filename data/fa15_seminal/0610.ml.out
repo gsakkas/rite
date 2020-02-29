@@ -1,0 +1,101 @@
+------------------------------------------------------------------
+File "0610.ml", line 21, characters 44-45:
+This expression has type int * 'a but is here used with type int list
+Relevant code: a
+------------------------------------------------------------------
+Triaged the following locations:
+File "0610.ml", line 22, characters 4-120:
+And modified the following location:
+File "0610.ml", line 21, characters 10-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (if value > 9 then value - 10 :: a else value :: a)
+with
+    [[...]]
+The actual replacement has type
+    int list
+within context
+    fun l1 l2 -> (let add (l1, l2) = let f a x = let (a1, a2) = a in (match x with 
+                                                                      | [] ->
+                                                                        (if a1 = 0
+                                                                            then
+                                                                            []
+                                                                            else
+                                                                            [a1])
+                                                                      |
+                                                                        (x1, x2)
+                                                                          :: t
+                                                                        ->
+                                                                        (let value =
+                                                                              (a1
+                                                                                    +
+                                                                                    x1)
+                                                                                + x2
+                                                                              in
+                                                                              [[...]])) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0610.ml", line 22, characters 4-120:
+And modified the following location:
+File "0610.ml", line 16, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    a
+with
+    a; [[...]]
+The actual replacement has type
+    'b * 'c
+within context
+    fun l1
+      l2 ->
+        (let add (l1, l2) = let f a x = let (a1, a2) = a; [[...]] in (match x with 
+                                                                      | [] ->
+                                                                        (if a1 = 0
+                                                                            then
+                                                                            []
+                                                                            else
+                                                                            [a1])
+                                                                      |
+                                                                        (x1, x2)
+                                                                          :: t
+                                                                        ->
+                                                                        (let value =
+                                                                              (a1
+                                                                                    +
+                                                                                    x1)
+                                                                                + x2
+                                                                              in
+                                                                              (if
+                                                                                  value
+                                                                                    >
+                                                                                    9
+                                                                                  then
+                                                                                  value
+                                                                                        -
+                                                                                        10
+                                                                                      ::
+                                                                                      a
+                                                                                  else
+                                                                                  value
+                                                                                      ::
+                                                                                      a))) in [[...other program...]] in (removeZero
+                (add (padZero l1 l2))))
+==============================
+Triaged the following locations:
+File "0610.ml", line 22, characters 4-120:
+And modified the following location:
+File "0610.ml", line 15, characters 4-349:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let f a x = let (a1, a2) = a in (match x with 
+                                     | [] -> (if a1 = 0 then [] else [a1])
+                                     | (x1, x2) :: t ->
+                                       (let value = (a1 + x1) + x2 in
+                                             (if value > 9 then value - 10 :: a else
+                                                 value ::
+                                                     a))) in let base = [] in
+      let args = (List.rev (List.combine l1 l2)) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'd
+==============================

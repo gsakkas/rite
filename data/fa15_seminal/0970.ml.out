@@ -1,0 +1,49 @@
+------------------------------------------------------------------
+File "0970.ml", line 26, characters 14-20:
+This expression is not a function, it cannot be applied
+Relevant code: buildY
+------------------------------------------------------------------
+File "0970.ml", line 26, characters 21-23:
+Try replacing
+    (buildY ())
+with
+    buildY
+of type
+    expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (buildX ())
+                              | buildY -> buildY
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage
+                                    ((eval (e1, x, y)), (eval (e2, x, y))))
+                              | Times (e1, e2) ->
+                                (buildTimes ((eval (e1, x, y)), (eval (e2, x, y))))
+                              | Thresh (a, b, a_less, b_less) ->
+                                (buildThresh
+                                    (a, b, a_less, (eval (b_less, x, y))))) ;; 
+==============================
+File "0970.ml", line 26, characters 14-20:
+Try replacing
+    buildY
+with
+    buildX
+of type
+    unit -> expr
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> (buildX ())
+                              | buildY -> (buildX ())
+                              | Sine e -> (buildSine (eval (e, x, y)))
+                              | Cosine e -> (buildCosine (eval (e, x, y)))
+                              | Average (e1, e2) ->
+                                (buildAverage
+                                    ((eval (e1, x, y)), (eval (e2, x, y))))
+                              | Times (e1, e2) ->
+                                (buildTimes ((eval (e1, x, y)), (eval (e2, x, y))))
+                              | Thresh (a, b, a_less, b_less) ->
+                                (buildThresh
+                                    (a, b, a_less, (eval (b_less, x, y))))) ;; 
+==============================

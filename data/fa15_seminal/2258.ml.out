@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "2258.ml", line 35, characters 47-53:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: bigAdd
+------------------------------------------------------------------
+File "2258.ml", line 35, characters 54-64:
+Try replacing
+    (bigAdd mulByDigit l  l1)
+with
+    (bigAdd l l1)
+of type
+    int * int list
+within context
+    let f a digit = (match a with 
+                     | (place, l) ->
+                       (place + 1,
+                             (bigAdd
+                               l
+                               l1))) in let base = 1, [] in
+      let args = (List.rev l2) in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

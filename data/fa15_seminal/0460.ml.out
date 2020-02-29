@@ -1,0 +1,45 @@
+------------------------------------------------------------------
+File "0460.ml", line 11, characters 18-19:
+This expression has type int -> int but is here used with type int
+Relevant code: x
+------------------------------------------------------------------
+File "0460.ml", line 10, characters 4-89:
+Try replacing
+    let rec go r = (if (isFPoint r) then r else (go (iterate (x, r)))) in
+      x, (isFPoint x)
+with
+    x, (isFPoint x)
+of type
+    int * bool
+within context
+    fun (f, b) ->
+      (let gs x =
+          let isFPoint x = (f x) - x < 0 in
+            let iterate (t, y) = (t y) in x, (isFPoint x)
+          in
+          (wwhile (gs, b)))
+==============================
+File "0460.ml", line 10, characters 58-59:
+Try replacing
+    x
+with
+    f
+of type
+    (int -> int) * int
+within context
+    fun r -> (if (isFPoint r) then r else (go (iterate (f, r))))
+==============================
+File "0460.ml", line 9, characters 24-25:
+Try replacing
+    t
+with
+    f
+of type
+    int -> int
+within context
+    fun x ->
+      (let isFPoint x = (f x) - x < 0 in
+          let iterate (t, y) = (f y) in
+          let rec go r = (if (isFPoint r) then r else (go (iterate (x, r)))) in
+          x, (isFPoint x))
+==============================

@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "2241.ml", line 28, characters 54-55:
+This expression has type int but is here used with type float
+Relevant code: 1
+------------------------------------------------------------------
+File "2241.ml", line 28, characters 54-55:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, y)))
+                              | TimesMod (w, t, u) ->
+                                (((eval (w, x, y)) *. (eval (t, x, y))) /.
+                                      (mod_float
+                                        ((eval (w, x, y)) *. (eval (t, x, y))) (eval (u, x, y))))
+                              | Times (t, u) ->
+                                ((eval (t, x, y)) *. (eval (u, x, y)))
+                              | Average (t, u) ->
+                                (((eval (t, x, y)) +. (eval (u, x, y))) /. 2.0)
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | Tan t ->
+                                (mod_float
+                                    (tan (pi *. (eval (t, x, y)))) (1; [[...]]))
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================
+File "2241.ml", line 28, characters 13-22:
+Try replacing
+    mod_float
+with
+    mod_float; [[...]]
+of type
+    float -> int -> float
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | Thresh (w, t, u, z) ->
+                                (if (eval (w, x, y)) < (eval (t, x, y)) then
+                                    (eval (u, x, y))
+                                    else
+                                    (eval (z, x, y)))
+                              | TimesMod (w, t, u) ->
+                                (((eval (w, x, y)) *. (eval (t, x, y))) /.
+                                      (mod_float
+                                        ((eval (w, x, y)) *. (eval (t, x, y))) (eval (u, x, y))))
+                              | Times (t, u) ->
+                                ((eval (t, x, y)) *. (eval (u, x, y)))
+                              | Average (t, u) ->
+                                (((eval (t, x, y)) +. (eval (u, x, y))) /. 2.0)
+                              | Cosine t -> (cos (pi *. (eval (t, x, y))))
+                              | Sine t -> (sin (pi *. (eval (t, x, y))))
+                              | Tan t ->
+                                ((mod_float; [[...]])
+                                    (tan (pi *. (eval (t, x, y)))) 1)
+                              | VarX -> x
+                              | VarY -> y) ;; 
+==============================

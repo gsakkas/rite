@@ -1,0 +1,191 @@
+------------------------------------------------------------------
+File "2106.ml", line 30, characters 53-64:
+This expression has type expr but is here used with type int
+Relevant code: (buildY ())
+------------------------------------------------------------------
+Triaged the following locations:
+File "2106.ml", line 31, characters 12-67:
+And modified the following location:
+File "2106.ml", line 30, characters 51-52:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    expr -> expr -> expr
+within context
+    let rec build (rand, depth) = (if depth = 0 then (match (rand (1, 2)) with 
+                                                      | 1 -> (buildX ())
+                                                      | 2 ->
+                                                        (buildY
+                                                            ())) else (match
+                                                                       (rand (1, 5))
+                                                                       with
+                                                                       
+                                                                       | 1 ->
+                                                                         (buildSine
+                                                                             ((build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 *;
+                                                                                 [[...]]
+                                                                                 (buildY
+                                                                                   ())))
+                                                                       | 2 ->
+                                                                         [[...other program...]]
+                                                                       | 3 ->
+                                                                         (buildAverage
+                                                                             ((build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 ,
+                                                                                 (build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))))
+                                                                       | 4 ->
+                                                                         (buildTimes
+                                                                             ((build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 ,
+                                                                                 (build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))))
+                                                                       | 5 ->
+                                                                         (buildThresh
+                                                                             ((build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 ,
+                                                                                 (build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 ,
+                                                                                 (build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 ,
+                                                                                 (build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1)))))) ;; 
+==============================
+Triaged the following locations:
+File "2106.ml", line 30, characters 12-65:
+And modified the following location:
+File "2106.ml", line 31, characters 53-54:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    *
+with
+    *; [[...]]
+The actual replacement has type
+    expr -> expr -> expr
+within context
+    let rec build (rand, depth) = (if depth = 0 then (match (rand (1, 2)) with 
+                                                      | 1 -> (buildX ())
+                                                      | 2 ->
+                                                        (buildY
+                                                            ())) else (match
+                                                                       (rand (1, 5))
+                                                                       with
+                                                                       
+                                                                       | 1 ->
+                                                                         [[...other program...]]
+                                                                       | 2 ->
+                                                                         (buildCosine
+                                                                             ((build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 *;
+                                                                                 [[...]]
+                                                                                 (buildX
+                                                                                   ())))
+                                                                       | 3 ->
+                                                                         (buildAverage
+                                                                             ((build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 ,
+                                                                                 (build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))))
+                                                                       | 4 ->
+                                                                         (buildTimes
+                                                                             ((build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 ,
+                                                                                 (build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))))
+                                                                       | 5 ->
+                                                                         (buildThresh
+                                                                             ((build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 ,
+                                                                                 (build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 ,
+                                                                                 (build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1))
+                                                                                 ,
+                                                                                 (build
+                                                                                   (rand
+                                                                                       ,
+                                                                                       depth
+                                                                                         -
+                                                                                         1)))))) ;; 
+==============================

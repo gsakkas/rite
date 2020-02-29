@@ -1,0 +1,124 @@
+------------------------------------------------------------------
+File "3540.ml", line 20, characters 16-20:
+This expression is not a function, it cannot be applied
+Relevant code: rand
+------------------------------------------------------------------
+File "3540.ml", line 20, characters 16-20:
+Try replacing
+    rand
+with
+    rand; [[...]]
+of type
+    'l * 'm -> 'n
+within context
+    let rec build (rand, depth) = (match rand with 
+                                   | (a, b) ->
+                                     (let rdm = ((rand; [[...]]) (a, b)) in
+                                           (match rdm with 
+                                            | 0 -> (buildY ())
+                                            | 1 -> (buildX ())
+                                            | 2 ->
+                                              (Cosine (build (rand, depth - 1)))
+                                            | 3 -> (Sine (build (rand, depth - 1)))
+                                            | 4 ->
+                                              (Average
+                                                  (build (rand, depth - 1)),
+                                                    (build (rand, depth - 1))
+                                                  )
+                                            | 5 ->
+                                              (Times
+                                                  (build (rand, depth - 1)),
+                                                    (build (rand, depth - 1))
+                                                  )
+                                            | 6 ->
+                                              (Thresh
+                                                  (build (rand, depth - 1)),
+                                                    (build (rand, depth - 1)),
+                                                    (build (rand, depth - 1)),
+                                                    (build (rand, depth - 1))
+                                                  )))) ;; 
+==============================
+File "3540.ml", line 18, characters 8-12:
+Try replacing
+    rand
+with
+    rand; [[...]]
+of type
+    'u * 'v
+within context
+    let rec build (rand, depth) = (match (rand; [[...]]) with 
+                                   | (a, b) ->
+                                     (let rdm = (rand (a, b)) in (match rdm with 
+                                                                  | 0 -> (buildY ())
+                                                                  | 1 -> (buildX ())
+                                                                  | 2 ->
+                                                                    (Cosine
+                                                                        (build
+                                                                          (rand,
+                                                                              depth
+                                                                                -
+                                                                                1))
+                                                                        )
+                                                                  | 3 ->
+                                                                    (Sine
+                                                                        (build
+                                                                          (rand,
+                                                                              depth
+                                                                                -
+                                                                                1))
+                                                                        )
+                                                                  | 4 ->
+                                                                    (Average
+                                                                        (build
+                                                                            (rand,
+                                                                                depth
+                                                                                  -
+                                                                                  1))
+                                                                          ,
+                                                                          (build
+                                                                            (rand,
+                                                                                depth
+                                                                                  -
+                                                                                  1))
+                                                                        )
+                                                                  | 5 ->
+                                                                    (Times
+                                                                        (build
+                                                                            (rand,
+                                                                                depth
+                                                                                  -
+                                                                                  1))
+                                                                          ,
+                                                                          (build
+                                                                            (rand,
+                                                                                depth
+                                                                                  -
+                                                                                  1))
+                                                                        )
+                                                                  | 6 ->
+                                                                    (Thresh
+                                                                        (build
+                                                                            (rand,
+                                                                                depth
+                                                                                  -
+                                                                                  1))
+                                                                          ,
+                                                                          (build
+                                                                            (rand,
+                                                                                depth
+                                                                                  -
+                                                                                  1))
+                                                                          ,
+                                                                          (build
+                                                                            (rand,
+                                                                                depth
+                                                                                  -
+                                                                                  1))
+                                                                          ,
+                                                                          (build
+                                                                            (rand,
+                                                                                depth
+                                                                                  -
+                                                                                  1))
+                                                                        )))) ;; 
+==============================

@@ -1,0 +1,140 @@
+------------------------------------------------------------------
+File "1998.ml", line 29, characters 13-14:
+This expression has type int but is here used with type float
+Relevant code: 1
+------------------------------------------------------------------
+File "1998.ml", line 29, characters 9-10:
+Try replacing
+    d
+with
+    d; [[...]]
+of type
+    int
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine n -> (sin (pi *. (eval (n, x, y))))
+                      | Cosine n -> (cos (pi *. (eval (n, x, y))))
+                      | Average (m, n) ->
+                        (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+                      | Times (m, n) -> ((eval (m, x, y)) *. (eval (n, x, y)))
+                      | Thresh (m, n, o, p) ->
+                        (if (eval (m, x, y)) < (eval (n, x, y)) then
+                            (eval (o, x, y))
+                            else
+                            (eval (p, x, y)))
+                      | Power (m, n) ->
+                        (let d = (eval (m, x, y)) in
+                              (if (d; [[...]]) > 1 then (eval (m, x, y)) else
+                                  (eval (m, x, y)) ** (eval (n, x, y)))))
+==============================
+File "1998.ml", line 29, characters 13-14:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    float
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine n -> (sin (pi *. (eval (n, x, y))))
+                      | Cosine n -> (cos (pi *. (eval (n, x, y))))
+                      | Average (m, n) ->
+                        (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+                      | Times (m, n) -> ((eval (m, x, y)) *. (eval (n, x, y)))
+                      | Thresh (m, n, o, p) ->
+                        (if (eval (m, x, y)) < (eval (n, x, y)) then
+                            (eval (o, x, y))
+                            else
+                            (eval (p, x, y)))
+                      | Power (m, n) ->
+                        (let d = (eval (m, x, y)) in
+                              (if d > (1; [[...]]) then (eval (m, x, y)) else
+                                  (eval (m, x, y)) ** (eval (n, x, y)))))
+==============================
+File "1998.ml", line 29, characters 11-12:
+Try replacing
+    >
+with
+    >; [[...]]
+of type
+    float -> int -> bool
+within context
+    fun (e, x, y) -> (match e with 
+                      | VarX -> x
+                      | VarY -> y
+                      | Sine n -> (sin (pi *. (eval (n, x, y))))
+                      | Cosine n -> (cos (pi *. (eval (n, x, y))))
+                      | Average (m, n) ->
+                        (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+                      | Times (m, n) -> ((eval (m, x, y)) *. (eval (n, x, y)))
+                      | Thresh (m, n, o, p) ->
+                        (if (eval (m, x, y)) < (eval (n, x, y)) then
+                            (eval (o, x, y))
+                            else
+                            (eval (p, x, y)))
+                      | Power (m, n) ->
+                        (let d = (eval (m, x, y)) in
+                              (if (d >; [[...]] 1) then (eval (m, x, y)) else
+                                  (eval (m, x, y)) ** (eval (n, x, y)))))
+==============================
+File "1998.ml", line 28, characters 14-28:
+Try replacing
+    (eval (m, x, y))
+with
+    (eval (m, x, y)); [[...]]
+of type
+    'a
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine n -> (sin (pi *. (eval (n, x, y))))
+                              | Cosine n -> (cos (pi *. (eval (n, x, y))))
+                              | Average (m, n) ->
+                                (((eval (m, x, y)) +. (eval (n, x, y))) /. 2.0)
+                              | Times (m, n) ->
+                                ((eval (m, x, y)) *. (eval (n, x, y)))
+                              | Thresh (m, n, o, p) ->
+                                (if (eval (m, x, y)) < (eval (n, x, y)) then
+                                    (eval (o, x, y))
+                                    else
+                                    (eval (p, x, y)))
+                              | Power (m, n) ->
+                                (let d = (eval (m, x, y)); [[...]] in
+                                      (if d > 1 then (eval (m, x, y)) else
+                                          (eval (m, x, y))
+                                            ** (eval (n, x, y))))) ;; 
+==============================
+Triaged the following locations:
+File "1998.ml", line 19, characters 14-42:
+File "1998.ml", line 20, characters 16-44:
+File "1998.ml", line 21, characters 21-66:
+File "1998.ml", line 22, characters 19-55:
+File "1998.ml", line 24, characters 6-96:
+And modified the following location:
+File "1998.ml", line 29, characters 57-59:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    **
+with
+    **; [[...]]
+The actual replacement has type
+    int -> int -> int
+within context
+    let rec eval (e, x, y) = (match e with 
+                              | VarX -> x
+                              | VarY -> y
+                              | Sine n -> [[...other program...]]
+                              | Cosine n -> [[...other program...]]
+                              | Average (m, n) -> [[...other program...]]
+                              | Times (m, n) -> [[...other program...]]
+                              | Thresh (m, n, o, p) -> [[...other program...]]
+                              | Power (m, n) ->
+                                (let d = (eval (m, x, y)) in
+                                      (if d > 1 then (eval (m, x, y)) else
+                                          ((eval (m, x, y))
+                                              **; [[...]] (eval (n, x, y)))))) ;; 
+==============================

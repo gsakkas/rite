@@ -1,0 +1,78 @@
+------------------------------------------------------------------
+File "1759.ml", line 42, characters 13-188:
+This expression has type expr * expr * expr * expr * expr
+but is here used with type expr * expr * expr * expr
+Relevant code: ((build (rand, (depth - 1))), (build (rand, (depth - 1))),
+               (build (rand, (depth - 1))), (build (rand, (depth - 1))),
+               (build (rand, (depth - 1))))
+------------------------------------------------------------------
+File "1759.ml", line 42, characters 13-188:
+Try replacing
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+of type
+    expr * expr * expr *
+    expr
+==============================
+File "1759.ml", line 42, characters 13-188:
+Try replacing
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+of type
+    expr * expr * expr *
+    expr
+==============================
+File "1759.ml", line 42, characters 13-188:
+Try replacing
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+of type
+    expr * expr * expr *
+    expr
+==============================
+File "1759.ml", line 42, characters 13-188:
+Try replacing
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+of type
+    expr * expr * expr *
+    expr
+==============================
+File "1759.ml", line 42, characters 13-188:
+Try replacing
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+with
+    (build (rand, depth - 1)),
+      (build (rand, depth - 1)),
+      (build (rand, depth - 1)), (build (rand, depth - 1))
+of type
+    expr * expr * expr *
+    expr
+==============================

@@ -1,0 +1,54 @@
+------------------------------------------------------------------
+File "2048.ml", line 5, characters 61-62:
+This expression has type 'a -> 'b -> ('a -> 'c) -> 'c
+but is here used with type 'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "2048.ml", line 5, characters 8-13:
+Try replacing
+    fun a x x -> (x a)
+with
+    fun x x a -> (x a)
+of type
+    'd -> ('e -> 'f) -> 'e -> 'f
+within context
+    let pipe fs =
+    let f x x a = (x a) in let base = identity in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2048.ml", line 5, characters 46-60:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('g -> 'h -> ('g -> 'i) -> 'i) ->
+    ('j -> 'j) -> (('g -> 'h -> ('g -> 'i) -> 'i) -> 'k) -> 'k
+within context
+    let pipe fs = let f a x x = (x a) in let base = identity in (f f base  fs) ;; 
+==============================
+File "2048.ml", line 5, characters 46-60:
+Try replacing
+    List.fold_left
+with
+    identity
+of type
+    (('l -> 'l) -> 'm -> (('l -> 'l) -> 'n) -> 'n) ->
+    ('l -> 'l) -> 'm -> (('l -> 'l) -> 'n) -> 'n
+within context
+    let pipe fs =
+    let f a x x = (x a) in let base = identity in (identity f base  fs)
+    ;; 
+==============================
+File "2048.ml", line 5, characters 46-60:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('o -> 'o) -> 'p -> (('o -> 'o) -> 'q) -> 'q) ->
+    ('o -> 'o) -> 'p -> (('o -> 'o) -> 'q) -> 'q
+within context
+    let pipe fs = let f a x x = (x a) in let base = identity in (base f base  fs)
+    ;; 
+==============================

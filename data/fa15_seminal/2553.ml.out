@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2553.ml", line 7, characters 42-45:
+This expression has type int list but is here used with type 'a list list
+Relevant code: pad
+------------------------------------------------------------------
+File "2553.ml", line 7, characters 35-46:
+Try replacing
+    l1 :: pad
+with
+    [[...]]
+of type
+    int list list
+within context
+    fun l2 ->
+      (let sizDif = (List.length l1) - (List.length l2) in
+          (if sizDif > 0 then (let pad = (clone 0 sizDif) in [[...]] :: l2) else
+              (let pad = (clone 0 (( ~- ) sizDif)) in pad :: l1 :: l2)))
+==============================

@@ -1,0 +1,22 @@
+------------------------------------------------------------------
+File "2527.ml", line 17, characters 28-45:
+This expression has type int list -> int list * int list
+but is here used with type 'a list
+Relevant code: (padZero (l1 l2))
+------------------------------------------------------------------
+Triaged the following locations:
+File "2527.ml", line 18, characters 4-51:
+And modified the following location:
+File "2527.ml", line 17, characters 4-100:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    let args = (List.combine (padZero (l1 l2))) in
+      let (_, res) = (List.fold_left f base  args) in res
+with
+    [[...other program...]]
+The actual replacement has type
+    'b
+within context
+    let add (l1, l2) = let f a x = a + x in let base = 0 in [[...other program...]]
+      in
+      (removeZero (add (padZero l1 l2)))
+==============================

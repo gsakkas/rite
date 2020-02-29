@@ -1,0 +1,19 @@
+------------------------------------------------------------------
+File "2050.ml", line 7, characters 58-59:
+This expression has type 'a list but is here used with type 'a list list
+Relevant code: l
+------------------------------------------------------------------
+File "2050.ml", line 7, characters 36-50:
+Try replacing
+    List.fold_left
+with
+    sep
+of type
+    ('b list -> string list -> string list) -> 'c list -> 'b list -> string
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t ->
+       (let f a x = (sepConcat sep a) :: x in
+             let base = [] in let l = t in (sep f base  l)))
+==============================

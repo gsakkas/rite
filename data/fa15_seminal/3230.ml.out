@@ -1,0 +1,31 @@
+------------------------------------------------------------------
+File "3230.ml", line 6, characters 65-67:
+This expression has type int but is here used with type int list
+Relevant code: x'
+------------------------------------------------------------------
+File "3230.ml", line 6, characters 65-67:
+Try replacing
+    x'
+with
+    l
+of type
+    int list
+within context
+    (match l with 
+     | [] -> []
+     | x :: x' :: x'' ->
+       [(x * i) / 10] @ ([(mod (x * i) 10) + x'] @ ((mulByDigit i l) @ x'')))
+==============================
+File "3230.ml", line 6, characters 65-67:
+Try replacing
+    x'
+with
+    x''
+of type
+    int list
+within context
+    (match l with 
+     | [] -> []
+     | x :: x' :: x'' ->
+       [(x * i) / 10] @ ([(mod (x * i) 10) + x'] @ ((mulByDigit i x'') @ x'')))
+==============================

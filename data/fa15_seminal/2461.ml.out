@@ -1,0 +1,74 @@
+------------------------------------------------------------------
+File "2461.ml", line 3, characters 64-65:
+This expression has type 'a -> 'b -> 'c -> ('a -> 'd) -> 'd
+but is here used with type 'a -> 'b -> 'a
+Relevant code: f
+------------------------------------------------------------------
+File "2461.ml", line 3, characters 8-11:
+Try replacing
+    fun a x combine x -> (x a)
+with
+    fun x a combine x -> (x a)
+of type
+    'e -> 'f -> 'g -> ('f -> 'h) -> 'h
+within context
+    let pipe fs =
+    let f x a combine x = (x a) in let base x = x in (List.fold_left f base  fs)
+    ;; 
+==============================
+File "2461.ml", line 3, characters 49-65:
+Try replacing
+    (List.fold_left f base  fs)
+with
+    (List.fold_left (f base fs))
+of type
+    'i -> (('j -> 'j) -> 'i) list -> 'i
+within context
+    let pipe fs =
+    let f a x combine x = (x a) in let base x = x in (List.fold_left (f base fs))
+    ;; 
+==============================
+File "2461.ml", line 3, characters 49-63:
+Try replacing
+    List.fold_left
+with
+    f
+of type
+    ('k -> 'l -> 'm -> ('k -> 'n) -> 'n) ->
+    ('o -> 'o) -> 'p -> (('k -> 'l -> 'm -> ('k -> 'n) -> 'n) -> 'q) -> 'q
+within context
+    let pipe fs = let f a x combine x = (x a) in let base x = x in (f f base  fs)
+    ;; 
+==============================
+File "2461.ml", line 3, characters 49-63:
+Try replacing
+    List.fold_left
+with
+    base
+of type
+    (('r -> 'r) -> 's -> 't -> (('r -> 'r) -> 'u) -> 'u) ->
+    ('r -> 'r) -> 's -> 't -> (('r -> 'r) -> 'u) -> 'u
+within context
+    let pipe fs = let f a x combine x = (x a) in let base x = x in (base f base  fs)
+    ;; 
+==============================
+File "2461.ml", line 3, characters 26-27:
+Try replacing
+    a
+with
+    fs
+of type
+    'v list
+within context
+    fun a x combine x -> (x fs)
+==============================
+File "2461.ml", line 3, characters 26-27:
+Try replacing
+    a
+with
+    List.fold_left
+of type
+    ('w -> 'x -> 'w) -> 'w -> 'x list -> 'w
+within context
+    fun a x combine x -> (x List.fold_left)
+==============================

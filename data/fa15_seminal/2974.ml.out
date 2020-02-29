@@ -1,0 +1,24 @@
+------------------------------------------------------------------
+File "2974.ml", line 6, characters 53-67:
+This expression has type string but is here used with type string list
+Relevant code: a ^ (sep ^ hd)
+------------------------------------------------------------------
+File "2974.ml", line 6, characters 24-25:
+Try replacing
+    x
+with
+    t
+of type
+    string list
+within context
+    (match sl with 
+     | [] -> ""
+     | h :: t -> (let f a x = (match t with 
+                               | [] -> x
+                               | hd :: tl ->
+                                 a ^
+                                     (sep
+                                         ^
+                                         hd)) in let base = h in
+             let l = t in (List.fold_left f base  l)))
+==============================

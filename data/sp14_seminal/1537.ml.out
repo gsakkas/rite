@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "1537.ml", line 3, characters 14-21:
+This expression has type int -> int but is here used with type int
+Relevant code: ((+) a)
+------------------------------------------------------------------
+File "1537.ml", line 3, characters 20-20:
+Try replacing
+    ( + ) a
+with
+    [[...]] + a
+of type
+    int
+within context
+    fun xs ->
+      (let f a x = ([[...]] + a) * a in
+          let base = (f 2 xs) in (List.fold_left f base  xs))
+==============================
+File "1537.ml", line 3, characters 21-21:
+Try replacing
+    ( + ) a
+with
+    a + [[...]]
+of type
+    int
+within context
+    fun xs ->
+      (let f a x = (a + [[...]]) * a in
+          let base = (f 2 xs) in (List.fold_left f base  xs))
+==============================
+File "1537.ml", line 3, characters 22-23:
+Try replacing
+    *
+with
+    *; [[...]]
+of type
+    (int -> int) -> int -> 'a
+within context
+    fun xs ->
+      (let f a x = (( + ) a *; [[...]] a) in
+          let base = (f 2 xs) in (List.fold_left f base  xs))
+==============================

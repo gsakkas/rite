@@ -1,0 +1,26 @@
+------------------------------------------------------------------
+File "0086.ml", line 10, characters 32-39:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: sumList
+------------------------------------------------------------------
+File "0086.ml", line 10, characters 40-51:
+Try replacing
+    (sumList digitsOfInt n)
+with
+    (sumList n)
+of type
+    int
+within context
+    let rec additivePersistence n = (sumList n) ;; 
+==============================
+File "0086.ml", line 10, characters 32-51:
+Try replacing
+    (sumList digitsOfInt n)
+with
+    (sumList (digitsOfInt n))
+of type
+    int
+within context
+    let rec additivePersistence n = (sumList (digitsOfInt n)) ;; 
+==============================

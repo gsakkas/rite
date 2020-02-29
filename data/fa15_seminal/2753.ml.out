@@ -1,0 +1,65 @@
+------------------------------------------------------------------
+File "2753.ml", line 7, characters 25-26:
+This expression has type 'a list but is here used with type int
+Relevant code: t
+------------------------------------------------------------------
+File "2753.ml", line 7, characters 13-24:
+Try replacing
+    (remainder i t)
+with
+    (remainder (i t))
+of type
+    int -> int
+within context
+    fun i l -> (match (List.rev l) with 
+                | [] -> []
+                | h :: t -> [(remainder (i t))] @ (mulByDigit i t))
+==============================
+File "2753.ml", line 7, characters 13-22:
+Try replacing
+    remainder
+with
+    @
+of type
+    'b list -> 'b list -> 'b list
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t -> [(@ i t)] @ (mulByDigit i t))
+==============================
+File "2753.ml", line 7, characters 13-22:
+Try replacing
+    remainder
+with
+    >
+of type
+    'c list -> 'c list -> bool
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t -> [(> i t)] @ (mulByDigit i t))
+==============================
+File "2753.ml", line 7, characters 25-26:
+Try replacing
+    t
+with
+    h
+of type
+    int
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t -> [(remainder i h)] @ (mulByDigit i t))
+==============================
+File "2753.ml", line 7, characters 25-26:
+Try replacing
+    t
+with
+    i
+of type
+    int
+within context
+    fun l -> (match (List.rev l) with 
+              | [] -> []
+              | h :: t -> [(remainder i i)] @ (mulByDigit i t))
+==============================

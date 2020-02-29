@@ -1,0 +1,32 @@
+------------------------------------------------------------------
+File "2086.ml", line 28, characters 29-37:
+This function is applied to too many arguments,
+maybe you forgot a `;'
+Relevant code: List.rev
+------------------------------------------------------------------
+Triaged the following locations:
+File "2086.ml", line 28, characters 15-27:
+And modified the following location:
+File "2086.ml", line 28, characters 29-37:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    List.combine
+If you ignore other surrounding code, try replacing
+    List.rev
+with
+    List.rev; [[...]]
+The actual replacement has type
+    'f -> ('g list -> 'g list) -> 'h -> 'i
+within context
+    fun (l1, l2) ->
+      (let f a x =
+          let (val1, val2) = x in
+            let (lastCarry, lastTupleSum) = a in
+            let tupleSum = (val1 + val2) + lastCarry in
+            let newCarry = tupleSum / 10 in
+            let nextDigit = (mod tupleSum 10) in newCarry, nextDigit :: lastTupleSum
+          in
+          let base = 0, [] in
+          let args = ((List.combine; [[...]]) ((List.rev; [[...]]) l1 List.rev  l2))
+          in
+          let (_, res) = (List.fold_left f base  args) in res)
+==============================

@@ -1,0 +1,23 @@
+------------------------------------------------------------------
+File "3013.ml", line 25, characters 40-54:
+This expression has type int -> 'a but is here used with type int
+Relevant code: (mulByDigit i)
+------------------------------------------------------------------
+Triaged the following locations:
+File "3013.ml", line 25, characters 55-56:
+And modified the following location:
+File "3013.ml", line 25, characters 60-72:
+Your code has several type errors.  The following subexpressions are type-correct on their own, but do not fit with the rest of the program:
+    -
+If you ignore other surrounding code, try replacing
+    (1 (bigAdd l l))
+with
+    1
+The actual replacement has type
+    int
+within context
+    let rec mulByDigit i l = (match i with 
+                              | 0 -> 0
+                              | 1 -> l
+                              | x -> ((mulByDigit i) -; [[...]] 1)) ;; 
+==============================

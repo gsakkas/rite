@@ -1,0 +1,15 @@
+------------------------------------------------------------------
+File "2458.ml", line 9, characters 44-46:
+This expression is not a function, it cannot be applied
+Relevant code: ""
+------------------------------------------------------------------
+File "2458.ml", line 9, characters 47-48:
+Try replacing
+    (( "" ) l)
+with
+    ""
+of type
+    string
+within context
+    let stringOfList f l = (List.map (sepConcat "") l) ;; 
+==============================

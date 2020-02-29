@@ -1,0 +1,20 @@
+------------------------------------------------------------------
+File "1961.ml", line 9, characters 35-36:
+This expression has type 'a list * 'a list -> 'b * 'c -> 'a list
+but is here used with type 'a list * 'a list -> 'b * 'c -> 'a list * 'a list
+Relevant code: f
+------------------------------------------------------------------
+File "1961.ml", line 9, characters 20-34:
+Try replacing
+    List.fold_left
+with
+    List.fold_left; [[...]]
+of type
+    ('d list * 'd list -> 'e * 'f -> 'd list) ->
+    'g list -> ('h * 'i) list -> 'j * 'k
+within context
+    let f a x = let (x1, x2) = x in let (carry, res) = a in carry @ res in
+      let base = [] in
+      let args = (List.rev (helper l1 l2)) in
+      let (carry, res) = ((List.fold_left; [[...]]) f base  args) in res
+==============================

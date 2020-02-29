@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "2186.ml", line 30, characters 53-61:
+This expression is not a function, it cannot be applied
+Relevant code: (expr a)
+------------------------------------------------------------------
+File "2186.ml", line 30, characters 62-65:
+Try replacing
+    ((expr a) ")")
+with
+    (expr a)
+of type
+    string
+within context
+    let expr = exprToString in (match e with 
+                                | VarX -> "x"
+                                | VarY -> "y"
+                                | Sine a -> "sin(pi*" ^ ((expr a) ^ ")")
+                                | Cosine a -> "cos(pi*" ^ ((expr a) ^ ")")
+                                | Average (a, b) ->
+                                  "((" ^ ((expr a) ^ ("+" ^ ((expr b) ^ ")/2)")))
+                                | Times (a, b) -> (expr a) ^ ("*" ^ (expr b))
+                                | Thresh (a, b, c, d) ->
+                                  "(" ^
+                                      ((expr a) ^
+                                          ("<" ^
+                                              ((expr b) ^
+                                                  ("?" ^
+                                                      ((expr c) ^
+                                                          (":" ^
+                                                              ((expr d) ^ ")")))))))
+                                | Poly (a, b, c) ->
+                                  "(" ^
+                                      ((expr a) ^
+                                          ("*" ^
+                                              ((expr a) ^
+                                                  ("+" ^
+                                                      ((expr b) ^
+                                                          ("*" ^
+                                                              ((expr c) ^ ")")))))))
+                                | Tan a ->
+                                  "sin(pi*" ^ ((expr a) ^ (")/cos(pi*" ^ (expr a))))
+==============================

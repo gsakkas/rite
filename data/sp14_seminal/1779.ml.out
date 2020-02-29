@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1779.ml", line 16, characters 18-19:
+This expression has type 'a list but is here used with type 'b * int list
+Relevant code: l
+------------------------------------------------------------------
+File "1779.ml", line 14, characters 70-71:
+Try replacing
+    l
+with
+    l1
+of type
+    int list
+within context
+    let args =
+      (List.combine (List.rev 0 :: l1) (List.rev (clone (List.length l1) i)))
+      in
+      let (_, res) = (List.fold_left f base  args) in res
+==============================

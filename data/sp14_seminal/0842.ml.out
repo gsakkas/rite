@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0842.ml", line 8, characters 29-39:
+This expression has type int but is here used with type 'a list
+Relevant code: (n mod 10)
+------------------------------------------------------------------
+File "0842.ml", line 8, characters 17-28:
+Try replacing
+    listReverse
+with
+    /
+of type
+    int -> int -> int
+within context
+    let rec digitsOfInt n =
+    (if n > 0 then (/ (mod n 10)) :: (digitsOfInt (n / 10)) else [])
+    ;; 
+==============================
+File "0842.ml", line 8, characters 17-28:
+Try replacing
+    listReverse
+with
+    >
+of type
+    int -> int -> bool
+within context
+    let rec digitsOfInt n =
+    (if n > 0 then (> (mod n 10)) :: (digitsOfInt (n / 10)) else [])
+    ;; 
+==============================

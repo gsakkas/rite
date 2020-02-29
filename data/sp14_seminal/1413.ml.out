@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "1413.ml", line 3, characters 2-75:
+This expression has type 'a list but is here used with type 'a
+Relevant code: if n < 0 then [] else (match n mod 10 with | _ -> [digitsOfInt (n / 10)])
+------------------------------------------------------------------
+File "1413.ml", line 3, characters 53-64:
+Try replacing
+    digitsOfInt
+with
+    mod
+of type
+    int -> int -> int
+within context
+    fun n -> (if n < 0 then [] else (match (mod n 10) with 
+                                     | _ -> [(mod (n / 10))]))
+==============================
+File "1413.ml", line 3, characters 53-64:
+Try replacing
+    digitsOfInt
+with
+    /
+of type
+    int -> int -> int
+within context
+    fun n -> (if n < 0 then [] else (match (mod n 10) with 
+                                     | _ -> [(/ (n / 10))]))
+==============================
+File "1413.ml", line 3, characters 53-64:
+Try replacing
+    digitsOfInt
+with
+    <
+of type
+    int -> int -> bool
+within context
+    fun n -> (if n < 0 then [] else (match (mod n 10) with 
+                                     | _ -> [(< (n / 10))]))
+==============================

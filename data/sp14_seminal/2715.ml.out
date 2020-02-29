@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "2715.ml", line 3, characters 41-51:
+This expression has type int but is here used with type 'a list
+Relevant code: (n mod 10)
+------------------------------------------------------------------
+File "2715.ml", line 3, characters 41-51:
+Try replacing
+    (mod n 10)
+with
+    (mod n 10); [[...]]
+of type
+    'b list
+within context
+    let rec digitsOfInt n =
+    (if n > 0 then (digitsOfInt (n / 10)) @ ((mod n 10); [[...]]) else [])
+    ;; 
+==============================
+File "2715.ml", line 3, characters 39-40:
+Try replacing
+    @
+with
+    @; [[...]]
+of type
+    'c list -> int -> 'c list
+within context
+    let rec digitsOfInt n =
+    (if n > 0 then ((digitsOfInt (n / 10)) @; [[...]] (mod n 10)) else [])
+    ;; 
+==============================

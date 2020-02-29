@@ -1,0 +1,38 @@
+------------------------------------------------------------------
+File "1333.ml", line 27, characters 54-60:
+This expression has type unit -> expr but is here used with type expr
+Relevant code: buildY
+------------------------------------------------------------------
+Triaged the following locations:
+File "1333.ml", line 29, characters 4-548:
+And modified the following location:
+File "1333.ml", line 27, characters 54-60:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    buildY
+with
+    buildY; [[...]]
+The actual replacement has type
+    expr
+within context
+    let rec build (rand, depth) = (if depth = 0 then (match (rand (0, 1)) with 
+                                                      | 0 -> (buildX ())
+                                                      | 1 ->
+                                                        (buildY;
+                                                            [[...]])) else [[...other program...]]) ;; 
+==============================
+Triaged the following locations:
+File "1333.ml", line 29, characters 4-548:
+And modified the following location:
+File "1333.ml", line 27, characters 37-46:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (buildX ())
+with
+    (buildX ()); [[...]]
+The actual replacement has type
+    unit -> expr
+within context
+    let rec build (rand, depth) = (if depth = 0 then (match (rand (0, 1)) with 
+                                                      | 0 -> ((buildX ()); [[...]])
+                                                      | 1 ->
+                                                        buildY) else [[...other program...]]) ;; 
+==============================

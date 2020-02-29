@@ -1,0 +1,17 @@
+------------------------------------------------------------------
+File "1489.ml", line 3, characters 35-52:
+This expression has type int but is here used with type 'a list
+Relevant code: ((clone x n) - 1)
+------------------------------------------------------------------
+File "1489.ml", line 3, characters 30-52:
+Try replacing
+    x :: (clone x n) - 1
+with
+    [[...]]
+of type
+    'b
+within context
+    let rec clone x n = (match n > 0 with 
+                         | true -> [[...]]
+                         | false -> x) ;; 
+==============================

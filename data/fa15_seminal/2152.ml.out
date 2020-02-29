@@ -1,0 +1,513 @@
+------------------------------------------------------------------
+File "2152.ml", line 36, characters 6-140:
+This expression has type string but is here used with type float
+Relevant code: (exprToString v) ^
+        ("<" ^
+           ((exprToString w) ^
+              ("?" ^ ((exprToString x) ^ (":" ^ (exprToString y))))))
+------------------------------------------------------------------
+File "2152.ml", line 36, characters 6-140:
+Try replacing
+    (exprToString v) ^
+      ("<" ^
+          ((exprToString w) ^
+              ("?" ^ ((exprToString x) ^ (":" ^ (exprToString y))))))
+with
+    (exprToString v) ^
+      ("<" ^
+          ((exprToString w) ^
+              ("?" ^ ((exprToString x) ^ (":" ^ (exprToString y))))));
+    [[...]]
+of type
+    float
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 36, characters 7-19:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString
+The actual replacement has type
+    expr -> string
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString v) ^
+                                                      ("<" ^
+                                                          ((exprToString w) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 36, characters 7-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString v)
+with
+    (exprToString (v))
+The actual replacement has type
+    string
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString (v)) ^
+                                                      ("<" ^
+                                                          ((exprToString w) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 36, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    v
+with
+    w
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString w) ^
+                                                      ("<" ^
+                                                          ((exprToString w) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 36, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    v
+with
+    v
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString v) ^
+                                                      ("<" ^
+                                                          ((exprToString w) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 36, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    v
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString e) ^
+                                                      ("<" ^
+                                                          ((exprToString w) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 36, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    v
+with
+    y
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString y) ^
+                                                      ("<" ^
+                                                          ((exprToString w) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 36, characters 20-21:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    v
+with
+    x
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString x) ^
+                                                      ("<" ^
+                                                          ((exprToString w) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 37, characters 13-14:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    ^
+with
+    ^
+The actual replacement has type
+    string -> string -> string
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString v) ^
+                                                      ("<" ^
+                                                          ((exprToString w) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 38, characters 13-25:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    exprToString
+with
+    exprToString
+The actual replacement has type
+    expr -> string
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString v) ^
+                                                      ("<" ^
+                                                          ((exprToString w) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 38, characters 13-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (exprToString w)
+with
+    (exprToString (w))
+The actual replacement has type
+    string
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString v) ^
+                                                      ("<" ^
+                                                          ((exprToString (w)) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 38, characters 26-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    w
+with
+    x
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString v) ^
+                                                      ("<" ^
+                                                          ((exprToString x) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 38, characters 26-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    w
+with
+    e
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString v) ^
+                                                      ("<" ^
+                                                          ((exprToString e) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 38, characters 26-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    w
+with
+    w
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString v) ^
+                                                      ("<" ^
+                                                          ((exprToString w) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================
+Triaged the following locations:
+File "2152.ml", line 31, characters 14-42:
+File "2152.ml", line 32, characters 16-44:
+File "2152.ml", line 33, characters 21-66:
+File "2152.ml", line 34, characters 19-55:
+And modified the following location:
+File "2152.ml", line 38, characters 26-27:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    w
+with
+    v
+The actual replacement has type
+    expr
+within context
+    let rec eval (e, x, y) = let pi = 3.142 in (match e with 
+                                                | VarX -> x
+                                                | VarY -> y
+                                                | Sine v -> [[...other program...]]
+                                                | Cosine v ->
+                                                  [[...other program...]]
+                                                | Average (v, w) ->
+                                                  [[...other program...]]
+                                                | Times (v, w) ->
+                                                  [[...other program...]]
+                                                | Thresh (v, w, x, y) ->
+                                                  (exprToString v) ^
+                                                      ("<" ^
+                                                          ((exprToString v) ^
+                                                              ("?" ^
+                                                                  ((exprToString x)
+                                                                      ^
+                                                                      (":" ^
+                                                                          (exprToString
+                                                                            y))))))) ;; 
+==============================

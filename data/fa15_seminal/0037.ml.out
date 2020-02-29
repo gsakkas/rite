@@ -1,0 +1,29 @@
+------------------------------------------------------------------
+File "0037.ml", line 2, characters 58-75:
+This expression has type int but is here used with type 'a list
+Relevant code: x + (sumList xs')
+------------------------------------------------------------------
+File "0037.ml", line 2, characters 60-61:
+Try replacing
+    +
+with
+    +; [[...]]
+of type
+    'b -> 'c list -> 'c list
+within context
+    let rec sumList xs = (match xs with 
+                          | [] -> []
+                          | x :: xs' -> (x +; [[...]] (sumList xs'))) ;; 
+==============================
+File "0037.ml", line 2, characters 43-45:
+Try replacing
+    []
+with
+    []; [[...]]
+of type
+    int
+within context
+    let rec sumList xs = (match xs with 
+                          | [] -> ([]; [[...]])
+                          | x :: xs' -> x + (sumList xs')) ;; 
+==============================

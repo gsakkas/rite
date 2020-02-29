@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "2479.ml", line 39, characters 33-34:
+This expression has type int but is here used with type int list
+Relevant code: 1
+------------------------------------------------------------------
+File "2479.ml", line 39, characters 33-34:
+Try replacing
+    1
+with
+    1; [[...]]
+of type
+    int list
+within context
+    let rec mulByDigit i l = (match i with 
+                              | 0 -> [0]
+                              | 1 -> (1; [[...]])
+                              | _ -> (bigAdd l (mulByDigit (i - 1) l))) ;; 
+==============================

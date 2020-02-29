@@ -1,0 +1,42 @@
+------------------------------------------------------------------
+File "1501.ml", line 9, characters 32-73:
+This expression has type int but is here used with type int list
+Relevant code: (comb ((hd * i) mod 10) (mBDhelper i tl))
+------------------------------------------------------------------
+File "1501.ml", line 3, characters 11-30:
+Try replacing
+    fun a hd :: tl -> a + hd
+with
+    fun a hd :: tl -> a + hd; [[...]]
+of type
+    'a
+within context
+    let rec mulByDigit i l =
+    let comb = fun a hd :: tl -> a + hd; [[...]] in
+      let rec mBDhelper i x = (match x with 
+                               | [] -> []
+                               | hd :: tl ->
+                                 (if hd * i - 9 != 0 then
+                                     (hd * i) / 10 ::
+                                         (comb (mod (hd * i) 10) (mBDhelper i tl))
+                                     else
+                                     hd * i :: (mBDhelper i tl))) in (mBDhelper i l)
+    ;; 
+==============================
+File "1501.ml", line 9, characters 32-73:
+Try replacing
+    (comb (mod (hd * i) 10) (mBDhelper i tl))
+with
+    (comb (mod (hd * i) 10) (mBDhelper i tl)); [[...]]
+of type
+    int list
+within context
+    fun i x -> (match x with 
+                | [] -> []
+                | hd :: tl ->
+                  (if hd * i - 9 != 0 then
+                      (hd * i) / 10 ::
+                          (comb (mod (hd * i) 10) (mBDhelper i tl)); [[...]]
+                      else
+                      hd * i :: (mBDhelper i tl)))
+==============================

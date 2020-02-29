@@ -1,0 +1,41 @@
+------------------------------------------------------------------
+File "1582.ml", line 6, characters 7-61:
+This expression is not a function, it cannot be applied
+Relevant code: ((clone 0 ((List.length l2) - (List.length l1))) @ l1)
+------------------------------------------------------------------
+Triaged the following locations:
+File "1582.ml", line 8, characters 4-124:
+And modified the following location:
+File "1582.ml", line 6, characters 62-64:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (((clone 0 ((List.length l2) - (List.length l1))) @ l1) l2)
+with
+    (clone 0 ((List.length l2) - (List.length l1))) @ l1
+The actual replacement has type
+    int list
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then
+      (clone 0 ((List.length l2) - (List.length l1))) @ l1
+      else
+      [[...other program...]])
+    ;; 
+==============================
+Triaged the following locations:
+File "1582.ml", line 8, characters 4-124:
+And modified the following location:
+File "1582.ml", line 6, characters 7-61:
+Your code has several type errors.  If you ignore other surrounding code, try replacing
+    (clone 0 ((List.length l2) - (List.length l1))) @ l1
+with
+    (clone 0 ((List.length l2) - (List.length l1))) @ l1; [[...]]
+The actual replacement has type
+    'h list -> 'i
+within context
+    let padZero l1 l2 =
+    (if (List.length l1) < (List.length l2) then
+      (((clone 0 ((List.length l2) - (List.length l1))) @ l1; [[...]]) l2)
+      else
+      [[...other program...]])
+    ;; 
+==============================

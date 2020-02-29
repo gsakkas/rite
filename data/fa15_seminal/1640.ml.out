@@ -1,0 +1,18 @@
+------------------------------------------------------------------
+File "1640.ml", line 8, characters 4-73:
+This expression has type ('a * bool) * 'b but is here used with type
+  ('c -> 'c * bool) * 'c
+Relevant code: ((let x = f b in match x with | b -> (x, false) | _ -> (x, true)), b)
+------------------------------------------------------------------
+File "1640.ml", line 8, characters 5-72:
+Try replacing
+    (let x = (f b) in (match x with 
+                       | b -> (x, false)
+                       | _ -> (x, true))), b
+with
+    b, (let x = (f b) in (match x with 
+                          | b -> (x, false)
+                          | _ -> (x, true)))
+of type
+    ('d * bool -> ('d * bool) * bool) * ('d * bool)
+==============================
