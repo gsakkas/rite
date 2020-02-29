@@ -113,13 +113,13 @@ main = do
         fx <- readFile "data/fix.ml"
         mkClusters' False preds_tis bd fx
     "clusters+some"
-      -> mkClusters False out cls mempty preds_tis jsons
+      -> mkClusters False out cls mempty (preds_tsize ++ preds_tis) jsons
     "clusters+all"
       -> mkClusters False out cls mempty (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
     "known+clusters+some"
       -> do
         top_cls <- map readClusterFile . lines <$> readFile cfile
-        mkClusters True out cls top_cls preds_tis jsons
+        mkClusters True out cls top_cls (preds_tsize ++ preds_tis) jsons
     "known+clusters+all"
       -> do
         top_cls <- map readClusterFile . lines <$> readFile cfile

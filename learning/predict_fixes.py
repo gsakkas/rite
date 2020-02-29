@@ -93,13 +93,13 @@ def categorize(labels):
 
 
 train_samps = train.loc[:, 'F-Expr-Size':]
-print(train_samps.shape)
+# print(train_samps.shape)
 train_labels = train.loc[:, 'L-Cluster1':last_L]
 train_labels = categorize(train_labels)
 
 test_samps = test.loc[:, 'F-Expr-Size':]
 del test_samps['SOURCE_FILE']
-print(test_samps.shape)
+# print(test_samps.shape)
 test_labels = test.loc[:, 'L-Cluster1':last_L]
 test_labels = categorize(test_labels)
 test_span = test.loc[:, 'SourceSpan']
@@ -134,9 +134,9 @@ else:
     clf = joblib.load(model_file)
 
 
-parameters = {'hidden_layer_sizes': ((256, 128), (128, 128), (128, 64)),
-              'alpha': [0.001, 0.0001],
-              'verbose': [False]}
+# parameters = {'hidden_layer_sizes': ((256, 128), (128, 128), (128, 64)),
+#               'alpha': [0.001, 0.0001],
+#               'verbose': [False]}
 
 #Standarize the data
 # scaler = StandardScaler()
@@ -144,7 +144,7 @@ parameters = {'hidden_layer_sizes': ((256, 128), (128, 128), (128, 64)),
 train_stds = train_samps.values
 
 # Type of model training to use
-clf_type = 'multiclass' # "ova" of "multiclass"
+clf_type = 'ova' # "ova" of "multiclass"
 
 if model != 'load':
     if clf_type == 'ova' or clf_type == 'big-ova':
@@ -214,7 +214,7 @@ for labelind in list(set(test_labels.index)):
 
     if model != 'load' and model != 'uniform' and model != 'stratified':
         filenm = test_file.loc[[labelind]].values[0].split('.')
-        res_dir = os.path.join(test_dir, model + '-' + str(num_of_cls) + '-' + clf_type + '-lbfgs')
+        res_dir = os.path.join(test_dir, model + '-' + str(num_of_cls) + '-' + clf_type)
         if not os.path.exists(res_dir):
             os.mkdir(res_dir)
         temp_sc.to_csv(res_dir + '/' + filenm[0] + '.csv', index=False)
@@ -240,8 +240,8 @@ for i, idx in enumerate(test_labels.values):
     pes = prob_error[i]
     # print(pes)
     # print(idx)
-    if pes[0] != anses[i]:
-        print('NOT OK')
+    # if pes[0] != anses[i]:
+    #     print('NOT OK')
     # print(pes[:5])
 
     if pes[0] == idx or pes[1] == idx or pes[2] == idx or pes[3] == idx or pes[4] == idx:
@@ -271,15 +271,15 @@ for i, idx in enumerate(test_labels.values):
             yay1 += 1
             yays1[idx - 1] += 1
 
-print("accuracy for top 5 per class (" + str(num_of_cls) + ")")
-print("top 1")
-print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays1, alls)])
-print("top 2")
-print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays2, alls)])
-print("top 3")
-print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays3, alls)])
-print("top 5")
-print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays5, alls)])
+# print("accuracy for top 5 per class (" + str(num_of_cls) + ")")
+# print("top 1")
+# print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays1, alls)])
+# print("top 2")
+# print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays2, alls)])
+# print("top 3")
+# print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays3, alls)])
+# print("top 5")
+# print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays5, alls)])
 
 print("accuracy for top 5")
 print("top 1")
@@ -291,28 +291,28 @@ print(float(yay3) * 100 / tots)
 print("top 5")
 print(float(yay5) * 100 / tots)
 
-print("accuracy for top 5 (with unclassified)")
-print("top 1")
-print(float(yay1_2) * 100 / real_tots)
-print("top 2")
-print(float(yay2_2) * 100 / real_tots)
-print("top 3")
-print(float(yay3_2) * 100 / real_tots)
-print("top 5")
-print(float(yay5_2) * 100 / real_tots)
+# print("accuracy for top 5 (with unclassified)")
+# print("top 1")
+# print(float(yay1_2) * 100 / real_tots)
+# print("top 2")
+# print(float(yay2_2) * 100 / real_tots)
+# print("top 3")
+# print(float(yay3_2) * 100 / real_tots)
+# print("top 5")
+# print(float(yay5_2) * 100 / real_tots)
 
-print("accuracy for top 5 (average acc. per program)")
-print("top 1")
-print(float(c1) / all_programs)
-print("top 3")
-print(float(c3) / all_programs)
-print("top 5")
-print(float(c5) / all_programs)
+# print("accuracy for top 5 (average acc. per program)")
+# print("top 1")
+# print(float(c1) / all_programs)
+# print("top 3")
+# print(float(c3) / all_programs)
+# print("top 5")
+# print(float(c5) / all_programs)
 
-print("accuracy for top 5 (acc. per program)")
-print("top 1")
-print(float(c1_whole) * 100 / all_programs)
-print("top 3")
-print(float(c3_whole) * 100 / all_programs)
-print("top 5")
-print(float(c5_whole) * 100 / all_programs)
+# print("accuracy for top 5 (acc. per program)")
+# print("top 1")
+# print(float(c1_whole) * 100 / all_programs)
+# print("top 3")
+# print(float(c3_whole) * 100 / all_programs)
+# print("top 5")
+# print(float(c5_whole) * 100 / all_programs)

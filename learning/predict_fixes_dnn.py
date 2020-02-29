@@ -20,8 +20,8 @@ import tensorflow as tf
 import input_old
 
 model = sys.argv[1]
-if model not in ['dnn', 'cnn', 'svm', 'popular', 'random', 'load', 'load-cnn']:
-    print('python predict_fixes.py [dnn|cnn|svm|popular|random|load|load-cnn] <train> <test> <load-model>')
+if model not in ['dnn', 'small', 'cnn', 'svm', 'popular', 'random', 'load', 'load-cnn']:
+    print('python predict_fixes_dnn.py [dnn|small|cnn|svm|popular|random|load|load-cnn] <train> <test> <load-model>')
     sys.exit(1)
 train_dir = sys.argv[2]
 test_dir = sys.argv[3]
@@ -38,8 +38,8 @@ prng = np.random.RandomState(RANDOM_SEED)
 rn.seed(RANDOM_SEED)
 
 
-train_csvs = sorted([f for f in listdir(train_dir) if f.endswith('.csv')])
-test_csvs = sorted([f for f in listdir(test_dir) if f.endswith('.csv')])
+train_csvs = sorted([f for f in listdir(train_dir) if f.endswith('.csv') and not f.startswith('train')])
+test_csvs = sorted([f for f in listdir(test_dir) if f.endswith('.csv') and not f.startswith('test')])
 
 sklearn.utils.shuffle(train_csvs, random_state=prng)
 train_all = []
@@ -95,8 +95,8 @@ if isfile(train_file) and isfile(train_file_all):
 elif model != 'popular' and model != 'random':
     train_all = pd.concat(train_all)
     train = pd.concat(train)
-    train_all.to_dense().to_csv(train_file_all, index=False, encoding='utf-8')
-    train.to_dense().to_csv(train_file, index=False, encoding='utf-8')
+    train_all.to_csv(train_file_all, index=False, encoding='utf-8')
+    train.to_csv(train_file, index=False, encoding='utf-8')
     print(train_all.shape)
     print(train.shape)
 
@@ -106,8 +106,8 @@ if isfile(test_file) and isfile(test_file_all):
 else:
     test_all = pd.concat(test_all)
     test = pd.concat(test)
-    test_all.to_dense().to_csv(test_file_all, index=True, encoding='utf-8')
-    test.to_dense().to_csv(test_file, index=True, encoding='utf-8')
+    test_all.to_csv(test_file_all, index=True, encoding='utf-8')
+    test.to_csv(test_file, index=True, encoding='utf-8')
 print(test_all.shape)
 print(test.shape)
 
@@ -123,11 +123,11 @@ if model != 'popular' and model != 'random':
 
     classes = list(train.groupby(label_names))
     classes_test = list(test.groupby(label_names))
-    print(len(classes), len(classes_test))
+    # print(len(classes), len(classes_test))
     not_appear = [sum(x) for x in zip(*[y[0] for y in classes])]
-    print([i + 1 for i, x in enumerate(not_appear) if x < 0.5])
+    # print([i + 1 for i, x in enumerate(not_appear) if x < 0.5])
     not_appear = [sum(x) for x in zip(*[y[0] for y in classes_test])]
-    print([i + 1 for i, x in enumerate(not_appear) if x < 0.5])
+    # print([i + 1 for i, x in enumerate(not_appear) if x < 0.5])
     max_samples = max(len(c) for _, c in classes)
     num_of_samples = int(10 * train.shape[0] / len(classes)) if len(classes) * max_samples > 10 * train.shape[0] else max_samples
     train = sklearn.utils.shuffle(pd.concat(c.sample(num_of_samples, replace=True) for _, c in classes), random_state=prng)
@@ -151,8 +151,8 @@ def categorize(labels):
 if model != 'popular' and model != 'random':
     train_samps_all = train_all.loc[:, 'F-Expr-Size':]
     train_samps = train.loc[:, 'F-Expr-Size':]
-    print(train_samps_all.shape)
-    print(train_samps.shape)
+    # print(train_samps_all.shape)
+    # print(train_samps.shape)
     train_labels_all = train_all.loc[:, 'L-DidChange']
     train_labels = train.loc[:, 'L-Cluster1':last_L]
     # train_labels = categorize(train_labels)
@@ -161,8 +161,8 @@ test_samps_all = test_all.loc[:, 'F-Expr-Size':]
 test_samps = test.loc[:, 'F-Expr-Size':]
 del test_samps_all['SOURCE_FILE']
 del test_samps['SOURCE_FILE']
-print(test_samps_all.shape)
-print(test_samps.shape)
+# print(test_samps_all.shape)
+# print(test_samps.shape)
 test_labels_all = test_all.loc[:, 'L-DidChange']
 test_labels = test.loc[:, 'L-Cluster1':last_L]
 # test_labels = categorize(test_labels)
@@ -172,7 +172,7 @@ test_file = test_all.loc[:, 'SOURCE_FILE']
 clf_all = Model()
 clf = Model()
 
-if model == 'dnn' or model == 'load':
+if model == 'dnn' or model == 'load' or model == 'small':
     clf_input = Input(shape=(train_samps.shape[1],))
     # clf_input = Input(shape=(128,))
     x = Dense(512, activation='relu')(clf_input)
@@ -241,16 +241,18 @@ ready_test_labels = test_labels.values
 # Type of model training to use
 clf_type = 'multiclass'
 
-if model == 'dnn' or model == 'cnn':
+if model == 'dnn' or model == 'cnn' or model == 'small':
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
-    if isfile(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5')):
+    if model != 'small' and isfile(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5')):
         clf_all.load_weights(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5'))
     else:
         es_all = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=10)
         clf_all.fit(train_stds_all, ready_train_labels_all, batch_size=512, epochs=200, verbose=1, validation_split=0.2, callbacks=[es_all])
-        clf_all.save_weights(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5'))
+        if model != 'small':
+            clf_all.save_weights(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5'))
     clf.fit(train_stds, ready_train_labels, batch_size=256, epochs=200, verbose=1, validation_split=0.1, callbacks=[es])
-    clf.save_weights(join('models', model + '-' + str(num_of_cls) + '-' + clf_type + '-final.h5'))
+    if model != 'small':
+        clf.save_weights(join('models', model + '-' + str(num_of_cls) + '-' + clf_type + '-final.h5'))
 elif model == 'load' or model == 'load-cnn':
     clf.load_weights(model_file)
     clf_all.load_weights(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5'))
@@ -277,6 +279,7 @@ if model == 'dnn' or model == 'cnn' or model == 'load' or model == 'load-cnn':
 
 prob_error = []
 anses = []
+loc_conf = []
 if model == 'popular':
     prob_error = [[0, 1, 2, 3, 4, 5, 6] for _ in range(test_stds_all.shape[0])]
     anses = [1 for _ in range(test_stds_all.shape[0])]
@@ -286,9 +289,10 @@ elif model == 'random':
     anses = [x[0] + 1 for x in prob_error]
     loc_conf = [np.random.rand() * 100 for _ in range(test_stds_all.shape[0])]
 elif model == 'svm':
-    anses = clf.predict(test_stds).tolist()
-    prob_score = clf.predict_proba(test_stds)
+    anses = clf.predict(test_stds_all).tolist()
+    prob_score = clf.predict_proba(test_stds_all)
     prob_error = [np.argsort(pe)[::-1].tolist() for pe in prob_score]
+    loc_conf = [np.random.rand() * 100 for _ in range(test_stds_all.shape[0])]
 else:
     prob_score = clf.predict(test_stds_all)
     anses = [np.argmax(pe) + 1 for pe in prob_score]
@@ -305,28 +309,29 @@ all_labels = categorize(test_all.loc[:, 'L-Cluster1':last_L])
 ll = list(zip(test_span, loc_conf, pes1, pes2, pes3, pes4, pes5, pes6, all_labels.values))
 
 # Show confusion matrix...
-all_ls, ps = tuple(map(list, zip(*[(x, y) for x, y in zip(all_labels.values, pes1) if x > 0])))
-cm = confusion_matrix(all_ls, ps)
-cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+if num_of_cls == 30:
+    all_ls, ps = tuple(map(list, zip(*[(x, y) for x, y in zip(all_labels.values, pes1) if x > 0])))
+    cm = confusion_matrix(all_ls, ps)
+    cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-lbls = ['Tmpl-' + str(i) for i in range(1, num_of_cls + 1)]
-print(cm.shape[1], cm.shape[0])
-plt.rc('text', usetex=True)
-plt.rc('font', family='serif')
-fig, ax = plt.subplots()
-im = ax.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-ax.figure.colorbar(im, ax=ax)
-ax.set(xticks=np.arange(cm.shape[1]),
-       yticks=np.arange(cm.shape[0]),
-       xticklabels=lbls, yticklabels=lbls,
-       title='Normalized Confusion Matrix for Templates',
-       ylabel='True Label',
-       xlabel='Predicted Label')
+    lbls = ['Tmpl-' + str(i) for i in range(1, num_of_cls + 1)]
+    # print(cm.shape[1], cm.shape[0])
+    plt.rc('text', usetex=True)
+    plt.rc('font', family='serif')
+    fig, ax = plt.subplots()
+    im = ax.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
+    ax.figure.colorbar(im, ax=ax)
+    ax.set(xticks=np.arange(cm.shape[1]),
+        yticks=np.arange(cm.shape[0]),
+        xticklabels=lbls, yticklabels=lbls,
+        title='Normalized Confusion Matrix for Templates',
+        ylabel='True Label',
+        xlabel='Predicted Label')
 
-plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
-         rotation_mode="anchor")
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+            rotation_mode="anchor")
 
-plt.show()
+    plt.show()
 # ... until here
 score = pd.DataFrame(data=ll, index=all_labels.index, columns=['SourceSpan', 'Loc-Conf', 'P-1', 'P-2', 'P-3', 'P-4', 'P-5', 'P-6', 'Actual'])
 
@@ -455,15 +460,15 @@ for i, tmpl in enumerate(all_labels.values):
             yays1[tmpl - 1] += 1
 
 # All template accuracies for top N template-classes
-print("accuracy for top 6 per class (" + str(num_of_cls) + ")")
-print("top 1")
-print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays1, alls)])
-print("top 3")
-print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays3, alls)])
-print("top 5")
-print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays5, alls)])
-print("top 6")
-print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays6, alls)])
+# print("accuracy for top 6 per class (" + str(num_of_cls) + ")")
+# print("top 1")
+# print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays1, alls)])
+# print("top 3")
+# print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays3, alls)])
+# print("top 5")
+# print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays5, alls)])
+# print("top 6")
+# print([float(x) * 100 / y if y != 0 else 0.0 for x, y in zip(yays6, alls)])
 
 # Total accuracy for all program locations together
 print("accuracy for top 6")
@@ -478,51 +483,51 @@ print(float(yay6) * 100 / tots)
 
 # Total accuracy for all program locations together, with each template predictions counted
 # only if it was in the top 5 error localization predictions for that location
-print("accuracy for top 6 per class (" + str(num_of_cls) + ") for best 5 locations")
-print("top 1")
-print(float(yay1_2) * 100 / tots)
-print("top 3")
-print(float(yay3_2) * 100 / tots)
-print("top 5")
-print(float(yay5_2) * 100 / tots)
-print("top 6")
-print(float(yay6_2) * 100 / tots)
+# print("accuracy for top 6 per class (" + str(num_of_cls) + ") for best 5 locations")
+# print("top 1")
+# print(float(yay1_2) * 100 / tots)
+# print("top 3")
+# print(float(yay3_2) * 100 / tots)
+# print("top 5")
+# print(float(yay5_2) * 100 / tots)
+# print("top 6")
+# print(float(yay6_2) * 100 / tots)
 
 # Average of each program's accuracy of template prediction
 # Only for the locations that changed in the dataset (that have a correct template)
-print("accuracy for top 6 (average template acc. per program)")
-print("top 1")
-print(float(c1) / all_programs)
-print("top 3")
-print(float(c3) / all_programs)
-print("top 5")
-print(float(c5) / all_programs)
-print("top 6")
-print(float(c6) / all_programs)
+# print("accuracy for top 6 (average template acc. per program)")
+# print("top 1")
+# print(float(c1) / all_programs)
+# print("top 3")
+# print(float(c3) / all_programs)
+# print("top 5")
+# print(float(c5) / all_programs)
+# print("top 6")
+# print(float(c6) / all_programs)
 
 # How many programs are predicted 100% correct for all their locations
-print("accuracy for top 6 (acc. per 100% correct program)")
-print("top 1")
-print(float(c1_whole) * 100 / all_programs)
-print("top 3")
-print(float(c3_whole) * 100 / all_programs)
-print("top 5")
-print(float(c5_whole) * 100 / all_programs)
-print("top 6")
-print(float(c6_whole) * 100 / all_programs)
+# print("accuracy for top 6 (acc. per 100% correct program)")
+# print("top 1")
+# print(float(c1_whole) * 100 / all_programs)
+# print("top 3")
+# print(float(c3_whole) * 100 / all_programs)
+# print("top 5")
+# print(float(c5_whole) * 100 / all_programs)
+# print("top 6")
+# print(float(c6_whole) * 100 / all_programs)
 
 # Error localization results
 print("accuracy for top 3 locations")
-print("average acc. per program")
-print(float(locs3) * 100 / all_programs)
-print("acc for all locations")
+# print("average acc. per program")
+# print(float(locs3) * 100 / all_programs)
+# print("acc for all locations")
 print(float(alocs3) * 100 / all_locs)
 
 print("accuracy for top 5 locations")
-print("average acc. per program")
-print(float(locs5) * 100 / all_programs)
-print("acc for all locations")
+# print("average acc. per program")
+# print(float(locs5) * 100 / all_programs)
+# print("acc for all locations")
 print(float(alocs5) * 100 / all_locs)
 
-if pes1 != anses:
-    print('NOT OK: Check anses/pes difference for possible error!')
+# if pes1 != anses:
+#     print('NOT OK: Check anses/pes difference for possible error!')

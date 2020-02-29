@@ -90,9 +90,9 @@ getAllSrcSpans = map (\(sl', sc', el', ec') -> SrcSpan sl' sc' el' ec') all_ss
     all_ss = (,,,) <$> [(-10)..(-1)] <*> [1..10] <*> [(-10)..(-1)] <*> [1..10]
 
 
-synthesize :: Prog -> Expr -> [ExprGeneric] -> [Var] -> [DCon] -> [Expr]
-synthesize _ _ [] _ _ = []
-synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
+synthesize :: Prog -> Expr -> Bool -> [ExprGeneric] -> [Var] -> [DCon] -> [Expr]
+synthesize _ _ _ [] _ _ = []
+synthesize pr bd naive (t:ts) funs dcons = synthesize' pr bd t
   where
     synthesize' p bad tmpl' = if null valid then [] else nubOrdOn killSpans (ok_res ++ valid)
       where
@@ -173,18 +173,18 @@ synthesize pr bd (t:ts) funs dcons = synthesize' pr bd t
               List ms es mt    -> map (\es' -> List ms es' mt) $ if null es
                                                                  then es : all_combos [TypedHole (Just $ SrcSpan (-42) (-42) (-42) (-42)) "_list_"]
                                                                  else all_combos es
-              -- Use for simplified holes
-              TypedHole ms _   -> nub $ map (Var ms) vrs ++ subs ++ lits
               -- Use for "full" synthesis
-              -- TypedHole ms _   -> concatMap (synth (d - 1) vrs . (`instantiateExpr` pbadss)) [AppG [EmptyG], AppG [EmptyG, EmptyG]
-              --                       , AppG [EmptyG, EmptyG, EmptyG], BopG EmptyG EmptyG, UopG EmptyG, LitG, LetG NonRec [(VarPatG, EmptyG)] EmptyG
-              --                       , LetG NonRec [(TuplePatG (Set.fromList [VarPatG, VarPatG]), EmptyG)] EmptyG, IteG EmptyG EmptyG EmptyG
-              --                       , SeqG EmptyG EmptyG, CaseG EmptyG [(TuplePatG (Set.fromList [VarPatG, VarPatG]), Nothing, EmptyG)]
-              --                       , CaseG EmptyG [(LitPatG, Nothing, EmptyG)], CaseG EmptyG [(ConPatG Nothing, Nothing, EmptyG)]
-              --                       , CaseG EmptyG [(ConPatG Nothing, Nothing, EmptyG), (ConPatG (Just VarPatG), Nothing, EmptyG)]
-              --                       , CaseG EmptyG [(ConsPatG VarPatG EmptyPatG, Nothing, EmptyG)], TupleG [EmptyG], TupleG [EmptyG, EmptyG]
-              --                       , TupleG [EmptyG, EmptyG, EmptyG], ConAppG (Just EmptyG), ListG [EmptyG], ListG [EmptyG, EmptyG]
-              --                       , ListG [EmptyG, EmptyG, EmptyG], LamG VarPatG EmptyG, VarG, EmptyG]
+              TypedHole ms _ | naive -> concatMap (synth (d - 1) vrs . (`instantiateExpr` pbadss)) [AppG [EmptyG], AppG [EmptyG, EmptyG]
+                                    , AppG [EmptyG, EmptyG, EmptyG], BopG EmptyG EmptyG, UopG EmptyG, LitG, LetG NonRec [(VarPatG, EmptyG)] EmptyG
+                                    , LetG NonRec [(TuplePatG (Set.fromList [VarPatG, VarPatG]), EmptyG)] EmptyG, IteG EmptyG EmptyG EmptyG
+                                    , SeqG EmptyG EmptyG, CaseG EmptyG [(TuplePatG (Set.fromList [VarPatG, VarPatG]), Nothing, EmptyG)]
+                                    , CaseG EmptyG [(LitPatG, Nothing, EmptyG)], CaseG EmptyG [(ConPatG Nothing, Nothing, EmptyG)]
+                                    , CaseG EmptyG [(ConPatG Nothing, Nothing, EmptyG), (ConPatG (Just VarPatG), Nothing, EmptyG)]
+                                    , CaseG EmptyG [(ConsPatG VarPatG EmptyPatG, Nothing, EmptyG)], TupleG [EmptyG], TupleG [EmptyG, EmptyG]
+                                    , TupleG [EmptyG, EmptyG, EmptyG], ConAppG (Just EmptyG), ListG [EmptyG], ListG [EmptyG, EmptyG]
+                                    , ListG [EmptyG, EmptyG, EmptyG], LamG VarPatG EmptyG, VarG, EmptyG]
+              -- Use for simplified holes
+              TypedHole ms _ -> nub $ map (Var ms) vrs ++ subs ++ lits
               _ -> []
 
             -- All instantiations for all possible parameter combinations

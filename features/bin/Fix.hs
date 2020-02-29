@@ -74,7 +74,7 @@ main = do
       -> do
         let input = if isNothing fl then Just 42 else fl
         let all_preds' = filter (\(i, _) -> fromJust input == i) all_preds
-        res <- timeout 90 $ mkAllFixes out top_cls funs dcons all_preds' jsons
+        res <- timeout 90 $ mkAllFixes False out top_cls funs dcons all_preds' jsons
         print res
     "tiny-naive"
       -> do
@@ -82,7 +82,7 @@ main = do
         let all_preds_empty = zipWith readPredsEmpty predf_ids raw_preds
         let input = if isNothing fl then Just 42 else fl
         let all_preds' = filter (\(i, _) -> fromJust input == i) all_preds_empty
-        res <- timeout 90 $ mkAllFixes out top_cls_empty funs dcons all_preds' jsons
+        res <- timeout 90 $ mkAllFixes True out top_cls_empty funs dcons all_preds' jsons
         print res
     "synthesis"
       -> do
@@ -104,7 +104,7 @@ main = do
         print $ map (\us -> (head us, length us)) $ group $ sort unfinished
     "timed-synth-total"
       -> do
-        res <- forM all_preds $ \pr -> timeout 60 $ mkAllFixes out top_cls funs dcons [pr] jsons
+        res <- forM all_preds $ \pr -> timeout 90 $ mkAllFixes False out top_cls funs dcons [pr] jsons
         let pur = catMaybes res
         let tmpls = map getTemplate all_preds
         let unfinished = concat $ zipWith (\t r -> if isNothing r then t else []) tmpls res
@@ -119,11 +119,11 @@ main = do
       where
         avg :: (Real a, Fractional b) => [a] -> b
         avg xs = realToFrac (sum xs) / genericLength xs
-    "timed-synth-no-templ"
+    "timed-synth-naive"
       -> do
         let top_cls_empty = [([EmptyG], [EmptyG])]
         let all_preds_empty = zipWith readPredsEmpty predf_ids raw_preds
-        res <- forM all_preds_empty $ \pr -> timeout 60 $ mkAllFixes out top_cls_empty funs dcons [pr] jsons
+        res <- forM all_preds_empty $ \pr -> timeout 90 $ mkAllFixes True out top_cls_empty funs dcons [pr] jsons
         let pur = catMaybes res
         let tmpls = map getTemplate all_preds
         let unfinished = concat $ zipWith (\t r -> if isNothing r then t else []) tmpls res
@@ -155,8 +155,8 @@ mkFixesTest out top_cls funs dcons all_preds jsons = do
     let old_parts  = map (\pd -> snd $ fromJust $ find (\(ss'', e) -> getPredSrcSpan pd == show ss'') alls) goods
     let templates  = map (\pd -> snd (top_cls !! (getCorrectTmpl pd - 1))) goods
     -- let templates  = map (\gs -> map (\r -> if r > 0 && getCorrectTmpl gs `elem` getRankedPreds gs then Just $ snd $ top_cls !! (r-1) else Nothing) $ getRankedPreds gs) goods
-    let results    = nubOrdOn (map killSpans) $ allCombos $ map (\(tmpls, bd) -> synthesize bad bd tmpls funs dcons) $ zip templates old_parts
-    -- let results    = map (\(tmpls, bd) -> map (>>= (\t -> Just $ synthesize bad bd t funs dcons)) tmpls) $ zip templates old_parts
+    let results    = nubOrdOn (map killSpans) $ allCombos $ map (\(tmpls, bd) -> synthesize bad bd False tmpls funs dcons) $ zip templates old_parts
+    -- let results    = map (\(tmpls, bd) -> map (>>= (\t -> Just $ synthesize bad bd naive t funs dcons)) tmpls) $ zip templates old_parts
     let pretty_bad = render (prettyProg bad)
     let edit_dist  = levenshteinDistance defaultEditCosts pretty_bad . render . prettyProg
     let candidates = filter (\p -> checkP (errorSlice p) $ map (fromJust.getSrcSpanExprMaybe) old_parts) $ map (foldl replaceSSWithExpr bad) results
@@ -174,7 +174,7 @@ mkFixesTest out top_cls funs dcons all_preds jsons = do
 
     let brk  = "\n\n(* -------------------------------------- *)\n"
     -- let templ = map (\pd -> snd (top_cls !! (getCorrectTmpl pd - 1))) goods
-    -- let resul = nubOrd $ allCombos $ map (\(tmpls, bd) -> synthesize bad bd tmpls funs dcons) $ zip templ old_parts
+    -- let resul = nubOrd $ allCombos $ map (\(tmpls, bd) -> synthesize bad bd naive tmpls funs dcons) $ zip templ old_parts
     -- let repla = any ((\p -> all (`notElem` errorSlice p) $ map (fromJust.getSrcSpanExprMaybe) old_parts) . foldl replaceSSWithExpr bad) resul
     -- print $ null goods || repla
     let printable = map (\p -> render (prettyProg p) ++ brk) replaced
@@ -196,8 +196,8 @@ mkFixesTest out top_cls funs dcons all_preds jsons = do
   -- return (genericLength (filter fst3 xx) * 100.0 / genericLength xx, sum (map (fst.snd3) xx) * 100.0 / sum (map (snd.snd3) xx), genericLength (filter thd3 xx) * 100.0 / genericLength xx)
 
 
-mkAllFixes :: String -> [([ExprGeneric], [ExprGeneric])] -> [Var] -> [DCon] -> [(Int, [Preds])] -> [String] -> IO ((Double, Double), [(Maybe Int, Integer)])
-mkAllFixes out top_cls funs dcons all_preds jsons = do
+mkAllFixes :: Bool -> String -> [([ExprGeneric], [ExprGeneric])] -> [Var] -> [DCon] -> [(Int, [Preds])] -> [String] -> IO ((Double, Double), [(Maybe Int, Integer)])
+mkAllFixes naive out top_cls funs dcons all_preds jsons = do
   let inp = if length all_preds == 1 then fst (head all_preds) else -1
   let uniqs = concatMap (mkDiffsWithGenericTrs inp) jsons
   let feats = [ (ss, bad, fix, badStr, fixStr, pds, idx)
@@ -241,7 +241,7 @@ mkAllFixes out top_cls funs dcons all_preds jsons = do
     -- let replaced   = take 3 $ sortOn (\p -> (good_type p, dist p, edit_dist p)) checked
     -- Use this mertic to disable that
     let sorted_ch = sortOn (\p -> (dist p, edit_dist p)) checked
-    let replaced  = take 10 sorted_ch
+    let replaced  = take 3 sorted_ch
 
     let vscopes = map (\(s, _, _) -> show $ getVarsInScope bad s) ss
     print $ not (null replaced)
@@ -267,7 +267,7 @@ mkAllFixes out top_cls funs dcons all_preds jsons = do
         old_parts  = map (\pd -> snd $ fromJust $ find (\(ss'', e) -> getPredSrcSpan pd == show ss'') alls) pds
         templates  = map (map (top_cls !!) . getRankedPreds) pds
         sss        = map getPredSrcSpan pds
-        results    = mapAccumL (\mp' (ss, tmpls, bd) -> insertIfNot mp ss (concatMap (\tmpl -> synthesize bad bd tmpl funs dcons) tmpls)) mp $ zip3 sss templates old_parts
+        results    = mapAccumL (\mp' (ss, tmpls, bd) -> insertIfNot mp ss (concatMap (\tmpl -> synthesize bad bd naive tmpl funs dcons) tmpls)) mp $ zip3 sss templates old_parts
     insertIfNot :: Map String [Expr] -> String -> [Expr] -> (Map String [Expr], [Expr])
     insertIfNot mp ss def = if Map.member ss mp then (mp, fromJust $ Map.lookup ss mp) else (new_mp, def)
       where
