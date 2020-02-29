@@ -5,7 +5,7 @@
 Let's quickly walk through setting up a development environment.
 
 If you don't mind using a VM and things being a bit slower, we've
-[provided] one for you, the user and password are both "nate". The VM
+[provided] one for you, the user and password are both "rite". The VM
 should already have everything you need installed, and will boot with a
 terminal open in the repository. You just need to activate the python
 virtualenv with
@@ -14,7 +14,8 @@ virtualenv with
 ~/rite $ source .venv/bin/activate
 ```
 
-and then you should be able to skip to "Reproducing the evaluation".
+and then you should be able to skip to "Reproducing the evaluation
+(Step-by-Step Instructions)".
 
 [provided]: https://www.dropbox.com/s/b8a7nfwi8loiwvp/nate-artifact.ova?dl=0
 
@@ -29,14 +30,14 @@ Make sure you clone with `--recursive` as we have a few submodules.
 
 ### Building
 
-This project uses Haskell for feature extraction and Python (3.5) for
+This project uses Haskell for feature extraction and Python (3.8) for
 learning/executing the models.
 
 There are also some required libraries and tools that won't be installed
-automatically: ncurses, graphviz, BLAS, Tk. If you're on Ubuntu, the following command should suffice.
+automatically. If you're on Ubuntu, the following command should suffice.
 
 ``` shellsession
-$ sudo apt-get install ncurses-dev graphviz libopenblas-dev python-tk
+$ sudo apt install haskell-stack python3-pip libtinfo-dev libopenblas-dev python3-tk dvipng
 ```
 
 We recommend building the Haskell components using the [stack] tool.
@@ -46,6 +47,12 @@ We recommend building the Haskell components using the [stack] tool.
 ``` shellsession
 ~/rite $ stack setup && stack build
 ```
+If the above command fails to build RITE, then try installing the most recent
+version of stack with:
+
+``` shellsession
+~ $ curl -sSL https://get.haskellstack.org/ | sh -s - -f
+```
 
 For python we recommend using [virtualenv].
 
@@ -54,555 +61,318 @@ For python we recommend using [virtualenv].
 ``` shellsession
 ~/rite $ virtualenv .venv
 ~/rite $ source .venv/bin/activate
-~/rite $ pip install -r requirements.txt
+~/rite $ pip3 install -r requirements.txt
 ```
 
 ### Testing
 
 Let's run a quick test to make sure everything was built/installed
-correctly. We'll train a logistic regression on just the local syntactic
+correctly. We'll train a deep neural network using only a subset of our
 features.
 
-First, we'll extract the features from the paired programs. This should
-take a few minutes. You'll also see a bunch of warnings about unbound
-variables (in particular for variants of `printf` which we don't yet
-support), this is expected. OCaml interleaves name resolution and type
-checking, so it will sometimes abort with a type error before discovering
-an unbound variable.
+First, we'll extract the features from the paired programs and find all fix
+templates (clusters). This should take around half an hour. You'll also see
+a bunch of warnings about unbound variables (in particular for variants of
+`printf` which we don't yet support), this is expected. OCaml interleaves name
+resolution and type checking, so it will sometimes abort with a type error
+before discovering an unbound variable.
+
+``` shellsession
+~/rite $ stack exec -- generate-features \
+            --features clusters+some \
+            --source features/data/ucsd/data/derived/sp14/pairs.json \
+            --out data/sp14_min
+Number of clusters = 146
+~/rite $ stack exec -- generate-features \
+            --features known+clusters+some \
+            --source features/data/ucsd/data/derived/fa15/pairs.json \
+            --out data/fa15_min \
+            --clusters data/sp14_min/clusters/top_clusters.json
+Number of clusters = 118
+```
+The command line output should include the lines with `Number of lines = `
+near the end. Those are the total number of fix template clusters extracted
+from each year.
+
+The result will be a set of `.ml` files in the `data/{sp14_min,fa15_min}`
+directories, containing the individual programs, a set of `.csv`
+files in the `data/sp14_min/clusters+some` and
+`data/fa15_min/known+clusters+some` directories, containing the extracted
+features for each program, and a set of `.ml` files in the
+`data/{sp14_min,fa15_min}/clusters` containing the fix template clusters.
+We are not going to use the clusters in the `data/fa15_min` directory.
+
+Next, let's train a deep neural network (DNN) on the sp14 programs and test it
+on the fa15 programs. The specific learning parameters don't particularly
+matter here and are predefined in the script.
+
+``` shellsession
+~/rite $ python3 learning/predict_fixes_dnn.py \
+            small \
+            data/sp14_min/clusters+some/ \
+            data/fa15_min/known+clusters+some/
+Clusters = 50
+accuracy for top 6
+top 1
+41.98800342759212
+top 3
+66.53813196229649
+top 5
+76.13538988860326
+top 6
+78.83461868037703
+accuracy for top 3 locations
+77.41312741312741
+accuracy for top 5 locations
+87.95366795366796
+```
+
+The output will contain a lot more information, mainly for the training of the
+DNN, but the above lines contain the important information, i.e. the fix
+template prediction accuracy and the error localization accuracy.
+
+Finally, we will repair a program using the appropriate predictions.
+
+``` shellsession
+~/rite $ stack exec -- make-fixes \
+            --source features/data/ucsd/data/derived/fa15/pairs.json \
+            --mode tiny \
+            --predictions data/fa15_min/known+clusters+some/small-50-multiclass \
+            --clusters data/sp14_min/clusters \
+            --out data/fa15_min/repaired/rite \
+            --file 42
+42
+True
+Just ((100.0,0.0),[(Nothing,120)])
+```
+
+The command line argument `--file ID` can get as a value, any number `ID` that
+represents the ID of a `.ml` program from the directory `data/fa15_min`. The
+first output line will contain that ID, the second will return `True` if the
+program repair was successful and the third will contain some statistical
+information for other use.
+
+The final repaired solutions for the program `ID.ml` will be in a new `.ml` file
+in the directory that we passed with the `--out` argument, i.e.
+`data/fa15_min/repaired/rite`, with same `ID.ml` filename. This file will contain
+up to 3 top ranked solutions, i.e. repairs for the ill-typed `ID.ml` program.
+
+If the above command fails with:
+
+``` shellsession
+make-fixes: ./data/fa15_min/known+clusters+some/small-50-multiclass/1544.csv: openBinaryFile: resource exhausted (Too many open files)
+```
+
+then try:
+
+``` shellsession
+~/rite $ ulimit -n 524288
+```
+
+## Reproducing the evaluation (Step-by-Step Instructions)
+
+Running the entire evaluation can take quite a while (i.e. 24 hours) since
+there are so many computation-heavy steps we have to follow. Where possible,
+we provide commands to run both the full evaluation and a smaller subset,
+which may be particularly useful if you're using our VM.
+
+### Generating all feature sets and clusters
+
+First, we'll extract the features from the paired programs and find all fix
+templates (clusters). This should take around an hour.
 
 ``` shellsession
 ~/rite $ stack exec -- generate-features \
             --features clusters+all \
             --source features/data/ucsd/data/derived/sp14/pairs.json \
             --out data/sp14
+Number of clusters = 146
 ~/rite $ stack exec -- generate-features \
             --features known+clusters+all \
             --source features/data/ucsd/data/derived/fa15/pairs.json \
             --out data/fa15 \
             --clusters data/sp14/clusters/top_clusters.json
+Number of clusters = 118
 ```
+The command line output should include the lines with `Number of lines = `
+near the end. Those are the total number of fix template clusters extracted
+from each year.
 
-The result will be a set of `.ml` files in the `data/{sp14,fa15}`
-directories, containing the individual programs, a set of `.csv`
-files in the `data/sp14/clusters+all` and `data/fa15/known+clusters+all`
-directories, containing the extracted features for each program, and
-a set of `.ml` files in the `data/{sp14,fa15}/clusters` containing
-the fix template clusters.
+The result will be a set of `.ml` files in the `data/{sp14,fa15}` directories,
+containing the individual programs, a set of `.csv` files in the
+`data/sp14/clusters+all` and`data/fa15/known+clusters+all` directories,
+containing the extracted features for each program, and a set of `.ml` files
+in the `data/{sp14,fa15}/clusters` containing the fix template clusters.
+We are not going to use the clusters in the `data/fa15` directory.
 
-Next, let's train a logistic regression on the sp14 programs and test it
-on the fa15 programs. The specific learning parameters don't particularly
-matter here since we're just trying to make sure everything was built
-properly.
+We are also providing all these extracted files, if you want to skip this step.
 
-``` shellsession
-~/nate $ python learning/learn.py \
-           --data=data/sp14/op --test_data=data/fa15/op \
-           --model=linear --learn_rate=0.01 --reg_rate=0.01 \
-           --batch_size=200 --n_epochs=10 --seed=0
-training complete in 5.48 seconds
-final accuracy: 0.492 / 0.663 / 0.782
-avg/std recall: 0.532 / 0.388
-avg / std / med samples: 10.50 / 6.99 / 9.00
-avg / std / med changes: 2.74 / 2.34 / 2.00
-avg prediction time: 0.179411
-testing complete in 430.08 seconds
-```
-
-And for good measure let's try a decision tree too.
-
-``` shellsession
-~/nate $ python learning/trees.py decision-tree data/sp14/op data/fa15/op
-(40938, 49)
-(40938, 45)
-precision for top 3
-top 1
-0.534460887949
-top 2
-0.707822410148
-top 3
-0.780549682875
-recall for top 3
-0.415379864114
-```
-
-
-## Reproducing the evaluation
-
-Running the entire evaluation can take quite a while (i.e. hours) since
-there are so many different combinations of feature sets and models to
-train and evaluate. Where possible, we provide commands to run both the
-full evaluation and a smaller subset, which may be particularly useful
-if you're using our VM.
-
-If you're running the FASTER commands and want to examine a different
-feature set, here's a simple table to help select a feature set.
-
-| Segment  | Description                                   |
-| -------- | --------------------------------------------- |
-| op       | baseline of local syntax (always comes first) |
-| +context | add contextual syntax                         |
-| +type    | add typing features (local and contextual)    |
-| +size    | add expression size                           |
-
-For example, to use the feature set with local and contextual syntax
-features and expression size, we would use `op+context+size`.
-
-
-### Generating all feature sets
-
-We examine many different combinations of feature sets in our evaluation,
-so let's go a head and generate them all.
-
-This will take a while depending on how many cores you have, so you might
-want to go grab a cup of coffee.
-
-``` shellsession
-~/nate $ make -j20 csvs
-# FASTER: just the full feature set
-~/nate $ make -j2 sp14-op+context+type+size-csvs fa15-op+context+type+size-csvs
-```
-
-### Comparing Blame Accuracy (Sec. 4.2)
+### Accuracy (Sec. 6.1)
 
 The first experiment compares the accuracy of our learned models against
-OCaml and the state-of-the-art SHErrLoc and Mycroft tools.
+a random and a popular classifier.
 
-Let's first train all of NATE's various models. This will also take a
-while, so if you're in a hurry or on a low-powered machine try the
-FASTER command.
-
-``` shellsession
-~/nate $ make -j5 linear tree hidden
-# FASTER: just the MLP-500 with the op+context+type+size features
-~/nate $ make op+context+type+size-hidden-500
-```
-
-Running `make -j` will garble the results printed to stdout, but we also
-store each model's predictions for offline analysis. The predictions are
-stored in `data/{sp14,fa15}/<features>/<model>/<program>.ml.out`, with a
-single predicted blame span per line. For example, to see the
-predictions of the MLP-500 on the op+context+type features from the sp14
-dataset, we would look at the files in
-`data/sp14/op+context+type+size/hidden-500`.
-
-We can compute the top-k accuracy summaries with the `results` target.
+Let's first train all of RITE's various models. This will take a while
+depending on how many cores you have, so you might want to go grab a cup
+of coffee.
 
 ``` shellsession
-~/nate $ make -j5 results
-# FASTER: just the MLP-500
-~/nate $ make op+context+type+size-hidden-500-results
+~/rite $ python3 learning/predict_fixes_dnn.py \
+            dnn \
+            data/sp14/clusters+all/ \
+            data/fa15/known+clusters+all
+Clusters = 50
+Test ALL loss = 0.6660116819735946 , acc = 88.53344917297363
+Test loss = 3.506852368973419 , acc = 43.78748834133148
+accuracy for top 6
+top 1
+43.78748928877464
+top 3
+68.68037703513282
+top 5
+77.9777206512425
+top 6
+80.719794344473
+accuracy for top 3 locations
+78.8030888030888
+accuracy for top 5 locations
+88.4942084942085
 ```
 
-This will produce a `results.csv` file in the same directory as the
-`<program>.ml.out` files. For example, here are the results for the
-MLP-500 on the op+context+type features.
+Similarly, we can get the results for the other two classifiers with:
 
 ``` shellsession
-~/nate $ cat data/sp14/op+context+type+size/hidden-500/results.csv
-tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type+size/hidden-500,sp14,op+context+type+size,hidden-500,0.736,0.864,0.915,0.720,2712
-~/nate $ cat data/fa15/op+context+type+size/hidden-500/results.csv
-tool,year,features,model,top-1,top-2,top-3,recall,total
-op+context+type+size/hidden-500,fa15,op+context+type+size,hidden-500,0.701,0.841,0.907,0.696,2365
+~/rite $ python3 learning/predict_fixes_dnn.py \
+            random \
+            data/sp14/clusters+all/ \
+            data/fa15/known+clusters+all
+~/rite $ python3 learning/predict_fixes_dnn.py \
+            popular \
+            data/sp14/clusters+all/ \
+            data/fa15/known+clusters+all
 ```
 
-#### State of the Art
-
-You may also want to compare our models against OCaml, SHErrLoc, and
-Mycroft. We have patched all of these tools slightly to produce source
-locations in a standard format, so you will have to build the included
-versions.
-
-Unfortunately, Mycroft is not available publicly so we are not
-comfortable distributing it ourselves. Please contact the authors for a
-copy if you wish to rerun the Mycroft benchmarks.
-
-
-##### Building OCaml
+The results are not expected to be exactly the same as presented in the paper,
+but they should be very close. You can reproduce our results for the DNN
+classifier by loading a pretrained model that we provide with:
 
 ``` shellsession
-~/nate $ cd eval/ocaml
-~/nate/eval/ocaml $ ./configure -prefix $(pwd)/../build
-~/nate/eval/ocaml $ make world world.opt
-# NOTE: at the moment, ocaml's `make install` seems to
-# get stuck in an infinite recursion, just hit Ctrl-C
-# after a few seconds and it should be fine.. Sorry!
-~/nate/eval/ocaml $ make install
+~/rite $ python learning/predict_fixes_dnn.py \
+            load \
+            data/sp14/clusters+all/ \
+            data/fa15/known+clusters+all \
+            models/dnn-50-multiclass-final.h5
 ```
 
-##### Building Sherrloc
+Finally, we can reproduce the confusion matrix of the top 30 fix templates with:
 
 ``` shellsession
-# first we have to build sherrloc's version of easyocaml
-~/nate $ cd eval/sherrloc/easyocaml++
-~/nate/eval/sherrloc/easyocaml++ $ ./configure -prefix $(pwd)/../../build/eocaml
-~/nate/eval/sherrloc/easyocaml++$ ./build/smallworld.sh
-~/nate/eval/sherrloc/easyocaml++$ ./build/install.sh
-# now we can build sherrloc itself
-~/eval/sherrloc/easyocaml++ $ cd ..
-~/eval/sherrloc $ ant
+~/rite $ python3 learning/plot_conf_matrix_30.py \
+            load \
+            data/sp14/clusters+all/ \
+            data/fa15/known+clusters+all/ \
+            models/dnn-30-multiclass-final.h5
 ```
 
-##### Gathering state-of-the-art predictions
+### Efficiency (Sec. 6.2)
 
-Once you have built the tools, we provide another `make` target to
-gather the predictions. Note that SHErrLoc in particular is quite slow
-on some programs, so you may want to use our cached predictions instead
-of reproducing them yourself.
+Next, let's see how to reproduce the program repair rates.
+
+This will take quite a while as there are many programs to synthesize and
+each program has a synthesis timeout of 90 seconds. Running the full test
+can take up to 20 hours.
 
 ``` shellsession
-~/nate $ make -j6 ocaml sherrloc # mycroft
-# FASTER: just ocaml
-~/nate $ make -j2 ocaml
-# EVEN FASTER: use our cached predictions
+~/rite $ python3 run_all_synthesis.py all
 ```
 
-NOTE: As mentioned in the paper, there are a number of programs that
-SHErrLoc was unable to check due to unsupported language features or
-exceeding its 1GB heap limit. These will present in the logs as errors
-of the form:
+The final repaired solutions for the programs will be in new `.ml` files
+in the directories `data/fa15/repaired/{rite,naive}`. Each file will contain up
+to 3 top ranked solutions, i.e. repairs for the ill-typed program.
 
-```
-This feature is not supported by EasyOcaml
-eval/bin/ecamlc: line 14: error.con: No such file or directory
-
-OR
-
-OutOfMemoryError
-```
-
-The predictions are stored as above, in
-`data/{sp14,fa15}/<tool>/<program>.ml.out` files. As before, we provide
-a `make` target to compute the accuracy summaries.
+You can skip synthesizing solutions for all the programs in the test set
+(fa15) by using the provided synthesis times that we extracted. The repair
+rate graph can be generated with our data or by the data from the previous
+command, by using:
 
 ``` shellsession
-~/nate $ make -j6 ocaml-results sherrloc-results # mycroft-results
-# FASTER: just ocaml
-~/nate $ make ocaml-sp14-results ocaml-fa15-results
-# EVEN FASTER: use the cached results
+~/rite $ python3 plot_repair_rates.py all
 ```
 
-NOTE: As mentioned in the paper, there are a number of programs for
-which SHErrLoc and OCaml either did not produce any blame locations
-(perhaps due to a timeout), or our scripts could not match one of their
-blame locations with program locations as we see them (basically,
-off-by-one errors in comparing source spans). In these cases, you will
-see warnings of the form:
-
-```
-WARN: no blamed spans
-
-OR
-
-WARN: blamed spans not subset of all spans
-```
-
-
-As before, you should now see `results.csv` files.
+You can generate the repaired solutions for a smaller subset of programs
+from the test set, e.g. the 100 first programs, by using:
 
 ``` shellsession
-~/nate $ cat data/sp14/ocaml/results.csv
-tool,year,features,model,top-1,top-2,top-3,recall,total
-ocaml,sp14,.,ocaml,0.448,0.448,0.448,0.227,2652
-~/nate $ cat data/fa15/ocaml/results.csv
-tool,year,features,model,top-1,top-2,top-3,recall,total
-ocaml,fa15,.,ocaml,0.435,0.435,0.435,0.219,2328
+~/rite $ python3 run_all_synthesis.py 100
+Naive:
+10 sec: Repair rate = 0.61
+20 sec: Repair rate = 0.75
+30 sec: Repair rate = 0.79
+40 sec: Repair rate = 0.83
+50 sec: Repair rate = 0.86
+60 sec: Repair rate = 0.87
+70 sec: Repair rate = 0.87
+80 sec: Repair rate = 0.89
+90 sec: Repair rate = 0.92
+Rite:
+10 sec: Repair rate = 0.8
+20 sec: Repair rate = 0.85
+30 sec: Repair rate = 0.88
+40 sec: Repair rate = 0.9
+50 sec: Repair rate = 0.92
+60 sec: Repair rate = 0.93
+70 sec: Repair rate = 0.93
+80 sec: Repair rate = 0.95
+90 sec: Repair rate = 0.96
 ```
 
-The actual bar graphs in the paper are produced by LaTeX, to rebuild
-them after running the benchmarks:
+An then you can plot the repair rate graph for the data from the previous
+command, by using:
 
 ``` shellsession
-~/nate $ cd paper/oopsla17-submission && latexmk -pdf main
+~/rite $ python3 plot_repair_rates.py 100
 ```
 
+If you get an error running the `run_all_synthesis.py` script, because of
+the argument `capture_output=True` in line **30**, then you should replace
+it in **both** line **30** and line **82** with `stdout=PIPE, stderr=PIPE`
+and should import `PIPE` at the top of the file with
+`from subprocess import PIPE`. This could happen if you have an older
+version of python.
 
-### Comparing Feature Utility (Sec. 4.3)
+### Usefulness & Impact of Templates on Quality (Sec. 6.3 & 6.4)
 
-Next, let's see how to reproduce the feature utility results.
+The rest of our evaluation was based on a user study and an expert study.
+For both of them, we used a web interface that can be reached [here].
 
-This will take quite a while as there are many combinations of feature
-sets and models to test, and each combination does a 10-fold
-cross-validation.
+[here]: http://dijkstra.eecs.umich.edu/~endremad/George_HumanStudy1/index.php
+
+We can't provide a way to run Seminal at the moment, since it requires another
+VM with a much older version of Ubuntu to compile it and generate the programs.
+We provide however all the generated outputs of Seminal in the
+`data/{sp14_seminal,fa15_seminal}` directories, where each `ID.ml.out` file
+corresponds to the `ID.ml` program from our dataset.
+
+Furthermore, the list of program IDs used for the human studies are the following:
+
+`42, 56, 1007, 71, 2056, 1777, 102, 108, 109, 709, 1421, 156, 174, 178, 180, 209, 269, 329, 569, 628, 651`
+
+and the RITE solutions can be reproduced with:
 
 ``` shellsession
-~/nate $ make feature-cross  # this will take a few hours, and requires all feature sets
-# FASTER: just run the MLP-500 on the op+context+type+size features
-~/nate $ python learning/learn.py \
-           --data data/fa15/op+context+type+size:data/sp14/op+context+type+size \
-           --model=hidden --hidden_layers=500 \
-           --learn_rate=0.001 --reg_rate=0.001 \
-           --batch_size=200 --n_epochs=20 --n_folds=10 \
-           --seed 0
+~/rite $ stack exec -- make-fixes \
+            --source features/data/ucsd/data/derived/fa15/pairs.json \
+            --mode tiny \
+            --predictions data/fa15/known+clusters+all/dnn-50-multiclass \
+            --clusters data/sp14/clusters \
+            --out data/fa15/repaired/rite \
+            --file ID
 ```
 
-There's no interleaving of output here, so you can scroll through the log
-if you like, or you can look at the summary csvs we produce in
-`models/<model>-<features>.cross.csv`. For example, to see the results
-for the MLP-500 on the op+context+type feature set:
+by replacing `ID` each time with the appropriate program ID from the list.
+This step is not necessary if all programs were generated in the previous
+step with:
 
 ``` shellsession
-~/nate $ cat models/hidden-500-op+context+type+size.cross.csv
-model,features,top-1,top-2,top-3,recall
-hidden-500,op+context+type+size,0.773,0.883,0.929,0.737
+~/rite $ python3 run_all_synthesis.py all
 ```
-
-As before, the bar graphs in the paper are produced directly by LaTeX.
-
-### Explaining Predictions (Sec. 4.4)
-
-In this final experiment we try to explain specific predictions from our
-decision-tree classifier. We use the op+context+type feature set since
-we don't expect the expression size feature to produce a very intuitive
-explanation.
-
-If you've been following the FASTER path, you may need to first extract
-the op+context+type feature set and train a decision tree with:
-
-``` shellsession
-~/nate $ python learning/trees.py decision-tree data/fa15/op+context+type data/sp14/op+context+type
-```
-
-
-Now, we'll use the `learning/decisionpath.py` script to print out
-the sequence of decisions made by the tree. When we train the
-decision-tree, we also store a copy of the trained model in
-`models/data-<quarter>-<features>.pkl`, so let's use the tree trained on
-the fa15 data with the op+context+type features to explain the first
-bogus prediction.
-
-
-``` shellsession
-~/nate $ python learning/decisionpath.py models/decision-tree-data-fa15-op+context+type.pkl data/sp14/op+context+type/0967.csv
-# This script prints out decision paths for each expression, but we're
-# only interested in the recursive call to `clone` here
-...
-For span
-(3,42)-(3,47)
-with confidence
-0.369841269841
-our prediction is
-0.0
-should be
-1.0
-Rules used to predict sample 2:
-F-Is-Type-Fun : (= 1.0) > 0.5
-F-Is-App : (= 0.0) <= 0.5
-F-Is-Fun-C1 : (= 0.0) <= 0.5
-F-Is-App-C1 : (= 0.0) <= 0.5
-F-Is-Fun-P : (= 0.0) <= 0.5
-F-Is-Type-Fun-P : (= 0.0) <= 0.5
-F-Is-App-P : (= 1.0) > 0.5
-F-Is-Type-Tuple-P : (= 0.0) <= 0.5
-F-Is-Type-float-P : (= 0.0) <= 0.5
-F-Is-Type-Tuple-C1 : (= 0.0) <= 0.5
-F-Is-Type-int-P : (= 0.0) <= 0.5
-F-Is-Type-expr-P : (= 0.0) <= 0.5
-F-Is-Type-unit-P : (= 0.0) <= 0.5
-F-Is-Type-char-P : (= 0.0) <= 0.5
-F-Is-Type-bool-P : (= 0.0) <= 0.5
-F-Is-Type-string-P : (= 0.0) <= 0.5
-F-Is-Type-Fun-C1 : (= 0.0) <= 0.5
-F-Is-Type-list-P : (= 1.0) > 0.5
-leaf node 2821 reached, no decision here
-...
-```
-
-There are a few important pieces of information here. First of all, we
-can see that we predicted 0 (i.e. no-blame), when the correct answer was
-1, and furthermore our "confidence" was 0.369. Confidence is a bit of a
-misnomer here, it's really the probability that we should predict blame,
-i.e. < 0.5 means we will predict no-blame, and > 0.5 means we will
-predict blame.
-
-More importantly, we see the sequence of decisions made by the tree. Each
-line is as follows
-
-```
-<feature> : (= <feature-value>) [> <=] 0.5
-```
-
-which says that `<feature>`, with a value `<feature-value>` is greater
-or less than the threshold (in our case with binary features, always
-0.5). For example, the first line says that the `F-Is-Type-Fun` feature
-(i.e. the type of this expression mentions the `->` type constructor) is
-1 (i.e. true), which is greater than the threshold. Continuing on, we
-can see that the only enabled features are `F-Is-Type-Fun`,
-`F-Is-App-P` (the parent expression is an application), and
-`F-Is-Type-list-P` (the type of the parent expression mentions `list`).
-
-There should also now be a visualization of the entire tree in
-`models/decision-tree-data-fa15-op+context+type.pkl.pdf`. Each node in
-the tree lists a decision as above, and is shaded either blue
-(indicating the classifier is leaning towards **blame**) or orange
-(indicating it's leaning towards **no-blame**). Deeper shades indicate
-higher confidence. When the condition of a node is true, the tree will
-descend into the left child. Note that all of the conditions have the
-form `<feature> <= 0.5`, so taking the left path means the feature
-was disabled, the right path means the feature was enabled.
-
-
-## Extending / Reusing
-
-There are a few ways in which you may want to build on top of our work.
-You might have your own dataset that you wish to evaluate NATE's models
-on. Perhaps you have some clever ideas for additional features or
-classifiers to use with our data. Or maybe you would like to do your own
-analyses on the raw student interactions with OCaml.
-
-### New Datasets
-
-If you have your own dataset of ill-typed programs paired with fixes,
-and you would like to see how NATE's models perform on it, it should
-be fairly straightforward to integrate your data into our processing
-pipeline.
-
-First, we expect the program pairs to be in a single `pairs.json` file,
-with a single JSON object on each line. Each object should have a `bad`
-field with the ill-typed program, and a `fix` field with the fixed
-program.
-
-Once you have the `pairs.json` file, run
-
-``` shellsession
-~/nate $ stack exec -- generate-features \
-           --source path/to/pairs.json \
-           --features <features> \
-           --out path/to/csvs
-```
-
-with a suitable choice of `features`, based on our experiments
-`op+context+type` will probably perform best.
-
-Then you can train and evaluate a model with your data. For example,
-suppose we want to train on the combined sp14/fa15 data and evaluate on
-your data, to see how well the models generalize to other
-datasets. We'll use the MLP-500 classifier and op+context+type features
-since they give the best results.
-
-
-``` shellsession
-~/nate $ python learning/learn.py \
-           --data=data/sp14/op+context+type:data/fa15/op+context+type \
-           --test_data=path/to/csvs \
-           --model=hidden --hidden_layers=500 \
-           --learn_rate=0.001 --reg_rate=0.001 \
-           --batch_size=200 --n_epochs=20 \
-           --seed 0
-```
-
-The `learn_rate`, `reg_rate`, `batch_size`, and `n_epochs` are learning
-parameters, feel free to experiment with them, but these values seem to
-work well in practice. `seed` is an optional random seed for
-reproducibility.
-
-
-### New features
-
-Perhaps you have a clever idea for a new feature to improve NATE's
-accuracy.
-
-At a high level we model features as real-valued functions over typed
-expressions, but things are slightly more complex in the implementation.
-
-The feature extraction functions are defined in
-`features/src/NanoML/Classify.hs`, using the type alias
-
-``` haskell
-type Feature = ([String], (TExpr -> TExpr -> [Double]))
-```
-
-That is, a `Feature` is a pair of a list of labels and a function that
-takes two typed expressions and returns a list of `Double`s. The reason
-we define it this way, multiple features together, is that each
-expression is also given features of its parent and children, so it's
-very convenient to define a feature function for the current expression,
-and then use `mkContextLabels` and `mkContextFeatures` to lift it to the
-surrounding context.
-
-As an example, look at how we define the features for the syntactic
-class of an expression, `preds_tis_ctx`, in terms of
-`tis_op_ctx`, `tis_op`, etc.
-
-
-Once you have added your new feature function, you must hook it up to
-the `generate-features` binary. For this, open up
-`features/bin/Generate.hs` and look at the case-analysis in the `main`
-function. Here you just need to add a new case for your desired feature
-set, using the `mkBadFeatures` function. For example, to create a new
-feature set with local syntax and your new feature, you might add:
-
-``` haskell
-    "op+myfeature"
-      -> mkBadFeatures src cls (preds_tis ++ preds_myfeature) jsons
-```
-
-Then, recompile and extract the features:
-
-``` shellsession
-~/nate $ stack build && stack exec -- generate-features \
-           --source path/to/pairs.json \
-           --features op+myfeature \
-           --out path/to/csvs
-```
-
-### New models
-
-Adding a new model could mean a few things. At the simple end of the
-spectrum, you might want to test a different architectures for the MLP.
-This requires no code changes at all, just a different setting for the
-`--hidden_layers` flag. It accepts a `-` separated list of numbers,
-specifying the number of hidden layers and how many units each should
-have. For example, if we wanted to train an MLP with an initial hidden
-layer of 250 units and a second layer of 500 units, we would call
-
-``` shellsession
-~/nate $ python learning/learn.py \
-           --model=hidden --hidden_layers=250-500 # ...
-```
-
-You may also want to experiment with different settings for the learning
-parameters `--learn_rate`, `--reg_rate` (for L2 regularization),
-`--batch_size`, and `--n_epochs`.
-
-If you want to make more invasive changes, e.g. different activation
-functions or connections between layers, see the `build_model` function
-in `learning/hidden.py`.
-
-It's also quite straightforward to use any of scikit-learn's built-in
-classifiers, just extend the switch at
-https://github.com/ucsd-progsys/ml2/blob/master/learning/trees.py#L103-L119
-with your choice of classifier.
-
-Of course, you can always write your own classifier from scratch if it
-doesn't fit nicely into the tensorflow or scikit-learn models. As long
-as your classifier can read our CSV files and output a sequence of
-ranked predictions in the one-per-line format described above (see
-"Comparing Blame Accuracy"), it will fit nicely into our evaluation
-pipeline. The CSV files themselves are quite simple and look roughly as
-follows.
-
-```
-SourceSpan,L-NoChange,L-DidChange,F-InSlice,F-Feature1,F-Feature2,etc.
-"(1,1)-(2,2)",0,1,1,0,0,...
-"(1,5)-(1,8)",1,0,1,1,0,...
-...
-```
-
-The `SourceSpan` column contains the source span for each expression,
-and is what your classifier should output as predictions. The
-`L-{No,Did}Change` columns are the boolean output labels, indicating
-whether the expression changed in the fixed program. Having two columns
-here is redundant, you can just use one of them. The `F-InSlice` column
-indicates whether the expression is part of a type error
-slice. Regardless of the feature set, this column will be present, and
-based on our experiments, but you can safely ignore it unless you are
-working with the op+slice dataset, as we usually discard expressions
-where `F-InSlice` is false during feature extraction. Finally, there are
-an arbitrary number of `F-Feature` columns for the input features to the
-model.
-
-### Other analyses on the interaction traces
-
-If you just want to work with the interaction traces we collected from the
-students, you can find the full (anonymized) dataset at https://github.com/ucsd-progsys/yunounderstand-data.
