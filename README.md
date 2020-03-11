@@ -4,11 +4,19 @@
 
 Let's quickly walk through setting up a development environment.
 
-If you don't mind using a VM and things being a bit slower, we've
-[provided] one for you, the user and password are both **"rite"**. The VM
-should already have everything you need installed, and will boot with a
-terminal open in the repository. You just need to activate the python
-virtualenv with
+All programs mentioned below should be able to run on a single-core 8GB RAM
+laptop. However, for training the machine learning (ML) models, the more CPU
+cores available, the faster they will be trained.
+
+If you don't mind using a VM and things being a bit slower, we've [provided]
+one for you. Just import the `.ova` file into [Oracle VM VirtualBox] (or any
+other virtualization product that supports `.ova` files) and use the default
+settings. You can always increase the number of processors used by the VM to
+a number of your choice in order to speed up the ML model training later on.
+
+The user and password for the VM are both **"rite"**. The VM should already
+have everything you need installed, and will boot with a terminal open in the
+repository. You just need to activate the python virtualenv with
 
 ``` shellsession
 ~/rite $ source .venv/bin/activate
@@ -18,6 +26,7 @@ and then you should be able to skip to "Reproducing the evaluation
 (Step-by-Step Instructions)".
 
 [provided]: https://drive.google.com/file/d/1MjGzWiFmdW5lahzOI2RHDHJRJjtaHwba/view?usp=sharing
+[Oracle VM VirtualBox]: https://www.virtualbox.org/
 
 ### Getting the source
 
@@ -90,7 +99,7 @@ Number of clusters = 146
             --clusters data/sp14_min/clusters/top_clusters.json
 Number of clusters = 118
 ```
-The command line output should include the lines with `Number of lines = `
+The command line output should include the lines with `Number of clusters = `
 near the end. Those are the total number of fix template clusters extracted
 from each year.
 
@@ -103,7 +112,7 @@ features for each program, and a set of `.ml` files in the
 We are not going to use the clusters in the `data/fa15_min` directory.
 
 Next, let's train a deep neural network (DNN) on the sp14 programs and test it
-on the fa15 programs. The specific learning parameters don't particularly
+on the FA15 programs. The specific learning parameters don't particularly
 matter here and are predefined in the script.
 
 ``` shellsession
@@ -291,7 +300,7 @@ in the directories `data/fa15/repaired/{rite,naive}`. Each file will contain up
 to 3 top ranked solutions, i.e. repairs for the ill-typed program.
 
 You can skip synthesizing solutions for all the programs in the test set
-(fa15) by using the provided synthesis times that we extracted. The repair
+(FA15) by using the provided synthesis times that we extracted. The repair
 rate graph can be generated with our data or by the data from the previous
 command, by using:
 
@@ -376,3 +385,22 @@ step with:
 ``` shellsession
 ~/rite $ python3 run_all_synthesis.py all
 ```
+
+or in order to generate only the RITE solutions for all the programs in FA15:
+
+``` shellsession
+~/rite $ stack exec -- make-fixes \
+            --source features/data/ucsd/data/derived/fa15/pairs.json \
+            --mode timed-synth-total \
+            --predictions data/fa15/known+clusters+all/dnn-50-multiclass \
+            --clusters data/sp14/clusters \
+            --out data/fa15/repaired/rite
+```
+
+We have also provided the (anonymized) [human study responses] that were used
+in Sec. 6.3 of the paper and the [expert study responses] that were used in
+Sec. 6.4.
+
+[human study responses]: https://docs.google.com/spreadsheets/d/1J0s9chaAjKNunmcF66xBJjXLMKOct7Q9SsokCwX6SOk/edit?usp=sharing
+
+[expert study responses]: https://docs.google.com/spreadsheets/d/1pbLqAdb33BdUuvgOXRFO-HT5XtjXXeu9JWYFVBW47h0/edit?usp=sharing

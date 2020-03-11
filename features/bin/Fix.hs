@@ -63,7 +63,8 @@ main = do
   let ffile = fromMaybe "data/sp14_all/clusters" cls </> "ranked_funs.json"
   let dfile = fromMaybe "data/sp14_all/clusters" cls </> "ranked_dcons.json"
   pred_files <- sort <$> listDirectory preds
-  raw_preds <- mapM (\ff -> LBSC.readFile (preds </> ff)) pred_files
+  raw_preds_strict <- mapM (\ff -> BSC.readFile (preds </> ff)) pred_files
+  let raw_preds = map LBSC.fromStrict raw_preds_strict
   let predf_ids = map takeBaseName pred_files
   let all_preds = zipWith readPreds predf_ids raw_preds
   top_cls <- map readClusterFile . lines <$> readFile cfile
