@@ -30,25 +30,23 @@ Several recent papers have proposed an inspiring new line of
 attack on the feedback problem: using techniques from synthesis
 to provide feedback in the form of \emph{repairs} that students
 can apply to improve their code.
-%
-These repairs are found either by symbolically searching a space of candidate
-programs circumscribed by an expert-defined repair model
-\citep{singh2013,HeadGSSFDH17}, or via the observation that \emph{similar
-programs} have similar repairs, \ie by calculating ``diffs'' from the given
-solution and a \emph{correct} program that is the ``closest'' to the student's
-solution ~\citep{Gulwani_2018,Wang_2018}
 
-While this approach is compelling for generating feedback in large
-classes, it has several crucial requirements that render it inapplicable
-for type error messages.
+One way these repairs are found is by symbolically searching a space of candidate
+programs circumscribed by an expert-defined repair model
+\citep{singh2013,HeadGSSFDH17}.
 %
-First, for type errors, the space of candidate repairs is massive.
+However, for type errors, the space of candidate repairs is massive.
 It is quite unclear whether a small set of repair models \emph{exists}
 or even if it does, what it \emph{looks like}. More importantly,
 to scale, it is essential that we remove the requirement that an
 expert carefully curate some set of candidate repairs.
+
+Another way to generate repairs is via the observation that \emph{similar
+programs} have similar repairs, \ie by calculating ``diffs'' from the student's
+solution to the ``closest'' \emph{correct} program
+~\citep{Gulwani_2018,Wang_2018}.
 %
-Second, the approach requires a corpus of similar programs,
+However, this approach requires a corpus of similar programs,
 whose syntax trees or execution traces can be used to match
 each incorrect program with a ``correct'' version that is
 used to provide feedback. Programs with static type errors
