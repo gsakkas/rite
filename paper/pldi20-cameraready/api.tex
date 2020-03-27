@@ -1,0 +1,40 @@
+\begin{figure}
+\small
+\begin{minipage}[c]{\linewidth}
+  \lstDeleteShortInline{|}
+  \[
+  \boxed{
+  \begin{array}{lcl}
+    \Conf         & \defeq & \{r \in \R\ |\ 0 \le r \le 1\} \\
+    \ConfBin      & \defeq & \{b \in \R\ |\ b = 0 \vee b = 1\} \\
+    \T            & \defeq & e^{RTL} \\
+    \Emap{a}      & \defeq & e \to a \\
+    \Tmap{a}      & \defeq & \T \to a \\
+    \datasym      & \defeq & \List{\Conf} \\
+    \labelsym{a}  & \defeq & a \times \Tmap{a} \\
+    \pairsym      & \defeq & e \times e \\
+    \datasetsym   & \defeq & \List{\pairsym} \\
+    \midrule
+    \featuresym   & \defeq & e \to \Emap{\datasym} \\
+    \predictorsym & \defeq & e \to \Emap{(\labelsym{\Conf})} \\
+    \midrule
+    \abstrsym   & : & e \to \T \\
+    \diffsym    & : & \pairsym \to \List{e} \\
+    \midrule
+    \extractsym & : & \featuresym \to \List{\T} \to \pairsym \\
+                &   & \quad \to \Emap{(\datasym \times \labelsym{\ConfBin})} \\
+    \trainsym   & : & \List{\datasym \times \labelsym{\ConfBin}} \to \Model \times \ModelT \\
+    \ranksym & : & \Model \to \ModelT \to \datasym \to \labelsym{\Conf} \\
+    \midrule
+    \predictsym  & : & \featuresym \to \List{\T} \to \datasetsym \to \predictorsym \\
+  \end{array}
+  }
+  \]
+  \lstMakeShortInline[mathescape=true]{|}
+  \captionof{figure}{
+    A high-level API for converting program pairs to
+    feature vectors and template labels.
+  }
+  \label{fig:api}
+\end{minipage}
+\end{figure}

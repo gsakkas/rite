@@ -1,0 +1,247 @@
+\section{Predicting Fix Templates}
+\label{sec:templ-pred}
+
+Given a candidate set of templates, our next task is to \emph{train} a model
+that, when given an (erroneous) program, can predict which template to use for
+each location in that program.
+%
+We do so by defining a function $\predictsym$ which takes as input
+%
+(1)~a feature extraction function $\featuresym$,
+%
+(2) a dataset $\datasetsym$ of program pairs $(\pbad,\ \pfix)$, and
+%
+(3)~a list of fix templates $\T$.
+%
+It returns as output a \emph{fix-template-predictor} which, given an
+erroneous program, returns the locations of likely fixes, and the templates to
+be applied at those locations.
+
+We build $\predictsym$ using three helper functions that carry out each of the
+high-level steps.
+%
+First, the $\extractsym$ function extracts \emph{features} and \emph{labels}
+from the program pair dataset. Next, these feature vectors are grouped and fed
+into $\trainsym$ which produces two models, $\Model$ and $\ModelT$, that are
+respectively used for error localization and predicting fix templates.
+%
+Finally, $\ranksym$ takes the features for a new (erroneous) program and
+queries the trained models to return the likely fix locations and corresponding
+fix templates.
+
+Next, we describe the key data-types in \autoref{fig:api}, our implementations
+of the three key steps, and how they are combined to yield the $\predictsym$
+algorithm.
+
+\mypara{Confidences, Data and Labels}
+As shown in \autoref{fig:api}, we define $\Emap{a}$ as a mapping from
+expressions $e$ to values of type $a$, and $\Tmap{a}$ as a mapping from
+templates $\T$ to such values. For example, $\Tmap{\Conf}$ is a mapping from
+templates $\T$ to their confidence scores $\Conf$. $\datasym$ represents feature
+vectors used to train our predictive models, while $\labelsym{\ConfBin}$ are the
+dataset labels for training and $\labelsym{\Conf}$ are the output confidence
+scores. Finally, $\pairsym$ is a program pair $(\pbad,\ \pfix)$.
+
+\mypara{Features and Predictors}
+We define $\featuresym$ as a function that generates the feature vectors
+$\datasym$ for each subexpression of an input program $e$. Those feature vectors
+are given in the form of a map $\Emap{\datasym}$, which maps all subexpressions
+of the input program $e$ to its feature vector $\datasym$.
+
+$\predictorsym$s are learned fix-template-predictors returned from our algorithm
+that are used to generate confidence score mappings for input programs $e$.
+Specifically, they return a map $\Emap{(\labelsym{\Conf})}$ that associates each
+subexpression of the input program $e$ with a confidence score
+$\labelsym{\Conf}$.
+% \BC{here it's ``a confidence score $\labelsym{\Conf}$''; just recently it was
+% ``their confidence scores $\Conf$''}
+
+\mypara{Architecture}
+First, the $\extractsym$ function takes as input the feature extraction
+functions $\featuresym$, a list of templates $\List{\T}$ and a single program
+pair $\pairsym$ and generates a map $\Emap{(\datasym \times
+\labelsym{\ConfBin})}$ of feature vectors and boolean labels for all
+subexpressions of the erroneous input program from $\pairsym$.
+%
+All feature vectors $\datasym$ and labels $\labelsym{\ConfBin}$ are then
+accumulated into one list, which is given as input to $\trainsym$ and are used
+for training the two models $\Model$ and $\ModelT$ that are respectively used
+for predicting error locations and fix templates.
+%
+Next, the two trained models $\Model$ and $\ModelT$, along with $\datasym$ from
+a new and previously unseen program, can be fed into $\ranksym$. This
+produces a $\predictorsym$, which can be used to map subexpressions of the new
+program to possible error locations and fix templates.
+
+\input{api.tex}
+
+
+\subsection{Feature and Label Extraction}
+\label{sec:templ-pred:extract}
+The machine learning algorithms that we use for predicting fix templates and
+error locations expect fixed-length \emph{feature vectors} $\datasym$ as their
+input. However, we want to repair variable-sized programs over \lang. We thus
+use the $\extractsym$ function to convert programs to feature vectors.
+
+Following Seidel \emph{et al.}~\citep{Seidel:2017}, we choose to model a program
+as a \emph{set} of feature vectors, where each element corresponds to a
+subexpression in the program. Thus, given an erroneous program $\pbad$ we first
+split it into its constituent subexpressions and then transform each
+subexpression into a single feature vector, \ie $\featuresym\ \pbad ::
+\Emap{\datasym}$. We only consider expressions inside a minimal type-error
+\emph{slice}. We show here the five major feature categories used.
+
+\mypara{Local syntactic features}
+These features describe the syntactic category of each expression $e$. In other
+words, for each production rule of $e$ in \autoref{fig:ml-syntax} we introduce a
+feature that is enabled (set to $1$) if the expression was built with that
+production, and disabled (set to $0$) otherwise.
+
+\mypara{Contextual syntactic features}
+The \emph{context} in which an expression occurs can be critical for correctly
+predicting error sources and fix templates. Therefore, we include contextual
+features, which are similar to the local syntactic features but describe the
+parent and children of an expression. For example, the \IsNilC feature
+would describe whether an expression's \emph{first child} is []. This
+is similar
+to the \emph{n-grams} used in linguistic models
+\citep{Hindle2012-hf,Gabel2010-el}.
+
+\mypara{Expression size}
+We also include a feature representing the \emph{size} of each expression, \ie
+how many subexpressions does it contain? This allows the model to learn that,
+\eg, expressions closer to the leaves are more likely to be fixed than
+expressions closer to the root.
+
+\mypara{Typing features}
+The programs we are trying to repair are \emph{untypeable}, but a \emph{partial
+typing} derivation from the type checker could still provide useful information
+to the model. Therefore, we include \emph{typing} features in our
+representation. Due to the parametric type constructors
+$\tfun{\cdot}{\cdot}$, $\tprod{\cdot}{\cdot}$, and $\tlist{\cdot}$, there is an
+\emph{infinite} set of possible types --- but we must have a \emph{finite} set
+of features. We add features for each abstract type constructor that describes whether a
+given type uses that constructor. For example, the type
+$\tfun{\tint}{\tfun{\tint}{\tbool}}$
+would enable the $\tfun{\cdot}{\cdot}$, $\tint$, and $\tbool$ features.
+
+We add these features for parent and child expressions to summarize the context,
+but also for the current expression, as the type of an expression is not always
+clear syntactically.
+
+\mypara{Type error slice}
+We wish to distinguish changes that could fix the error from changes that
+\emph{cannot possibly} fix the error. Thus, we compute a minimal type-error
+\emph{slice} (\eg \citep{Tip2001-qp,Haack2003-vc}) for the program (\ie the set
+of expressions that contribute to the error) and if the program contains
+multiple type-errors, we compute a minimal slice for each error. We then have a
+post-processing step that discards all expressions that are not included in
+those slices.
+
+\mypara{Labels}
+Recall that we use two predictive models, $\Model$ for error localization and
+$\ModelT$ for predicting fix templates. We thus require two sets of
+\emph{labels} associated with each feature vector, given by
+$\labelsym{\ConfBin}$. $\Model$ is trained using the set $\List{\datasym \times
+\ConfBin}$, while $\ModelT$ using the set $\List{\datasym \times
+\Tmap{\ConfBin}}$.
+
+$\Model$'s labels of type $\ConfBin$ are set to ``true'' for each subexpression
+of a program $\pbad$ that changed in $\pfix$. A label $\Tmap{\ConfBin}$, for a
+subexpression of $\pbad$, maps to the repair template $\T$ that was used to fix
+it. $\Tmap{\ConfBin}$ associates all subexpressions with a fixed number of
+templates $\List{\T}$ given as input to $\extractsym$. Therefore, for the
+purpose of template prediction, $\Tmap{\ConfBin}$ can be viewed as a
+fixed-length boolean vector that represents the fix templates used to repair
+each subexpression. This vector has at most one slot set to ``true'',
+representing the template used to fix $\pbad$. These labels are extracted using
+$\diffsym$ and $\abstrsym$, similarly to the way that templates were extracted
+in \S~\ref{sec:templ-partition:templates}.
+
+
+\subsection{Training Predictive Models}
+\label{sec:templ-pred:train}
+\lstDeleteShortInline{|}
+
+Our goal with the $\trainsym$ function is to train two separate
+\emph{classifiers} given a training set $\List{\datasym \times
+\labelsym{\ConfBin}}$ of labeled examples. $\Model$ predicts error locations and
+$\ModelT$ predicts fix templates for a new input program $\pbad$. Critically, we
+require that the error localization classifier output a \emph{confidence score}
+$\Conf$ that represents the probability that a subexpression is the error that
+needs to be fixed. We also require that the fix template classifier output a
+confidence score $\Conf$ for each fix template that measures
+how sure the classifier is that the template can be used to repair the
+associated location of the input program $\pbad$.
+
+We consider a standard learning algorithm to generate our models: \emph{neural
+networks}. A thorough introduction to neural networks is
+beyond the scope of this work~\citep{Hastie2009-bn,Nielsen2015-pu}.
+
+\mypara{Neural Networks}
+The model that we use is a type of neural network called a \emph{multi-layer
+perceptron}. A multi-layer perceptron can be represented as a directed acyclic
+graph whose nodes are arranged in layers that are fully connected by weighted
+edges. The first layer corresponds to the input features, and the final to the
+output. The output of an internal node is the sum of the weighted
+outputs of the previous layer passed to a non-linear function, called the
+activation function. The number of layers,
+the number of nodes per layer, and the connections between layers constitute the
+\emph{architecture} of a neural network. In this work, we use relatively
+\emph{deep neural networks} (\dnn). We can train a \dnn $\Model$ as a
+binary classifier, which will predict whether a location in a program $\pbad$
+has to be fixed or not.
+
+\mypara{Multi-class \dnn{}s}
+While the above model is enough for error localization, in the case of template
+prediction we have to select from more than two \emph{classes}. We again use a
+\dnn for our template prediction $\ModelT$, but we adjust the output layer to
+have $N$ nodes for the $N$ chosen template-classes. For multi-class
+classification problems solved with neural networks, usually a \emph{softmax}
+function is used at output layer \citep{Goodfellow-et-al-2016,Bishop-book-2006}.
+Softmax assigns probabilities to each class that must add up to 1.
+This additional constraint speeds up training.
+
+% For an output vector $y = (y_1, \dots, y_N) \in \R^{N}$, the standard softmax
+% function is defined as:
+% \[ \sigma(y)_i = \frac{e^{y_i}}{\sum_{j=1}^{N} e^{y_j}},\ for\ i = 1, \dots, N \]
+
+
+\subsection{Predicting Fix Templates}
+\label{sec:templ-pred:predict}
+
+Our ultimate goal is to be able to pinpoint what parts of an erroneous program
+should be repaired and what fix templates should be used for that purpose.
+Therefore, the $\predictsym$ function uses $\ranksym$ to predict all
+subexpressions' confidence scores $\Conf$ to be an error location and confidence
+scores $\Tmap{\Conf}$ for each fix template. We show here how all the functions
+in our high-level API in \autoref{fig:api} are combined to produce a final list
+of confidence scores for a new program $p$. \autoref{algo:predict-algo} presents
+our high-level $\predictsym$ algorithm.
+
+\input{predict-algo.tex}
+
+\mypara{The Prediction Algorithm}
+Our algorithm first extracts the machine-learning-amenable dataset $D_{ML}$
+from the program pairs dataset $D$. For each program pair in $D$,
+\textsc{Extract} returns a mapping from the erroneous program's subexpressions
+to features and labels. Then, \textsc{InSlice} keeps only the expressions in
+the the type-error slice and evaluates to a list of the respective feature and
+label vectors, which is added to the $D_{ML}$ dataset. This dataset
+is used by the \textsc{Train} function to generate our predictive $Models$, \ie
+$\Model$ and $\ModelT$.
+
+At this point we want to generate a $\predictorsym$ for a new unknown program
+$p$. We perform feature extraction for $p$ with \textsc{Extract}, and use
+\textsc{InSlice} to restrict to expressions in $p$'s type-error slice.
+The result is given by $Data(p)$.
+
+\textsc{Rank} is then applied to all subexpressions produced by $Data(p)$ with
+$\textsc{Map}$, which will create a mapping of the type
+$\Emap{(\labelsym{\Conf})}$ associating expressions with confidence scores. We
+apply \textsc{Rank} to each feature vector that corresponds to an expression in
+the type-error slice of $p$. These vectors are the first elements of $\tilde{p}
+\in Data(p)$, which are of type $\datasym \times \labelsym{\ConfBin}$. Finally,
+$\predictorsym\ Pr$ is returned, which is used by our synthesis algorithm in
+\autoref{sec:synthesis} to correlate subexpressions in $p$ with their confidence
+scores.

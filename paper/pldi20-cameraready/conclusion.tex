@@ -1,0 +1,30 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+We have presented analytic program repair, a new data-driven 
+approach to provide repairs as feedback for type errors.
+%
+Our approach is to use a dataset of ill-typed
+programs and their fixed versions to learn a representative set of fix
+templates, which, via multi-class classification allows us to 
+accurately predict fix templates for new ill-typed programs. 
+These templates guide the synthesis of program repairs in 
+a tractable and precise manner.
+
+We have implemented our approach in \toolname, and demonstrate,
+using a corpus of 4,500 ill-typed \ocaml programs drawn from 
+two instances of an introductory programming course, 
+that \toolname makes accurate fix predictions 69\% 
+of the time when considering the top three templates 
+and surpass 80\% when we consider the top six,
+and that the predicted templates let us synthesize 
+repairs for over 70\% of the test set in under 20 sec.
+%
+Finally, we conducted a user study with 29 participants 
+which showed that \toolname's repairs are of higher 
+quality than those from the state-of-the-art \seminal 
+tool which incorporates several expert-guided heuristics 
+for improving the quality of repairs and error messages.
+%
+Thus, our results demonstrate the unreasonable effectiveness
+of data for generating better error messages.

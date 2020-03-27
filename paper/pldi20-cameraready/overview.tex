@@ -1,0 +1,313 @@
+\section{Overview}
+\label{sec:overview}
+
+We begin with an overview of our approach to suggesting fixes for faulty
+programs by learning from the processes novice programmers follow
+to fix errors in their programs.
+
+\begin{figure}[ht]
+\begin{ecode}
+let rec mulByDigit i l =
+  match l with
+  | []     -> []
+  | hd::tl -> (hd * i) @ mulByDigit i tl
+\end{ecode}
+
+\begin{ecode}
+let rec mulByDigit i l =
+  match l with
+  | []     -> []
+  | hd::tl -> [hd * i] @ mulByDigit i tl
+\end{ecode}
+\caption{(top) An ill-typed \ocaml program that should multiply each element
+of a list by an integer. (bottom) The fixed version by the student.}
+\label{fig:mulByDigit}
+\end{figure}
+
+
+\mypara{The Problem} Consider the program \mbd shown at the top of
+\autoref{fig:mulByDigit}, written by a student in an undergraduate Programming
+course. The program is meant to multiply all the numbers in a list with an
+integer digit. The student accidentally misuses the list append operator
+(\texttt{@}), applying it to a number and a list rather than two lists.
+%
+Novice students who are still building a mental model of how the type checker
+works are often perplexed by the compiler's error message \citep{Munson_2016}.
+Hence a novice will often take a long time to arrive at a suitable fix, such as
+the one shown at the bottom of \autoref{fig:mulByDigit}, where \texttt{@} is
+used with a singleton list containing the multiplication of the head \texttt{hd}
+and \texttt{i}.
+%
+Our goal is to use historical data of how programmers have fixed similar errors
+in their programs to automatically and rapidly guide novices to come up with
+candidate solutions like the one above.
+
+
+\mypara{Solution: Analytic Program Repair}
+%
+One approach is to view the search for candidate repairs
+as a synthesis problem: synthesize a (small) set of edits
+to the program that yields a good (\eg type-correct) one.
+%
+The key challenge is to ensure that synthesis is \emph{tractable}
+by restricting the repairs to an efficiently searchable space, and
+yet \emph{precise} so the search does not miss the right fixes
+for an erroneous program.
+%
+In this work, we present a novel strategy called
+\emph{Analytic Program Repair} which enables tractable
+and precise search by decomposing the problem into three steps:
+%
+First, \emph{learn} a set of widely used \emph{fix templates}.
+%
+Second, \emph{predict}, for each erroneous program, the correct fix template to apply.
+%
+Third, \emph{synthesize} candidate repairs from the predicted template.
+%
+In the remainder of this section, we give a high-level overview
+of our approach by describing how to:
+
+\begin{enumerate}
+
+  \item Represent fixes abstractly via \emph{fix templates}
+        (\S~\ref{sec:overview:templates}),
+
+  \item Acquire a \emph{training set} of labeled ill-typed programs and fixes
+        (\S~\ref{sec:overview:data}),
+
+  \item Learn a small set of candidate fix templates by \emph{partitioning}
+        the training set (\S~\ref{sec:overview:learn}),
+
+  \item Predict the appropriate template to apply by training a
+        \emph{multi-class classifier} from the training set
+        (\S~\ref{sec:overview:predict}), and
+
+  \item Synthesize fixes by enumerating and checking terms from the
+        predicted templates to give the programmer localized feedback
+        (\S~\ref{sec:overview:synthesis}).
+\end{enumerate}
+
+\subsection{Representing Fixes}
+\label{sec:overview:templates}
+
+Our notion of a fix is defined as a \emph{replacement} of an existing expression
+with a new \emph{candidate} expression at a specific program location. For
+example, the \mbd program is fixed by replacing |(hd * i)| with the expression
+|[hd * i]| on line 4. We focus on AST-level replacements as they are compact yet
+expressive enough to represent fixes.
+
+
+\mypara{Generic Abstract Syntax Trees}
+%
+We represent the different possible candidate expressions via abstract fix
+templates called \emph{Generic Abstract Syntax Trees} (GAST) which each
+correspond to many possible expressions.
+%
+GASTs are obtained from concrete ASTs in two steps.
+%
+First, we abstract concrete variable, function, and operator names.
+%
+Next, we prune GASTs at a certain depth $d$ to keep only the top-level changes
+of the fix. Pruned sub-trees are replaced with \emph{holes}, which can represent
+\emph{any} possible expression in our language.
+
+
+Together, these steps ensure that GASTs only contain information about a fix's
+\emph{structure} rather than the specific changes in variables and functions.
+%
+For example, the fix |[hd * i]| in the \mbd example is represented by the GAST
+of the expression |[_ $\oplus$ _]|, where variables |hd| and |i| are abstracted
+into holes (\eg by pruning the GAST at a depth $d=2$) and |*| is represented by
+an abstract binary operator |$\oplus$|. Our approach is similar to that of
+Lerner \emph{et al.}~\citep{Lerner2007-dt}, where AST-level modifications are
+used, however, our proposed GASTs represent more abstract fix schemas.
+
+
+\subsection{Acquiring a Fix-Labeled Training Set}
+\label{sec:overview:data}
+
+Previous work has used experts to create a set of ill-typed programs and their
+fixed versions~\citep[][]{Lerner2007-dt, Loncaric2016-uk}, or to manually create
+\emph{fix templates}~\cite{kim13par} that can yield \emph{repair
+patches}~\citep[][]{martinez2013automatically,martinez2015mining}.
+%
+These approaches are hard to scale up to yield datasets suitable for machine
+learning. Also, they do not discover the \emph{frequency} in practice of particular
+classes of novice mistakes and their fixes.
+%
+In contrast, we show that such fix templates can be \emph{learned} from a large,
+automatically constructed training set of ill-typed programs labeled with their
+repairs.
+%
+Fixes in our dataset are represented as the ASTs of the expressions that students
+changed in the ill-typed program to transform it into the correct solution.
+
+\mypara{Interaction Traces}
+Following Seidel and Jhala~\citep{Seidel:2017}, we extract a labeled
+dataset of erroneous programs
+and their fixed versions from \emph{interaction traces}. Usually students write
+several versions of their programs until they reach the correct solution for a
+programming assignment. An instrumented compiler is used to capture such
+sequences (or \emph{traces}) of student programs. The first type-correct
+solution in this sequence of attempts is considered to be the fixed
+version of all the previous ones and thus a pair for each of them is added to
+the dataset. For each program pair, we then produce a \emph{diff} of their
+abstract syntax trees (ASTs), and assign as the dataset's fix labels the
+\emph{smallest} sub-tree that changed between the correct and ill-typed attempt
+of the program.
+
+
+\subsection{Learning Candidate Fix Templates}
+\label{sec:overview:learn}
+
+Each labeled program in our dataset contains a fix, which we abstract to a fix
+template. For example, for the \mbd program in \autoref{fig:mulByDigit} we get
+the candidate fix |[hd * i]| and hence the fix template |[_ $\oplus$ _]|.
+However, a large dataset of fix-labeled programs, which may include many diverse
+solutions, can introduce a huge set of fix templates, which can be inappropriate
+for predicting the correct one to be used for the final program repair.
+
+Therefore, the next step in our approach is to learn a set of fix templates
+that is \emph{small enough} to automatically predict which template to apply to
+a given erroneous program, but nevertheless \emph{covers} most of the fixes that
+arise in practice.
+
+\mypara{Partitioning the Fixes} We learn a suitable small set of fix
+templates by \emph{partitioning} all the templates obtained from our dataset,
+and then selecting a single GAST to represent the fix templates from each fix
+template set.
+%
+The partitioning serves two purposes.
+%
+First, it identifies a small set of the most common fix templates which then
+enables the use of discrete classification algorithms to predict which template
+to apply to a new program.
+%
+Second, it allows for the principled removal of outliers that arise because
+student submissions often contain non-standard or idiosyncratic solutions that
+we do not wish to use for suggesting fixes.
+
+Unlike previous repair approaches that have used clustering to group together
+similar programs (e.g.,~\citep{Wang_2018, Gulwani_2018}), we partition our set of
+fix templates into their \emph{equivalence classes} based on a fix similarity
+relation.
+
+
+\subsection{Predicting Templates via Multi-classification}
+\label{sec:overview:predict}
+
+Next, we train models that can correctly predict error locations and fix
+templates for a given ill-typed program. We use these models to generate
+candidate expressions as possible program fixes. To reduce the
+complexity of predicting the correct fix templates and error locations, we
+separate these problems and encode them into two distinct \emph{supervised
+classification} problems.
+
+\mypara{Supervised Multi-Class Classification}
+We propose using a \emph{supervised multi-class classification} problem for
+predicting fix templates. A \emph{supervised} learning problem is one where,
+given a labeled training set, the task is to learn a function that accurately
+maps the inputs to output labels and generalizes to future inputs. In a
+\emph{classification} problem, the function we are trying to learn maps inputs
+to a discrete set of two or more output labels, called \emph{classes}.
+Therefore, we encode the task of learning a function that will map
+subexpressions of ill-typed programs to a small set of candidate fix templates
+as a \emph{multi-class} classification (MCC) problem.
+
+\mypara{Feature Extraction} The machine learning models that we will train to
+solve our MCC problem expect datasets of labeled \emph{fixed-length vectors} as
+inputs. Therefore, we define a transformation of fix-labeled programs to
+fixed-length vectors. Similarly to Seidel \emph{et al.}~\citep{Seidel:2017}, we
+define a set of feature extraction functions $f_1, \ldots, f_n$, that map
+program subexpressions to a numeric value (or just $\{0, 1\}$ to encode a
+boolean property). Given a set of feature extraction functions, we can represent
+a single program's AST as a set of fixed-length vectors by decomposing the AST
+$e$ into a set of its constituent subexpressions $\{e_1, \ldots, e_m\}$ and then
+representing each $e_i$ with the $n$-dimensional vector $[f_1(e_i), \ldots,
+f_n(e_i)]$. This method is known as a \emph{bag-of-abstracted-terms} (BOAT)
+representation in previous work \citep{Seidel:2017}.
+
+\mypara{Predicting Templates via MCC}
+Our fix-labeled dataset can be updated so the labels represent the corresponding
+template that fixes each location, drawn from the minimal set of fix templates
+that were acquired through partitioning. We then train a \emph{Deep Neural
+Network (DNN)} classifier on the updated template-labeled data set.
+
+Neural networks have the advantage of associating each class with a
+\emph{confidence score} that can be interpreted as the model's confidence of
+each class being correct for a given input. Therefore, confidence scores can be
+used to rank fix template predictions for new programs and use them in
+descending order when synthesizing repairs. Exploiting recent advances in
+machine learning, we use deep and dense architectures \citep{Schmidhuber_2015}
+for more accurate fix template predictions.
+
+\mypara{Error Localization} We view the problem of finding error locations in a
+new program as a \emph{binary} classification problem. In contrast with the
+template prediction problem, we want to learn a function that maps a program's
+subexpressions to a binary output representing the presence of an error or not.
+Therefore, this problem is equivalent to MCC with only two classes and thus, we
+use similar deep architectures of neural networks. For each expression in a
+given program, the learned model outputs a confidence score representing how
+likely it is an error location that needs to be fixed. We exploit those scores
+to synthesize candidate expressions for each location in descending order of
+confidence.
+
+\subsection{Synthesizing Feedback from Templates}
+\label{sec:overview:synthesis}
+
+Next, we use classic program \emph{synthesis} techniques to synthesize candidate
+expressions that will be used to provide feedback to users. Additionally,
+synthesis is guided by predicted fix templates and a set of possible error
+locations, and returns a ranked list of \emph{minimal} repairs to users as
+feedback.
+
+\mypara{Program Synthesis} Given a set of locations and candidate templates for
+those locations, we are trying to solve a problem of \emph{program synthesis}.
+For each program location, we search over all possible
+expressions in the language's grammar for a small set of candidate
+expressions that match the fix template and make the program type-check.
+Expressions from the ill-typed program are also used during synthesis
+to prune the search space of candidate expressions.
+
+\mypara{Synthesis for Multiple Locations}
+It is often the case that more than one location needs to be fixed. Therefore,
+we do not only consider the ordered set of single error locations for synthesis,
+but rather its power set. For simplicity, we consider fixing different program
+locations as independent; the probability we assign that a set of locations
+needs to be fixed is thus the product of their individual confidence scores.
+This is unlike recent approaches to multi-hunk program repair~\citep{Saha_2019}
+where modifications depend on each other.
+
+\mypara{Ranking Fixes} Finally, we rank each solution by two metrics, the
+\emph{tree-edit distance} and the \emph{string-edit} distance. Previous work
+\citep{Lerner2007-dt, Wang_2018, Gulwani_2018} has used such metrics to consider
+minimal changes, \ie changes that are as close as possible to the original
+programs, so novice programmers are presented with more coherent feedback.
+% Additionally, more experienced programmers might have in mind what \emph{type}
+% they want their functions to be. We thus provide the user with the option to
+% give the intended type for the program's functions we are trying to repair. In
+% our evaluation, we acquire the intended types from the fixed versions of the
+% dataset (see \autoref{sec:synthesis}).
+
+\begin{figure}[ht]
+  \begin{ecode}
+  let rec mulByDigit i l =
+    match l with
+    | []     -> []
+    | hd::tl -> [(*@$v_1$@*) * (*@$v_2$@*)] @ mulByDigit i tl
+  \end{ecode}
+  \caption{A candidate repair for the \mbd program.}
+  \label{fig:repair}
+  \end{figure}
+
+\mypara{Example} We see in \autoref{fig:repair} a minimal repair that our method
+could return (|[$v_1$ * $v_2$]| in line 4) using the template discussed in
+\S~\ref{sec:overview:learn} to synthesize it. While this solution is not the
+highest-ranked that our implementation returns (which would be identical to the
+human solution), it demonstrates relevant aspects of the synthesizer. In
+particular, this solution has some abstracted variables, $v_1$ and $v_2$. Our
+algorithm suggests to the user that they can replace the two variables with two
+distinct variables and insert the whole expression into a list, in order to
+obtain the correct program. We hypothesize that such solutions produced by our
+algorithm can provide valuable feedback to novices, and we investigate that
+claim empirically in \S~\ref{sec:eval:useful}.

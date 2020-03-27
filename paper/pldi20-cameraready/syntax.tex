@@ -1,0 +1,38 @@
+\begin{figure}
+\small
+\centering
+  \begin{minipage}[c]{\linewidth}
+  \[
+  \boxed{
+  \begin{array}{rcl}
+  e & ::=    & x \spmid \efun{x}{e} \spmid \eapp{e}{\bar{e}} \spmid \elet{x}{e}{e} \\
+    & \spmid & n \spmid b \spmid \eplus{e}{e} \spmid \eif{e}{e}{e} \\
+    & \spmid & \epair{e}{e} \spmid \epcase{e}{x}{x}{e} \\
+    & \spmid & \enil \spmid \econs{e}{e} \spmid \ecase{e}{e}{x}{x}{e} \\[0.05in]
+
+  n & ::= &  0, 1, -1, \ldots \\[0.05in]
+
+  b & ::= &  \etrue \spmid \efalse \\[0.05in]
+
+  t & ::= & \alpha \spmid \tbool \spmid \tint \spmid \tfun{t}{t} \spmid \tprod{t}{t} \spmid \tlist{t} \\[0.05in]
+  \end{array}
+  }
+  \]
+  \captionof{figure}{Syntax of \lang}
+  \label{fig:ml-syntax}
+  \end{minipage}
+  \begin{minipage}[c]{\linewidth}
+    \[
+    \boxed{
+    \begin{array}{rcl}
+    e & ::=    & \_  \spmid \hat{x} \spmid \efun{\hat{x}}{e} \spmid \eapp{\hat{x}}{\bar{e}} \spmid \elet{\hat{x}}{e}{e} \\
+      & \spmid & \hat{n} \spmid \ebop{e}{e} \spmid \eif{e}{e}{e} \\
+      & \spmid & \epair{e}{e} \spmid \epcase{e}{\hat{x}}{\hat{x}}{e} \\
+      & \spmid & \enil \spmid \econs{e}{e} \spmid \ecase{e}{e}{\hat{x}}{\hat{x}}{e} \\[0.05in]
+    \end{array}
+    }
+    \]
+    \captionof{figure}{Syntax of \repairLang}
+    \label{fig:rtl-syntax}
+  \end{minipage}
+\end{figure}

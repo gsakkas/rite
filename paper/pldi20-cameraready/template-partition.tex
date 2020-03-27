@@ -1,0 +1,176 @@
+\section{Learning Fix Templates}
+\label{sec:templ-partition}
+
+We start by introducing our approach for extracting useful \emph{fix templates}
+from a training dataset comprised of paired erroneous and fixed programs.
+%
+We express those templates in terms of a language that allows us to succinctly
+represent fixes in a way that captures the essential structure of various fix
+patterns that novices use in practice.
+%
+However, extracting a single fix template for \emph{each} fix in the program
+pair dataset yields too many templates to perform accurate predictions.
+%
+Hence, we define a \emph{similarity} relation between templates, which we use to
+\emph{partition} the extracted templates into a small bur representative set,
+that will make it easier to train precise models to predict fixes.
+
+\input{syntax.tex}
+
+\subsection{Representing User Fixes}
+\label{sec:templ-partition:lang}
+
+\mypara{Repair Template Language}
+\autoref{fig:rtl-syntax} describes our Repair Template Language, \repairLang,
+which is a lambda calculus with integers, booleans, pairs, and lists, that
+extends our core ML language \lang (\autoref{fig:ml-syntax}) with
+syntactic abstraction forms:
+
+\begin{enumerate}
+    \item \emph{Abstract variable} names $\hat{x}$  are used to denote variable
+    occurrences for functions, variables and binders, \ie $\hat{x}$ denotes
+    an unknown variable name in \repairLang;
+
+    \item \emph{Abstract literal} values $\hat{n}$ can represent \emph{any}
+    integer, float, boolean, character, or string;
+
+    \item \emph{Abstract operators} $\oplus$ similarly denote unknown unary or
+    binary operators;
+
+    \item \emph{Wildcard} expressions $\_$ are used to represent \emph{any}
+    expression in \repairLang, \ie a program \emph{hole}.
+\end{enumerate}
+
+Recall from \S~\ref{sec:overview:templates} that we define fixes as
+replacements of expressions with new candidate expressions at specific program
+locations. Therefore, we use candidate expressions over \repairLang to represent
+fix templates.
+
+\mypara{Generalizing ASTs}
+A \emph{Generic Abstract Syntax Tree} (GAST) is a term from \repairLang that
+represents many possible expressions from \lang. GASTs are abstracted from
+standard ASTs over the core language \lang using the $\abstrsym$ function that
+takes as input an expression $e^{ML}$ over \lang and a depth $d$ and returns an
+expression $e^{RTL}$ over \repairLang, \ie a GAST with all variables, literals
+and operators of $e^{ML}$ abstracted and all subexpressions starting at depth
+greater than $d$ pruned and replaced with holes $\_$.
+
+\mypara{Example}
+Recall our example program \mbd in \autoref{fig:mulByDigit}.
+%
+The expression |[hd * i]| replaces |(hd * i)| in line 4, and hence, is the
+user's \emph{fix}, whose AST is given in \autoref{fig:fix_ast}.
+%
+The output of $\abstrsym$, given this AST and a depth $d = 2$ as input, would be
+the GAST in \autoref{fig:templ_gast}, where the operator |*| has been replaced
+with an abstract operator $\oplus$, and the sub-terms |hd| and |i| at depth 2
+have been abstracted to wildcard expressions $\_$.
+%
+Hence, the \repairLang term |[_ $\oplus$ _]| represents a potential fix template
+for \mbd.
+
+\input{gast-example.tex}
+
+\subsection{Extracting Fix Templates from a Dataset}
+\label{sec:templ-partition:templates}
+
+Our approach fully automates the extraction of fixes by harvesting a set of fix
+templates from a training set of program pairs.
+%
+Given a program pair $(\pbad, \pfix)$ from the dataset, we extract a unique fix
+for each location in $\pbad$ that changed in $\pfix$.
+%
+We do so with an expression-level $\diffsym$~\citep{Lempsink2009-xf} function.
+%
+Recall that our fixes are replacements of expressions, so
+we abstract these extracted changes as our fix templates.
+
+\mypara{Contextual Repairs}
+%
+Following Felleisen \emph{et al.}~\cite{Felleisen92}, let $\econtext{}$ be the \emph{context} in which an
+expression $e$ appears in a program $p$, \ie the program $p$ with $e$
+replaced by a hole $\_$.
+%
+We write that $p = \context{}{e}$, meaning that if we fill the hole with the
+original expression $e$ we obtain the original program $p$.
+%
+In this fashion, $\diffsym$ finds a \emph{minimal} (in number of nodes)
+expression replacement $\efix$ for an expression $\ebad$ in $\pbad$, such that
+$\pbad = \context{\pbad}{\ebad}$ and $\context{\pbad}{\efix} = \pfix$.
+%
+There may be several such expressions, and $\diffsym$ returns all
+such changes.
+
+\mypara{Examples} If $\eapp{f}{x}$ is rewritten to $\eapp{g}{x}$, the context is
+$\econtext{} = \eapp{\_}{x}$ and the fix is $g$, since $\context{}{g} =
+\eapp{g}{x}$. If $\eapp{f}{x}$ is rewritten to $\eplus{(\eapp{f}{x})}{1}$, the
+context is $\econtext{} = \_$, and the fix is the whole expression
+$\eplus{(\eapp{f}{x})}{1}$, thus $\context{}{\eplus{(\eapp{f}{x})}{1}} =
+\eplus{(\eapp{f}{x})}{1}$. (Even though $\eapp{f}{x}$ appears in both the
+original and fixed programs, we consider the application expression
+$\eapp{f}{x}$ --- but not $f$ or $x$ --- to be replaced with the $+$ operator.)
+
+\subsection{Partitioning the Templates}
+
+Programs over \lang force similar fixes, such as changes to variable names, to
+have identical GASTs. Our next step is to define a notion of program fix
+\emph{similarity}. Our definition supports the formation of a small but
+widely-applicable set of fix templates. This small set is used to train a repair
+predictor.
+
+\label{subsec:partitioning}
+% \begin{figure*}
+% \begin{minipage}{\textwidth}
+% \begin{haskellcode}
+% ==data Expr== = Var | Bop Expr Expr | App [Expr] | ...
+
+% ==sim :: Expr -> Expr -> Bool==
+% sim Var         Var         = True
+% sim (Bop x1 y1) (Bop x2 y2) = sim [x1, y1] [x2, y2] ==||== sim [x1, y1] [y2, x2]
+% sim (App xs)    (App ys)    = any (\ys' -> any (\xs' -> sim xs' ys') xss) yss
+%     where
+%         xss = permutations xs
+%         yss = permutations ys
+% sim _           _           = False
+
+% ==sim :: [Expr] -> [Expr] -> Bool==
+% sim (x:xs) (y:ys) = sim x y && sim xs ys
+% \end{haskellcode}
+% \end{minipage}
+% \caption{$\simil{e_1}{e_2}$ denotes when the GAST $e_1$ is similar to $e_2$.}
+% \label{fig:similar}
+% \end{figure*}
+
+\mypara{GAST Similarity}
+% %
+% \autoref{fig:similar} formalizes a relation that states when
+% an expression $e_1$ is \emph{similar to} $e_2$  (written \simil{e_1}{e_2}).
+% %
+Two GASTs are \emph{similar} when the root nodes are the same and their child
+subtrees (if any) can be ordered such that they are pairwise similar. For
+example, $x + 3$ and $7 - y$ yield the \emph{similar} GASTs $\hat{x} \oplus
+\hat{n}$ and $\hat{n} \oplus \hat{x}$, where the root nodes are both abstract
+binary operators, one child is an abstract literal, and one child is an abstract
+variable.
+        % \eg $e_{11} \oplus e_{12}$ and $e_{21} \oplus e_{22}$ are
+        % similar \textit{iff} $(e_{11}, e_{21})$ and $(e_{12}, e_{22})$ or
+        % $(e_{11}, e_{22})$ and $(e_{12}, e_{21})$ are pair-wise similar.
+
+\mypara{Partitioning}
+GAST similarity defines a relation which is reflexive, symmetric, and transitive
+and thus an \emph{equivalence} relation. We can now define \emph{partitioning}
+as the computation of all possible \emph{equivalence classes} of our extracted
+fix templates \wrt GAST similarity. Each class can consist of several
+member-expressions and any one of them can be viewed as the class
+\emph{representative}. Each representative can then be used as a fix template to
+produce repairs for ill-typed programs.
+
+For example, $\hat{x} \oplus \hat{n}$ and $\hat{n} \oplus \hat{x}$ are in the
+same class and either one can be used as the representative. The repair
+algorithm in \autoref{sec:synthesis} will essentially consider both when fixing
+an erroneous program with this template.
+
+Finally, our partitioning algorithm returns the top $N$ equivalence classes
+based on their member-expressions frequency in the dataset. $N$ is a parameter
+of the algorithm and is chosen to be as small as possible while the top $N$
+classes represent a large enough portion of the dataset.

@@ -1,0 +1,42 @@
+\begin{figure}
+    \centering
+    \begin{minipage}[c]{0.49\linewidth}
+        \centering
+        \begin{tikzpicture}
+        [font=\small, edge from parent,
+        every node/.style={top color=white, bottom color=black!15,
+        circle, minimum size=6mm, draw=black!75,
+        thick, drop shadow, align=center},
+        edge from parent/.style={draw=black!75,thick},
+        level distance=0.8cm]
+        \node (cons) {\texttt{::}}
+            child { node (mult) {\texttt{*}}
+                child { node {\texttt{hd}}}
+                child { node {\texttt{i}}}
+                }
+            child {node (elist) {\texttt{[]}}};
+        \end{tikzpicture}
+        \subcaption{Fix AST}
+        \label{fig:fix_ast}
+    \end{minipage}
+    \begin{minipage}[c]{0.49\linewidth}
+        \centering
+        \begin{tikzpicture}
+            [font=\small, edge from parent,
+            every node/.style={top color=white, bottom color=black!15,
+            circle, minimum size=6mm, draw=black!75,
+            thick, drop shadow, align=center},
+            edge from parent/.style={draw=black!75,thick},
+            level distance=0.8cm]
+            \node (cons) {\texttt{::}}
+                child { node (mult) {\texttt{$\oplus$}}
+                    child { node {\texttt{$\_$}}}
+                    child { node {\texttt{$\_$}}}
+                    }
+                child {node (elist) {\texttt{[]}}};
+            \end{tikzpicture}
+        \subcaption{Template GAST}
+        \label{fig:templ_gast}
+    \end{minipage}
+    \caption{(left) The fix from example \autoref{fig:mulByDigit} and (right) a possible template for that fix.}
+\end{figure}
