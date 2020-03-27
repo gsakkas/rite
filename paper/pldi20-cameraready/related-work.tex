@@ -2,7 +2,7 @@
 \label{sec:related-work}
 
 There is a vast literature on automatically repairing or patching programs:
-% for specific properties (\eg null-dereferences, memory safety), 
+% for specific properties (\eg null-dereferences, memory safety),
 we focus on the most closely related work on providing feedback for novice errors.
 
 \mypara{Example-Based Feedback}
@@ -56,7 +56,7 @@ In contrast, \toolname has a more general philosophy that \emph{similar errors
 have similar repairs}: we extract generic fix templates that can be applied to
 arbitrary programs whose errors (BOAT vectors) are similar.
 %
-The \textsc{Tracer} system \cite{TRACER2018} is closest in philosophy to ours,
+The \textsc{Tracer} system \citep{TRACER2018} is closest in philosophy to ours,
 except that it focuses on single-line compilation errors for C programs, where
 it shows that NLP-based methods like sequence-to-sequence predicting DNNs can
 effectively suggest repairs, %\eg \verb+scanf("%d", a)+ should be converted to
@@ -65,40 +65,38 @@ but this does not scale up to fixing general type errors.
 %
 We have found that \ocaml's relatively simple
 \emph{syntactic} structure but rich \emph{type}
-structure make token-level seq-to-seq methods quite imprecise 
-(\eg \emph{deleting} offending statements suffices to ``repair'' C but
-yields ill-typed \ocaml) necessitating \toolname's higher-level semantic
-features and (learned) repair templates.
+structure make token-level seq-to-seq methods quite imprecise (\eg
+\emph{deleting} offending statements suffices to ``repair'' C but yields
+ill-typed \ocaml) necessitating \toolname's higher-level semantic features and
+(learned) repair templates.
 
+\textsc{Getafix} \citep{Bader_2019} and \textsc{Revisar} \citep{Rolim_2018} are
+two more systems that learn fix patterns using AST-level differencing on a
+corpus of past bug fixes. They both use \textit{anti-unification}
+\citep{Kutsia_2014} for generalizing expressions and, thus, grouping together
+fix patterns. They cluster together bug fixes in order to reduce the search
+space of candidate patches. While \textsc{Revisar} \citep{Rolim_2018} ends up
+with one fix pattern per bug category using anti-unification, \textsc{Getafix}
+\citep{Bader_2019} builds a hierarchy of patterns that also include the context
+of the edit to be made. They both keep before and after expression pairs as
+their fix patterns, and they use the before expression as a means to match an
+expression in a new buggy program and replace it with the after expression.
+While these methods are quite effective, they are only applicable in recurring
+bug categories e.g. how to deal with a null pointer exception. \toolname on the
+other hand, attempts to generalize fix patterns even more by using the GAST
+abstractions, and predicts proper error locations and fix patterns with a
+learned model from the corpus of bug fixes, so they can be applied into a
+diverse variety of bugs.
 
-%
-% \textsc{Hercules} \citep{Saha_2019} uses version history to
-% repair multiple program locations by using fault localization
-% to rank error locations and then generating repairs for each
-% location.
-% %
-% However, it utilizes version history of a big codebase to find
-% such repairs, and uses that history to produce repairs that
-% modifies multiple program locations.
-% %
-% \toolname attempts a different approach of multiple location
-% repairing, by considering each candidate error location as independent from one
-% another.
-%
-%% While \textsc{Sarfgen} is still a data-driven approach it tries to
-%% search for matching programs on the fly, using \toolname's approach can be similarly
-%% seen as a per AST node embedding, which however we use in advance for training
-%% predictive models, thus mitigating any extra cost on runtime.
-%%
-%% that can be used to produce repairs. Despite the apparent
-%% similarities, \toolname partitions similar fix patterns found in our dataset,
-%% while \textsc{Clara} clusters whole student solutions.
-%%
-%% Additionally, \textsc{Clara} assumes that there is always
-%% a matching student solution in the dataset, while \toolname
-%% extracts generic fix templates can be applied to arbitrary
-%% programs.
-%%
-%% \textsc{Clara} also scales poorly in matching programs due
-%% to the use of Integer Linear Programming, while \toolname's precomputation of
-%% fix template models makes final repairs more robust.
+\textsc{Prophet} \citep{Long_2016} is another technique that uses a corpus of
+fixed buggy programs to learn a probabilistic model that will rank candidate
+patches. Patches are generated using a set of predefined transformation schemas
+and condition synthesis. \textsc{Prophet} uses logistic regression to learn the
+parameters of this model and uses over 3500 extracted program features to do so.
+It also uses an instrumented recompile of a faulty program together with some
+failing input test cases to identify what program locations are of interest.
+While this method can be highly accurate for error localization, their
+experimental results show that it can take up to 2 hours to produce a valid
+candidate fix. In contrast, \toolname's pretrained models make finding proper
+error locations and possible fix templates more robust.
+
