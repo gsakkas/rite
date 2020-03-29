@@ -12,6 +12,7 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.metrics import confusion_matrix
 from sklearn.decomposition import PCA, NMF
 from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier
 from keras.models import Model
 from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Input, Dropout
 from keras.callbacks import EarlyStopping
@@ -20,8 +21,8 @@ import tensorflow as tf
 import input_old
 
 model = sys.argv[1]
-if model not in ['dnn', 'small', 'cnn', 'svm', 'popular', 'random', 'load', 'load-cnn']:
-    print('python predict_fixes_dnn.py [dnn|small|cnn|svm|popular|random|load|load-cnn] <train> <test> <load-model>')
+if model not in ['dnn', 'small', 'cnn', 'svm', 'trees', 'popular', 'random', 'load', 'load-cnn']:
+    print('python predict_fixes_dnn.py [dnn|small|cnn|svm|trees|popular|random|load|load-cnn] <train> <test> <load-model>')
     sys.exit(1)
 train_dir = sys.argv[2]
 test_dir = sys.argv[3]
@@ -214,7 +215,9 @@ elif model == 'cnn' or model == 'load-cnn':
     clf.summary()
     clf.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 elif model == 'svm':
-    clf = SVC(C=2, gamma='auto', cache_size=600, probability=True, random_state=prng)
+    clf = SVC(kernel='poly', probability=True, random_state=prng)
+elif model == 'trees':
+    clf = DecisionTreeClassifier(random_state=prng)
 
 #Standarize the data
 # scaler = StandardScaler()
@@ -288,7 +291,7 @@ elif model == 'random':
     prob_error = [np.random.permutation(num_of_cls) for _ in range(test_stds_all.shape[0])]
     anses = [x[0] + 1 for x in prob_error]
     loc_conf = [np.random.rand() * 100 for _ in range(test_stds_all.shape[0])]
-elif model == 'svm':
+elif model == 'svm' or model == 'trees':
     anses = clf.predict(test_stds_all).tolist()
     prob_score = clf.predict_proba(test_stds_all)
     prob_error = [np.argsort(pe)[::-1].tolist() for pe in prob_score]

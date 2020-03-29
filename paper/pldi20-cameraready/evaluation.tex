@@ -51,7 +51,7 @@ have made many, potentially unrelated, changes between compilations; at some
 point the ``fix'' becomes a ``rewrite''. These rewrites can lead to meaningless
 fix templates and error locations. We discard such outliers when the fraction of
 subexpressions that have changed in a program is more than one standard
-deviation above the mean, establishing a \diffsym threshold of 40\%. We also
+deviation above the mean, establishing a \diffsym\ threshold of 40\%. We also
 discard programs that have changes in 5 or more locations, noting that even
 state-of-the-art multi-location repair techniques cannot reproduce such
 ``fixes'' \citep{Saha_2019}. The discarded changes account for roughly 32\% of
@@ -83,14 +83,17 @@ to manual debugging \citep{Kochhar2016-oc,Parnin2011-ce}.
 %
 Therefore, we consider \toolname's accuracy up to the \emph{top six} fix
 template predictions, \ie predicted fix templates that represent the user's
-actual fix.
+actual fix that are used to synthesize produce actual repairs.
 
 \mypara{Baselines}
 %
-We compare \toolname's \dnn-based predictor against two baseline classifiers: a
+We compare \toolname's \dnn-based predictor against four baseline classifiers. A
 \random classifier that returns templates chosen uniformly at random from the 50
 templates learned from the \SPRING training dataset, and a \popular classifier
 that returns the most popular templates in the training set in decreasing order.
+We also train a \textit{decision tree} (\trees) and a \svm classifier on the
+\SPRING data, which are two of the most common learning algorithms in literature
+\citep{Hastie2009-bn}.
 
 \input{evaluation-accuracy-graph}
 
@@ -118,6 +121,15 @@ between \SPRING and \FALL quarters and, while different groups of students
 solved these problems for each quarter, the novice mistakes that they made seem
 to have a pattern. Thus, the most \emph{popular ``fixes''} (and therefore the
 relevant templates) from \SPRING were also popular in \FALL.
+
+We also observe that \trees achieves a Top-1 accuracy close to \dnn's at
+\TreeTopOne\% but fails to improve with more predictions (\TreeTopSix\% Top-6
+accuracy). On the other hand, the \svm has a \SVMTopOne\% Top-1 accuracy but
+increases significantly with more predictions (\SVMTopSix\% Top-6).
+%
+Therefore, we observe that more sophisticated learning algorithms can actually
+learn patterns from a corpus of fixed programs, with \dnn classifiers achieving
+the best performance in each category.
 
 \mypara{Results: Template ``Confusion''}
 %
@@ -148,9 +160,10 @@ $\hat{t}$.
 
 \begin{framed}
   \noindent \toolname's learns correlations between program features and repair
-  templates, yielding almost \emph{2x higher} accuracy than the baseline. By
-  abstracting programs into features, \toolname is able to \emph{generalize}
-  across years and different kinds of programs.
+  templates, yielding almost \emph{2x higher} accuracy than the naive baselines
+  and 8\% more than the other sophisticated learning algorithms. By abstracting
+  programs into features, \toolname is able to \emph{generalize} across years
+  and different kinds of programs.
 \end{framed}
 
 
