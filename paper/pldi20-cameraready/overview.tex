@@ -234,12 +234,13 @@ that were acquired through partitioning. We then train a \emph{Deep Neural
 Network (DNN)} classifier on the updated template-labeled data set.
 
 Neural networks have the advantage of associating each class with a
-\emph{confidence score} that can be interpreted as the model's confidence of
-each class being correct for a given input. Therefore, confidence scores can be
-used to rank fix template predictions for new programs and use them in
-descending order when synthesizing repairs. Exploiting recent advances in
-machine learning, we use deep and dense architectures \citep{Schmidhuber_2015}
-for more accurate fix template predictions.
+\emph{confidence score} that can be interpreted as the model's probability of
+each class being correct for a given input according to the model's estimated
+distribution. Therefore, confidence scores can be used to rank fix template
+predictions for new programs and use them in descending order when synthesizing
+repairs. Exploiting recent advances in machine learning, we use deep and dense
+architectures \citep{Schmidhuber_2015} for more accurate fix template
+predictions.
 
 \mypara{Error Localization} We view the problem of finding error locations in a
 new program as a \emph{binary} classification problem. In contrast with the

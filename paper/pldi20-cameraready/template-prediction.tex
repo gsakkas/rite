@@ -245,3 +245,27 @@ the type-error slice of $p$. These vectors are the first elements of $\tilde{p}
 $\predictorsym\ Pr$ is returned, which is used by our synthesis algorithm in
 \autoref{sec:synthesis} to correlate subexpressions in $p$ with their confidence
 scores.
+
+\subsection{Discussion}
+\label{sec:templ-pred:discuss}
+
+An alternative to the two separate predictive models, $\Model$ and $\ModelT$,
+would be to have one \textit{joint} model to predict both error locations and
+fix templates. One could simply add an ``empty'' fix template to the set of the
+$N$ extracted templates. Then, a multi-class \dnn{} could be trained on the
+dataset, using $N + 1$ classes instead. When the ``empty'' fix template is
+predicted, it denotes no error at that location, while the rest of the classes
+denote an error along with the fix template to be used. While, the approach of
+one joint model is quite intuitive, we found with our early experiments of
+\toolname that it does not produce as accurate predictions as the two separate
+models.
+
+Furthermore, learning representations is a remarkable strength of \dnn{}s and,
+therefore, manually extracting features is usually discouraged. Recently, there
+has been done some work in learning program representations for use in
+predictive models \citep{Allamanis_2017, Bhoopchand_2016}. However, we have
+found that the BOAT features are essential for high accuracy (\ie
+\autoref{sec:eval:accuracy}) given the relatively small size of our dataset,
+similarly to previous work \citep{Seidel:2017}. In future work, however, it
+would be interesting to learn features automatically and avoid the step of
+manually extracting them.
