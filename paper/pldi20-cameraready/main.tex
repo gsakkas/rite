@@ -11,27 +11,22 @@
 %% For single-blind review submission, w/ CCS and ACM Reference
 %\documentclass[sigplan,review]{acmart}\settopmatter{printfolios=true}
 %% For final camera-ready submission, w/ required CCS and ACM Reference
-\documentclass[sigplan]{acmart}\settopmatter{printfolios=true}
+\documentclass[sigplan,screen]{acmart}
 
 
 %% Conference information
 %% Supplied to authors by publisher for camera-ready submission;
 %% use defaults for review submission.
-% \acmConference[PL'18]{ACM SIGPLAN Conference on Programming Languages}{January 01--03, 2018}{New York, NY, USA}
-% \acmYear{2018}
-% \acmISBN{} % \acmISBN{978-x-xxxx-xxxx-x/YY/MM}
-% \acmDOI{} % \acmDOI{10.1145/nnnnnnn.nnnnnnn}
 \startPage{1}
-
-%% Copyright information
-%% Supplied to authors (based on authors' rights management selection;
-%% see authors.acm.org) by publisher for camera-ready submission;
-%% use 'none' for review submission.
 \setcopyright{none}
-%\setcopyright{acmcopyright}
-%\setcopyright{acmlicensed}
-%\setcopyright{rightsretained}
-%\copyrightyear{2018}           %% If different from \acmYear
+\acmPrice{}
+\acmDOI{10.1145/3385412.3386005}
+\acmYear{2020}
+\copyrightyear{2020}
+\acmSubmissionID{pldi20main-p407-p}
+\acmISBN{978-1-4503-7613-6/20/06}
+\acmConference[PLDI '20]{Proceedings of the 41st ACM SIGPLAN International Conference on Programming Language Design and Implementation}{June 15--20, 2020}{London, UK}
+\acmBooktitle{Proceedings of the 41st ACM SIGPLAN International Conference on Programming Language Design and Implementation (PLDI '20), June 15--20, 2020, London, UK}
 
 %% Bibliography style
 \bibliographystyle{ACM-Reference-Format}
@@ -72,6 +67,7 @@
 \usepackage{xspace}
 \usepackage{listings}
 \usepackage[skip=4pt]{caption}
+\usepackage{microtype}
 
 \lstset{
   language=Caml,
