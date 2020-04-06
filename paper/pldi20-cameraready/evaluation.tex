@@ -82,16 +82,17 @@ to manual debugging \citep{Kochhar2016-oc,Parnin2011-ce}.
 %
 Therefore, we consider \toolname's accuracy up to the \emph{top six} fix
 template predictions, \ie predicted fix templates that represent the user's
-actual fix that are used to synthesize produce actual repairs.
+actual fix that are used to synthesize actual repairs.
 
 \mypara{Baselines}
 %
-We compare \toolname's \dnn-based predictor against four baseline classifiers. A
+We compare \toolname's \dnn-based predictor against two baseline classifiers: A
 \random classifier that returns templates chosen uniformly at random from the 50
 templates learned from the \SPRING training dataset, and a \popular classifier
 that returns the most popular templates in the training set in decreasing order.
-We also train a \textit{decision tree} (\trees) and a \svm classifier on the
-\SPRING data, which are two of the most common learning algorithms in literature
+We also compare to a \textit{decision tree} (\trees) and an \svm classifier
+trained on the
+\SPRING data, since these are two of the most common learning algorithms
 \citep{Hastie2009-bn}.
 
 \input{evaluation-accuracy-graph}
@@ -249,8 +250,8 @@ repairs produced by \toolname were better than
 \mypara{User Study Setup}
 %
 Study participants were recruited from two public research institutes
-(University of California, San Diego and University of Michigan), and was
-advertised on Twitter.
+(University of California, San Diego and University of Michigan), and from
+advertisement on Twitter.
 %
 Participants had to assess the quality of, and give comprehensible
 bug descriptions for, at least 5 / 10 stimuli. The study took around

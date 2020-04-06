@@ -71,16 +71,16 @@ ill-typed \ocaml) necessitating \toolname's higher-level semantic features and
 (learned) repair templates.
 
 \textsc{Hoppity} \citep{Dinella_2020} is a \dnn-based approach for fixing buggy
-Javascript programs. \textsc{Hoppity} considers programs as graphs that are
-feeded to a \textit{Graph Neural Network} to produce fixed-length embeddings,
-that are in turn used in a LSTM model that generates a sequence of primitive
+Javascript programs. \textsc{Hoppity} treats programs as graphs that are
+fed to a \textit{Graph Neural Network} to produce fixed-length embeddings,
+which are in turn used in a LSTM model that generates a sequence of primitive
 edits of the program graph. To our knowledge, \textsc{Hoppity} is one of the few
-pieces of art that can address multiple error locations. This method solely
-relies on the underlying learned models to generate a sequence of edits.
-\toolname, however, uses the learned models to get appropriate error locations
-and fix templates, but then uses a synthesis procedure to always generate a
-number of type-correct programs. \textsc{Hoppity} on the other side, doesn't
-guarantee returning valid Javascript programs.
+pieces of art that can address multiple error locations. However, it relies
+solely on the learned models to generate a sequence of edits, so it
+doesn't guarantee returning valid Javascript programs.
+In contrast, \toolname, uses the learned models to get appropriate error locations
+and fix templates, but then uses a synthesis procedure to always generate
+type-correct programs.
 
 \textsc{Getafix} \citep{Bader_2019} and \textsc{Revisar} \citep{Rolim_2018} are
 two more systems that learn fix patterns using AST-level differencing on a
@@ -111,4 +111,3 @@ While this method can be highly accurate for error localization, their
 experimental results show that it can take up to 2 hours to produce a valid
 candidate fix. In contrast, \toolname's pretrained models make finding proper
 error locations and possible fix templates more robust.
-
