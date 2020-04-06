@@ -31,9 +31,9 @@ attack on the feedback problem: using techniques from synthesis
 to provide feedback in the form of \emph{repairs} that students
 can apply to improve their code.
 
-One way these repairs are found is by symbolically searching a space of candidate
-programs circumscribed by an expert-defined repair model
-\citep{singh2013,HeadGSSFDH17}.
+These repairs can be found by symbolically searching a space 
+of candidate programs circumscribed by an expert-defined repair 
+model \citep{singh2013,HeadGSSFDH17}.
 %
 However, for type errors, the space of candidate repairs is massive.
 It is quite unclear whether a small set of repair models \emph{exists}
@@ -41,10 +41,11 @@ or even if it does, what it \emph{looks like}. More importantly,
 to scale, it is essential that we remove the requirement that an
 expert carefully curate some set of candidate repairs.
 
-Another way to generate repairs is via the observation that \emph{similar
-programs} have similar repairs, \ie by calculating ``diffs'' from the student's
-solution to the ``closest'' \emph{correct} program
-~\citep{Gulwani_2018,Wang_2018}.
+Alternately, we can generate repairs via the
+observation that \emph{similar programs} have 
+similar repairs, \ie by calculating ``diffs'' 
+from the student's solution to the ``closest'' 
+\emph{correct} program~\citep{Gulwani_2018,Wang_2018}.
 %
 However, this approach requires a corpus of similar programs,
 whose syntax trees or execution traces can be used to match
@@ -101,8 +102,8 @@ introductory programming course.
 %
 Given a new ill-typed program, \toolname generates a list of potential
 solutions ranked by likelihood and an \emph{edit-distance} metric.
-We evaluate \toolname in several
-ways.
+%
+We evaluate \toolname in several ways.
 %
 First, we measure its \emph{accuracy}: we show that \toolname correctly predicts
 the right repair template 69\% of the time when considering the top three

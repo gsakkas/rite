@@ -81,19 +81,20 @@ Most developers will consider around five or six suggestions before falling back
 to manual debugging \citep{Kochhar2016-oc,Parnin2011-ce}.
 %
 Therefore, we consider \toolname's accuracy up to the \emph{top six} fix
-template predictions, \ie predicted fix templates that represent the user's
-actual fix that are used to synthesize actual repairs.
+template predictions, \ie we check if any of the top-N predicted templates 
+actually correspond to the users's edit. These predicted templates are not 
+shown to the user; they are only used to guide the synthesis of concrete 
+repairs which are then presented to the user.
 
 \mypara{Baselines}
 %
-We compare \toolname's \dnn-based predictor against two baseline classifiers: A
-\random classifier that returns templates chosen uniformly at random from the 50
+We compare \toolname's \dnn-based predictor against two baseline classifiers: 
+a \random classifier that returns templates chosen uniformly at random from the 50
 templates learned from the \SPRING training dataset, and a \popular classifier
 that returns the most popular templates in the training set in decreasing order.
-We also compare to a \textit{decision tree} (\trees) and an \svm classifier
-trained on the
-\SPRING data, since these are two of the most common learning algorithms
-\citep{Hastie2009-bn}.
+We also compare to a \emph{decision tree} (\trees) and an \svm classifier
+trained on the \SPRING data, since these are two of the most common learning 
+algorithms \citep{Hastie2009-bn}.
 
 \input{evaluation-accuracy-graph}
 
@@ -122,14 +123,20 @@ solved these problems for each quarter, the novice mistakes that they made seem
 to have a pattern. Thus, the most \emph{popular ``fixes''} (and therefore the
 relevant templates) from \SPRING were also popular in \FALL.
 
-We also observe that \trees achieves a Top-1 accuracy close to \dnn's at
-\TreeTopOne\% but fails to improve with more predictions (\TreeTopSix\% Top-6
-accuracy). On the other hand, the \svm has a \SVMTopOne\% Top-1 accuracy but
-increases significantly with more predictions (\SVMTopSix\% Top-6).
+We also observe that \trees achieves a Top-1 accuracy close 
+to that of \dnn's (\ie \TreeTopOne\% vs. \DnnTopOne\%) 
+but fails to improve with more predictions 
+(\ie with Top-6, \TreeTopSix\% vs. \DnnTopSix\%).
 %
-Therefore, we observe that more sophisticated learning algorithms can actually
-learn patterns from a corpus of fixed programs, with \dnn classifiers achieving
-the best performance in each category.
+On the other hand, the \svm does poorly one the Top-1 
+accuracy (\ie \SVMTopOne vs. \DnnTopOne) but does 
+significantly better with more predictions 
+(\ie with Top-6, \SVMTopSix\% vs. \DnnTopSix\%).
+%
+Therefore, we observe that more sophisticated learning 
+algorithms can actually learn patterns from a corpus of 
+fixed programs, with \dnn classifiers achieving the best 
+performance in each category.
 
 \mypara{Results: Template ``Confusion''}
 %
@@ -159,7 +166,7 @@ $\hat{t}$.
 \end{figure}
 
 \begin{framed}
-  \noindent \toolname's learns correlations between program features and repair
+  \noindent \toolname learns correlations between program features and repair
   templates, yielding almost \emph{2x higher} accuracy than the naive baselines
   and 8\% more than the other sophisticated learning algorithms. By abstracting
   programs into features, \toolname is able to \emph{generalize} across years
@@ -250,8 +257,8 @@ repairs produced by \toolname were better than
 \mypara{User Study Setup}
 %
 Study participants were recruited from two public research institutes
-(University of California, San Diego and University of Michigan), and from
-advertisement on Twitter.
+(University of California, San Diego and University of Michigan), and 
+from advertisement on Twitter.
 %
 Participants had to assess the quality of, and give comprehensible
 bug descriptions for, at least 5 / 10 stimuli. The study took around
