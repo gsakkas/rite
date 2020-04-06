@@ -17,16 +17,15 @@
 %% Conference information
 %% Supplied to authors by publisher for camera-ready submission;
 %% use defaults for review submission.
-\startPage{1}
-\setcopyright{none}
-\acmPrice{}
-\acmDOI{10.1145/3385412.3386005}
-\acmYear{2020}
 \copyrightyear{2020}
-\acmSubmissionID{pldi20main-p407-p}
+\acmYear{2020}
+\setcopyright{acmcopyright}
+\acmConference[PLDI '20]{Proceedings of the 41st ACM SIGPLAN International Conference on Programming Language Design and Implementation}{June 15--20, 2020}{London, United Kingdom}
+\acmBooktitle{Proceedings of the 41st ACM SIGPLAN International Conference on Programming Language Design and Implementation (PLDI '20), June 15--20, 2020, London, United Kingdom}
+\acmPrice{15.00}
+\acmDOI{10.1145/3385412.3386005}
 \acmISBN{978-1-4503-7613-6/20/06}
-\acmConference[PLDI '20]{Proceedings of the 41st ACM SIGPLAN International Conference on Programming Language Design and Implementation}{June 15--20, 2020}{London, UK}
-\acmBooktitle{Proceedings of the 41st ACM SIGPLAN International Conference on Programming Language Design and Implementation (PLDI '20), June 15--20, 2020, London, UK}
+\acmSubmissionID{pldi20main-p407-p}
 
 %% Bibliography style
 \bibliographystyle{ACM-Reference-Format}
@@ -251,28 +250,40 @@ in a statistically-significant manner.
 %% 2012 ACM Computing Classification System (CSS) concepts
 %% Generate at 'http://dl.acm.org/ccs/ccs.cfm'.
 \begin{CCSXML}
-<ccs2012>
-<concept>
-<concept_id>10011007.10011006.10011008</concept_id>
-<concept_desc>Software and its engineering~General programming languages</concept_desc>
-<concept_significance>500</concept_significance>
-</concept>
-<concept>
-<concept_id>10003456.10003457.10003521.10003525</concept_id>
-<concept_desc>Social and professional topics~History of programming languages</concept_desc>
-<concept_significance>300</concept_significance>
-</concept>
-</ccs2012>
+  <ccs2012>
+    <concept>
+        <concept_id>10011007.10011006.10011008</concept_id>
+        <concept_desc>Software and its engineering~General programming languages</concept_desc>
+        <concept_significance>500</concept_significance>
+        </concept>
+    <concept>
+        <concept_id>10010147.10010257</concept_id>
+        <concept_desc>Computing methodologies~Machine learning</concept_desc>
+        <concept_significance>300</concept_significance>
+        </concept>
+    <concept>
+        <concept_id>10003752.10003790.10011119</concept_id>
+        <concept_desc>Theory of computation~Abstraction</concept_desc>
+        <concept_significance>300</concept_significance>
+        </concept>
+    <concept>
+        <concept_id>10011007.10011074.10011092.10011782</concept_id>
+        <concept_desc>Software and its engineering~Automatic programming</concept_desc>
+        <concept_significance>500</concept_significance>
+        </concept>
+  </ccs2012>
 \end{CCSXML}
 
 \ccsdesc[500]{Software and its engineering~General programming languages}
-\ccsdesc[300]{Social and professional topics~History of programming languages}
+\ccsdesc[300]{Computing methodologies~Machine learning}
+\ccsdesc[300]{Theory of computation~Abstraction}
+\ccsdesc[500]{Software and its engineering~Automatic programming}
 %% End of generated code
 
 
 %% Keywords
 %% comma separated list
-% \keywords{keyword1, keyword2, keyword3}  %% \keywords are mandatory in final camera-ready submission
+\keywords{Type Error Feedback, Program Synthesis, Program Repair, Machine Learning}  %% \keywords are mandatory in final camera-ready submission
 
 
 %% \maketitle
@@ -298,14 +309,11 @@ in a statistically-significant manner.
   %% \grantnum[<url>]{<sponsorID>}{<number>} should be used to
   %% acknowledge financial support and will be used by metadata
   %% extraction tools.
-  This material is based upon work supported by the
-  \grantsponsor{GS100000001}{National Science
-    Foundation}{http://dx.doi.org/10.13039/100000001} under Grant
-  No.~\grantnum{GS100000001}{nnnnnnn} and Grant
-  No.~\grantnum{GS100000001}{mmmmmmm}.  Any opinions, findings, and
-  conclusions or recommendations expressed in this material are those
-  of the author and do not necessarily reflect the views of the
-  National Science Foundation.
+  We thank the anonymous referees and our shepherd Ke Wang for their excellent
+  suggestions for improving the paper. This work was supported by the
+  \grantsponsor{}{NSF}{} grants (\grantnum{}{CCF-1908633},
+  \grantnum{}{CCF1763674}) and the \grantsponsor{}{Air Force}{} grants
+  (\grantnum{}{FA8750-19-2-0006}, \grantnum{}{FA8750-19-1-0501}).
 \end{acks}
 
 
