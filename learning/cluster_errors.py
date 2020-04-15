@@ -59,6 +59,7 @@ else:
             continue
         if df.shape[0] == 0:
             continue
+        df['SOURCE_FILE'] = csv
         df = df[df.loc[:, 'L-DidChange'] == 1.0]
         train.append(df)
     train = pd.concat(train)
@@ -91,6 +92,9 @@ print(test.shape)
 # train = pd.concat(c.sample(num_of_samples, replace=True) for _, c in classes)
 
 train_samps = train.loc[:, 'F-Expr-Size':]
+del train_samps['SOURCE_FILE']
+train_span = train.loc[:, 'SourceSpan']
+train_file = train.loc[:, 'SOURCE_FILE']
 # print(train_samps.shape)
 # train_labels = train.loc[:, 'L-DidChange']
 
@@ -101,10 +105,12 @@ del test_samps['SOURCE_FILE']
 test_span = test.loc[:, 'SourceSpan']
 test_file = test.loc[:, 'SOURCE_FILE']
 
-clf = KMeans(n_clusters=5)
+n_clusts = 57
+clf = KMeans(n_clusters=n_clusts)
 
 if model == 'hierarch':
-    clf = AgglomerativeClustering(n_clusters=None, distance_threshold=0)
+    # clf = AgglomerativeClustering(n_clusters=None, distance_threshold=0)
+    clf = AgglomerativeClustering(n_clusters=n_clusts)
 elif model == 'load':
     clf = joblib.load(model_file)
 
@@ -112,9 +118,6 @@ elif model == 'load':
 # scaler = StandardScaler()
 # train_stds = scaler.fit_transform(train_samps.values)
 train_stds = train_samps.values
-
-# Type of model training to use
-clf_type = 'ova' # "ova" of "multiclass"
 
 if model != 'load':
     clf = clf.fit(train_stds)
@@ -131,7 +134,6 @@ if model != 'load':
 if model == 'hierarch':
     def plot_dendrogram(model, **kwargs):
         # Create linkage matrix and then plot the dendrogram
-
         # create the counts of samples under each node
         counts = np.zeros(model.children_.shape[0])
         n_samples = len(model.labels_)
@@ -150,9 +152,25 @@ if model == 'hierarch':
         # Plot the corresponding dendrogram
         dendrogram(linkage_matrix, **kwargs)
 
+    # plt.title('Hierarchical Clustering Dendrogram')
+    # # plot the top p levels of the dendrogram
+    # plot_dendrogram(clf, truncate_mode='level', p=5)
+    # plt.xlabel("Number of points in node (or index of point if no parenthesis).")
+    # plt.show()
 
-    plt.title('Hierarchical Clustering Dendrogram')
-    # plot the top three levels of the dendrogram
-    plot_dendrogram(clf, truncate_mode='level', p=5)
-    plt.xlabel("Number of points in node (or index of point if no parenthesis).")
-    plt.show()
+    res_dir = join(train_dir, 'error_clusters')
+    if not exists(res_dir):
+        mkdir(res_dir)
+
+    lbls = list(zip(train_file, train_span, clf.labels_))
+
+    # print(set(clf.labels_))
+    # print(list(lbls))
+    for cl in range(n_clusts):
+        ll = []
+        for lbl in lbls:
+            if lbl[2] == cl:
+                ll.append(lbl[:2])
+        print(len(ll))
+        cls_data = pd.DataFrame(data=ll, columns=['file', 'SourceSpan'])
+        cls_data.to_csv(res_dir + '/' + str(cl) + '.csv', index=False)
