@@ -130,8 +130,8 @@ if model != 'load':
 # test_stds = test_samps.values
 # anses = clf.predict(test_stds)
 
-### Code from scikit-learn
 if model == 'hierarch':
+    ### Code from scikit-learn
     def plot_dendrogram(model, **kwargs):
         # Create linkage matrix and then plot the dendrogram
         # create the counts of samples under each node
@@ -166,11 +166,14 @@ if model == 'hierarch':
 
     # print(set(clf.labels_))
     # print(list(lbls))
+    all_cls = []
     for cl in range(n_clusts):
         ll = []
         for lbl in lbls:
             if lbl[2] == cl:
                 ll.append(lbl[:2])
         print(len(ll))
+        all_cls.append((cl, len(ll)))
         cls_data = pd.DataFrame(data=ll, columns=['file', 'SourceSpan'])
         cls_data.to_csv(res_dir + '/' + str(cl) + '.csv', index=False)
+    print(sorted(all_cls, key=lambda x: x[1], reverse=True)[:10])
