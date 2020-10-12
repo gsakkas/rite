@@ -98,75 +98,7 @@ mkClusters _ out nm _ fs jsons = do
   let mean_fixes = sum sizes / genericLength sizes :: Double
   let std = 1.4 * sqrt (mkMean (\x -> (mkFrac x - mean) ^ 2) feats')
   let std_fixes = 1.4 * sqrt (sum $ map (\x -> (x - mean_fixes) ^ 2) sizes)
-  -- usefulls <- forM feats' $ \f@((_, _), (ss, _, _, _, _, cs, _, i)) -> do
-  --   let ss' = map fst3 ss
-  --   let lsizes = map (fromIntegral . sizeOfTree . thd3) ss
-  --   let lmean = sum lsizes / genericLength lsizes :: Double
-  --   if
-  --     | mkFrac f > mean + std -> do
-  --       printf (show i ++ ". OUTLIER: %.2f > %.2f\n") (mkFrac f :: Double) (mean + std)
-  --       return mempty
-  --     | null ss' -> do
-  --       putStrLn (show i ++ ". NO DIFF")
-  --       return mempty
-  --     | null (map fst3 ss `intersect` cs) -> do
-  --       putStrLn (show i ++ ". NO OVERLAP CORE/DIFF")
-  --       return mempty
-  --     | length ss' > 4 -> do
-  --       putStrLn (show i ++ ". TOO MANY CHANGES")
-  --       return mempty
-  --     | lmean > mean_fixes + std_fixes -> do
-  --       printf (show i ++ ". VERY BIG CHANGES: %.2f > %.2f\n") lmean (mean_fixes + std_fixes)
-  --       return mempty
-  --     | otherwise -> do
-  --       return [f]
-  -- let fts = concat usefulls
-  -- let ss_fixes = concatMap (\(_, (ss, _, _, _, _, _, _, _)) -> map thd3 ss) fts
-  -- Returns clusters [(set1, set2)], where set1 has unpruned egs and set2 the pruned egs at given depth dp
   let dp = 2
-  -- let clusters = makeClusters ss_fixes dp
-  -- let elems
-  --       = forM fts (\(_, (ss, _, fix, _, _, _, _, _)) ->
-  --         return $ map (\(_, e, eg) -> (e, progExprs fix, eg, render $ pretty e)) ss)
-  --           >>= concat
-  -- let els = map (\(_, _, y, z) -> (y, z)) elems
-  -- let cls = map (\(_, prc) -> map snd (filter (\(x, _) -> pruneGTree dp x `eleq` prc) els)) clusters
-
-  -- Keep only top N clusters as templates for ML labels or read them from the training set
-  -- let !actual_cls = take 50 $ map snd $ sortOn (DO.Down . \(x, _) -> length x) (zip cls clusters)
-  -- let top_cls =
-  --       if forTestSet then known_cls
-  --       else actual_cls
-  -- let mn = min (length top_cls) 50
-  -- let cls_names = zipWith (\x y -> BSC.pack $ x ++ show y) (replicate mn "L-Cluster") [1..mn]
-
-  -- Print the clusters
-  -- putStrLn ("Number of clusters = " ++ show (length clusters))
-  -- let sorted_cls = sortOn (DO.Down . \(x, _) -> length x) (zip cls (map snd clusters))
-  -- forM_ (zip [1..] sorted_cls) $ \(i, (vals, c)) -> do
-  --   let fn   = printf "%04d" (i :: Int)
-  --   let path = out </> "clusters" </> fn <.> "ml"
-  --   createDirectoryIfMissing True (takeDirectory path)
-  --   let string_cls = show (minimumBy (comparing sizeOfTree) c) : nubOrd vals
-  --   writeFile path $ unlines string_cls
-  -- let clu_path = out </> "clusters" </> "top_clusters" <.> "json"
-  -- LBSC.writeFile clu_path $ LBSC.unlines $ map (Aeson.encode . mkClsWithTs) actual_cls
-
-  -- Find all functions and print them ranked based on # of appearances
-  -- let el_es = map (\(x, _, _, _) -> x) elems
-  -- let el_ps = concatMap (\(_, x, _, _) -> x) elems
-  -- let f_vars = filter (`elem` rankedPrimVars) $ concatMap (getFuns . allSubExprs) el_es
-  -- let p_vars = filter (`elem` rankedPrimVars) $ concatMap (getFuns . allSubExprs) el_ps
-  -- let vars = rankEs f_vars p_vars
-  -- let vpaths = out </> "clusters" </> "ranked_funs" <.> "json"
-  -- LBSC.writeFile vpaths $ Aeson.encode vars
-
-  -- Find all DCons and print them ranked based on # of appearances
-  -- let f_dcons = concatMap getDCons $ concatMap allSubExprs el_es
-  -- let p_dcons = concatMap getDCons $ concatMap allSubExprs el_ps
-  -- let dcons = rankEs f_dcons p_dcons
-  -- let dpaths = out </> "clusters" </> "ranked_dcons" <.> "json"
-  -- LBSC.writeFile dpaths $ Aeson.encode dcons
 
   -- Make the ML dataset and print it into csv files
   forM_ feats' $ \f@((header, features), (ss, _, _, badStr, fixStr, cs, _, i)) -> do
@@ -191,23 +123,6 @@ mkClusters _ out nm _ fs jsons = do
         return mempty
       | otherwise -> do
         let ss_expr  = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show (pruneGTree dp td) ++ "\n") ss
-        -- let give_labels xx (_, cl) lbl
-        --       | pruneGTree dp (thd3 xx) `eleq` cl = lbl .= (1::Double)
-        --       | otherwise                         = lbl .= (0::Double)
-        -- let in_cluster xx = namedRecord $ zipWith (give_labels xx) top_cls cls_names
-        -- let the_ss xx     = namedRecord ["SourceSpan" .= show xx]
-        -- let labels        = zipWith HashMap.union (map in_cluster ss) (map (the_ss . fst3) ss)
-
-        -- let getTypeFs ss' = runTFeaturesDiff preds_tcon_ctx (map fst3 ss, replaceSSWithExpr bad (mkTHole ss' 1))
-        -- let rtfd = mapMaybe (\ss' -> getTypeFs ss' >>= \(h, nr, _) -> Just (h, filter (\r -> BSC.unpack (r HashMap.! "SourceSpan") == show ss') nr)) cs
-        -- let all_fs' = concatMap snd rtfd
-        -- let header' = fst $ head rtfd
-        -- let features' = map (\ff -> HashMap.union ff (namedRecord $ map (\lbl -> lbl .= (0::Double)) cls_names)) features
-
-        -- let fs' = map (\nr -> HashMap.union (fromJust $ find (\nr' -> nr' HashMap.! "SourceSpan" == nr HashMap.! "SourceSpan") features') nr) all_fs'
-        -- let new_features = map (\nr -> HashMap.union (fromMaybe nr $ find (\nr' -> nr' HashMap.! "SourceSpan" == nr HashMap.! "SourceSpan") labels) nr) fs'
-        -- print $ length new_features
-        -- let new_header = V.take 1 header V.++ V.fromList cls_names V.++ V.tail header V.++ V.drop 4 header'
         let fn   = printf "%04d" (i :: Int)
         let path = out </> nm </> fn <.> "csv"
         createDirectoryIfMissing True (takeDirectory path)
@@ -218,10 +133,6 @@ mkClusters _ out nm _ fs jsons = do
                                 ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
   -- Print some final messages
   printf "MEAN / STD frac: %.3f / %.3f\n" mean std
-  -- print $ length ss_fixes
-  -- print $ length clusters
-  -- let cluster_lens = map (\li -> (head li, length li)) $ reverse $ group $ sort $ map length cls
-  -- print cluster_lens
 
 eleq :: ExprGeneric -> [ExprGeneric] -> Bool
 eleq EmptyG [EmptyG] = True
