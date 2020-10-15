@@ -66,22 +66,26 @@ main = do
   let cfile = fromMaybe "data/sp14_all/clusters/top_clusters.json" clusters_file
   case cls of
     "clusters+some"
-      -> mkClusters False out cls mempty (preds_tsize ++ preds_tis) jsons
+      -> mkBadFeats False out cls mempty (preds_tsize ++ preds_tis) jsons
     "clusters+all"
-      -> mkClusters False out cls mempty (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
+      -> mkBadFeats False out cls mempty (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
     "known+clusters+some"
       -> do
         top_cls <- map readClusterFile . lines <$> readFile cfile
-        mkClusters True out cls top_cls (preds_tsize ++ preds_tis) jsons
+        mkBadFeats True out cls top_cls (preds_tsize ++ preds_tis) jsons
     "known+clusters+all"
       -> do
         top_cls <- map readClusterFile . lines <$> readFile cfile
-        mkClusters True out cls top_cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
+        mkBadFeats True out cls top_cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
+    "fixes+some"
+      -> mkFixFeats False out cls mempty (preds_tsize ++ preds_tis) jsons
+    "fixes+all"
+      -> mkFixFeats False out cls mempty (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
     _ -> errorWithoutStackTrace "main failed: No such parameter for --features"
 
 
-mkClusters :: Bool -> String -> String -> [([ExprGeneric], [ExprGeneric])] -> [Feature] -> [String] -> IO ()
-mkClusters _ out nm _ fs jsons = do
+mkBadFeats :: Bool -> String -> String -> [([ExprGeneric], [ExprGeneric])] -> [Feature] -> [String] -> IO ()
+mkBadFeats _ out nm _ fs jsons = do
   let uniqs = concatMap mkDiffsWithGenericTrs jsons
   let feats = [ ((h, f), (ss, bad, fix, badStr, fixStr, c, all, idx))
               | (ss, bad, fix, badStr, fixStr, idx) <- uniqs
@@ -134,6 +138,26 @@ mkClusters _ out nm _ fs jsons = do
   -- Print some final messages
   printf "MEAN / STD frac: %.3f / %.3f\n" mean std
 
+
+mkFixFeats :: Bool -> String -> String -> [([ExprGeneric], [ExprGeneric])] -> [Feature] -> [String] -> IO ()
+mkFixFeats _ out nm _ fs jsons = do
+  let uniqs = concatMap mkFixes jsons
+  let feats = [ (h, f, fix, fixStr, idx)
+              | (fix, fixStr, idx) <- uniqs
+              , let (h, f) = runTFeaturesTypes fs fix
+              ]
+
+  -- Make the ML dataset and print it into csv files
+  forM_ feats $ \f@(header, features, _, fixStr, i) -> do
+    let fn   = printf "%04d" (i :: Int)
+    let path = out </> nm </> fn <.> "csv"
+    createDirectoryIfMissing True (takeDirectory path)
+    LBSC.writeFile path $ encodeByName header features
+    let fpath = out </> fn <.> "ml"
+    writeFile fpath $ unlines $ [ fixStr ]
+  -- Print some final messages
+
+
 eleq :: ExprGeneric -> [ExprGeneric] -> Bool
 eleq EmptyG [EmptyG] = True
 eleq _ [EmptyG] = False
@@ -142,19 +166,21 @@ eleq a as = any (eq a) as'
     as' = delete EmptyG as
 
 
--- George
 readClusterFile :: String -> ([ExprGeneric], [ExprGeneric])
 readClusterFile f = case eitherDecode (LBSC.pack f) of
   Left err                       -> error ("readClusterFile failed: " ++ err)
   Right (MkClsWithTs egs pruned) -> (egs, pruned)
+
 
 data ClsWithTs = MkClsWithTs { egs :: [ExprGeneric], pruned :: [ExprGeneric] }
   deriving (Show, Generic)
 instance ToJSON ClsWithTs
 instance FromJSON ClsWithTs
 
+
 mkClsWithTs :: ([ExprGeneric], [ExprGeneric]) -> ClsWithTs
 mkClsWithTs (egs, pruned) = MkClsWithTs egs pruned
+
 
 rankEs :: Ord a => [a] -> [a] -> [a]
 rankEs es ps = map fst $ sortOn (DO.Down . snd) $ zip alls $ zip un_es un_ps
@@ -162,6 +188,7 @@ rankEs es ps = map fst $ sortOn (DO.Down . snd) $ zip alls $ zip un_es un_ps
     alls  = nubOrd (es ++ ps)
     un_es = map (\v -> length $ filter (==v) es) alls
     un_ps = map (\v -> length $ filter (==v) ps) alls
+
 
 makeClusters :: [ExprGeneric] -> Int -> [([ExprGeneric], [ExprGeneric])]
 makeClusters es depth = assert (Set.fromList (concatMap fst cls) == Set.fromList (delete EmptyG es)) ret
@@ -180,7 +207,6 @@ makeClusters es depth = assert (Set.fromList (concatMap fst cls) == Set.fromList
     ret = if EmptyG `elem` es then ([EmptyG], [EmptyG]) : cls else cls
 
 
--- George
 mkDiffsWithGenericTrs :: String -> [([(SrcSpan, Expr, ExprGeneric)], Prog, Prog, String, String, Int)]
 mkDiffsWithGenericTrs json = case eitherDecode (LBSC.pack json) of
   Left e -> mempty
@@ -203,7 +229,21 @@ mkDiffsWithGenericTrs json = case eitherDecode (LBSC.pack json) of
   v -> error (show v)
 
 
--- George
+mkFixes :: String -> [(Prog, String, Int)]
+mkFixes json = case eitherDecode (LBSC.pack json) of
+  Left e -> mempty
+  Right (MkInSample bad' fix' idx)
+    | Right fix <- parseTopForm fix'
+    -> [(fix, fix', idx)]
+  Right (MkInSample bad' fix' _)
+    | Left e <- parseTopForm fix'
+    -> mempty
+  Right (MkInSample bad' fix' _)
+    | Left e <- parseTopForm bad'
+    -> mempty
+  v -> error (show v)
+
+
 mkDiffWithGenericTrs :: Prog -> Prog -> [(SrcSpan, Expr, ExprGeneric)]
 mkDiffWithGenericTrs bad fix = assert (not (null x)) x
   where
@@ -214,12 +254,10 @@ mkDiffWithGenericTrs bad fix = assert (not (null x)) x
     fs = progExprs fix'
 
 
--- George
 isSubTypeAny :: Type -> [Type] -> Bool
 isSubTypeAny e l = any (`isSubType` e) l
 
 
--- George
 isSubType :: Type -> Type -> Bool
 isSubType ti to | ti == to = True
 isSubType (xi :-> xo) (yi :-> yo) = xi `isSubType` yi && xo `isSubType` yo
@@ -248,7 +286,6 @@ isSubType t (TVar a) = False
 isSubType ti to = False
 
 
--- George
 getAllTypedExprs :: Prog -> [TExpr]
 getAllTypedExprs fix = concatMap allSubTExprs samples
   where
@@ -265,7 +302,6 @@ getAllTypedExprs fix = concatMap allSubTExprs samples
       _             -> progTExprs ds
 
 
--- George
 allSubTExprs :: TExpr -> [TExpr]
 allSubTExprs e = e : case e of
   T_Var {}        -> []
@@ -333,6 +369,31 @@ runTFeaturesDiff fs (ls, bad)
              ++ didChange (infoSpan (texprInfo e))
              ++ inSlice (infoSpan (texprInfo e))
              ++ concatMap (\(ls, c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
+
+
+runTFeaturesTypes :: [Feature] -> Prog -> (Header, [NamedRecord])
+runTFeaturesTypes fs fix = (header, samples)
+  where
+  header = V.fromList
+         $ ["SourceSpan"]
+        ++ concatMap (\(ls,_) -> map mkFeature ls) fs
+
+  samples = concatMap mkfsD tfix
+
+  tfix = case runEval stdOpts (typeProg fix) of
+    Left e       -> traceShow e []
+    Right (p, _) -> p
+
+  mkfsD (TDFun _ _ pes) = mconcat (map (mkTypeOut . snd) pes)
+  mkfsD (TDEvl _ e)     = mkTypeOut e
+  mkfsD _               = mempty
+
+  mkTypeOut :: TExpr -> [NamedRecord]
+  mkTypeOut = actfold f []
+    where
+    f p e acc = (:acc) . namedRecord $
+                ["SourceSpan" .= show (infoSpan (texprInfo e))]
+             ++ concatMap (\(ls,c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
 
 
 mkLabel :: String -> BSC.ByteString
