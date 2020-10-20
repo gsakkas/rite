@@ -10,24 +10,22 @@ import pandas as pd
 import sklearn
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.metrics import confusion_matrix
-from sklearn.decomposition import PCA, NMF
-from sklearn.svm import SVC
-from sklearn.tree import DecisionTreeClassifier
 from keras.models import Model
-from keras.layers import Dense, Conv2D, MaxPooling2D, Flatten, Input, Dropout
+from keras.layers import Input, Dense, LSTM
 from keras.callbacks import EarlyStopping
+from keras.utils.vis_utils import plot_model
 import tensorflow as tf
 
 import input_old
 
-model = sys.argv[1]
-if model not in ['lstm', 'dnn', 'small', 'cnn', 'svm', 'trees', 'load', 'load-cnn']:
-    print('python predict_fixes_lstm.py [lstm|dnn|small|cnn|svm|trees|load|load-cnn] <train> <test> <load-model>')
+method = sys.argv[1]
+if method not in ['lstm', 'load']:
+    print('python predict_fixes_lstm.py [lstm|load] <train> <test> <load-model>')
     sys.exit(1)
 train_dir  = sys.argv[2]
 test_dir   = sys.argv[3]
 model_file = ''
-if 'load' in model:
+if 'load' in method:
     model_file = sys.argv[4]
 
 # The below is necessary to get reproducible results
@@ -79,121 +77,113 @@ for csv in test_csvs:
         continue
     test_data.append((csv, df, df2))
 
+# Extract all datasets
+train_unzipped = zip(*[(s.loc[:, 'F-Is-Eq':],
+                        t.loc[:, 'F-Is-Eq':],
+                        s.loc[:, 'L-DidChange'])
+                        for _, s, t in train_data])
+train_samples, train_targets, train_labels = map(list, train_unzipped)
 
-train_samples, train_targets, train_labels = zip(*[(s.loc[:, 'F-Is-Eq':], t.loc[:, 'F-Is-Eq':], s.loc[:, 'L-DidChange']) for _, s, t in train_data])
-test_samples,  test_targets,  test_labels  = zip(*[(s.loc[:, 'F-Is-Eq':], t.loc[:, 'F-Is-Eq':], s.loc[:, 'L-DidChange']) for _, s, t in test_data])
+test_unzipped = zip(*[(s.loc[:, 'F-Is-Eq':],
+                       t.loc[:, 'F-Is-Eq':],
+                       s.loc[:, 'L-DidChange'])
+                       for _, s, t in test_data])
+test_samples, test_targets, test_labels = map(list, test_unzipped)
 test_span, test_file = zip(*[(s.loc[:, 'SourceSpan'], f) for f, s, _ in test_data])
 
+model          = Model()
+encoder_model  = Model()
+decoder_model  = Model()
+n_input        = train_samples[0].shape[1]
+n_output       = train_targets[0].shape[1]
+max_input_len  = max(map(lambda s: s.shape[0], train_samples))
+max_target_len = max(map(lambda s: s.shape[0], train_targets))
+
+print("Input data:", (len(train_samples), max_input_len, n_input))
+print("Target data:", (len(train_targets), max_target_len, n_output))
+
+if method == 'lstm':
+    # Define number of LSTM cells
+    n_units = 256
+
+	# Define training encoder
+    encoder_inputs = Input(shape=(None, n_input))
+    encoder        = LSTM(n_units, return_state=True)
+    encoder_outputs, state_h, state_c = encoder(encoder_inputs)
+    encoder_states = [state_h, state_c]
+
+    # Define training decoder
+    decoder_inputs  = Input(shape=(None, n_output))
+    decoder_lstm    = LSTM(n_units, return_sequences=True, return_state=True)
+    decoder_outputs, _, _ = decoder_lstm(decoder_inputs, initial_state=encoder_states)
+    decoder_dense   = Dense(n_output, activation='softmax')
+    decoder_outputs = decoder_dense(decoder_outputs)
+    model           = Model([encoder_inputs, decoder_inputs], decoder_outputs)
+
+    # Define inference encoder
+    encoder_model = Model(encoder_inputs, encoder_states)
+
+    # Define inference decoder
+    decoder_state_input_h = Input(shape=(n_units,))
+    decoder_state_input_c = Input(shape=(n_units,))
+    decoder_states_inputs = [decoder_state_input_h, decoder_state_input_c]
+    decoder_outputs, state_h, state_c = decoder_lstm(decoder_inputs, initial_state=decoder_states_inputs)
+    decoder_states        = [state_h, state_c]
+    decoder_outputs       = decoder_dense(decoder_outputs)
+    decoder_model         = Model([decoder_inputs] + decoder_states_inputs, [decoder_outputs] + decoder_states)
+
+    # Compile model
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    plot_model(model, to_file='model.png', show_shapes=True)
+else:
+    sys.exit(0)
+
+
+# Generate target, given source sequence
+def predict_sequence(infenc, infdec, source, n_steps, cardinality):
+    # Encode
+    state = infenc.predict(source)
+    # Start of sequence input
+    target_seq = np.array([0.0 for _ in range(cardinality)]).reshape(1, 1, cardinality)
+    # Collect predictions
+    output = list()
+    for t in range(n_steps):
+        # Predict next node
+        yhat, h, c = infdec.predict([target_seq] + state)
+        # Store prediction
+        output.append(yhat[0,0,:])
+        # Update state
+        state = [h, c]
+        # Update target sequence
+        target_seq = yhat
+    return np.array(output)
+
+
+def shift_targets(trgt):
+    new_trgt = trgt.to_numpy()[:-1,:]
+    start    = np.zeros((1, trgt.shape[1]), dtype=int)
+    return np.concatenate((start, new_trgt), axis=0)
+
+def pad_to_length(arr, max_len):
+    rs = arr.shape[0]
+    new_shape = ((0, max_len - rs), (0, 0))
+    return np.pad(arr, new_shape, constant_values=(0))
+
+
+# Train model
+shifted_targets_temp = list(map(lambda t: pad_to_length(shift_targets(t), max_target_len), train_targets))
+shifted_targets      = np.stack(shifted_targets_temp, axis=0)
+train_samples_temp   = list(map(lambda t: pad_to_length(t.to_numpy(), max_input_len), train_samples))
+train_samples        = np.stack(train_samples_temp, axis=0)
+train_targets_temp   = list(map(lambda t: pad_to_length(t.to_numpy(), max_target_len), train_targets))
+train_targets        = np.stack(train_targets_temp)
+
+model.fit([train_samples, train_targets], shifted_targets,
+          batch_size=512,
+          epochs=100,
+          validation_split=0.2)
+
 sys.exit(0) ### FIXME: Works until here
-
-clf_all = Model()
-clf = Model()
-
-if model == 'dnn' or model == 'load' or model == 'small':
-    clf_input = Input(shape=(train_samps.shape[1],))
-    # clf_input = Input(shape=(128,))
-    x = Dense(512, activation='relu')(clf_input)
-    # x = Dropout(0.5)(x)
-    x = Dense(512, activation='relu')(x)
-    x = Dense(512, activation='relu')(x)
-    x = Dense(num_of_cls, activation='softmax')(x)
-
-    clf = Model(clf_input, x)
-    clf.summary()
-    clf.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-
-    y = Dense(1024, activation='relu')(clf_input)
-    # y = Dropout(0.5)(y)
-    y = Dense(1024, activation='relu')(y)
-    y = Dense(512, activation='relu')(y)
-    y = Dense(1, activation='sigmoid')(y)
-
-    clf_all = Model(clf_input, y)
-    clf_all.summary()
-    clf_all.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
-elif model == 'cnn' or model == 'load-cnn':
-    clf_input = Input(shape=(train_samps.shape[1], 1, 1))
-    x = Conv2D(64, (6, 1), activation='relu', padding='same')(clf_input)
-    x = Conv2D(64, (6, 1), activation='relu', padding='same')(x)
-    x = MaxPooling2D((2, 1), strides=(2, 1))(x)
-
-    x = Conv2D(64, (16, 1), activation='relu', padding='same')(x)
-    x = Conv2D(64, (16, 1), activation='relu', padding='same')(x)
-    x = MaxPooling2D((2, 1), strides=(2, 1))(x)
-
-    x = Flatten()(x)
-    x = Dense(1024, activation='relu')(x)
-    x = Dense(1024, activation='relu')(x)
-    x = Dense(512, activation='relu')(x)
-    x = Dense(num_of_cls, activation='softmax')(x)
-
-    clf = Model(clf_input, x)
-    clf.summary()
-    clf.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-elif model == 'svm':
-    clf = SVC(kernel='poly', probability=True, random_state=prng)
-elif model == 'trees':
-    clf = DecisionTreeClassifier(random_state=prng)
-
-#Standarize the data
-# scaler = StandardScaler()
-# pca = PCA(n_components=64)
-# nmf = NMF(n_components=128, random_state=prng)
-train_stds_all = []
-train_stds = []
-if model != 'popular' and model != 'random':
-    train_stds_all = train_samples.values
-    train_stds = train_samps.values
-    # train_stds = scaler.fit_transform(train_samps.values)
-    # train_stds = pca.fit_transform(train_stds)
-    # train_stds = nmf.fit_transform(train_stds)
-    if model == 'cnn' or model == 'load-cnn':
-        train_stds = train_stds.reshape(train_stds.shape[0], train_stds.shape[1], 1, 1)
-    # enc = OneHotEncoder(handle_unknown='ignore')
-    # ready_train_labels = enc.fit_transform(train_labels.values.reshape(-1, 1))
-    ready_train_labels_all = train_labels_all.values
-    ready_train_labels = train_labels.values
-# ready_test_labels = enc.transform(test_labels.values.reshape(-1, 1))
-ready_test_labels_all = test_labels_all.values
-ready_test_labels = test_labels.values
-
-# Type of model training to use
-clf_type = 'multiclass'
-
-if model == 'dnn' or model == 'cnn' or model == 'small':
-    es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
-    if model != 'small' and isfile(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5')):
-        clf_all.load_weights(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5'))
-    else:
-        es_all = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=10)
-        clf_all.fit(train_stds_all, ready_train_labels_all, batch_size=512, epochs=200, verbose=1, validation_split=0.2, callbacks=[es_all])
-        if model != 'small':
-            clf_all.save_weights(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5'))
-    clf.fit(train_stds, ready_train_labels, batch_size=256, epochs=200, verbose=1, validation_split=0.1, callbacks=[es])
-    if model != 'small':
-        clf.save_weights(join('models', model + '-' + str(num_of_cls) + '-' + clf_type + '-final.h5'))
-elif model == 'load' or model == 'load-cnn':
-    clf.load_weights(model_file)
-    clf_all.load_weights(join('models', 'dnn-' + str(num_of_cls) + '-location-final.h5'))
-    model = 'dnn'
-elif model != 'popular' and model != 'random':
-    clf = clf.fit(train_stds, categorize(train_labels).values)
-
-test_stds_all = test_samps_all.values
-test_stds = test_samps.values
-# if model != 'popular' and model != 'random':
-#     test_stds_all = test_samps_all.values
-#     test_stds = test_samps.values
-    # test_stds = scaler.transform(test_samps.values)
-    # test_stds = pca.transform(test_stds)
-    # test_stds = nmf.transform(test_stds)
-if model == 'cnn' or model == 'load-cnn':
-    test_stds = test_stds.reshape(test_stds.shape[0], test_stds.shape[1], 1, 1)
-if model == 'dnn' or model == 'cnn' or model == 'load' or model == 'load-cnn':
-    test_loss_all, test_acc_all = clf_all.evaluate(test_stds_all, ready_test_labels_all)
-    test_loss, test_acc = clf.evaluate(test_stds, ready_test_labels)
-    print("Test ALL loss =", test_loss_all, ", acc =", test_acc_all * 100)
-    print("Test loss =", test_loss, ", acc =", test_acc * 100)
 
 
 prob_error = []
@@ -220,38 +210,12 @@ else:
     prob_error = [np.argsort(pe)[::-1].tolist() for pe in prob_score]
     # print(len(prob_error))
     # print(len(prob_error[0]))
-    loc_conf = [c[0] * 100.0 for c in clf_all.predict(test_stds_all)]
 
 pes_top6 = [[x + 1 for x in pe[:6]] for pe in prob_error]
 pes1, pes2, pes3, pes4, pes5, pes6 = map(list, zip(*pes_top6))
 all_labels = categorize(test_data.loc[:, 'L-Cluster1':last_L])
 ll = list(zip(test_span, loc_conf, pes1, pes2, pes3, pes4, pes5, pes6, all_labels.values))
 
-# Show confusion matrix...
-if num_of_cls == 30:
-    all_ls, ps = tuple(map(list, zip(*[(x, y) for x, y in zip(all_labels.values, pes1) if x > 0])))
-    cm = confusion_matrix(all_ls, ps)
-    cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-
-    lbls = ['Tmpl-' + str(i) for i in range(1, num_of_cls + 1)]
-    # print(cm.shape[1], cm.shape[0])
-    plt.rc('text', usetex=True)
-    plt.rc('font', family='serif')
-    fig, ax = plt.subplots()
-    im = ax.imshow(cm, interpolation='nearest', cmap=plt.cm.Blues)
-    ax.figure.colorbar(im, ax=ax)
-    ax.set(xticks=np.arange(cm.shape[1]),
-        yticks=np.arange(cm.shape[0]),
-        xticklabels=lbls, yticklabels=lbls,
-        title='Normalized Confusion Matrix for Templates',
-        ylabel='True Label',
-        xlabel='Predicted Label')
-
-    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
-            rotation_mode="anchor")
-
-    plt.show()
-# ... until here
 score = pd.DataFrame(data=ll, index=all_labels.index, columns=['SourceSpan', 'Loc-Conf', 'P-1', 'P-2', 'P-3', 'P-4', 'P-5', 'P-6', 'Actual'])
 
 all_programs = 0
