@@ -133,8 +133,9 @@ if method == 'lstm':
     decoder_model         = Model([decoder_inputs] + decoder_states_inputs, [decoder_outputs] + decoder_states)
 
     # Compile model
+    model.summary()
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-    plot_model(model, to_file='model.png', show_shapes=True)
+    # plot_model(model, to_file='model.png', show_shapes=True)
 else:
     sys.exit(0)
 
@@ -144,7 +145,7 @@ def predict_sequence(infenc, infdec, source, n_steps, cardinality):
     # Encode
     state = infenc.predict(source)
     # Start of sequence input
-    target_seq = np.array([0.0 for _ in range(cardinality)]).reshape(1, 1, cardinality)
+    target_seq = np.zeros((cardinality, )).reshape(1, 1, cardinality)
     # Collect predictions
     output = list()
     for t in range(n_steps):
@@ -178,10 +179,16 @@ train_samples        = np.stack(train_samples_temp, axis=0)
 train_targets_temp   = list(map(lambda t: pad_to_length(t.to_numpy(), max_target_len), train_targets))
 train_targets        = np.stack(train_targets_temp)
 
-model.fit([train_samples, train_targets], shifted_targets,
-          batch_size=512,
-          epochs=100,
-          validation_split=0.2)
+if method == 'lstm':
+    es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
+    model.fit([train_samples, train_targets], shifted_targets,
+                batch_size=512,
+                epochs=150,
+                validation_split=0.2,
+                callbacks=[es])
+    model.save_weights(join(train_dir, 'models', 'lstm-256-full-progs.h5'))
+elif method == 'load':
+    model.load_weights(join(train_dir, 'models', 'lstm-256-full-progs.h5'))
 
 sys.exit(0) ### FIXME: Works until here
 
