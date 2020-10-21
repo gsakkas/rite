@@ -167,9 +167,9 @@ if method == 'lstm':
                 epochs=150,
                 validation_split=0.2,
                 callbacks=[es])
-    model.save_weights(join(train_dir, 'models', 'lstm-256-full-progs.h5'))
+    model.save_weights(join(train_dir, 'models', 'lstm-' + str(n_units) + '-full-progs.h5'))
 elif method == 'load':
-    model.load_weights(join(train_dir, 'models', 'lstm-256-full-progs.h5'))
+    model.load_weights(join(train_dir, 'models', 'lstm-' + str(n_units) + '-full-progs.h5'))
 
 
 # Generate target, given an encoded source sequence
@@ -216,35 +216,34 @@ total   = len(test_samples)
 correct = 0.0
 invalid = 0
 for (smpl, trgt, lbls, f) in zip(test_samples, test_targets, test_labels, test_file):
-    if int(f.split('.')[0]) > 333:
-        sizes        = smpl.shape
-        shaped_smpl  = smpl.to_numpy()
-        first_change = np.argmax(lbls)
-        if first_change == 0:
-            prediction   = predict_sequence(encoder_model,
-                                            decoder_model,
-                                            shaped_smpl.reshape(1, sizes[0], sizes[1]),
-                                            1,
-                                            n_output)
-            pred_node   = one_hot_decode(prediction)[0]
-            target_node = one_hot_decode(trgt.to_numpy())[first_change]
-            if pred_node == target_node:
-                correct += 1
-        elif first_change < trgt.shape[0]:
-            prediction   = predict_next_node(encoder_model,
-                                            decoder_model,
-                                            shaped_smpl.reshape(1, sizes[0], sizes[1]),
-                                            shaped_smpl[:first_change, :],
-                                            n_output)
-            pred_node   = np.argmax(prediction)
-            target_node = one_hot_decode(trgt.to_numpy())[first_change]
-            if pred_node == target_node:
-                correct += 1
-        else:
-            invalid += 1
-            print("Fixed program is smaller than buggy for:", f)
-        done += 1
-        print("Progress:", done, "/", total)
+    sizes        = smpl.shape
+    shaped_smpl  = smpl.to_numpy()
+    first_change = np.argmax(lbls)
+    if first_change == 0:
+        prediction   = predict_sequence(encoder_model,
+                                        decoder_model,
+                                        shaped_smpl.reshape(1, sizes[0], sizes[1]),
+                                        1,
+                                        n_output)
+        pred_node   = one_hot_decode(prediction)[0]
+        target_node = one_hot_decode(trgt.to_numpy())[first_change]
+        if pred_node == target_node:
+            correct += 1
+    elif first_change < trgt.shape[0]:
+        prediction   = predict_next_node(encoder_model,
+                                        decoder_model,
+                                        shaped_smpl.reshape(1, sizes[0], sizes[1]),
+                                        shaped_smpl[:first_change, :],
+                                        n_output)
+        pred_node   = np.argmax(prediction)
+        target_node = one_hot_decode(trgt.to_numpy())[first_change]
+        if pred_node == target_node:
+            correct += 1
+    else:
+        invalid += 1
+        print("Fixed program is smaller than buggy for:", f)
+    done += 1
+    print("Progress:", done, "/", total)
 
 print("Accuracy for first changed term prediction:             ", correct * 100.0 / float(total))
 print("Accuracy for first changed term prediction (only valid):", correct * 100.0 / float(total - invalid))
