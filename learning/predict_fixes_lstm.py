@@ -220,7 +220,7 @@ for (smpl, trgt, lbls, f) in zip(test_samples, test_targets, test_labels, test_f
     shaped_smpl  = smpl.to_numpy()
     first_change = np.argmax(lbls)
     if first_change == 0:
-        prediction   = predict_sequence(encoder_model,
+        prediction  = predict_sequence(encoder_model,
                                         decoder_model,
                                         shaped_smpl.reshape(1, sizes[0], sizes[1]),
                                         1,
@@ -230,7 +230,7 @@ for (smpl, trgt, lbls, f) in zip(test_samples, test_targets, test_labels, test_f
         if pred_node == target_node:
             correct += 1
     elif first_change < trgt.shape[0]:
-        prediction   = predict_next_node(encoder_model,
+        prediction  = predict_next_node(encoder_model,
                                         decoder_model,
                                         shaped_smpl.reshape(1, sizes[0], sizes[1]),
                                         shaped_smpl[:first_change, :],
@@ -247,3 +247,18 @@ for (smpl, trgt, lbls, f) in zip(test_samples, test_targets, test_labels, test_f
 
 print("Accuracy for first changed term prediction:             ", correct * 100.0 / float(total))
 print("Accuracy for first changed term prediction (only valid):", correct * 100.0 / float(total - invalid))
+
+# Trained with:
+# n_units = 256
+# ...
+# es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
+# model.fit([train_samples, train_targets], shifted_targets,
+#             batch_size=512,
+#             epochs=150,
+#             validation_split=0.2,
+#             callbacks=[es])
+# On:
+# {sp14, fa15})_lstm_1/_+some
+# Got:
+# Accuracy for first changed term prediction:              18.695452457510335
+# Accuracy for first changed term prediction (only valid): 19.48300622307324

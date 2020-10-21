@@ -7,44 +7,39 @@
 
 module Main where
 
-import           Control.Exception          (assert, evaluate)
-import           Control.Monad
-import           Control.DeepSeq
-import           Control.Arrow              (second)
-import           Data.Aeson                 (ToJSON(..), FromJSON(..), eitherDecode)
-import qualified Data.Aeson                 as Aeson
-import qualified Data.Algorithm.Diff        as Diff
+import           Control.Exception          ( assert )
+import           Control.Monad              ( forM_ )
+import           Data.Aeson                 ( FromJSON(..),
+                                              eitherDecode )
 import qualified Data.ByteString.Char8      as BSC
 import qualified Data.ByteString.Lazy.Char8 as LBSC
-import           Data.Ord                   as DO
-import           Data.Csv
-import           Data.Either
-import           Data.Function
-import           Data.List
-import qualified Data.Map.Strict            as Map
-import           Data.Maybe
-import qualified Data.HashMap.Strict        as HashMap
-import qualified Data.HashSet               as HashSet
-import           Data.HashSet               (HashSet)
+import           Data.Csv                   ( (.=),
+                                              namedRecord,
+                                              encodeByName,
+                                              Header,
+                                              NamedRecord )
+import           Data.List                  ( genericLength,
+                                              intersect,
+                                              nub )
+import           Data.Maybe                 ( fromJust,
+                                              mapMaybe,
+                                              maybeToList )
 import qualified Data.Set                   as Set
-import           Data.Set                   (Set)
 import qualified Data.Vector                as V
-import           Data.Containers.ListUtils  (nubOrd, nubOrdOn)
-import           GHC.Generics
-import           Options.Generic            hiding (All(..))
-import           System.Directory
-import           System.Environment
-import           System.FilePath
-import           System.IO
-import           Text.Printf
+import           GHC.Generics               ( Generic )
+import           Options.Generic            ( getRecord,
+                                              ParseRecord )
+import           System.Directory           ( createDirectoryIfMissing )
+import           System.FilePath            ( (<.>),
+                                              (</>),
+                                              takeDirectory )
+import           Text.Printf                ( printf )
 
 import           NanoML.Classify
-import           NanoML.Lexer
-import           NanoML.Monad
-import           NanoML.Parser
-import           NanoML.Pretty
+import           NanoML.Monad               ( runEval )
+import           NanoML.Parser              ( parseTopForm )
+import           NanoML.Pretty              ( render, pretty )
 import           NanoML.Types               hiding (Kind)
-import           NanoML.Instantiate
 
 import           Debug.Trace
 
@@ -53,30 +48,20 @@ data Generate = Generate
   { source   :: FilePath
   , features :: String
   , out      :: FilePath
-  , clusters :: Maybe String
   }
   deriving (Generic, Show)
 instance ParseRecord Generate
 
 main :: IO ()
 main = do
-  Generate {source=src, features=cls, out=out, clusters=clusters_file} <-
+  Generate {source=src, features=cls, out=out} <-
     getRecord "generate-features"
-  jsons <- lines <$> readFile src -- (readFile $ "features/data/ucsd/data/derived" </> src </> "pairs.json")
-  let cfile = fromMaybe "data/sp14_all/clusters/top_clusters.json" clusters_file
+  jsons <- lines <$> readFile src
   case cls of
-    "clusters+some"
+    "buggy+some"
       -> mkBadFeats False out cls mempty (preds_tsize ++ preds_tis) jsons
-    "clusters+all"
+    "buggy+all"
       -> mkBadFeats False out cls mempty (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
-    "known+clusters+some"
-      -> do
-        top_cls <- map readClusterFile . lines <$> readFile cfile
-        mkBadFeats True out cls top_cls (preds_tsize ++ preds_tis) jsons
-    "known+clusters+all"
-      -> do
-        top_cls <- map readClusterFile . lines <$> readFile cfile
-        mkBadFeats True out cls top_cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
     "fixes+some"
       -> mkFixFeats False out cls mempty (preds_tsize ++ preds_tis) jsons
     "fixes+all"
@@ -147,77 +132,26 @@ mkFixFeats _ out nm _ fs jsons = do
               , let (h, f) = runTFeaturesTypes fs fix
               ]
 
-  -- Make the ML dataset and print it into csv files
-  forM_ feats $ \f@(header, features, _, fixStr, i) -> do
+  forM_ feats $ \(header, features, _, fixStr, i) -> do
     let fn   = printf "%04d" (i :: Int)
     let path = out </> nm </> fn <.> "csv"
     createDirectoryIfMissing True (takeDirectory path)
     LBSC.writeFile path $ encodeByName header features
     let fpath = out </> fn <.> "ml"
     writeFile fpath $ unlines $ [ fixStr ]
-  -- Print some final messages
-
-
-eleq :: ExprGeneric -> [ExprGeneric] -> Bool
-eleq EmptyG [EmptyG] = True
-eleq _ [EmptyG] = False
-eleq a as = any (eq a) as'
-  where
-    as' = delete EmptyG as
-
-
-readClusterFile :: String -> ([ExprGeneric], [ExprGeneric])
-readClusterFile f = case eitherDecode (LBSC.pack f) of
-  Left err                       -> error ("readClusterFile failed: " ++ err)
-  Right (MkClsWithTs egs pruned) -> (egs, pruned)
-
-
-data ClsWithTs = MkClsWithTs { egs :: [ExprGeneric], pruned :: [ExprGeneric] }
-  deriving (Show, Generic)
-instance ToJSON ClsWithTs
-instance FromJSON ClsWithTs
-
-
-mkClsWithTs :: ([ExprGeneric], [ExprGeneric]) -> ClsWithTs
-mkClsWithTs (egs, pruned) = MkClsWithTs egs pruned
-
-
-rankEs :: Ord a => [a] -> [a] -> [a]
-rankEs es ps = map fst $ sortOn (DO.Down . snd) $ zip alls $ zip un_es un_ps
-  where
-    alls  = nubOrd (es ++ ps)
-    un_es = map (\v -> length $ filter (==v) es) alls
-    un_ps = map (\v -> length $ filter (==v) ps) alls
-
-
-makeClusters :: [ExprGeneric] -> Int -> [([ExprGeneric], [ExprGeneric])]
-makeClusters es depth = assert (Set.fromList (concatMap fst cls) == Set.fromList (delete EmptyG es)) ret
-  where
-    init_cls = map (\e -> (e, pruneGTree depth e)) $ delete EmptyG $ nubOrd $ sortOn (\e -> (depthOfTree e 0, sizeOfTree e)) es
-    go es' = map (\(e, pre) -> filter (eq pre . snd) es') es'
-    to [] = []
-    to (xs:xss) = ys : to no
-      where
-        eqSnd x y = snd x `eq` snd y
-        yes = filter (not.null.intersectBy eqSnd xs) xss
-        ys = nubOrdOn fst (xs ++ concat yes)
-        no = filter (null.intersectBy eqSnd ys) xss
-    cls = map ((\(x, y) -> (nubOrd x, nubOrd y)) . unzip) $ to $ go init_cls
-    final_cls = map (\(x, y) -> (x, sortOn (DO.Down . \y' -> length $ filter (eq y' . pruneGTree depth) es) y)) cls
-    ret = if EmptyG `elem` es then ([EmptyG], [EmptyG]) : cls else cls
 
 
 mkDiffsWithGenericTrs :: String -> [([(SrcSpan, Expr, ExprGeneric)], Prog, Prog, String, String, Int)]
 mkDiffsWithGenericTrs json = case eitherDecode (LBSC.pack json) of
-  Left e -> mempty
-  Right (MkInSample bad' fix' _)
-    | Left e <- parseTopForm fix'
+  Left _ -> mempty
+  Right (MkInSample _ fix' _)
+    | Left _ <- parseTopForm fix'
+    -> mempty
+  Right (MkInSample bad' _ _)
+    | Left _ <- parseTopForm bad'
     -> mempty
   Right (MkInSample bad' fix' _)
-    | Left e <- parseTopForm bad'
-    -> mempty
-  Right (MkInSample bad' fix' _)
-    | Right fix <- parseTopForm fix'
+    | Right _ <- parseTopForm fix'
     , Right bad <- parseTopForm bad'
     , concatMap getDecld bad /= nub (concatMap getDecld bad)
     -> mempty
@@ -231,15 +165,15 @@ mkDiffsWithGenericTrs json = case eitherDecode (LBSC.pack json) of
 
 mkFixes :: String -> [(Prog, String, Int)]
 mkFixes json = case eitherDecode (LBSC.pack json) of
-  Left e -> mempty
-  Right (MkInSample bad' fix' idx)
+  Left _ -> mempty
+  Right (MkInSample _ fix' idx)
     | Right fix <- parseTopForm fix'
     -> [(fix, fix', idx)]
-  Right (MkInSample bad' fix' _)
-    | Left e <- parseTopForm fix'
+  Right (MkInSample _ fix' _)
+    | Left _ <- parseTopForm fix'
     -> mempty
-  Right (MkInSample bad' fix' _)
-    | Left e <- parseTopForm bad'
+  Right (MkInSample bad' _ _)
+    | Left _ <- parseTopForm bad'
     -> mempty
   v -> error (show v)
 
@@ -254,45 +188,13 @@ mkDiffWithGenericTrs bad fix = assert (not (null x)) x
     fs = progExprs fix'
 
 
-isSubTypeAny :: Type -> [Type] -> Bool
-isSubTypeAny e l = any (`isSubType` e) l
-
-
-isSubType :: Type -> Type -> Bool
-isSubType ti to | ti == to = True
-isSubType (xi :-> xo) (yi :-> yo) = xi `isSubType` yi && xo `isSubType` yo
-isSubType (TTup xs) (TTup ys)
-  | length xs == length ys
-    = and (zipWith isSubType xs ys)
-  | otherwise
-    = False
-isSubType to@(TApp xc xts) ti@(TApp yc yts)
-  | xc == yc
-    = and (zipWith isSubType xts yts)
-  | otherwise = False
-isSubType to@(TVar a) ti =
-  case runEval stdOpts (unifySubType to ti) of
-    Left e  -> False
-    Right b -> b
-isSubType to@TApp {} ti@(TVar a) =
-  case runEval stdOpts (unifySubType to ti) of
-    Left e  -> False
-    Right b -> b
-isSubType to@TTup {} ti@(TVar a) =
-  case runEval stdOpts (unifySubType to ti) of
-    Left e  -> False
-    Right b -> b
-isSubType t (TVar a) = False
-isSubType ti to = False
-
-
 getAllTypedExprs :: Prog -> [TExpr]
 getAllTypedExprs fix = concatMap allSubTExprs samples
   where
     samples = progTExprs tfix
 
     tfix = case runEval stdOpts (typeProg fix) of
-      Left e       -> []
+      Left _       -> []
       Right (p, _) -> p
 
     progTExprs []     = []
