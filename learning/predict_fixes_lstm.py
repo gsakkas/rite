@@ -24,9 +24,7 @@ if method not in ['lstm', 'load']:
     sys.exit(1)
 train_dir  = sys.argv[2]
 test_dir   = sys.argv[3]
-model_file = ''
-if 'load' in method:
-    model_file = sys.argv[4]
+model_file = sys.argv[4] if 'load' in method else ''
 
 # The below is necessary to get reproducible results
 RANDOM_SEED = 42
@@ -77,6 +75,9 @@ for csv in test_csvs:
         continue
     test_data.append((csv, df, df2))
 
+# Remove fixed functions from training dataset
+train_data = list(filter(lambda f: np.max(f[1].loc[:, 'L-DidChange']) > 0.0, train_data))
+
 # Extract all datasets
 train_unzipped = zip(*[(s.loc[:, 'F-Is-Eq':],
                         t.loc[:, 'F-Is-Eq':],
@@ -94,28 +95,28 @@ test_span, test_file = zip(*[(s.loc[:, 'SourceSpan'], f) for f, s, _ in test_dat
 model          = Model()
 encoder_model  = Model()
 decoder_model  = Model()
-n_input        = train_samples[0].shape[1]
-n_output       = train_targets[0].shape[1]
+N_INPUT        = train_samples[0].shape[1]
+N_OUTPUT       = train_targets[0].shape[1]
 max_input_len  = max(map(lambda s: s.shape[0], train_samples))
 max_target_len = max(map(lambda s: s.shape[0], train_targets))
 
-print("Input data:", (len(train_samples), max_input_len, n_input))
-print("Target data:", (len(train_targets), max_target_len, n_output))
+print("Input data:", (len(train_samples), max_input_len, N_INPUT))
+print("Target data:", (len(train_targets), max_target_len, N_OUTPUT))
 
 # Define number of LSTM cells
-n_units = 256
-if method == 'lstm' or method == 'load':
+N_UNITS = 256
+if method in ('lstm', 'load'):
 	# Define training encoder
-    encoder_inputs = Input(shape=(None, n_input))
-    encoder        = LSTM(n_units, return_state=True)
+    encoder_inputs = Input(shape=(None, N_INPUT))
+    encoder        = LSTM(N_UNITS, return_state=True)
     encoder_outputs, state_h, state_c = encoder(encoder_inputs)
     encoder_states = [state_h, state_c]
 
     # Define training decoder
-    decoder_inputs  = Input(shape=(None, n_output))
-    decoder_lstm    = LSTM(n_units, return_sequences=True, return_state=True)
+    decoder_inputs  = Input(shape=(None, N_OUTPUT))
+    decoder_lstm    = LSTM(N_UNITS, return_sequences=True, return_state=True)
     decoder_outputs, _, _ = decoder_lstm(decoder_inputs, initial_state=encoder_states)
-    decoder_dense   = Dense(n_output, activation='softmax')
+    decoder_dense   = Dense(N_OUTPUT, activation='softmax')
     decoder_outputs = decoder_dense(decoder_outputs)
     model           = Model([encoder_inputs, decoder_inputs], decoder_outputs)
 
@@ -123,8 +124,8 @@ if method == 'lstm' or method == 'load':
     encoder_model = Model(encoder_inputs, encoder_states)
 
     # Define inference decoder
-    decoder_state_input_h = Input(shape=(n_units,))
-    decoder_state_input_c = Input(shape=(n_units,))
+    decoder_state_input_h = Input(shape=(N_UNITS,))
+    decoder_state_input_c = Input(shape=(N_UNITS,))
     decoder_states_inputs = [decoder_state_input_h, decoder_state_input_c]
     decoder_outputs, state_h, state_c = decoder_lstm(decoder_inputs, initial_state=decoder_states_inputs)
     decoder_states        = [state_h, state_c]
@@ -163,15 +164,15 @@ model_path = join(train_dir, 'models')
 if method == 'lstm':
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
     model.fit([train_samples, train_targets], shifted_targets,
-                batch_size=256,
+                batch_size=512,
                 epochs=100,
                 validation_split=0.2,
                 callbacks=[es])
     if not exists(model_path):
         mkdir(model_path)
-    model.save_weights(join(model_path, 'lstm-' + str(n_units) + '-full-progs.h5'))
+    model.save_weights(join(model_path, 'lstm-' + str(N_UNITS) + '-full-progs.h5'))
 elif method == 'load':
-    model.load_weights(join(model_path, 'lstm-' + str(n_units) + '-full-progs.h5'))
+    model.load_weights(join(model_path, 'lstm-' + str(N_UNITS) + '-full-progs.h5'))
 
 
 # Generate target, given an encoded source sequence
@@ -229,7 +230,7 @@ for (smpl, trgt, lbls, f) in zip(test_samples, test_targets, test_labels, test_f
                                         decoder_model,
                                         shaped_smpl.reshape(1, sizes[0], sizes[1]),
                                         1,
-                                        n_output)
+                                        N_OUTPUT)
         pred_node   = one_hot_decode(prediction)[0]
         target_node = one_hot_decode(trgt.to_numpy())[first_change]
         if pred_node == target_node:
@@ -239,7 +240,7 @@ for (smpl, trgt, lbls, f) in zip(test_samples, test_targets, test_labels, test_f
                                         decoder_model,
                                         shaped_smpl.reshape(1, sizes[0], sizes[1]),
                                         shaped_smpl[:first_change, :],
-                                        n_output)
+                                        N_OUTPUT)
         pred_node   = np.argmax(prediction)
         target_node = one_hot_decode(trgt.to_numpy())[first_change]
         if pred_node == target_node:
@@ -250,7 +251,7 @@ for (smpl, trgt, lbls, f) in zip(test_samples, test_targets, test_labels, test_f
     done += 1
     print("Progress:", done, "/", total)
 
-print("Accuracy for first changed term prediction:             ", correct * 100.0 / float(total))
+print("Accuracy for first changed term prediction:             ", (correct + invalid) * 100.0 / float(total))
 print("Accuracy for first changed term prediction (only valid):", correct * 100.0 / float(total - invalid))
 
 
@@ -258,7 +259,7 @@ print("Accuracy for first changed term prediction (only valid):", correct * 100.
 ###                        Program-level learning                          ###
 ##############################################################################
 # Trained with:
-# n_units = 256
+# N_UNITS = 256
 # ...
 # es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
 # model.fit([train_samples, train_targets], shifted_targets,
@@ -270,11 +271,11 @@ print("Accuracy for first changed term prediction (only valid):", correct * 100.
 # {sp14, fa15})_lstm_1/_+some
 # Got:
 # Accuracy for first changed term prediction:              18.695452457510335
-# Accuracy for first changed term prediction (only valid): 19.48300622307324
+# Accuracy for first changed term prediction (only valid): 19.48300622307324 <--
 
 
 # Trained with:
-# n_units = 512
+# N_UNITS = 512
 # ...
 # es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
 # model.fit([train_samples, train_targets], shifted_targets,
@@ -286,14 +287,14 @@ print("Accuracy for first changed term prediction (only valid):", correct * 100.
 # {sp14, fa15})_lstm_1/_+some
 # Got:
 # Accuracy for first changed term prediction:              18.190169958658704
-# Accuracy for first changed term prediction (only valid): 18.956438487314504
+# Accuracy for first changed term prediction (only valid): 18.956438487314504 <--
 
 
 ##############################################################################
 ###                        Function-level learning                         ###
 ##############################################################################
 # Trained with:
-# n_units = 256
+# N_UNITS = 256
 # ...
 # es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
 # model.fit([train_samples, train_targets], shifted_targets,
@@ -305,10 +306,10 @@ print("Accuracy for first changed term prediction (only valid):", correct * 100.
 # {sp14, fa15})_lstm_2/{bad, fix}_feats
 # Got:
 # Accuracy for first changed term prediction:              7.7771329077190945
-# Accuracy for first changed term prediction (only valid): 18.018825638727026
+# Accuracy for first changed term prediction (only valid): 18.018825638727026 <--
 
 # Trained with:
-# n_units = 512
+# N_UNITS = 512
 # ...
 # es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
 # model.fit([train_samples, train_targets], shifted_targets,
@@ -320,4 +321,23 @@ print("Accuracy for first changed term prediction (only valid):", correct * 100.
 # {sp14, fa15})_lstm_2/{bad, fix}_feats
 # Got:
 # Accuracy for first changed term prediction:              7.7771329077190945
-# Accuracy for first changed term prediction (only valid): 18.018825638727026
+# Accuracy for first changed term prediction (only valid): 18.018825638727026  <--
+
+
+##############################################################################
+###              Function-level learning (only bad programs)               ###
+##############################################################################
+# Trained with:
+# N_UNITS = 256
+# ...
+# es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
+# model.fit([train_samples, train_targets], shifted_targets,
+#             batch_size=512,
+#             epochs=100,
+#             validation_split=0.2,
+#             callbacks=[es])
+# On:
+# {sp14, fa15})_lstm_2/{bad, fix}_feats
+# Got:
+# Accuracy for first changed term prediction:              64.51924937125169
+# Accuracy for first changed term prediction (only valid): 17.794710891976692 <--
