@@ -262,3 +262,19 @@ print("Accuracy for first changed term prediction (only valid):", correct * 100.
 # Got:
 # Accuracy for first changed term prediction:              18.695452457510335
 # Accuracy for first changed term prediction (only valid): 19.48300622307324
+
+
+# Trained with:
+# n_units = 512
+# ...
+# es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
+# model.fit([train_samples, train_targets], shifted_targets,
+#             batch_size=256,
+#             epochs=400,
+#             validation_split=0.2,
+#             callbacks=[es])
+# On:
+# {sp14, fa15})_lstm_1/_+some
+# Got:
+# Accuracy for first changed term prediction:              18.190169958658704
+# Accuracy for first changed term prediction (only valid): 18.956438487314504

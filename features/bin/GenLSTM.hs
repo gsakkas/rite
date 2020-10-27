@@ -115,6 +115,7 @@ mkFeats out fs jsons = do
         printf (show i ++ ". VERY BIG CHANGES: %.2f > %.2f\n") lmean (mean_fixes + std_fixes)
         return mempty
       | otherwise -> do
+        putStrLn (show i ++ ". FINE")
         let ss_expr = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show (pruneGTree 2 td) ++ "\n") ss
         let prog_id = printf "%04d" (i :: Int)
         let pathBad = out </> "bad_feats"
@@ -122,8 +123,9 @@ mkFeats out fs jsons = do
         let fixMap  = Map.fromList featFix
         createDirectoryIfMissing True pathBad
         createDirectoryIfMissing True pathFix
-        forM_ (zip [0..] featBad) $ \(idx, (pat, feat)) -> do
-          let fn    = printf "%04d" (idx :: Int)
+        let featBad' = filter (\(pat, _) -> Map.member pat fixMap) featBad
+        forM_ (zip [0..] featBad') $ \(idx, (pat, feat)) -> do
+          let fn    = printf "%02d" (idx :: Int)
           let pathB = pathBad </> (prog_id ++ "_" ++ fn) <.> "csv"
           let pathF = pathFix </> (prog_id ++ "_" ++ fn) <.> "csv"
           LBSC.writeFile pathB $ encodeByName hdrBad feat
@@ -364,13 +366,13 @@ runTFeaturesTypes fs fix = (header, samples)
              ++ concatMap (\(ls, c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
 
 
-runFeatsDiff :: Bool -> [Feature] -> ([SrcSpan], Prog) -> Maybe (Header, [(Pat, [NamedRecord])], [SrcSpan])
+runFeatsDiff :: Bool -> [Feature] -> ([SrcSpan], Prog) -> Maybe (Header, [([Var], [NamedRecord])], [SrcSpan])
 runFeatsDiff flag fs (ls, prog)
   | null samples = Nothing
   | otherwise    = Just (header, samples, nub cores)
   where
   header = Vec.fromList
-         $ if flag then ["SourceSpan"] else ["SourceSpan", "L-NoChange", "L-DidChange", "F-InSlice"]
+         $ (if flag then ["SourceSpan"] else ["SourceSpan", "L-NoChange", "L-DidChange", "F-InSlice"])
         ++ concatMap (\(ls,_) -> map mkFeature ls) fs
 
   samples
@@ -384,9 +386,9 @@ runFeatsDiff flag fs (ls, prog)
     Left e        -> ([], [], Just e)
     Right (p, cs) -> (p, mapMaybe constraintSpan (Set.toList (mconcat cs)), Nothing)
 
-  mkfsD (TDFun _ _ pes) = (fst $ head pes, mconcat (map (mkTypeOut . snd) pes))
-  mkfsD (TDEvl _ e)     = (LitPat Nothing (LI 42), mkTypeOut e)
-  mkfsD _               = (LitPat Nothing (LI (-1)), mempty)
+  mkfsD (TDFun _ _ pes) = (bindersOf $ fst $ head pes, mconcat (map (mkTypeOut . snd) pes))
+  mkfsD (TDEvl _ e)     = (["TDEvlPat"], mkTypeOut e)
+  mkfsD _               = (["NotValidPat"], mempty)
 
   didChange l
     | l `elem` ls
@@ -405,8 +407,8 @@ runFeatsDiff flag fs (ls, prog)
     where
     f p e acc = (:acc) . namedRecord $
                 ["SourceSpan" .= show (infoSpan (texprInfo e))]
-             ++ if flag then mempty else didChange (infoSpan (texprInfo e))
-             ++ if flag then mempty else inSlice (infoSpan (texprInfo e))
+             ++ (if flag then mempty else didChange (infoSpan (texprInfo e)))
+             ++ (if flag then mempty else inSlice (infoSpan (texprInfo e)))
              ++ concatMap (\(ls, c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
 
 
