@@ -25,7 +25,8 @@ import           Data.Maybe                 ( fromJust,
                                               mapMaybe,
                                               maybeToList )
 import qualified Data.Set                   as Set
-import qualified Data.Vector                as V
+import qualified Data.Vector                as Vec
+import qualified Data.Map                   as Map
 import           GHC.Generics               ( Generic )
 import           Options.Generic            ( getRecord,
                                               ParseRecord )
@@ -59,18 +60,84 @@ main = do
   jsons <- lines <$> readFile src
   case cls of
     "buggy+some"
-      -> mkBadFeats False out cls mempty (preds_tsize ++ preds_tis) jsons
+      -> mkBadFeats out cls (preds_tsize ++ preds_tis) jsons
     "buggy+all"
-      -> mkBadFeats False out cls mempty (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
+      -> mkBadFeats out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
     "fixes+some"
-      -> mkFixFeats False out cls mempty (preds_tsize ++ preds_tis) jsons
+      -> mkFixFeats out cls (preds_tsize ++ preds_tis) jsons
     "fixes+all"
-      -> mkFixFeats False out cls mempty (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
+      -> mkFixFeats out cls (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
+    "some-feats"
+      -> mkFeats out (preds_tsize ++ preds_tis) jsons
+    "all-feats"
+      -> mkFeats out (preds_tsize ++ preds_tis ++ map only_ctx preds_tis_ctx) jsons
     _ -> errorWithoutStackTrace "main failed: No such parameter for --features"
 
 
-mkBadFeats :: Bool -> String -> String -> [([ExprGeneric], [ExprGeneric])] -> [Feature] -> [String] -> IO ()
-mkBadFeats _ out nm _ fs jsons = do
+mkFeats :: String -> [Feature] -> [String] -> IO ()
+mkFeats out fs jsons = do
+  let uniqs     = concatMap mkDiffsWithGenericTrs jsons
+  let feats = [ ((hb, fb), (hf, ff), (ss, bad, fix, badStr, fixStr, cs, all, idx))
+              | (ss, bad, fix, badStr, fixStr, idx) <- uniqs
+              , (hb, fb, cs) <- maybeToList $ runFeatsDiff fs (map fst3 ss, bad)
+              , (hf, ff, _ ) <- maybeToList $ runFeatsDiff fs (mempty, fix)
+              , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
+                                    (concatMap allSubExprs $ progExprs bad)
+              ]
+  let feats' = filter (\(_, _, (_,_,fix,_,_,cs,_,_)) -> not (null cs) && not (null (getAllTypedExprs fix))) feats
+  let sizes  = concatMap (\(_, _, (ss, _, _, _, _, _, _, _)) -> map (fromIntegral . sizeOfTree . thd3) ss) feats'
+  let mkMean f xs = sum (map f xs) / genericLength xs
+  let mkFrac (_, _, (ss, _, _, _, _, _, all, _)) = genericLength (filter (\ss' -> any (isSubSpanOf ss') $ map fst3 ss) all) / genericLength all
+  let mean       = mkMean mkFrac feats' :: Double
+  let mean_fixes = sum sizes / genericLength sizes :: Double
+  let std        = 1.4 * sqrt (mkMean (\x -> (mkFrac x - mean) ^ 2) feats')
+  let std_fixes  = 1.4 * sqrt (sum $ map (\x -> (x - mean_fixes) ^ 2) sizes)
+
+  -- Make the ML dataset and print it into csv files
+  forM_ feats' $ \f@((hdrBad, featBad), (hdrFix, featFix), (ss, _, _, badStr, fixStr, cs, _, i)) -> do
+    let ss'    = map fst3 ss
+    let lsizes = map (fromIntegral . sizeOfTree . thd3) ss
+    let lmean  = sum lsizes / genericLength lsizes :: Double
+    if
+      | mkFrac f > mean + std -> do
+        printf (show i ++ ". OUTLIER: %.2f > %.2f\n") (mkFrac f :: Double) (mean + std)
+        return mempty
+      | null ss' -> do
+        putStrLn (show i ++ ". NO DIFF")
+        return mempty
+      | null (map fst3 ss `intersect` cs) -> do
+        putStrLn (show i ++ ". NO OVERLAP CORE/DIFF")
+        return mempty
+      | length ss' > 4 -> do
+        putStrLn (show i ++ ". TOO MANY CHANGES")
+        return mempty
+      | lmean > mean_fixes + std_fixes -> do
+        printf (show i ++ ". VERY BIG CHANGES: %.2f > %.2f\n") lmean (mean_fixes + std_fixes)
+        return mempty
+      | otherwise -> do
+        let ss_expr = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show (pruneGTree 2 td) ++ "\n") ss
+        let prog_id = printf "%04d" (i :: Int)
+        let pathBad = out </> "bad_feats"
+        let pathFix = out </> "fix_feats"
+        let fixMap  = Map.fromList featFix
+        createDirectoryIfMissing True pathBad
+        createDirectoryIfMissing True pathFix
+        forM_ (zip [0..] featBad) $ \(idx, (pat, feat)) -> do
+          let fn    = printf "%04d" (idx :: Int)
+          let pathB = pathBad </> (prog_id ++ "_" ++ fn) <.> "csv"
+          let pathF = pathFix </> (prog_id ++ "_" ++ fn) <.> "csv"
+          LBSC.writeFile pathB $ encodeByName hdrBad feat
+          LBSC.writeFile pathF $ encodeByName hdrFix $ fromJust $ Map.lookup pat fixMap -- FIXME: fromJust is not correct
+        let fpath = out </> prog_id <.> "ml"
+        writeFile fpath $ unlines $ [ badStr, "", "(* fix", fixStr, "*)" ]
+                                 ++ [ "", "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
+                                 ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
+  -- Print some final messages
+  printf "MEAN / STD frac: %.3f / %.3f\n" mean std
+
+
+mkBadFeats :: String -> String -> [Feature] -> [String] -> IO ()
+mkBadFeats out nm fs jsons = do
   let uniqs = concatMap mkDiffsWithGenericTrs jsons
   let feats = [ ((h, f), (ss, bad, fix, badStr, fixStr, c, all, idx))
               | (ss, bad, fix, badStr, fixStr, idx) <- uniqs
@@ -80,14 +147,13 @@ mkBadFeats _ out nm _ fs jsons = do
                                     (concatMap allSubExprs $ progExprs bad)
               ]
   let feats' = filter (\(_, (_,_,fix,_,_,cs,_,_)) -> not (null cs) && not (null (getAllTypedExprs fix))) feats
-  let sizes = concatMap (\(_, (ss, _, _, _, _, _, _, _)) -> map (fromIntegral . sizeOfTree . thd3) ss) feats'
+  let sizes  = concatMap (\(_, (ss, _, _, _, _, _, _, _)) -> map (fromIntegral . sizeOfTree . thd3) ss) feats'
   let mkMean f xs = sum (map f xs) / genericLength xs
   let mkFrac (_, (ss, _, _, _, _, _, all, _)) = genericLength (filter (\ss' -> any (isSubSpanOf ss') $ map fst3 ss) all) / genericLength all
-  let mean = mkMean mkFrac feats' :: Double
+  let mean       = mkMean mkFrac feats' :: Double
   let mean_fixes = sum sizes / genericLength sizes :: Double
-  let std = 1.4 * sqrt (mkMean (\x -> (mkFrac x - mean) ^ 2) feats')
-  let std_fixes = 1.4 * sqrt (sum $ map (\x -> (x - mean_fixes) ^ 2) sizes)
-  let dp = 2
+  let std        = 1.4 * sqrt (mkMean (\x -> (mkFrac x - mean) ^ 2) feats')
+  let std_fixes  = 1.4 * sqrt (sum $ map (\x -> (x - mean_fixes) ^ 2) sizes)
 
   -- Make the ML dataset and print it into csv files
   forM_ feats' $ \f@((header, features), (ss, _, _, badStr, fixStr, cs, _, i)) -> do
@@ -111,21 +177,21 @@ mkBadFeats _ out nm _ fs jsons = do
         printf (show i ++ ". VERY BIG CHANGES: %.2f > %.2f\n") lmean (mean_fixes + std_fixes)
         return mempty
       | otherwise -> do
-        let ss_expr  = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show (pruneGTree dp td) ++ "\n") ss
+        let ss_expr  = map (\(fi, se, td) -> show fi ++ "\n" ++ render (pretty se) ++ "\n" ++ show (pruneGTree 2 td) ++ "\n") ss
         let fn   = printf "%04d" (i :: Int)
         let path = out </> nm </> fn <.> "csv"
         createDirectoryIfMissing True (takeDirectory path)
         LBSC.writeFile path $ encodeByName header features
         let fpath = out </> fn <.> "ml"
         writeFile fpath $ unlines $ [ badStr, "", "(* fix", fixStr, "*)" ]
-                                ++ [ "", "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
-                                ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
+                                 ++ [ "", "(* changed spans" ] ++ ss_expr ++ [ "*)" ]
+                                 ++ [ "", "(* type error slice" ] ++ map show cs ++ [ "*)" ]
   -- Print some final messages
   printf "MEAN / STD frac: %.3f / %.3f\n" mean std
 
 
-mkFixFeats :: Bool -> String -> String -> [([ExprGeneric], [ExprGeneric])] -> [Feature] -> [String] -> IO ()
-mkFixFeats _ out nm _ fs jsons = do
+mkFixFeats :: String -> String -> [Feature] -> [String] -> IO ()
+mkFixFeats out nm fs jsons = do
   let uniqs = concatMap mkFixes jsons
   let feats = [ (h, f, fix, fixStr, idx)
               | (fix, fixStr, idx) <- uniqs
@@ -231,7 +297,7 @@ runTFeaturesDiff fs (ls, bad)
   | null samples = Nothing
   | otherwise    = Just (header, samples, nub cores)
   where
-  header = V.fromList
+  header = Vec.fromList
          $ ["SourceSpan", "L-NoChange", "L-DidChange", "F-InSlice"]
         ++ concatMap (\(ls,_) -> map mkFeature ls) fs
 
@@ -276,7 +342,7 @@ runTFeaturesDiff fs (ls, bad)
 runTFeaturesTypes :: [Feature] -> Prog -> (Header, [NamedRecord])
 runTFeaturesTypes fs fix = (header, samples)
   where
-  header = V.fromList
+  header = Vec.fromList
          $ ["SourceSpan"]
         ++ concatMap (\(ls,_) -> map mkFeature ls) fs
 
@@ -296,6 +362,54 @@ runTFeaturesTypes fs fix = (header, samples)
     f p e acc = (:acc) . namedRecord $
                 ["SourceSpan" .= show (infoSpan (texprInfo e))]
              ++ concatMap (\(ls,c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
+
+
+runFeatsDiff :: [Feature] -> ([SrcSpan], Prog) -> Maybe (Header, [(Pat, [NamedRecord])], [SrcSpan])
+runFeatsDiff fs (ls, prog)
+  | null samples = Nothing
+  | otherwise    = Just (header, samples, nub cores)
+  where
+  header = Vec.fromList
+         $ if null ls then ["SourceSpan"] else ["SourceSpan", "L-NoChange", "L-DidChange", "F-InSlice"]
+        ++ concatMap (\(ls,_) -> map mkFeature ls) fs
+
+  samples
+    | (not . null) ls
+    , null cores
+    -- something went wrong other than typechecking success
+    , Just e <- me = trace ("WARNING: " ++ show e) []
+    | otherwise = filter (not . null . snd) $ map mkfsD tprog
+
+  (tprog, cores, me) = case runEval stdOpts (typeProg prog) of
+    Left e        -> ([], [], Just e) -- traceShow e
+    Right (p, cs) -> (p, mapMaybe constraintSpan (Set.toList (mconcat cs)), Nothing)
+
+  mkfsD (TDFun _ _ pes) = (fst $ head pes, mconcat (map (mkTypeOut . snd) pes))
+  -- mkfsD (TDEvl _ e)     = [mkTypeOut e]
+  mkfsD _               = (LitPat Nothing (LI 42), mempty)
+
+  didChange l
+    --- | any (l `isSubSpanOf`) ls
+    | l `elem` ls
+    = ["L-DidChange" .= (1::Double), "L-NoChange" .= (0::Double)]
+    | otherwise
+    = ["L-DidChange" .= (0::Double), "L-NoChange" .= (1::Double)]
+
+  inSlice l
+    --- | any (l `isSubSpanOf`) cores
+    | l `elem` cores
+    = ["F-InSlice" .= (1::Double)]
+    | otherwise
+    = ["F-InSlice" .= (0::Double)]
+
+  mkTypeOut :: TExpr -> [NamedRecord]
+  mkTypeOut = actfold f []
+    where
+    f p e acc = (:acc) . namedRecord $
+                ["SourceSpan" .= show (infoSpan (texprInfo e))]
+             ++ if null ls then didChange (infoSpan (texprInfo e)) else mempty
+             ++ if null ls then inSlice (infoSpan (texprInfo e)) else mempty
+             ++ concatMap (\(ls, c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
 
 
 mkLabel :: String -> BSC.ByteString
