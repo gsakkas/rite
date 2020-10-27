@@ -76,11 +76,11 @@ main = do
 
 mkFeats :: String -> [Feature] -> [String] -> IO ()
 mkFeats out fs jsons = do
-  let uniqs     = concatMap mkDiffsWithGenericTrs jsons
+  let uniqs = concatMap mkDiffsWithGenericTrs jsons
   let feats = [ ((hb, fb), (hf, ff), (ss, bad, fix, badStr, fixStr, cs, all, idx))
               | (ss, bad, fix, badStr, fixStr, idx) <- uniqs
-              , (hb, fb, cs) <- maybeToList $ runFeatsDiff fs (map fst3 ss, bad)
-              , (hf, ff, _ ) <- maybeToList $ runFeatsDiff fs (mempty, fix)
+              , (hb, fb, cs) <- maybeToList $ runFeatsDiff False fs (map fst3 ss, bad)
+              , (hf, ff, _ ) <- maybeToList $ runFeatsDiff True fs (mempty, fix)
               , let all = nub $ map (fromJust.getSrcSpanExprMaybe)
                                     (concatMap allSubExprs $ progExprs bad)
               ]
@@ -361,42 +361,40 @@ runTFeaturesTypes fs fix = (header, samples)
     where
     f p e acc = (:acc) . namedRecord $
                 ["SourceSpan" .= show (infoSpan (texprInfo e))]
-             ++ concatMap (\(ls,c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
+             ++ concatMap (\(ls, c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
 
 
-runFeatsDiff :: [Feature] -> ([SrcSpan], Prog) -> Maybe (Header, [(Pat, [NamedRecord])], [SrcSpan])
-runFeatsDiff fs (ls, prog)
+runFeatsDiff :: Bool -> [Feature] -> ([SrcSpan], Prog) -> Maybe (Header, [(Pat, [NamedRecord])], [SrcSpan])
+runFeatsDiff flag fs (ls, prog)
   | null samples = Nothing
   | otherwise    = Just (header, samples, nub cores)
   where
   header = Vec.fromList
-         $ if null ls then ["SourceSpan"] else ["SourceSpan", "L-NoChange", "L-DidChange", "F-InSlice"]
+         $ if flag then ["SourceSpan"] else ["SourceSpan", "L-NoChange", "L-DidChange", "F-InSlice"]
         ++ concatMap (\(ls,_) -> map mkFeature ls) fs
 
   samples
-    | (not . null) ls
-    , null cores
-    -- something went wrong other than typechecking success
+    | flag         = filter (not . null . snd) $ map mkfsD tprog
+    -- Something went wrong other than typechecking success
+    | null cores
     , Just e <- me = trace ("WARNING: " ++ show e) []
-    | otherwise = filter (not . null . snd) $ map mkfsD tprog
+    | otherwise    = filter (not . null . snd) $ map mkfsD tprog
 
   (tprog, cores, me) = case runEval stdOpts (typeProg prog) of
-    Left e        -> ([], [], Just e) -- traceShow e
+    Left e        -> ([], [], Just e)
     Right (p, cs) -> (p, mapMaybe constraintSpan (Set.toList (mconcat cs)), Nothing)
 
   mkfsD (TDFun _ _ pes) = (fst $ head pes, mconcat (map (mkTypeOut . snd) pes))
-  -- mkfsD (TDEvl _ e)     = [mkTypeOut e]
-  mkfsD _               = (LitPat Nothing (LI 42), mempty)
+  mkfsD (TDEvl _ e)     = (LitPat Nothing (LI 42), mkTypeOut e)
+  mkfsD _               = (LitPat Nothing (LI (-1)), mempty)
 
   didChange l
-    --- | any (l `isSubSpanOf`) ls
     | l `elem` ls
     = ["L-DidChange" .= (1::Double), "L-NoChange" .= (0::Double)]
     | otherwise
     = ["L-DidChange" .= (0::Double), "L-NoChange" .= (1::Double)]
 
   inSlice l
-    --- | any (l `isSubSpanOf`) cores
     | l `elem` cores
     = ["F-InSlice" .= (1::Double)]
     | otherwise
@@ -407,8 +405,8 @@ runFeatsDiff fs (ls, prog)
     where
     f p e acc = (:acc) . namedRecord $
                 ["SourceSpan" .= show (infoSpan (texprInfo e))]
-             ++ if null ls then didChange (infoSpan (texprInfo e)) else mempty
-             ++ if null ls then inSlice (infoSpan (texprInfo e)) else mempty
+             ++ if flag then mempty else didChange (infoSpan (texprInfo e))
+             ++ if flag then mempty else inSlice (infoSpan (texprInfo e))
              ++ concatMap (\(ls, c) -> zipWith (.=) (map mkFeature ls) (c p e)) fs
 
 

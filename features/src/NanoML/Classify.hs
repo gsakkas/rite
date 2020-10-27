@@ -1620,7 +1620,7 @@ diffSpansAndGenericTrs diffs bs fs = {- trace ((showDiff df) ++ "\n\n\n\n\n" ++ 
     go _ [] _ = []
     go _ _ [] = []
     go d'' (x:xs) (y:ys) = case d'' of
-      -- Two independent insertions. The first one will always match with the fist in deletion in the sequence
+      -- Two independent insertions. The first one will always match with the first deletion in the sequence
       Ins e (Ins e' d) | not (e' `isSubExpr` e)
         -> es ++ go (Ins e' d') xs' (head ys : ys')
             where (d', es, xs', ys') = to (Ins e d) (x:xs) (y : tail ys)
@@ -1857,7 +1857,7 @@ mkGenericTrees = \case
   List _ es _     -> ListG $ map mkGenericTrees es
   TypedHole _ _   -> EmptyG
   TypedVar _ _    -> VarG
-  e               -> error ("exprKind: " ++ render (pretty e))
+  e               -> error ("mkGenericTrees: " ++ render (pretty e))
   where maybeMkGTs me = fmap mkGenericTrees me
 
 -- George
