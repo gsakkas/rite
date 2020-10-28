@@ -78,10 +78,10 @@ for csv in test_csvs:
 # Remove fixed functions from training dataset
 train_data = list(filter(lambda f: np.max(f[1].loc[:, 'L-DidChange']) > 0.0, train_data))
 
-# Extract all datasets
-train_unzipped = zip(*[(s.loc[:, 'F-Is-Eq':],
-                        t.loc[:, 'F-Is-Eq':],
-                        s.loc[:, 'L-DidChange'])
+# Extract all datasets & reverse train data rows
+train_unzipped = zip(*[(s.loc[:, 'F-Is-Eq':].iloc[::-1],
+                        t.loc[:, 'F-Is-Eq':].iloc[::-1],
+                        s.loc[:, 'L-DidChange'].iloc[::-1])
                         for _, s, t in train_data])
 train_samples, train_targets, train_labels = map(list, train_unzipped)
 
@@ -164,8 +164,8 @@ model_path = join(train_dir, 'models')
 if method == 'lstm':
     es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
     model.fit([train_samples, train_targets], shifted_targets,
-                batch_size=512,
-                epochs=100,
+                batch_size=384,
+                epochs=200,
                 validation_split=0.2,
                 callbacks=[es])
     if not exists(model_path):
@@ -341,3 +341,22 @@ print("Accuracy for first changed term prediction (only valid):", correct * 100.
 # Got:
 # Accuracy for first changed term prediction:              64.51924937125169
 # Accuracy for first changed term prediction (only valid): 17.794710891976692 <--
+
+
+##############################################################################
+###     Function-level learning (only bad programs & reversed training)    ###
+##############################################################################
+# Trained with:
+# N_UNITS = 256
+# ...
+# es = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=5)
+# model.fit([train_samples, train_targets], shifted_targets,
+#             batch_size=384,
+#             epochs=200,
+#             validation_split=0.2,
+#             callbacks=[es])
+# On:
+# {sp14, fa15})_lstm_2/{bad, fix}_feats
+# Got:
+# Accuracy for first changed term prediction:              63.745405300831884
+# Accuracy for first changed term prediction (only valid): 16.001792917974004
